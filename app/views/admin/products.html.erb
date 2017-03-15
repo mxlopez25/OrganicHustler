@@ -1,0 +1,180 @@
+<h2>Products</h2>
+<div class="table_search">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon2">ID</span>
+    <label for="id"></label>
+    <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon2">SKU</span>
+    <label for="sku"></label>
+    <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku" name="sku">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Title</span>
+    <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Less than</span>
+    <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
+    <span class="input-group-addon">$</span>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon2">Category</span>
+    <label for="category"></label>
+    <select class="form-control" id="category" name="category">
+      <option value="">All categories</option>
+      <% AdminHelper.get_categories.each do |category| %>
+          <option value="<%= category['id'] %>"><%= category['title'] %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
+</div>
+
+<%= render partial: 'admin/partial_products/info_product' %>
+<%= render partial: 'admin/partial_products/edit_product' %>
+
+<div class="table_products">
+  <table class="table" id="table">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>SKU</th>
+      <th>Title</th>
+      <th>Sale price</th>
+      <th>Stock level</th>
+      <th><button class="btn btn-success">New product</button></th>
+    </tr>
+    </thead>
+    <tbody id="list-to-m">
+
+    <% AdminHelper.get_products.each do |product| %>
+        <tr>
+          <td><%= product['id'] %></td>
+          <td><%= product['sku'] %></td>
+          <td><%= product['title'] %></td>
+          <td><%= product['sale_price'] %></td>
+          <td><%= product['stock_level'] %></td>
+          <td>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="actions">
+              <button onclick="loadData(['<%= product['id'] %>'])" type="button" class="btn btn-info" data-toggle="modal" data-target="#info_product">Info</button>
+              <button onclick="loadEdit(['<%= product['id'] %>'])" type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit_product">Edit</button>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#info_product">Delete</button>
+            </div>
+
+          </td>
+        </tr>
+    <% end %>
+
+    </tbody>
+  </table>
+  <script>
+
+    function loadEdit(id) {
+        var element = $("#container-edit");
+        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="sr-only">Waiting</span></div></div>');
+
+        $.ajax({
+            url: "/customs/edit_data",
+            type: 'get',
+            data: {
+                id: id[0]
+            },
+            dataType: 'html',
+            success: function (data) {
+                element.html(data);
+            },
+            error: function () {
+                element.html('Something went wrong');
+            }
+        })
+    }
+
+    function loadData(id) {
+        var element = $("#container-info");
+        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
+
+        $.ajax({
+            url: "/customs/load_info",
+            type: 'get',
+            data: {
+                id: id[0]
+            },
+            dataType: 'html',
+            success: function (data) {
+                element.html(data);
+            },
+            error: function () {
+                element.html('Something went wrong');
+            }
+        })
+    }
+
+    function loadTable() {
+
+        var element = $("#list-to-m");
+        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
+
+        $.ajax({
+            url: "/customs/reload_table" ,
+            type: 'post',
+            data: {
+                id: $("#id_input").val(),
+                sku: $("#sku").val(),
+                title: $("#title").val(),
+                amount: $("#amount").val(),
+                category: $("#category").val()
+            },
+            dataType: 'html',
+            success: function (data) {
+                element.html(data);
+            },
+            error: function() {
+                element.html('Something went wrong');
+            }
+        });
+    }
+
+    function makeSortable(table) {
+        var th = table.tHead, i;
+        th && (th = th.rows[0]) && (th = th.cells);
+        if (th) i = th.length;
+        else return; // if no `<thead>` then do nothing
+        while (--i >= 0) (function (i) {
+            var dir = 1;
+            th[i].addEventListener('click', function () {
+                sortTable(table, i, (dir = 1 - dir));
+            });
+        }(i));
+    }
+
+    function sortTable(table, col, reverse) {
+        var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+            tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+            i;
+        reverse = -((+reverse) || -1);
+        tr = tr.sort(function (a, b) { // sort rows
+            return reverse // `-1 *` if want opposite order
+                * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+                        .localeCompare(b.cells[col].textContent.trim())
+                );
+        });
+        for (i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+    }
+
+    function makeAllSortable(parent) {
+        parent = parent || document.body;
+        var t = parent.getElementsByTagName('table'), i = t.length;
+        while (--i >= 0) makeSortable(t[i]);
+    }
+
+    makeAllSortable();
+  </script>
+</div>

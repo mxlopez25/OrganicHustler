@@ -1,0 +1,22 @@
+<title>OrganicHustler</title>
+<div class="container">
+  <div class="row">
+    <% get_products.each do |product| %>
+        <div class="col-sm-3">
+          <div class="img-thumbnail">
+            <% if product['images'].count > 0 %>
+                <img style="margin-top: 5px; width: 100%" src="https://<%= product['images'][0]['segments']['domain'] %>fit/w242/h242/<%= product['images'][0]['segments']['suffix'] %>" alt="..." class="img-fluid">
+            <% end %>
+            <div class="caption" style="overflow: hidden">
+              <h3><%= product['title'] %></h3>
+              <p><%= product['title'] %></p>
+              <h5 style="float: left">Sale price: <span style="font-size: small; color: #b12704">$<%= product['sale_price'] %></span></h5>
+            </div>
+            <a href="/product/<%= product['id'] %>" style="width: 100%; margin: 0 auto" class="btn btn-default" aria-haspopup="true" aria-expanded="true">
+              Customize
+            </a>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>

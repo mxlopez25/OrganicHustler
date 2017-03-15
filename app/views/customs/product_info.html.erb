@@ -1,0 +1,63 @@
+<% product = @product %>
+<!--Available actions, delete/modify-->
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_product_dialog" data-dismiss="modal">Delete</button>
+</div>
+
+<h4 style="width: 100%; text-align: center; margin-left: auto; margin-right: auto; border-bottom: solid thin #707070">Basic info</h4>
+<!--Product status-->
+<div>
+  <h5>
+    Product status
+    <% if product['status']['data']['key'].eql?('1') %><span class="badge badge-success">Live</span><% end %>
+    <% if product['status']['data']['key'].eql?('0') %><span class="badge badge-danger">Draft</span><% end %>
+  </h5>
+</div>
+
+<!--Product id/sku-->
+<div style="overflow: hidden;">
+  <h6 style="display: inline; width: 50%; float: left">ID: <span style="font-size: x-small"><%= product['id'] %></span></h6>
+  <h6 style="width: 50%; float: left">SKU: <span style="font-size: x-small"><%= product['sku'] %></span></h6>
+</div>
+
+<!--Created at/Updated at info-->
+<div style="overflow: hidden">
+  <h6 style="display: inline; width: 50%; float: left">Created At: <span style="font-size: small"><%= product['created_at'] %></span></h6>
+  <h6 style="width: 50%; float: left">Updated at: <span style="font-size: small"><%= product['updated_at'] %></span></h6>
+</div>
+
+<h4  style="width: 100%; text-align: center; margin-left: auto; margin-right: auto; border-bottom: solid thin #707070">General info</h4>
+<!--Brand/Category info-->
+<h6>Category: <span style="font-size: small"><%= product['category']['value'] %></span></h6>
+<h6>Brand: <span style="font-size: small"><%= product['brand']['value'] %></span></h6>
+
+<!--Price-->
+<div style="overflow: hidden">
+  <h6 style="display: inline; width: 50%; float: left">Price+taxes: <span style="font-size: small; color: #b12704"><%= product['price']['value'] %></span></h6>
+  <h6 style="width: 50%; float: left">Sale price: <span style="font-size: small; color: #b12704">$<%= product['sale_price'] %></span></h6>
+</div>
+
+<h6>Stock: <span style="font-size: small"><%= product['stock_level'] %></span></h6>
+<h6>Stock Status: <span class="label label-info" style="font-size: small"><%= product['stock_status']['value'] %></span></h6>
+
+<div style="padding: 10px; border: solid thin lightgray; border-radius: 10px">
+  <h6><span class="label label-primary">Description</span></h6>
+  <p style="text-align: justify; font-size: small">
+    <%= product['description'] %>
+  </p>
+</div>
+
+<div style="margin-top: 10px; padding: 10px; border: solid thin lightgray; border-radius: 10px; background: #ffffff; overflow: hidden">
+  <h6><span class="label label-primary">Images</span></h6>
+  <% product['images'].each do |image| %>
+      <img src="http://<%= image['segments']['domain'] %>fit/w100/h100/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
+  <% end %>
+</div>
+
+<!--Tags-->
+<h6 style="margin-top: 10px"><span class="label label-primary">Tags</span></h6>
+<div class="well" style="min-width: 30px; border-radius: 10px; padding: 10px; background: #ffffff; border: thin solid lightgray">
+  <% product['slug'].split(' ').each do |word| %>
+      <span class="badge badge-info"><%= word %></span>
+  <% end %>
+</div>

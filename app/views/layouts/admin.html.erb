@@ -1,0 +1,110 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OrganicHustler</title>
+
+  <%= javascript_include_tag 'jquery.min.js' %>
+  <%= stylesheet_link_tag 'bootstrap.min.css' %>
+  <%= stylesheet_link_tag 'bootstrap.css' %>
+  <%= javascript_include_tag 'bootstrap.min' %>
+  <%= stylesheet_link_tag 'bootstrap-theme.min.css' %>
+  <%= javascript_include_tag 'dropzone' %>
+  <%= stylesheet_link_tag 'dropzone' %>
+  <%= javascript_include_tag 'dragable.min' %>
+  <%= javascript_include_tag 'jquery.jcarousel' %>
+
+  <%= stylesheet_link_tag    'admin_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'admin', 'data-turbolinks-track': 'reload' %>
+
+  <%= csrf_meta_tags %>
+</head>
+
+<header style="margin: 10px">
+  <ul class="nav nav-pills hidden-xs-down">
+    <li class="nav-item"><a class="nav-link" onclick="loadView('products')" href="#" id="products">Products</a></li>
+    <li class="nav-item"><a class="nav-link" onclick="loadView('logo')" href="#" id="logo">Logos</a></li>
+    <li class="float-right" style="float: right; display: block" role="presentation"><a class="btn btn-danger" style="margin-left:50px" href="/admins/sign_out" data-method="DELETE" id="logo">Log out</a></li>
+  </ul>
+</header>
+
+<body>
+
+<div class="container" id="releasable">
+<%= yield %>
+</div>
+
+</body>
+
+</html>
+
+<script>
+
+  function loadView(idView){
+
+      var inter = $('#releasable');
+
+      inter.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
+
+      var tabs = document.getElementsByClassName('nav-link');
+      for (var i = 0; i < tabs.length; i++){
+          tabs[i].className = 'nav-link';
+      }
+      document.getElementById(idView).className = 'nav-link active';
+
+      $.ajax({
+          url: "/admin/" + idView,
+          type: 'GET',
+          data: {
+
+          },
+          dataType: 'html',
+          success: function (data) {
+              inter.html(data);
+          },
+          error: function() {
+              inter.html('An error has ocurred');
+          }
+      });
+
+
+
+  }
+</script>
+
+<script>
+    function makeSortable(table) {
+        var th = table.tHead, i;
+        th && (th = th.rows[0]) && (th = th.cells);
+        if (th) i = th.length;
+        else return; // if no `<thead>` then do nothing
+        while (--i >= 0) (function (i) {
+            var dir = 1;
+            th[i].addEventListener('click', function () {
+                sortTable(table, i, (dir = 1 - dir));
+                console.log("holaaaa")
+            });
+        }(i));
+    }
+
+    function sortTable(table, col, reverse) {
+        var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+            tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+            i;
+        reverse = -((+reverse) || -1);
+        tr = tr.sort(function (a, b) { // sort rows
+            return reverse // `-1 *` if want opposite order
+                * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+                        .localeCompare(b.cells[col].textContent.trim())
+                );
+        });
+        for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+    }
+
+    function makeAllSortable(parent) {
+        parent = parent || document.body;
+        var t = parent.getElementsByTagName('table'), i = t.length;
+        while (--i >= 0) makeSortable(t[i]);
+    }
+</script>

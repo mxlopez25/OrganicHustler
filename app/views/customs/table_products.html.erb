@@ -1,0 +1,18 @@
+<% @products.each do |product| %>
+    <tr>
+      <td><%= product['id'] %></td>
+      <td><%= product['sku'] %></td>
+      <td><%= product['title'] %></td>
+      <td><%= product['sale_price'] %></td>
+      <td><%= product['stock_level'] %></td>
+      <td>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="actions">
+          <button type="button" class="btn btn-info">Info</button>
+          <button type="button" class="btn btn-warning">Edit</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+
+      </td>
+    </tr>
+<% end %>

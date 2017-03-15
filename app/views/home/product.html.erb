@@ -1,0 +1,358 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= @product['title'] %></title>
+
+</head>
+
+<body>
+<div id="overall-c" class="co-sty">
+  <div id="container">
+  </div>
+  <!--<div id="variations" style="float: left; margin-top: 10px; margin-bottom: 10px; width: 100%">
+    <h6 style="font-weight: bold">Select color(s):</h6>
+    <h6 style="margin-bottom: 0; font-weight: bold"><input type="checkbox" value="colors-sel" name="color-sel"> Select all colors</h6>
+        <button class="btn btn-default" style="padding: 0 ;float: left; border: thin solid silver; margin-right: 4px; width: 20px; height: 20px; background: %>;">
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+  </div>-->
+  <div id="icon_loader" class="jcarousel-wrapper">
+
+    <div class="jcarousel" data-jcarousel="true">
+      <ul style="left: 0; top: 0;">
+        <% Gallery.first.pictures.all.each do |image| %>
+            <li>
+              <img onclick="addToPic('<%= image.image.url(:large) %>')" src="<%= image.image.url(:thumb) %>" alt="" height="50">
+            </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <button style="border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+    <button style="border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+
+
+  </div>
+
+  <div id="controllers" style="float: left; width: 100%">
+    <div style="margin-left: auto; margin-right: auto; text-align: center">
+      <button id="minus-btn" class="btn btn-default direction" style="border-radius: 0"><span class="fa fa-minus resizable"></span></button>
+      <button id="plus-btn" class="btn btn-default direction" style="border-radius: 0"><span class="fa fa-plus resizable"></span></button>
+      <button id="left-btn" class="btn btn-default direction" style="border-radius: 0"><span class="fa resizable fa-chevron-left"></span></button>
+      <button id="right-btn" class="btn btn-default direction" style="border-radius: 0"><span class="fa resizable fa-chevron-right"></span></button>
+      <button id="down-btn" class="btn btn-default direction direction" style="border-radius: 0"><span class="fa resizable fa-chevron-down"></span></button>
+      <button id="up-btn" class="btn btn-default direction" style="border-radius: 0"><span class="fa resizable fa-chevron-up"></span></button>
+    </div>
+  </div>
+  <button id="share" style="width: 100%; margin: 10px auto;text-align: center" class="btn btn-default">
+    <h5 class="cell-btn" style="border-radius: 0; padding: 5px 20px">SHARE</h5>
+  </button>
+  <button id="restart-btn" style="width: 100%; display: table; margin: 10px auto 5px auto; padding: 5px auto; border-radius: 0" class="btn btn-default">
+    <h5 class="cell-btn">START OVER</h5></button>
+  <button style="width: 100%; background: #ae8e94;display: table;margin: 10px auto 5px auto; padding: 5px auto;border-radius: 0" class="btn btn-default">
+    <h5 class="cell-btn" style="color: white">DONE</h5></button>
+</div>
+</body>
+</html>
+<script>
+
+    //Photo slider
+    (function ($) {
+        $(function () {
+            $('.jcarousel').jcarousel();
+
+            $('.jcarousel-control-prev')
+                .on('jcarouselcontrol:active', function () {
+                    $(this).removeClass('inactive');
+                })
+                .on('jcarouselcontrol:inactive', function () {
+                    $(this).addClass('inactive');
+                })
+                .jcarouselControl({
+                    target: '-=1'
+                });
+
+            $('.jcarousel-control-next')
+                .on('jcarouselcontrol:active', function () {
+                    $(this).removeClass('inactive');
+                })
+                .on('jcarouselcontrol:inactive', function () {
+                    $(this).addClass('inactive');
+                })
+                .jcarouselControl({
+                    target: '+=1'
+                });
+
+            $('.jcarousel-pagination')
+                .on('jcarouselpagination:active', 'a', function () {
+                    $(this).addClass('active');
+                })
+                .on('jcarouselpagination:inactive', 'a', function () {
+                    $(this).removeClass('active');
+                })
+                .jcarouselPagination();
+        });
+    })(jQuery);
+
+    var elementsBorders = [];
+    var elements = [];
+    var selected = null;
+
+    var base_co = $("#container");
+    var width = base_co.width();
+    base_co.height(height);
+    var height = width + 0;
+
+    console.log('Dimen: ' + width + 'x' + height);
+
+    var stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height,
+        preventDefault: false
+    });
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    function addBorders(group, x, y, name, h, w) {
+        var layer = group.getLayer();
+        var anchor = new Konva.Rect({
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            stroke: '#A9A9A9',
+            strokeWidth: 3,
+            name: name,
+            draggable: false,
+            dragOnTop: false,
+            preventDefault: false
+        });
+
+        group.add(anchor);
+        layer.draw();
+        return anchor;
+    }
+
+    function addToPic(imageToAdd) {
+
+        var logo = new Konva.Image({
+            width: 200,
+            height: 200,
+            name: 'image',
+            preventDefault: false,
+            ratio: 0.2
+        });
+
+        var logo_group = new Konva.Group({
+            x: 0,
+            y: 0,
+            name: 'group',
+            draggable: true
+        });
+
+        layer.add(logo_group);
+        logo_group.add(logo);
+
+        var border;
+
+        var imageLogo = new Image();
+        imageLogo.onload = function () {
+            logo.image(imageLogo);
+            logo.height(imageLogo.height * 0.2);
+            logo.width(imageLogo.width * 0.2);
+            border = addBorders(logo_group, 0, 0, "borders", imageLogo.height * 0.2, imageLogo.width * 0.2);
+            elementsBorders.push(border);
+            layer.draw();
+        };
+
+        hideAll();
+        selected = logo_group;
+        elements.push(selected);
+
+        logo_group.on('click tap', function () {
+            if(border.visible() == false) {
+                hideAll();
+                border.show();
+                selected = logo_group;
+                layer.draw();
+            }else{
+                hideAll();
+                selected = null;
+                layer.draw();
+            }
+        });
+
+        imageLogo.src = imageToAdd;
+    }
+
+    var anim_zoom_in = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            var image = selected.get('.image')[0];
+            var border = selected.get('.borders')[0];
+
+            selected.width(image.width() + image.width()*frame.timeDiff/1000);
+            selected.height(image.height() + image.height()*frame.timeDiff/1000);
+
+            border.width(image.width() + image.width()*frame.timeDiff/1000);
+            border.height(image.height() + image.height()*frame.timeDiff/1000);
+
+            image.width(image.width() + image.width()*frame.timeDiff/1000);
+            image.height(image.height() + image.height()*frame.timeDiff/1000);
+
+        }
+    }, layer);
+
+    var anim_zoom_out = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            selected.width(11000);
+            selected.height(11000);
+            var image = selected.get('.image')[0];
+            var border = selected.get('.borders')[0];
+
+            selected.width(image.width() - image.width()*frame.timeDiff/1000);
+            selected.height(image.height() - image.height()*frame.timeDiff/1000);
+
+            border.width(image.width() - image.width()*frame.timeDiff/1000);
+            border.height(image.height() - image.height()*frame.timeDiff/1000);
+
+            image.width(image.width() - image.width()*frame.timeDiff/1000);
+            image.height(image.height() - image.height()*frame.timeDiff/1000);
+
+        }
+    }, layer);
+
+    var anim_right = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            selected.x(selected.x() + (65 * frame.timeDiff / 1000));
+        }
+    }, layer);
+
+    var anim_left = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            selected.x(selected.x() - (65 * frame.timeDiff / 1000));
+        }
+    }, layer);
+
+    var anim_up = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            selected.y(selected.y() - (65 * frame.timeDiff / 1000));
+        }
+    }, layer);
+
+    var anim_down = new Konva.Animation(function (frame) {
+        if(selected != null) {
+            selected.y(selected.y() + (65 * frame.timeDiff / 1000));
+        }
+    }, layer);
+
+    var btn_up = $("#up-btn");
+    var btn_down = $("#down-btn");
+    var btn_left = $("#left-btn");
+    var btn_right = $("#right-btn");
+    var btn_minus = $("#minus-btn");
+    var btn_plus = $("#plus-btn");
+    var btn_restart = $("#restart-btn");
+
+    btn_minus.on('mousedown touchstart', function () {
+        anim_zoom_out.start();
+    });
+
+    btn_minus.on('mouseup touchend', function () {
+        anim_zoom_out.stop();
+    });
+
+    btn_plus.on('mousedown touchstart', function () {
+        anim_zoom_in.start();
+    });
+
+    btn_plus.on('mouseup touchend', function () {
+        anim_zoom_in.stop();
+    });
+
+    btn_up.on('mousedown touchstart', function () {
+        anim_up.start();
+    });
+
+    btn_up.on('mouseup touchend', function () {
+        anim_up.stop();
+    });
+
+    btn_down.on('mousedown touchstart', function () {
+        anim_down.start();
+    });
+
+    btn_down.on('mouseup touchend', function () {
+        anim_down.stop();
+    });
+
+    btn_left.on('mousedown touchstart', function () {
+        anim_left.start();
+    });
+
+    btn_left.on('mouseup touchend', function () {
+        anim_left.stop();
+    });
+
+    btn_right.on('mousedown touchstart', function () {
+        anim_right.start();
+    });
+
+    btn_right.on('mouseup touchend', function () {
+        anim_right.stop();
+    });
+
+    btn_restart.on('click', function () {
+        for(var i = 0; i < elements.length; i++){
+            elements[i].destroy();
+            layer.draw();
+        }
+    });
+
+    function hideAll() {
+        for (var i = 0; i < elementsBorders.length; i++){
+            elementsBorders[i].hide();
+        }
+    }
+
+    var baseImg = new Konva.Image({
+        width: width,
+        height: height,
+        preventDefault: false
+    });
+
+    var baseIGroup = new Konva.Group({
+        x: 0,
+        y: 0,
+        preventDefault: false
+    });
+
+    layer.add(baseIGroup);
+    baseIGroup.add(baseImg);
+
+    var imageBgPro = new Image();
+    imageBgPro.onload = function () {
+        console.log("pro-reload");
+        baseImg.image(imageBgPro);
+
+        stage.width(base_co.width());
+        stage.height(base_co.height());
+
+        baseImg.width(base_co.width());
+        baseImg.height(base_co.width());
+
+        layer.draw();
+    };
+
+    imageBgPro.src = '<%= @product['images'][0]['url']['https'] %>';
+
+    window.onresize = function () {
+        console.log($("#overall-c").width());
+        base_co.height(base_co.width());
+        imageBgPro.src = '<%= @product['images'][0]['url']['https'] %>';
+    };
+
+</script>
