@@ -7,4 +7,8 @@ module LogoHelper
     return Gallery.all
   end
 
+  def get_colors(id)
+    Gallery.get_colors(id)
+  end
+
 end

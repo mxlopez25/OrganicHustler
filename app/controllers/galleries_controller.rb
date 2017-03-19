@@ -5,7 +5,7 @@ class GalleriesController < ApplicationController
       @gallery = Gallery.find(params['id'])
       if @gallery.save
         if params[:file]
-          @gallery.pictures.create(image: params[:file].tempfile)
+          @gallery.pictures.create(image: params[:file].tempfile, color: params[:color])
         end
       end
       return
@@ -15,7 +15,7 @@ class GalleriesController < ApplicationController
       @gallery = Gallery.new(name: params['name'])
       if @gallery.save
         if params[:file]
-          @gallery.pictures.create(image: params[:file].tempfile)
+          @gallery.pictures.create(image: params[:file].tempfile, color: params[:color])
         end
       end
     end

@@ -1,5 +1,8 @@
 <h1>Logos</h1>
 
+<%= javascript_include_tag 'jscolor/jscolor' %>
+<%= javascript_include_tag 'jscolor/jscolor.min' %>
+
 <script>
 
     document.getElementById("dropping").className += ' dropzone';
@@ -22,6 +25,7 @@
             this.on("sending", function (file, xhr, formData) {
                 formData.append("id", $("#gallery_id").val());
                 formData.append("name", $("#name_division").val());
+                formData.append("color", '#' + $("#valueSpan").html());
             });
             this.on("success", function (file, xhr) {
                 this.removeAllFiles();
@@ -75,13 +79,21 @@
 </script>
 
 <div class="row">
-  <input type="text" id="name_division">
+
   <select onchange="loadLogos()" onload="loadLogos()" id="gallery_id">
     <option value="">New group</option>
     <% LogoHelper.get_galleries.each do |gallery| %>
         <option value="<%= gallery.id %>"><%= gallery.name %></option>
     <% end %>
   </select>
+
+  <input type="text" id="name_division" placeholder="New group name">
+  <button class="jscolor {valueElement:'valueSpan',styleElement:'styleSpan',value:'ff6699'}">
+    Click here to pick a color
+  </button>
+  <span id="valueSpan"></span>
+  <span style="border-radius: 100px;margin:10px; padding: 10px; width: 10px;" id="styleSpan"></span>
+
 </div>
 
 <div id="dropping" class="logos">

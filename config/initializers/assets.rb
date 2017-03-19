@@ -17,7 +17,11 @@ Rails.application.config.assets.precompile += %w( jquery.jcarousel.js )
 Rails.application.config.assets.precompile += %w( magnific-popup/magnific-popup.css )
 Rails.application.config.assets.precompile += %w( creative/creative.css )
 Rails.application.config.assets.precompile += %w( bootstrap.js )
+Rails.application.config.assets.precompile += %w( bootstrap.min.css )
+Rails.application.config.assets.precompile += %w( bootstrap.min.js )
 Rails.application.config.assets.precompile += %w( creative/creative.min.css )
+Rails.application.config.assets.precompile += %w( jscolor/jscolor.js )
+Rails.application.config.assets.precompile += %w( jscolor/jscolor.min.js )
 
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path

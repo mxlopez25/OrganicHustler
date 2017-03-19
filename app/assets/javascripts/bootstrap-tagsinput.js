@@ -3,7 +3,7 @@
 
   var defaultOptions = {
     tagClass: function(item) {
-      return 'badge badge-info';
+        return 'label label-info';
     },
     itemValue: function(item) {
       return item ? item.toString() : item;
@@ -110,7 +110,9 @@
       if (existing && !self.options.allowDuplicates) {
         // Invoke onTagExists
         if (self.options.onTagExists) {
-          var $existingTag = $(".badge", self.$container).filter(function() { return $(this).data("item") === existing; });
+            var $existingTag = $(".tag", self.$container).filter(function () {
+                return $(this).data("item") === existing;
+            });
           self.options.onTagExists(item, $existingTag);
         }
         return;
@@ -176,7 +178,9 @@
         if (beforeItemRemoveEvent.cancel)
           return;
 
-        $('.badge', self.$container).filter(function() { return $(this).data('item') === item; }).remove();
+          $('.tag', self.$container).filter(function () {
+              return $(this).data('item') === item;
+          }).remove();
         $('option', self.$element).filter(function() { return $(this).data('item') === item; }).remove();
         if($.inArray(item, self.itemsArray) !== -1)
           self.itemsArray.splice($.inArray(item, self.itemsArray), 1);
@@ -198,7 +202,7 @@
     removeAll: function() {
       var self = this;
 
-      $('.badge', self.$container).remove();
+        $('.tag', self.$container).remove();
       $('option', self.$element).remove();
 
       while(self.itemsArray.length > 0)
@@ -213,7 +217,7 @@
      */
     refresh: function() {
       var self = this;
-      $('.badge', self.$container).each(function() {
+        $('.tag', self.$container).each(function () {
         var $tag = $(this),
             item = $tag.data('item'),
             itemValue = self.options.itemValue(item),
@@ -457,7 +461,7 @@
         if (self.$element.attr('disabled')) {
           return;
         }
-        self.remove($(event.target).closest('.badge').data('item'));
+          self.remove($(event.target).closest('.tag').data('item'));
       }, self));
 
       // Only add existing value as tags when using strings as tags

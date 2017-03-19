@@ -1,3 +1,6 @@
 <% @logos.each do |logo| %>
-    <img src="<%= logo %>" alt="<%= logo %>" class="img-thumbnail" style="float: left; margin: 5px">
+    <div style="display: inline-block; position: relative" class="img-thumbnail">
+      <a href="<%= logo.image.url %>"><img src="<%= logo.image.url(:thumb) %>" alt="<%= logo.image.url(:thumb) %>" style="float: left; margin: 5px"></a>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 10px; background: <%= logo.color %>"></span>
+    </div>
 <% end %>

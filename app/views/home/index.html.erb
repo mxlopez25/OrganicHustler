@@ -1,22 +1,140 @@
-<title>OrganicHustler</title>
+<!--<title>OrganicHustler</title>
 <div class="container">
   <div class="row">
-    <% get_products.each do |product| %>
+    % get_products.each do |product| %>
         <div class="col-sm-3">
           <div class="img-thumbnail">
-            <% if product['images'].count > 0 %>
-                <img style="margin-top: 5px; width: 100%" src="https://<%= product['images'][0]['segments']['domain'] %>fit/w242/h242/<%= product['images'][0]['segments']['suffix'] %>" alt="..." class="img-fluid">
-            <% end %>
+            % #if product['images'].count > 0 %>
+                <img style="margin-top: 5px; width: 100%" src="https://%= #product['images'][0]['segments']['domain'] %>fit/w242/h242/%= #product['images'][0]['segments']['suffix'] %>" alt="..." class="img-fluid">
+            % #end %>
             <div class="caption" style="overflow: hidden">
-              <h3><%= product['title'] %></h3>
-              <p><%= product['title'] %></p>
-              <h5 style="float: left">Sale price: <span style="font-size: small; color: #b12704">$<%= product['sale_price'] %></span></h5>
+              <h3>%= #product['title'] %></h3>
+              <p>%= #product['title'] %></p>
+              <h5 style="float: left">Sale price: <span style="font-size: small; color: #b12704">$%= #product['sale_price'] %></span></h5>
             </div>
-            <a href="/product/<%= product['id'] %>" style="width: 100%; margin: 0 auto" class="btn btn-default" aria-haspopup="true" aria-expanded="true">
+            <a href="/product/%= #product['id'] %>" style="width: 100%; margin: 0 auto" class="btn btn-default" aria-haspopup="true" aria-expanded="true">
               Customize
             </a>
           </div>
         </div>
-    <% end %>
+    % #end %>
   </div>
-</div>
+</div>-->
+
+
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span> <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand page-scroll" href="#page-top">Organic Hustler</a>
+    </div>
+
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a class="page-scroll" href="#about">STORY</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#services">SHOP MEN</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#portfolio">SHOP WOMEN</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#customize">CUSTOMIZE</a>
+        </li>
+        <li>
+          <a class="page-scroll" href="#contact">CONTACT US</a>
+        </li>
+        <p class="text-center color"> Organic Hustler, LLC</p>
+      </ul>
+    </div>
+
+  </div>
+
+</nav>
+
+<header>
+
+  <div class="header-content">
+    <div class="header-content-inner">
+      <h1 id="homeHeading">ECO FRIENDLY</h1>
+      <hr>
+
+      <a href="#" class="btn btn-primary btn-xl sr-button">SHOP MEN</a>
+
+      <a href="#" class="btn btn-primary btn-xl sr-button">SHOP WOMEN</a>
+    </div>
+  </div>
+
+</header>
+
+<section class="bg-primary" id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 text-center">
+        <a href="<%= image_url 'portfolio/fullsize/3.png' %>" class="portfolio-box">
+          <img src="<%= image_url 'portfolio/thumbnails/3.png' %>" class="img-responsive" alt="">
+          <a href="#" class=" btn btn-default btn-xl sr-button">CUSTOMIZE</a>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Our Story</h2>
+        <hr class="primary">
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-offset-3 col-md-6 text-center">
+
+        <div class="service-box textcenter ">
+          <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+
+          <h4 class="text-muted">Clothing- For the solid, selfmade individual with root instincts to pursue their
+            goals. "By Any Means"</h4>
+          <a href="#" class="btn btn-default btn-xl sr-button">WATCH VIDEO</a>
+
+
+          <section id="portfolio" class="bg-primary">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+              <a href="<%= image_url 'portfolio/fullsize/1.png' %>" class="portfolio-box">
+                <img src="<%= image_url 'portfolio/thumbnails/1.png' %>" class="img-responsive" alt="">
+                <a href="#" class="btn btn btn-default btn-xl sr-button">SHOP MEN</a>
+              </a>
+            </div>
+          </section>
+          <div>
+
+          </div>
+
+          <section id="customize" class="bg-primary">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+              <a href="<%= image_url 'portfolio/fullsize/2.png' %>" class="portfolio-box">
+                <img src="<%= image_url 'portfolio/thumbnails/2.png' %>" class="img-responsive" alt="">
+                <a href="#" class="btn btn btn-default btn-xl sr-button">FULL COLLECTION</a>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="text-center"> #ORGANICHUSTLER </h1>
+
+  </div>
+  <footer>
+
+  </footer>
+</section>

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/customs/load_info' => 'customs#product_info'
   get '/customs/edit_data' => 'customs#edit_product'
   get '/custom/delete_image_control' => 'customs#delete_image'
+  get '/custom/load_logo_w_color' => 'customs#load_logo_w_color'
 
   post '/customs/reload_table' => 'customs#table_products'
 

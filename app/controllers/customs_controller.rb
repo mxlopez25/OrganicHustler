@@ -64,11 +64,7 @@ class CustomsController < ApplicationController
   def load_logo
     id = params['id']
     gallery = Gallery.find(id)
-
-    @logos = []
-    gallery.pictures.all.each do |picture|
-      @logos.push(picture.image.url(:thumb))
-    end
+    @logos = gallery.pictures.all
   end
 
   def save_variation
@@ -85,6 +81,19 @@ class CustomsController < ApplicationController
     end
     margin.save
     render :nothing => true, :status => 200
+  end
+
+  def load_logo_w_color
+    id = params['id']
+    colors = params['color']
+
+    @logos = []
+    Gallery.find(id).pictures.all.each do |logo|
+      if colors.include?(logo.color)
+        @logos.push(logo)
+      end
+    end
+
   end
 
 end

@@ -1,0 +1,5 @@
+<% @logos.each do |image| %>
+    <li class="items-scroll-container">
+      <img onclick="addToPic('<%= image.image.url(:large) %>')" src="<%= image.image.url(:thumb) %>" alt="" height="30">
+    </li>
+<% end %>
