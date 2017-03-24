@@ -1,16 +1,20 @@
 Rails.application.routes.draw do
-  devise_for :users
+
+  devise_for :users, controllers: {
+      registrations: 'users/registrations'
+  }
   devise_for :admins
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
   get '/product/:id' => 'home#product'
 
-  get '/admin' => 'admin#main'
-  get '/admin/products' => 'admin#products'
-  get '/admin/logo' => 'admin#logo'
+  get '/admins' => 'admins#main'
+  get '/admins/products' => 'admins#products'
+  get '/admins/logo' => 'admins#logo'
+  get '/admins/orders' => 'admins#orders'
 
-  put '/admin/products' => 'admin#products'
+  put '/admins/products' => 'admins#products'
 
   get '/customs/load_images/logo/:id' => 'customs#load_logo'
   get '/customs/load_info' => 'customs#product_info'

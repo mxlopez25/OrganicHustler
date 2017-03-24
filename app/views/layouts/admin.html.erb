@@ -23,6 +23,7 @@
   <ul class="nav nav-pills hidden-xs-down">
     <li class="nav-item"><a class="nav-link" onclick="loadView('products')" href="#" id="products">Products</a></li>
     <li class="nav-item"><a class="nav-link" onclick="loadView('logo')" href="#" id="logo">Logos</a></li>
+    <li class="nav-item"><a class="nav-link" onclick="loadView('orders')" href="#" id="orders">Orders</a></li>
     <li class="float-right" style="float: right; display: block" role="presentation"><a class="btn btn-danger" style="margin-left:50px" href="/admins/sign_out" data-method="DELETE" id="logo">Log out</a></li>
   </ul>
 </header>
@@ -43,7 +44,7 @@
 
       var inter = $('#releasable');
 
-      inter.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
+      inter.html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
 
       var tabs = document.getElementsByClassName('nav-link');
       for (var i = 0; i < tabs.length; i++){
@@ -52,7 +53,7 @@
       document.getElementById(idView).className = 'nav-link active';
 
       $.ajax({
-          url: "/admin/" + idView,
+          url: "/admins/" + idView,
           type: 'GET',
           data: {
 

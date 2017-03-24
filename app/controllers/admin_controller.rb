@@ -19,4 +19,9 @@ class AdminController < ApplicationController
     @state = 'logo'
   end
 
+  def orders
+    render :layout => false
+    @state = 'orders'
+  end
+
 end

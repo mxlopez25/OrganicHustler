@@ -5,7 +5,7 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w( bootstrap.css )
 Rails.application.config.assets.precompile += %w( jquery.min.js )
-Rails.application.config.assets.precompile += %w( admin.js )
+Rails.application.config.assets.precompile += %w( admins.js )
 Rails.application.config.assets.precompile += %w( admin_layout.css )
 Rails.application.config.assets.precompile += %w( dropzone.js )
 Rails.application.config.assets.precompile += %w( dropzone.css )
