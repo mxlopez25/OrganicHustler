@@ -9,12 +9,12 @@ Rails.application.routes.draw do
   root to: 'home#index'
   get '/product/:id' => 'home#product'
 
-  get '/admins' => 'admins#main'
-  get '/admins/products' => 'admins#products'
-  get '/admins/logo' => 'admins#logo'
-  get '/admins/orders' => 'admins#orders'
+  get '/admin' => 'admin#main'
+  get '/admin/products' => 'admin#products'
+  get '/admin/logo' => 'admin#logo'
+  get '/admin/orders' => 'admin#orders'
 
-  put '/admins/products' => 'admins#products'
+  put '/admin/products' => 'admin#products'
 
   get '/customs/load_images/logo/:id' => 'customs#load_logo'
   get '/customs/load_info' => 'customs#product_info'
