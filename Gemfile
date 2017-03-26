@@ -9,7 +9,7 @@ gem 'devise'
 gem 'moltin'
 gem 'rest-client'
 gem 'paperclip', '~> 5.0.0'
-gem 'font-awesome-rails'
+gem 'font-awesome-sass'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

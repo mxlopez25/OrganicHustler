@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,26 +11,26 @@
   <%= stylesheet_link_tag 'dropzone' %>
   <%= javascript_include_tag 'dragable.min' %>
 
-  <%= stylesheet_link_tag    'admin_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_include_tag 'admin', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'admin_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+  <%= javascript_include_tag 'admin.js', 'data-turbolinks-track': 'reload' %>
 
   <%= csrf_meta_tags %>
 </head>
 
-<header style="margin: 10px">
+
+<!--<header style="margin: 10px">
   <ul class="nav nav-pills hidden-xs-down">
     <li class="nav-item"><a class="nav-link" onclick="loadView('products')" href="#" id="products">Products</a></li>
     <li class="nav-item"><a class="nav-link" onclick="loadView('logo')" href="#" id="logo">Logos</a></li>
     <li class="nav-item"><a class="nav-link" onclick="loadView('orders')" href="#" id="orders">Orders</a></li>
     <li class="float-right" style="float: right; display: block" role="presentation"><a class="btn btn-danger" style="margin-left:50px" href="/admins/sign_out" data-method="DELETE" id="logo">Log out</a></li>
   </ul>
-</header>
+</header>-->
 
 <body>
 
-<div class="container" id="releasable">
 <%= yield %>
-</div>
 
 </body>
 
@@ -40,36 +38,33 @@
 
 <script>
 
-  function loadView(idView){
+    function loadView(idView) {
 
-      var inter = $('#releasable');
+        var inter = $('#releasable');
 
-      inter.html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
+        inter.html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
 
-      var tabs = document.getElementsByClassName('nav-link');
-      for (var i = 0; i < tabs.length; i++){
-          tabs[i].className = 'nav-link';
-      }
-      document.getElementById(idView).className = 'nav-link active';
+        var tabs = document.getElementsByClassName('nav-link');
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].className = 'nav-link';
+        }
+        document.getElementById(idView).className = 'nav-link active';
 
-      $.ajax({
-          url: "/admin/" + idView,
-          type: 'GET',
-          data: {
-
-          },
-          dataType: 'html',
-          success: function (data) {
-              inter.html(data);
-          },
-          error: function() {
-              inter.html('An error has ocurred');
-          }
-      });
+        $.ajax({
+            url: "/admin/" + idView,
+            type: 'GET',
+            data: {},
+            dataType: 'html',
+            success: function (data) {
+                inter.html(data);
+            },
+            error: function () {
+                inter.html('An error has ocurred');
+            }
+        });
 
 
-
-  }
+    }
 </script>
 
 <script>
@@ -98,7 +93,7 @@
                         .localeCompare(b.cells[col].textContent.trim())
                 );
         });
-        for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+        for (i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
     }
 
     function makeAllSortable(parent) {

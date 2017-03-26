@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20170324225402) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "gallery_id"
-    t.string "color"
+    t.string   "color"
   end
 
   create_table "relation_logos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 20170324225402) do
     t.datetime "updated_at",                          null: false
     t.string   "user_name",              default: "", null: false
     t.string   "user_last_name",         default: "", null: false
-    t.string "id_moltin"
+    t.string   "id_moltin"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
