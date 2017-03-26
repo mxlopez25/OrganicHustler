@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   root to: 'home#index'
   get '/product/:id' => 'home#product'
 
-  get '/admin' => 'admin#main'
+  get '/admin/home' => 'admin#main'
   get '/admin/products' => 'admin#products'
-  get '/admin/logo' => 'admin#logo'
+  get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
 
   put '/admin/products' => 'admin#products'

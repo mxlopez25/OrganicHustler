@@ -70,16 +70,16 @@
 
   <script id="fold">
 
-      let innerHTML22 = {};
+      var innerHTML22 = {};
 
       $(document).ready(function () {
           innerHTML22.heightTT = $("#icon_loader").height();
           console.log(innerHTML22.heightTT);
       });
 
-      let iconShow = $("#icon-show");
-      let iconHide = $("#icon-hide");
-      let loader = $("#icon_loader");
+      var iconShow = $("#icon-show");
+      var iconHide = $("#icon-hide");
+      var loader = $("#icon_loader");
 
       iconShow.click(function () {
           loader.animate({
@@ -116,12 +116,12 @@
 
 <script id="set-colored">
 
-    let icon_loader = $("#container-logo");
-    let all_logos = $("#select-all");
+    var icon_loader = $("#container-logo");
+    var all_logos = $("#select-all");
 
     all_logos.click(function () {
         if ($(this).is(':checked')) {
-            let selected = [];
+            var selected = [];
             $('#checkboxes').find('input').each(function () {
                 selected.push($(this).attr('name'));
                 $(this).prop("checked", false);
@@ -137,7 +137,7 @@
 
         all_logos.prop("checked", false);
 
-        let selected = [];
+        var selected = [];
         $('#checkboxes').find('input:checked').each(function () {
             selected.push($(this).attr('name'));
         });

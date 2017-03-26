@@ -227,10 +227,10 @@
           region_bottom = (region_bottom/100)*y;
 
 
-          let layer = group.getLayer();
+          var layer = group.getLayer();
 
           //left margin
-          let margin_left = new Konva.Rect({
+          var margin_left = new Konva.Rect({
               width: region_left,
               height: y,
               name: 'margin_left',
@@ -239,7 +239,7 @@
               fill: 'rgba(230,230,230,0.3)'
           });
 
-          let margin_left_b = new Konva.Line({
+          var margin_left_b = new Konva.Line({
               points: [region_left, 0, region_left, y],
               stroke: 'grey',
               strokeWidth: 3,
@@ -270,7 +270,7 @@
           });
 
           //top margin
-          let margin_top = new Konva.Rect({
+          var margin_top = new Konva.Rect({
               width: x,
               height: region_top,
               name: 'margin_top',
@@ -279,7 +279,7 @@
               fill: 'rgba(230,230,230,0.3)'
           });
 
-          let margin_top_b = new Konva.Line({
+          var margin_top_b = new Konva.Line({
               points: [0, region_top, x, region_top],
               stroke: 'grey',
               strokeWidth: 3,
@@ -310,7 +310,7 @@
           });
 
           //margin right
-          let margin_right = new Konva.Rect({
+          var margin_right = new Konva.Rect({
               width: region_right,
               height: y,
               name: 'margin_right',
@@ -324,7 +324,7 @@
 
           });
 
-          let margin_right_b = new Konva.Line({
+          var margin_right_b = new Konva.Line({
               points: [x-region_right, 0, x-region_right, y],
               stroke: 'grey',
               strokeWidth: 3,
@@ -357,7 +357,7 @@
           });
 
           //margin bottom
-          let margin_bottom = new Konva.Rect({
+          var margin_bottom = new Konva.Rect({
               width: x,
               height: region_bottom,
               name: 'margin_bottom',
@@ -371,7 +371,7 @@
 
           });
 
-          let margin_bottom_b = new Konva.Line({
+          var margin_bottom_b = new Konva.Line({
               points: [0, y-region_bottom, x, y-region_bottom],
               stroke: 'grey',
               strokeWidth: 3,
@@ -431,7 +431,7 @@
       function editRegions(id, img, region_left, region_top, region_right, region_bottom ){
 
           //container width
-          let width_c = $('#container').width();
+          var width_c = $('#container').width();
 
           //Creates de canvas with the same width and height
           const stage = new Konva.Stage({
@@ -446,14 +446,14 @@
           stage.add(layer);
 
           //Product image
-          let baseImg = new Konva.Image({
+          var baseImg = new Konva.Image({
               width: stage.width(),
               height: stage.height,
               preventDefault: false
           });
 
           //Holds the product image
-          let baseIGroup = new Konva.Group({
+          var baseIGroup = new Konva.Group({
               x: 0,
               y: 0,
               preventDefault: false
@@ -463,7 +463,7 @@
           baseIGroup.add(baseImg);
 
           //Loads the image
-          let imageBgPro = new Image();
+          var imageBgPro = new Image();
           imageBgPro.onload = function () {
               baseImg.image(imageBgPro);
               baseImg.width(stage.width());

@@ -1,180 +1,302 @@
-<h2>Products</h2>
-<div class="table_search">
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon2">ID</span>
-    <label for="id"></label>
-    <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
+<nav class="navbar navbar-inverse sidebar" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Organic Hustler</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-home"></span></a>
+        </li>
+        <li class="active">
+          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-product-hunt"></span></a>
+        </li>
+        <li>
+          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-picture-o"></span></a>
+        </li>
+        <li>
+          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-truck"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<body style="background-color: #dedede">
+<div class="main">
+
+  <div class="table_search card">
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon2">ID</span>
+      <label for="id"></label>
+      <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon2">SKU</span>
+      <label for="sku"></label>
+      <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku" name="sku">
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-addon">Title</span>
+      <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-addon">Less than</span>
+      <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
+      <span class="input-group-addon">$</span>
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon2">Category</span>
+      <label for="category"></label>
+      <select class="form-control" id="category" name="category">
+        <option value="">All categories</option>
+        <% AdminHelper.get_categories.each do |category| %>
+            <option value="<%= category['id'] %>"><%= category['title'] %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
+  </div>
+  <div class="table_buttons card">
+    <button class="btn btn-success">New product</button>
+    <button type="button" class="btn btn-info">Info</button>
+    <button type="button" class="btn btn-warning">Edit</button>
+    <button type="button" class="btn btn-danger">Delete</button>
   </div>
 
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon2">SKU</span>
-    <label for="sku"></label>
-    <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku" name="sku">
-  </div>
+  <%= render partial: 'admin/partial_products/info_product' %>
+  <%= render partial: 'admin/partial_products/edit_product' %>
 
-  <div class="input-group">
-    <span class="input-group-addon">Title</span>
-    <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
-  </div>
-
-  <div class="input-group">
-    <span class="input-group-addon">Less than</span>
-    <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
-    <span class="input-group-addon">$</span>
-  </div>
-
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon2">Category</span>
-    <label for="category"></label>
-    <select class="form-control" id="category" name="category">
-      <option value="">All categories</option>
-      <% AdminHelper.get_categories.each do |category| %>
-          <option value="<%= category['id'] %>"><%= category['title'] %></option>
+  <div class="table_products card">
+    <table class="table" id="table">
+      <thead>
+      <tr>
+        <th><input id="select-all" type="checkbox" name="select-all"></th>
+        <th><i class="fa fa-picture-o" aria-hidden="true"></i></th>
+        <th onclick="sort_title()" class="header-ele">Title</th>
+        <th onclick="sort_inventory()" class="header-ele">Inventory</th>
+        <th onclick="sort_category()" class="header-ele">Category</th>
+        <th onclick="sort_price()" class="header-ele">Price $</th>
+      </tr>
+      </thead>
+      <tbody id="list-to-m">
+      <% AdminHelper.get_products.each do |product| %>
+          <tr id="product-row">
+            <td><input id="select-obj" type="checkbox" name="select-obj"></td>
+            <td>
+              <span id="img-thumb" class="thumbnail"><img src="http://<%= product['images'][0]['segments']['domain'] %>fit/w50/h50/<%= product['images'][0]['segments']['suffix'] %>"></span>
+            </td>
+            <td><%= product['title'] %></td>
+            <td><%= product['stock_level'] %></td>
+            <td><%= product['category']['value'] %></td>
+            <td class="price" style="text-align: right"><%= product['sale_price'] %></td>
+          </tr>
       <% end %>
-    </select>
+
+      </tbody>
+    </table>
+    <script>
+
+        var title_sort = true;
+        var inventory_sort = true;
+        var category_sort = true;
+        var price_sort = true;
+
+        function sort_title() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("table");
+            switching = true;
+          /*Make a loop that will continue until
+           no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.getElementsByTagName("tr");
+              /*Loop through all table rows (except the
+               first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                   one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("td")[2];
+                    y = rows[i + 1].getElementsByTagName("td")[2];
+                    //check if the two rows should switch place:
+                    if ((x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) && title_sort) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    } else if ((x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) && !title_sort) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                   and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            title_sort = !title_sort;
+        }
+        function sort_inventory() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("table");
+            switching = true;
+          /*Make a loop that will continue until
+           no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.getElementsByTagName("tr");
+              /*Loop through all table rows (except the
+               first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                   one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("td")[3];
+                    y = rows[i + 1].getElementsByTagName("td")[3];
+                    //check if the two rows should switch place:
+                    if ((parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) && inventory_sort) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    } else if ((parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) && !inventory_sort) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                   and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            inventory_sort = !inventory_sort;
+        }
+        function sort_category() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("table");
+            switching = true;
+          /*Make a loop that will continue until
+           no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.getElementsByTagName("tr");
+              /*Loop through all table rows (except the
+               first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                   one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("td")[2];
+                    y = rows[i + 1].getElementsByTagName("td")[2];
+                    //check if the two rows should switch place:
+                    if ((x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) && category_sort) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    } else if ((x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) && !category_sort) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                   and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            category_sort = !category_sort;
+        }
+        function sort_price() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("table");
+            switching = true;
+          /*Make a loop that will continue until
+           no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.getElementsByTagName("tr");
+              /*Loop through all table rows (except the
+               first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                  /*Get the two elements you want to compare,
+                   one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("td")[3];
+                    y = rows[i + 1].getElementsByTagName("td")[3];
+                    //check if the two rows should switch place:
+                    if ((parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) && price_sort) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    } else if ((parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) && !price_sort) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                  /*If a switch has been marked, make the switch
+                   and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            price_sort = !price_sort;
+        }
+
+        $('*[class*=price]:visible').each(function () {
+            var amount = $(this).html();
+            var i = parseFloat(amount);
+            if (isNaN(i)) {
+                i = 0.00;
+            }
+            var minus = '';
+            if (i < 0) {
+                minus = '-';
+            }
+            i = Math.abs(i);
+            i = parseInt((i + .005) * 100);
+            i = i / 100;
+            var s = String(i);
+            if (s.indexOf('.') < 0) {
+                s += '.00';
+            }
+            if (s.indexOf('.') === (s.length - 2)) {
+                s += '0';
+            }
+            s = minus + s;
+            $(this).html(s);
+        });
+
+
+    </script>
   </div>
-
-  <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
 </div>
-
-<%= render partial: 'admin/partial_products/info_product' %>
-<%= render partial: 'admin/partial_products/edit_product' %>
-
-<div class="table_products">
-  <table class="table" id="table">
-    <thead>
-    <tr>
-      <th>Id</th>
-      <th>SKU</th>
-      <th>Title</th>
-      <th>Sale price</th>
-      <th>Stock level</th>
-      <th><button class="btn btn-success">New product</button></th>
-    </tr>
-    </thead>
-    <tbody id="list-to-m">
-
-    <% AdminHelper.get_products.each do |product| %>
-        <tr>
-          <td><%= product['id'] %></td>
-          <td><%= product['sku'] %></td>
-          <td><%= product['title'] %></td>
-          <td><%= product['sale_price'] %></td>
-          <td><%= product['stock_level'] %></td>
-          <td>
-
-            <div class="btn-group btn-group-sm" role="group" aria-label="actions">
-              <button onclick="loadData(['<%= product['id'] %>'])" type="button" class="btn btn-info" data-toggle="modal" data-target="#info_product">Info</button>
-              <button onclick="loadEdit(['<%= product['id'] %>'])" type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit_product">Edit</button>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#info_product">Delete</button>
-            </div>
-
-          </td>
-        </tr>
-    <% end %>
-
-    </tbody>
-  </table>
-  <script>
-
-    function loadEdit(id) {
-        var element = $("#container-edit");
-        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="sr-only">Waiting</span></div></div>');
-
-        $.ajax({
-            url: "/customs/edit_data",
-            type: 'get',
-            data: {
-                id: id[0]
-            },
-            dataType: 'html',
-            success: function (data) {
-                element.html(data);
-            },
-            error: function () {
-                element.html('Something went wrong');
-            }
-        })
-    }
-
-    function loadData(id) {
-        var element = $("#container-info");
-        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
-
-        $.ajax({
-            url: "/customs/load_info",
-            type: 'get',
-            data: {
-                id: id[0]
-            },
-            dataType: 'html',
-            success: function (data) {
-                element.html(data);
-            },
-            error: function () {
-                element.html('Something went wrong');
-            }
-        })
-    }
-
-    function loadTable() {
-
-        var element = $("#list-to-m");
-        element.html('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> <span class="sr-only">Waiting</span> </div> </div>');
-
-        $.ajax({
-            url: "/customs/reload_table" ,
-            type: 'post',
-            data: {
-                id: $("#id_input").val(),
-                sku: $("#sku").val(),
-                title: $("#title").val(),
-                amount: $("#amount").val(),
-                category: $("#category").val()
-            },
-            dataType: 'html',
-            success: function (data) {
-                element.html(data);
-            },
-            error: function() {
-                element.html('Something went wrong');
-            }
-        });
-    }
-
-    function makeSortable(table) {
-        var th = table.tHead, i;
-        th && (th = th.rows[0]) && (th = th.cells);
-        if (th) i = th.length;
-        else return; // if no `<thead>` then do nothing
-        while (--i >= 0) (function (i) {
-            var dir = 1;
-            th[i].addEventListener('click', function () {
-                sortTable(table, i, (dir = 1 - dir));
-            });
-        }(i));
-    }
-
-    function sortTable(table, col, reverse) {
-        var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-            tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
-            i;
-        reverse = -((+reverse) || -1);
-        tr = tr.sort(function (a, b) { // sort rows
-            return reverse // `-1 *` if want opposite order
-                * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-                        .localeCompare(b.cells[col].textContent.trim())
-                );
-        });
-        for (i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
-    }
-
-    function makeAllSortable(parent) {
-        parent = parent || document.body;
-        var t = parent.getElementsByTagName('table'), i = t.length;
-        while (--i >= 0) makeSortable(t[i]);
-    }
-
-    makeAllSortable();
-  </script>
-</div>
+</body>
