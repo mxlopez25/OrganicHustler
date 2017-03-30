@@ -1,3 +1,6 @@
+<script>
+    const items = [];
+</script>
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -70,10 +73,10 @@
     <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
   </div>
   <div class="table_buttons card">
-    <button class="btn btn-success">New product</button>
-    <button type="button" class="btn btn-info">Info</button>
-    <button type="button" class="btn btn-warning">Edit</button>
-    <button type="button" class="btn btn-danger">Delete</button>
+    <button type="button" class="btn btn-success">New product</button>
+    <button type="button" class="btn btn-info" onclick="window.location.href='/admin/product/' + items[0]">Info</button>
+    <button type="button" class="btn btn-warning" onclick="window.location.href='/admin/edit/' + items[0]">Edit</button>
+    <button type="button" class="btn btn-danger" href="#">Delete</button>
   </div>
 
   <%= render partial: 'admin/partial_products/info_product' %>
@@ -94,7 +97,12 @@
       <tbody id="list-to-m">
       <% AdminHelper.get_products.each do |product| %>
           <tr id="product-row">
-            <td><input id="select-obj" type="checkbox" name="select-obj"></td>
+            <td>
+              <script>
+                  console.log('<%= product %>')
+              </script>
+              <input id="select-obj" type="checkbox" name="select-obj" onclick="add_item(this, '<%= product['id'] %>')">
+            </td>
             <td>
               <span id="img-thumb" class="thumbnail"><img src="http://<%= product['images'][0]['segments']['domain'] %>fit/w50/h50/<%= product['images'][0]['segments']['suffix'] %>"></span>
             </td>
@@ -107,6 +115,17 @@
 
       </tbody>
     </table>
+    <script>
+
+        function add_item(box, product) {
+            if (box.checked && ($.inArray(product, items) === -1))
+                items.push(product);
+            else
+                items.splice(items.lastIndexOf(product), 1);
+            console.log(items);
+        }
+
+    </script>
     <script>
 
         var title_sort = true;

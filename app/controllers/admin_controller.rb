@@ -15,4 +15,14 @@ class AdminController < ApplicationController
   def orders
   end
 
+  def info_product
+    @product = AdminHelper.get_product_by_id(params[:id])
+    render 'admin/products_functions/info_product'
+  end
+
+  def edit_product
+    @product = AdminHelper.get_product_by_id(params[:id])
+    render 'admin/products_functions/edit_product'
+  end
+
 end

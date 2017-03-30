@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
 
+  get '/admin/product/:id' => 'admin#info_product'
+  get '/admin/edit/:id' => 'admin#edit_product'
+
   put '/admin/products' => 'admin#products'
 
   get '/customs/load_images/logo/:id' => 'customs#load_logo'

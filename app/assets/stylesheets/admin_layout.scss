@@ -111,6 +111,33 @@ div.table_buttons button {
   margin: 2px 0 2px 0;
 }
 
+div.head-bread-crumbs {
+  padding: 10px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+div.head-bread-crumbs a.breadcrumb {
+  text-decoration: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+  color: #269abc;
+}
+
+div.modal-g {
+  text-align: inherit;
+  padding: 16px;
+  margin: 16px 50px;
+  width: 60%;
+}
+
+div.modal-g div.form-group {
+  padding: 10px;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
 #img-thumb {
   margin: 0;
 }

@@ -1,0 +1,119 @@
+<nav class="navbar navbar-inverse sidebar" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Organic Hustler</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-home"></span></a>
+        </li>
+        <li class="active">
+          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-product-hunt"></span></a>
+        </li>
+        <li>
+          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-picture-o"></span></a>
+        </li>
+        <li>
+          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-truck"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<body style="background-color: #dedede">
+<div class="main">
+
+  <% product = @product %>
+  <div class="head-bread-crumbs card">
+    <h4><a class="breadcrumb" href="/admin/products">Products</a> / <%= product['id'] %></h4>
+  </div>
+
+  <div class="card modal-g">
+    <!--Available actions, delete/modify-->
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_product_dialog" data-dismiss="modal">Delete</button>
+    </div>
+
+    <h3 style="width: 100%; text-align: center; margin-left: auto; margin-right: auto; border-bottom: solid thin #707070">Basic
+      info</h3>
+    <!--Product status-->
+    <div>
+      <h5>
+        Product status
+        <% if product['status']['data']['key'].eql?('1') %><span class="label label-success">Live</span>
+        <% end %>
+        <% if product['status']['data']['key'].eql?('0') %><span class="label label-danger">Draft</span>
+        <% end %>
+      </h5>
+    </div>
+
+    <!--Product id/sku-->
+    <div style="overflow: hidden;">
+      <h6 style="display: inline; width: 50%; float: left">ID:
+        <span style="font-size: x-small"><%= product['id'] %></span></h6>
+      <h6 style="width: 50%; float: left">SKU: <span style="font-size: x-small"><%= product['sku'] %></span></h6>
+    </div>
+
+    <!--Created at/Updated at info-->
+    <div style="overflow: hidden">
+      <h6 style="display: inline; width: 50%; float: left">Created At:
+        <span style="font-size: small"><%= product['created_at'] %></span></h6>
+      <h6 style="width: 50%; float: left">Updated at: <span style="font-size: small"><%= product['updated_at'] %></span>
+      </h6>
+    </div>
+
+  </div>
+
+  <div class="card modal-g">
+
+    <h3 style="width: 100%; text-align: center; margin-left: auto; margin-right: auto; border-bottom: solid thin #707070">General
+      info</h3>
+    <!--Brand/Category info-->
+    <h6>Category: <span style="font-size: small"><%= product['category']['value'] %></span></h6>
+    <h6>Brand: <span style="font-size: small"><%= product['brand']['value'] %></span></h6>
+
+    <!--Price-->
+    <div style="overflow: hidden">
+      <h6 style="display: inline; width: 50%; float: left">Price+taxes:
+        <span style="font-size: small; color: #b12704"><%= product['price']['value'] %></span></h6>
+      <h6 style="width: 50%; float: left">Sale price:
+        <span style="font-size: small; color: #b12704">$<%= product['sale_price'] %></span></h6>
+    </div>
+
+    <h6>Stock: <span style="font-size: small"><%= product['stock_level'] %></span></h6>
+    <h6>Stock Status:
+      <span class="label label-info" style="font-size: small"><%= product['stock_status']['value'] %></span></h6>
+
+    <div style="padding: 10px; border: solid thin lightgray; border-radius: 10px">
+      <h6><span class="label label-primary">Description</span></h6>
+      <p style="text-align: justify; font-size: small">
+        <%= product['description'] %>
+      </p>
+    </div>
+
+    <div style="margin-top: 10px; padding: 10px; border: solid thin lightgray; border-radius: 10px; background: #ffffff; overflow: hidden">
+      <h6><span class="label label-primary">Images</span></h6>
+      <% product['images'].each do |image| %>
+          <img src="http://<%= image['segments']['domain'] %>fit/w100/h100/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
+      <% end %>
+    </div>
+
+    <!--Tags-->
+    <h6 style="margin-top: 10px"><span class="label label-primary">Tags</span></h6>
+    <div class="well" style="min-width: 30px; border-radius: 10px; padding: 10px; background: #ffffff; border: thin solid lightgray">
+      <% product['slug'].split(' ').each do |word| %>
+          <span class="label label-info"><%= word %></span>
+      <% end %>
+    </div>
+  </div>
+</div>
+</body>
