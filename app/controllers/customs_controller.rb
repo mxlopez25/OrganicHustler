@@ -96,4 +96,8 @@ class CustomsController < ApplicationController
 
   end
 
+  def add_image_gallery
+
+  end
+
 end

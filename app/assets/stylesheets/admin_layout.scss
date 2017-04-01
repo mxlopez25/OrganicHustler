@@ -128,8 +128,22 @@ div.head-bread-crumbs a.breadcrumb {
 div.modal-g {
   text-align: inherit;
   padding: 16px;
-  margin: 16px 50px;
+  margin: 16px 0 16px 5%;
   width: 60%;
+
+  float: left;
+
+}
+
+div.modal-h {
+
+  float: right;
+
+  text-align: inherit;
+  padding: 16px;
+  margin: 16px 5% 16px 0;
+  width: 25%;
+  height: 500px;
 }
 
 div.modal-g div.form-group {
@@ -154,8 +168,13 @@ div.modal-g div.form-group {
   cursor: pointer;
 }
 
-.header-ele:hover {
+.header-ele:in-range {
   background: #c0ffc6;
+}
+
+img.image-blur-ef:hover {
+  -webkit-filter: blur(8px);
+  filter: blur(8px);
 }
 
 td {

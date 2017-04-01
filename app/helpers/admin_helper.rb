@@ -81,6 +81,13 @@ module AdminHelper
     response.body
   end
 
+  def get_gallery(id)
+    Gallery.find_by_product_id(id)
+  end
+
+  def create_gallery(id)
+    Gallery.new(product_id: id, name: 'product..set..i').save
+  end
 
 
 end

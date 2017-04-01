@@ -25,4 +25,5 @@ class AdminController < ApplicationController
     render 'admin/products_functions/edit_product'
   end
 
+
 end

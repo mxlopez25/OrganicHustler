@@ -31,6 +31,6 @@ Rails.application.routes.draw do
   put '/customs/upload_image' => 'customs#upload_image'
   put '/customs/save_variation' => 'customs#save_variation'
 
-  put '/add/gallery/logo' => 'galleries#create'
+  put '/admin/edit/add/gallery/logo' => 'galleries#create'
 
 end

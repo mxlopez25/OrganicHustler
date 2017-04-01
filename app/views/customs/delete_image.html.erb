@@ -1,8 +1,8 @@
 <h5><span class="label label-primary">Images</span></h5>
 <% @product_images.each do |image| %>
     <div style="display: inline-block; position: relative">
-      <img src="http://<%= image['segments']['domain'] %>fit/w70/h70/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 2.5px;">
-      <button type="button" onclick="delete_s(['<%= @id_product %>', '<%= image['id'].to_s %>'])" style="position: absolute; right: 10px; top: 10px; background: url(https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_delete_48px-128.png); background-size: contain; background-repeat: no-repeat; width: 30px; height: 30px; border: none"></button>
-      <button type="button" onclick="delete_s(['<%= @id_product %>', '<%= image['id'].to_s %>'])" style="position: absolute; right: 10px; top: 10px; background-size: contain; background-repeat: no-repeat; width: 30px; height: 30px; border: none"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+      <% margins = get_regions(image['id'].to_s) %>
+      <img class="image-blur-ef" onclick="editRegions('<%= image['id'].to_s %>','<%= get_image(image['id'].to_s) %>', <%= margins.left_margin %>, <%= margins.top_margin %>, <%= margins.right_margin %>, <%= margins.bottom_margin %>)" src="http://<%= image['segments']['domain'] %>fit/w120/h120/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 3px;">
+      <button type="button" onclick="delete_s(['<%= image['id'].to_s %>', '<%= image['id'].to_s %>'])" style="position: absolute; left: 10px; top: 10px; background: url(https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_delete_48px-128.png); background-size: contain; background-repeat: no-repeat; width: 30px; height: 30px; border: none"></button>
     </div>
 <% end %>
