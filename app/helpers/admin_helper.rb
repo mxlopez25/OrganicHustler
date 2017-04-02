@@ -12,7 +12,7 @@ module AdminHelper
   def self.generate_token
     moltin_client = Moltin::Api::Client
     if self.token.nil? || !moltin_client.authenticated?
-      moltin_client.authenticate('client_credentials', client_id: 'RZsR5ErdxqMJNami9Bb7lOtDKy9ujFwaAb9bkCHm3s', client_secret: 'ffUhy8qZjb4vniRkHG9ZdoqEqIOpRBOGNqITVpbZpG')
+      moltin_client.authenticate('client_credentials', client_id: ENV['MOLTIN_USER'], client_secret: ENV['MOLTIN_PASS'])
     end
     self.token = moltin_client.access_token
     self.token
