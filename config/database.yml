@@ -11,7 +11,7 @@
 #
 default: &default
   url: <%= ENV['DATABASE_URL'] %>
-  adapter: mysql2
+  adapter: mysql3
   encoding: utf8
   pool: 5
   username: <%= ENV['USERNAME_DB'] %>
