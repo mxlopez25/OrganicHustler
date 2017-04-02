@@ -152,7 +152,7 @@ div.modal-h {
   padding: 16px;
   margin: 16px 5% 16px 0;
   width: 25%;
-  height: 500px;
+  min-height: 500px;
 }
 
 div.modal-g div.form-group {
@@ -188,6 +188,19 @@ img.image-blur-ef:hover {
 
 td {
   text-align: left;
+}
+
+button.menu-buttons {
+  width: 100%;
+  margin-top: 16px;
+}
+
+div.container-menu {
+  width: 100%;
+  min-height: 150px;
+  border: solid thin lightgray;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 /*Remove rounded coners*/

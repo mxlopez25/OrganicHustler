@@ -89,5 +89,11 @@ module AdminHelper
     Gallery.new(product_id: id, name: 'product..set..i').save
   end
 
+  def get_product(id)
+    p id
+    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}", {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    JSON.parse(response.body)['result']
+  end
+
 
 end

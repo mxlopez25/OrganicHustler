@@ -184,7 +184,10 @@
 
   <div class="card modal-h">
 
-    <div id="logo-drop" style="width: 100%; min-height: 150px; margin-bottom: 16px; border: solid thin lightgray; border-radius: 10px; overflow: hidden">
+
+    <h5><span class="label label-primary">Available logos</span></h5>
+
+    <div id="logo-drop" class="container-menu">
       <% if get_gallery(product_i['id']).nil? %>
           <% create_gallery(product_i['id']) %>
       <% else %>
@@ -197,7 +200,32 @@
       <% end %>
     </div>
 
-    <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success" style="width: 100%" type="button">Save</button>
+    <h5><span class="label label-primary">Available colors</span></h5>
+    <div class="container-menu">
+
+      <% product_i['modifiers'].each do |modifier| %>
+
+          <% modifier[1]['variations'].each do |variation| %>
+
+              <%= variation %>
+
+          <% end %>
+
+      <% end %>
+
+    </div>
+
+    <h5><span class="label label-primary">Available sizes</span></h5>
+    <div class="container-menu">
+
+    </div>
+
+
+    <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Add
+      variations
+    </button>
+
+    <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
   </div>
 
 
