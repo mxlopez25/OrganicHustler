@@ -11,7 +11,7 @@
 #
 default: &default
   url: <%= ENV['DATABASE_URL'] %>
-  adapter: mysql2
+  adapter: mysql
   encoding: utf8
   pool: 5
   username: <%= ENV['USERNAME_DB'] %>
@@ -50,7 +50,7 @@ test:
 #
 production:
   <<: *default
-  adapter: mysql2
+  adapter: mysql
   url: <%= ENV['DATABASE_URL'] %>
   database: OrganicHustler_production
   username: <%= ENV['USERNAME_DB'] %>
