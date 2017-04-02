@@ -9,7 +9,7 @@ gem 'devise'
 gem 'moltin'
 gem 'rest-client'
 gem 'paperclip'
-gem 'aws-sdk'
+gem 'aws-sdk', '~> 2.9.1'
 gem 'font-awesome-sass'
 gem 'figaro'
 
