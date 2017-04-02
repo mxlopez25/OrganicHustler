@@ -190,9 +190,9 @@
       <% else %>
           <% get_gallery(product_i['id']).pictures.all.each do |logo| %>
               <% p logo %>
-              <li class="items-scroll-container">
-                <img onclick="addToPic('<%= logo.image.url(:large) %>')" src="<%= logo.image.url(:thumb) %>" alt="" height="30">
-              </li>
+              <div class="items-logo-container">
+                <img onclick="addToPic('<%= logo.image.url(:large) %>')" src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
+              </div>
           <% end %>
       <% end %>
     </div>

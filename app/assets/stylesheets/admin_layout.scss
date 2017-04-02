@@ -135,6 +135,15 @@ div.modal-g {
 
 }
 
+div.items-logo-container {
+  padding: 5px;
+  margin: 2px;
+  overflow: hidden;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  float: left;
+}
+
 div.modal-h {
 
   float: right;
@@ -184,7 +193,7 @@ td {
 /*Remove rounded coners*/
 
 nav.sidebar.navbar {
-  border-radius: 0px;
+  border-radius: 0;
 }
 
 nav.sidebar, .main {
@@ -219,13 +228,13 @@ nav.sidebar, .main {
 
   /*Center Brand*/
   nav.sidebar.navbar.sidebar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
-    margin-left: 0px;
+    margin-left: 0;
   }
   /*Center Brand*/
   nav.sidebar .navbar-brand, nav.sidebar .navbar-header {
     text-align: center;
     width: 100%;
-    margin-left: 0px;
+    margin-left: 0;
   }
 
   /*Center Icons*/
@@ -257,7 +266,7 @@ nav.sidebar, .main {
 
   /*allows nav box to use 100% width*/
   nav.sidebar .navbar-collapse, nav.sidebar .container-fluid {
-    padding: 0 0px 0 0px;
+    padding: 0 0 0 0;
   }
 
   /*colors dropdown box text */
@@ -272,7 +281,7 @@ nav.sidebar, .main {
     margin-left: -160px;
     float: left;
     z-index: 8000;
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   /*give sidebar 100% width;*/
@@ -282,7 +291,7 @@ nav.sidebar, .main {
 
   /* Move nav to full on mouse over*/
   nav.sidebar:hover {
-    margin-left: 0px;
+    margin-left: 0;
   }
   /*for hiden things when navbar hidden*/
   .forAnimate {
@@ -302,7 +311,7 @@ nav.sidebar, .main {
 
   /*Show all nav*/
   nav.sidebar {
-    margin-left: 0px;
+    margin-left: 0;
     float: left;
   }
   /*Show hidden items on nav*/

@@ -1,0 +1,175 @@
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: font-url('glyphicons-halflings-regular.eot');
+  src: font-url('glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+  font-url('glyphicons-halflings-regular.woff') format('woff'),
+  font-url('glyphicons-halflings-regular.ttf') format('truetype'),
+  font-url('glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  width: 100%;
+  background-size: cover;
+  background: image_url('index/Head.jpg') no-repeat center;
+  color: #fff;
+  height: 60vh;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-size: 1%;
+
+}
+
+.logo {
+  display: block;
+  position: absolute;
+  margin-left: -25px;
+  left: 50%;
+}
+
+.ht {
+  vertical-align: middle;
+  margin-top: 100px;
+
+  font-size: 70px;
+}
+
+.mainNav {
+  overflow: visible;
+  position: relative;
+
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: transparent;
+  color: white;
+  border: 3px solid #4CAF50;
+  margin-top: 30px;
+
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button2 {
+  background-color: white;
+  color: white;
+  border: 3px solid pink;
+  margin-top: 30px;
+
+}
+
+.button2:hover {
+  background-color: #dedede;
+  color: white;
+}
+
+@media (max-width: 700px) {
+  .mobile-only {
+    display: block !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+.prod {
+  height: 100px;
+}
+
+.imgxx {
+
+  width: 50px;
+  height: 50px;
+
+}
+
+.iconx {
+  float: left;
+  font-size: 23px;
+  margin-top: 13px;
+  margin-right: 15px;
+  color: gray;
+
+}
+
+.lf {
+  font-size: 9px;
+}
+
+.navbar-default {
+  background-color: white;
+  border-color: rgba(34, 34, 34, 0.05);
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+}
+
+.navbar-default .navbar-header .navbar-brand {
+  color: #F05F40;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.navbar-default .navbar-header .navbar-brand:hover,
+.navbar-default .navbar-header .navbar-brand:focus {
+  color: #eb3812;
+}
+
+.navbar-default .navbar-header .navbar-toggle {
+  font-weight: 700;
+  font-size: 12px;
+  color: #222222;
+  text-transform: uppercase;
+}
+
+.navbar-default .nav > li > a,
+.navbar-default .nav > li > a:focus {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 13px;
+  color: #222222;
+}
+
+.navbar-default .nav > li > a:hover,
+.navbar-default .nav > li > a:focus:hover {
+  color: #F05F40;
+}
+
+.navbar-default .nav > li.active > a,
+.navbar-default .nav > li.active > a:focus {
+  color: #F05F40 !important;
+  background-color: transparent;
+}
+
+.navbar-default .nav > li.active > a:hover,
+.navbar-default .nav > li.active > a:focus:hover {
+  background-color: transparent;
+}
