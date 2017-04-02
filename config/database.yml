@@ -10,11 +10,12 @@
 #   http://dev.mysql.com/doc/refman/5.7/en/old-client.html
 #
 default: &default
+  url: <%= ENV['DATABASE_URL'] %>
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: root
-  password: 199603rE
+  username: <%= ENV['USERNAME_DB'] %>
+  password: <%= ENV['PASSWORD_DB'] %>
   socket: /var/run/mysqld/mysqld.sock
 
 development:
@@ -49,6 +50,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: OrganicHustler_production
-  username: OrganicHustler
-  password: <%= ENV['ORGANICHUSTLER_DATABASE_PASSWORD'] %>
+  username: <%= ENV['USERNAME_DB'] %>
+  password: <%= ENV['PASSWORD_DB'] %>
