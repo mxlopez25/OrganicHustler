@@ -198,7 +198,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   moltin
-  mysql2 (>= 0.3.18, < 0.5)
+  mysql2
   paperclip (~> 5.0.0)
   puma (~> 3.0)
   rails (~> 5.0.1)
