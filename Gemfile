@@ -8,8 +8,8 @@ end
 gem 'devise'
 gem 'moltin'
 gem 'rest-client'
-gem 'paperclip', '~> 5.0.0'
-gem 'aws-sdk', '~> 2.9.1'
+gem 'paperclip'
+gem 'aws-sdk'
 gem 'font-awesome-sass'
 gem 'figaro'
 
