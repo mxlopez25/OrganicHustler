@@ -203,15 +203,7 @@
     <h5><span class="label label-primary">Available colors</span></h5>
     <div class="container-menu">
 
-      <% product_i['modifiers'].each do |modifier| %>
-
-          <% modifier[1]['variations'].each do |variation| %>
-
-              <%= variation %>
-
-          <% end %>
-
-      <% end %>
+      <%= create_variant('', '') %>
 
     </div>
 
