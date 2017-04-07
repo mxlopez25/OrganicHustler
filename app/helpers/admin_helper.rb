@@ -100,8 +100,9 @@ module AdminHelper
 
     mod_id = '1484278740824359838'
     id = '1457091068452406042'
+    id_var = '1487771434125099428'
 
-    response = RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{id}/modifiers/#{mod_id}/variations", {'title': 'WHITE'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    response = RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{id}/modifiers/#{mod_id}/variations/#{id_var}", {'title': 'WHITE'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
     p JSON.parse(response.body)
   end
 
