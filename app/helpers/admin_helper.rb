@@ -98,11 +98,11 @@ module AdminHelper
   def create_variant(mod_id, id)
     p id
 
-    mod_id = ''
-    id = ''
+    mod_id = '1484278740824359838'
+    id = '1457091068452406042'
 
-    response = RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{id}/modifiers/#{mod_id}/variations", {'title': 'red'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    JSON.parse(response.body)['result']
+    response = RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{id}/modifiers/#{mod_id}/variations", {'title': 'WHITE'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    p JSON.parse(response.body)
   end
 
 
