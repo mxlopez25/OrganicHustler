@@ -207,7 +207,7 @@
 
           <% modifier[1]['variations'].each do |variation| %>
 
-              <%= variation[1]['title'] %>
+              <%= variation %>
 
           <% end %>
 
@@ -490,8 +490,7 @@
                   y: region_bottom
               },
               x: 0,
-              y: y,
-
+              y: y
           });
 
           var margin_bottom_b = new Konva.Line({

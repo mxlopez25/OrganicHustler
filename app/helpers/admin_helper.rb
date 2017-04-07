@@ -95,5 +95,15 @@ module AdminHelper
     JSON.parse(response.body)['result']
   end
 
+  def create_variant(mod_id, id)
+    p id
+
+    mod_id = ''
+    id = ''
+
+    response = RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{id}/modifiers/#{mod_id}/variations", {'title': 'red'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    JSON.parse(response.body)['result']
+  end
+
 
 end
