@@ -14,16 +14,16 @@
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li>
-          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-home"></span></a>
+          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-home"></span></a>
         </li>
         <li class="active">
-          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-product-hunt"></span></a>
+          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-product-hunt"></span></a>
         </li>
         <li>
-          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-picture-o"></span></a>
+          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-picture-o"></span></a>
         </li>
         <li>
-          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-truck"></span></a>
+          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-truck"></span></a>
         </li>
       </ul>
     </div>
@@ -38,6 +38,11 @@
 
   <!--Product reference-->
   <% product_i = @product %>
+
+  <div class="head-bread-crumbs card">
+    <h4><a class="breadcrumb" href="/admin/products">Products</a> /
+      <a class="breadcrumb" href="/admin/product/<%= product_i['id'] %>"><%= product_i['id'] %></a> / Edit</h4>
+  </div>
 
   <div class="card modal-g">
 
@@ -209,7 +214,7 @@
     <div class="container-menu">
 
       <% variations[1][1]['variations'].each do |var| %>
-          <button class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
+          <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
       <% end %>
 
     </div>
@@ -219,7 +224,7 @@
     <div class="container-menu">
 
       <% variations[0][1]['variations'].each do |var| %>
-          <button class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
+          <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
       <% end %>
 
     </div>
@@ -231,7 +236,6 @@
 
     <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
   </div>
-
 
   <script id="logo_drop_load">
 
