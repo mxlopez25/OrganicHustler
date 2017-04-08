@@ -66,7 +66,7 @@
           <% end %>
 
           <% if variant %>
-              <tr id="product-row">
+              <tr id="product-row" onclick="window.location.href = '/admin/edit/<%= product['id'] %>'">
                 <td>
                   <input id="select-obj" type="checkbox" name="select-obj" onclick="add_item(this, '<%= product['id'] %>')">
                 </td>
@@ -85,12 +85,60 @@
   </div>
   <div class="card modal-h">
 
+    <button id="btn_w" onclick="loadLogoDrop()" class="btn btn-success menu-buttons" type="button">Add group images
+    </button>
 
-    <h5><span class="label label-primary">Available logos</span></h5>
-
-    <div id="logo-drop" class="container-menu">
+    <div id="logo-drop" class="container-menu hidden">
     </div>
+
   </div>
+
+  <script id="logo_drop_load">
+
+      function loadLogoDrop() {
+          document.getElementById("logo-drop").className = 'container-menu dropzone';
+          var myDropzone = new Dropzone("div#logo-drop", {
+              url: 'upload_m_image',
+              autoProcessQueue: true,
+              uploadMultiple: false,
+              parallelUploads: 100,
+              maxFiles: 100,
+              headers: {
+                  'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+              },
+              method: 'put',
+              remote: true,
+
+              // The setting up of the dropzone
+              init: function () {
+                  var myDropzone = this;
+
+                  this.on("sending", function (file, xhr, formData) {
+                      formData.append("products", items);
+                  });
+                  this.on("success", function (file, xhr) {
+                      this.removeAllFiles();
+                  });
+
+                  // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+                  // of the sending event because uploadMultiple is set to true.
+                  this.on("sendingmultiple", function () {
+                      // Gets triggered when the form is actually being sent.
+                      // Hide the success button or the complete form.
+                  });
+                  this.on("successmultiple", function (files, response) {
+                      // Gets triggered when the files have successfully been sent.
+                      // Redirect user or notify of success.
+                  });
+                  this.on("errormultiple", function (files, response) {
+                      // Gets triggered when there was an error sending the files.
+                      // Maybe show form again, and notify user of error
+                  });
+              }
+          });
+      }
+
+  </script>
 
   <script>
 

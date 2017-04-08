@@ -53,6 +53,13 @@ class CustomsController < ApplicationController
 
   def upload_image
     AdminHelper.set_image(params['file'].tempfile, params['id'])
+    render :nothing => true, :status => 200
+  end
+
+  def upload_m_image
+    p params['products'].split(',').map(&:to_i)
+    params['products'].split(',').map(&:to_i).each { |product_var| AdminHelper.set_image(params['file'].tempfile, product_var) }
+    render :nothing => true, :status => 200
   end
 
   def delete_image

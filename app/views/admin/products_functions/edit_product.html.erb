@@ -205,6 +205,8 @@
       <% end %>
     </div>
 
+    <% unless product_i['is_variation'] %>
+
     <% variations = [] %>
     <% product_i['modifiers'].each do |modifiers| %>
         <% variations.push(modifiers) %>
@@ -233,6 +235,7 @@
     <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Add
       variations
     </button>
+    <% end %>
 
     <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
   </div>
