@@ -30,6 +30,42 @@
   </div>
 </nav>
 <body style="background-color: #dedede">
-<div class="main">
+
+<div class="center-div">
+  <div class="card notification-ask" style="background: #ffffff">
+    <h3>Add variation</h3>
+    <hr>
+    <div style="text-align: left">
+      <%= form_tag "/admin/add_variation/#{@product_id}", :name => 'addVariationForm', :method => :post do %>
+          <div class="form-group">
+            <label class="col-md-3" for="modifier">Modifier: </label>
+            <select class="col-md-7" name="modifier" id="modifier">
+              <% @modifiers.each do |mod| %>
+                  <option value='<%= mod[0] %>'><%= mod[1]['title'] %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-3" for="changes">Change: </label>
+            <input class="col-md-7" type="text" id="changes" name="changes">
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-3" for="changes">Price mod: </label>
+            <select class="col-md-2" name="sign">
+              <option value="+">+</option>
+              <option value="+">-</option>
+              <option value="+">=</option>
+            </select>
+            <input class="col-md-5" type="text" id="price_mod" name="price_mod">
+          </div>
+
+          <button type="submit" style="width: 100%" class="btn btn-primary">ADD</button>
+
+      <% end %>
+
+    </div>
+  </div>
 </div>
 </body>
