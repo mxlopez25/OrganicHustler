@@ -200,13 +200,16 @@
       <% end %>
     </div>
 
+    <% variations = [] %>
+    <% product_i['modifiers'].each do |modifiers| %>
+        <% variations.push(modifiers) %>
+    <% end %>
+
     <h5><span class="label label-primary">Available colors</span></h5>
     <div class="container-menu">
 
-      <% product_i['modifiers'].each do |variations| %>
-
-          <%= variations %>
-
+      <% variations[1][1]['variations'].each do |var| %>
+          <button class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
       <% end %>
 
     </div>
@@ -214,6 +217,10 @@
 
     <h5><span class="label label-primary">Available sizes</span></h5>
     <div class="container-menu">
+
+      <% variations[0][1]['variations'].each do |var| %>
+          <button class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
+      <% end %>
 
     </div>
 

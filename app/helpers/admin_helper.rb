@@ -90,20 +90,13 @@ module AdminHelper
   end
 
   def get_product(id)
-    p id
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}", {:Authorization => "Bearer #{AdminHelper.generate_token}"})
     JSON.parse(response.body)['result']
   end
 
   def get_color(id)
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}/variations", {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    variations = JSON.parse(RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}/variations", {:Authorization => "Bearer #{AdminHelper.generate_token}"}))
-
-    color_variations = [];
-
-    JSON.parse(response.body) do |varaition|
-      variation
-    end
+    JSON.parse(response.body)
   end
 
 

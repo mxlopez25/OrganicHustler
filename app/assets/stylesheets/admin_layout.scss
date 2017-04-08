@@ -196,11 +196,19 @@ button.menu-buttons {
 }
 
 div.container-menu {
+  padding: 5px;
   width: 100%;
   min-height: 150px;
   border: solid thin lightgray;
   border-radius: 10px;
   overflow: hidden;
+}
+
+button.types-button {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
 }
 
 /*Remove rounded coners*/
