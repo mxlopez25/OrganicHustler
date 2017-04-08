@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/edit/:id' => 'admin#edit_product'
   get '/admin/edit_variation/:source_product/:variation_id' => 'admin#modify_variation'
+  get '/admin/add_variation/:source_product/:variation_id' => 'admin#add_variation'
 
   put '/admin/products' => 'admin#products'
 

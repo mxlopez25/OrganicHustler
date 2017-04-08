@@ -1,3 +1,6 @@
+<script>
+    const items = [];
+</script>
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -36,6 +39,261 @@
     <h4><a class="breadcrumb" href="/admin/products">Products</a> /
       <a class="breadcrumb" href="/admin/edit/<%= @product %>"><%= @product %></a> / <%= @id %></h4>
   </div>
+
+  <div class="table_products card modal-g">
+    <table class="table" id="table">
+      <thead>
+      <tr>
+        <th><input id="select-all" type="checkbox" name="select-all"></th>
+        <th onclick="sort_title()" class="header-ele">Size</th>
+        <th onclick="sort_title()" class="header-ele">Color</th>
+        <th onclick="sort_title()" class="header-ele">Title</th>
+        <th onclick="sort_category()" class="header-ele">Current price $</th>
+        <th onclick="sort_inventory()" class="header-ele">Inventory</th>
+        <th onclick="sort_price()" class="header-ele">Status</th>
+      </tr>
+      </thead>
+      <tbody id="list-to-m">
+      <% get_product_variations(@product).each do |product| %>
+
+          <% variations = [] %>
+          <% variant = false %>
+          <% product['modifiers'].each do |modifiers| %>
+              <% variations.push(modifiers) %>
+              <% if modifiers[1]['var_id'].eql?(@id) %>
+                  <% variant = true %>
+              <% end %>
+          <% end %>
+
+          <% if variant %>
+              <tr id="product-row">
+                <td>
+                  <input id="select-obj" type="checkbox" name="select-obj" onclick="add_item(this, '<%= product['id'] %>')">
+                </td>
+                <td><%= variations[0][1]['var_title'] %></td>
+                <td><%= variations[1][1]['var_title'] %></td>
+                <td><%= product['title'] %></td>
+                <td class="price" style="text-align: right"><%= product['price']['data']['raw']['with_tax'] %></td>
+                <td><%= product['stock_level'] %></td>
+                <td><%= product['status']['value'] %></td>
+              </tr>
+          <% end %>
+      <% end %>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="card modal-h">
+
+
+    <h5><span class="label label-primary">Available logos</span></h5>
+
+    <div id="logo-drop" class="container-menu">
+    </div>
+  </div>
+
+  <script>
+
+      function add_item(box, product) {
+          if (box.checked && ($.inArray(product, items) === -1))
+              items.push(product);
+          else
+              items.splice(items.lastIndexOf(product), 1);
+          console.log(items);
+      }
+
+  </script>
+
+  <script>
+
+      var title_sort = true;
+      var inventory_sort = true;
+      var category_sort = true;
+      var price_sort = true;
+
+      function sort_title() {
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("table");
+          switching = true;
+        /*Make a loop that will continue until
+         no switching has been done:*/
+          while (switching) {
+              //start by saying: no switching is done:
+              switching = false;
+              rows = table.getElementsByTagName("tr");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("td")[2];
+                  y = rows[i + 1].getElementsByTagName("td")[2];
+                  //check if the two rows should switch place:
+                  if ((x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) && title_sort) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                  } else if ((x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) && !title_sort) {
+                      shouldSwitch = true;
+                      break;
+                  }
+              }
+              if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+              }
+          }
+
+          title_sort = !title_sort;
+      }
+      function sort_inventory() {
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("table");
+          switching = true;
+        /*Make a loop that will continue until
+         no switching has been done:*/
+          while (switching) {
+              //start by saying: no switching is done:
+              switching = false;
+              rows = table.getElementsByTagName("tr");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("td")[3];
+                  y = rows[i + 1].getElementsByTagName("td")[3];
+                  //check if the two rows should switch place:
+                  if ((parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) && inventory_sort) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                  } else if ((parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) && !inventory_sort) {
+                      shouldSwitch = true;
+                      break;
+                  }
+              }
+              if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+              }
+          }
+
+          inventory_sort = !inventory_sort;
+      }
+      function sort_category() {
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("table");
+          switching = true;
+        /*Make a loop that will continue until
+         no switching has been done:*/
+          while (switching) {
+              //start by saying: no switching is done:
+              switching = false;
+              rows = table.getElementsByTagName("tr");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("td")[2];
+                  y = rows[i + 1].getElementsByTagName("td")[2];
+                  //check if the two rows should switch place:
+                  if ((x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) && category_sort) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                  } else if ((x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) && !category_sort) {
+                      shouldSwitch = true;
+                      break;
+                  }
+              }
+              if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+              }
+          }
+
+          category_sort = !category_sort;
+      }
+      function sort_price() {
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("table");
+          switching = true;
+        /*Make a loop that will continue until
+         no switching has been done:*/
+          while (switching) {
+              //start by saying: no switching is done:
+              switching = false;
+              rows = table.getElementsByTagName("tr");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+              for (i = 1; i < (rows.length - 1); i++) {
+                  //start by saying there should be no switching:
+                  shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                  x = rows[i].getElementsByTagName("td")[3];
+                  y = rows[i + 1].getElementsByTagName("td")[3];
+                  //check if the two rows should switch place:
+                  if ((parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) && price_sort) {
+                      //if so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                  } else if ((parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) && !price_sort) {
+                      shouldSwitch = true;
+                      break;
+                  }
+              }
+              if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                  switching = true;
+              }
+          }
+
+          price_sort = !price_sort;
+      }
+
+      $('*[class*=price]:visible').each(function () {
+          var amount = $(this).html();
+          var i = parseFloat(amount);
+          if (isNaN(i)) {
+              i = 0.00;
+          }
+          var minus = '';
+          if (i < 0) {
+              minus = '-';
+          }
+          i = Math.abs(i);
+          i = parseInt((i + .005) * 100);
+          i = i / 100;
+          var s = String(i);
+          if (s.indexOf('.') < 0) {
+              s += '.00';
+          }
+          if (s.indexOf('.') === (s.length - 2)) {
+              s += '0';
+          }
+          s = minus + s;
+          $(this).html(s);
+      });
+
+
+  </script>
 
 </div>
 </body>

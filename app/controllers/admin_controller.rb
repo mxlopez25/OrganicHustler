@@ -31,5 +31,10 @@ class AdminController < ApplicationController
     render 'admin/products_functions/modify_variation'
   end
 
+  def add_variation
+    @id_mod = params['id_mod']
+    @product_id = params['source_product']
+  end
+
 
 end
