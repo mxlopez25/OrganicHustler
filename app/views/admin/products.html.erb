@@ -73,9 +73,10 @@
     <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
   </div>
   <div class="table_buttons card">
-    <button type="button" class="btn btn-success">New product</button>
+    <button type="button" class="btn btn-success" onclick="window.location.href='/admin/products/new'">New product
+    </button>
     <button type="button" class="btn btn-info" onclick="window.location.href='/admin/product/' + items[0]">Info</button>
-    <button type="button" class="btn btn-warning" onclick="window.location.href='/admin/edit/' + items[0]">Edit</button>
+    <button type="button" class="btn btn-warning" onclick="window.location.href='/admin/product/edit/' + items[0]">Edit</button>
     <button type="button" class="btn btn-danger" href="#">Delete</button>
   </div>
 

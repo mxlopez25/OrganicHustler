@@ -15,11 +15,13 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
 
   get '/admin/product/:id' => 'admin#info_product'
-  get '/admin/edit/:id' => 'admin#edit_product'
+  get '/admin/product/edit/:id' => 'admin#edit_product'
+  get '/admin/products/new' => 'admin#new_product'
   get '/admin/edit_variation/:source_product/:variation_id' => 'admin#modify_variation'
   get '/admin/add_variation/:source_product' => 'admin#add_variation'
 
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
+  post '/admin/product/new' => 'admin#new_product'
 
   put '/admin/products' => 'admin#products'
 
