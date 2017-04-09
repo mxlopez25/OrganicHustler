@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   post '/admin/product/new' => 'admin#new_product'
 
   put '/admin/products' => 'admin#products'
+  put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'
 
   get '/customs/load_images/logo/:id' => 'customs#load_logo'
   get '/customs/load_info' => 'customs#product_info'
@@ -35,7 +36,6 @@ Rails.application.routes.draw do
 
   put '/customs/edit/product' => 'customs#save_product'
   put '/customs/upload_image' => 'customs#upload_image'
-  put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'
   put '/customs/save_variation' => 'customs#save_variation'
 
   put '/admin/edit/add/gallery/logo' => 'galleries#create'

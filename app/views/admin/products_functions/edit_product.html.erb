@@ -215,7 +215,7 @@
     <h5><span class="label label-primary">Available colors</span></h5>
     <div class="container-menu">
 
-      <% variations[1][1]['variations'].each do |var| %>
+      <% variations[2][1]['variations'].each do |var| %>
           <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
       <% end %>
 
@@ -225,7 +225,7 @@
     <h5><span class="label label-primary">Available sizes</span></h5>
     <div class="container-menu">
 
-      <% variations[0][1]['variations'].each do |var| %>
+      <% variations[1][1]['variations'].each do |var| %>
           <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
       <% end %>
 
