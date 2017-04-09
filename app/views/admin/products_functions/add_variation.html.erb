@@ -45,22 +45,36 @@
               <% end %>
             </select>
           </div>
-
           <div id="variable form">
+            <div class="form-group">
+              <label class="col-md-3" for="changes">Change: </label>
+              <input class="col-md-7" type="text" id="changes" name="changes">
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-3" for="changes">Price mod: </label>
+              <select class="col-md-2" name="sign">
+                <option value="+">+</option>
+                <option value="+">-</option>
+                <option value="+">=</option>
+              </select>
+              <input class="col-md-5" type="text" id="price_mod" name="price_mod">
+            </div>
           </div>
 
           <button type="submit" style="width: 100%" class="btn btn-primary">ADD</button>
 
-      <% end %>
 
-      <script>
-          $(document).ready(function () {
-              $(document).on('change', "#modifier", function () {
-                  alert($(this).val())
+          <script>
+              $(document).ready(function () {
+                  $(document).on('change', "#modifier", function () {
+                      alert($(this).prop('selectedIndex'))
+                  });
               });
-          });
 
-      </script>
+          </script>
+
+      <% end %>
 
     </div>
   </div>
