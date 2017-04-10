@@ -318,7 +318,7 @@
         <% product_i['images'].each do |image| %>
             <div style="display: inline-block; position: relative;">
               <% margins = get_regions(image['id'].to_s) %>
-              <img class="image-blur-ef" onclick="editRegions('<%= image['id'].to_s %>','<%= get_image(image['id'].to_s) %>', <%= margins.left_margin %>, <%= margins.top_margin %>, <%= margins.right_margin %>, <%= margins.bottom_margin %>)" src="http://<%= image['segments']['domain'] %>fit/w120/h120/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 3px;">
+              <img class="image-blur-ef" onclick="editRegions('<%= image['id'].to_s %>','<%= get_image(image['id'].to_s) %>', <%= margins.left_margin %>, <%= margins.top_margin %>, <%= margins.right_margin %>, <%= margins.bottom_margin %>)" src="https://<%= image['segments']['domain'] %>fit/w120/h120/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 3px;">
               <button type="button" onclick="delete_s(['<%= product_i['id'].to_s %>', '<%= image['id'].to_s %>'])" style="position: absolute; left: 10px; top: 10px; background: url(https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_delete_48px-128.png); background-size: contain; background-repeat: no-repeat; width: 30px; height: 30px; border: none"></button>
             </div>
         <% end %>

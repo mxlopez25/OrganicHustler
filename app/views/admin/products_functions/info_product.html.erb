@@ -106,7 +106,7 @@
     <div style="margin-top: 10px; padding: 10px; border: solid thin lightgray; border-radius: 10px; background: #ffffff; overflow: hidden">
       <h6><span class="label label-primary">Images</span></h6>
       <% product['images'].each do |image| %>
-          <img src="http://<%= image['segments']['domain'] %>fit/w100/h100/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
+          <img src="https://<%= image['segments']['domain'] %>fit/w100/h100/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
       <% end %>
     </div>
 
