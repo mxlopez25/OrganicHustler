@@ -38,6 +38,7 @@ class AdminController < ApplicationController
   end
 
   def add_variation
+    p params
     @product_id = params['source_product']
     if request.method.eql?('GET')
       @modifiers = []
@@ -46,9 +47,9 @@ class AdminController < ApplicationController
       end
       render 'admin/products_functions/add_variation'
     elsif request.method.eql?('POST')
-      RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: params['sign'].to_s.concat(params['price_mod'])}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-      @product = AdminHelper.get_product_by_id(@product_id)
-      render 'admin/products_functions/edit_product'
+      #RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: params['sign'].to_s.concat(params['price_mod'])}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+      #@product = AdminHelper.get_product_by_id(@product_id)
+      #render 'admin/products_functions/edit_product'
     end
   end
 
