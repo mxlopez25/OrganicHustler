@@ -239,7 +239,7 @@
                     <% if var[1]['title'].eql?('null') %>
                         <img src="http://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
                     <% else %>
-                        <%= var[1]['title'] %>
+                        <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
                     <% end %>
                   </button>
               <% end %>

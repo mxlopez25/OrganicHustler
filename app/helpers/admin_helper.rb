@@ -99,5 +99,13 @@ module AdminHelper
     JSON.parse(response.body)['result']
   end
 
+  def getJson(data)
+    JSON.parse(data)
+  end
+
+  def get_thumb_g_id(id, size)
+    Picture.get_id_url(id, size)
+  end
+
 
 end

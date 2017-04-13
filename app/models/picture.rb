@@ -6,4 +6,8 @@ class Picture < ApplicationRecord
 
   do_not_validate_attachment_file_type :image
 
+  def self.get_id_url(id, size)
+    Picture.find(id).image.url(size)
+  end
+
 end
