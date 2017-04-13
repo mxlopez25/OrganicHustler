@@ -207,43 +207,50 @@
 
     <% unless product_i['is_variation'] %>
 
-    <% variations = [] %>
-    <% product_i['modifiers'].each do |modifiers| %>
-        <% variations.push(modifiers) %>
-    <% end %>
+        <% variations = [] %>
+        <% product_i['modifiers'].each do |modifiers| %>
+            <% variations.push(modifiers) %>
+        <% end %>
 
-    <h5><span class="label label-primary">Available colors</span></h5>
-    <div class="container-menu">
+        <% if !variations.blank? %>
+            <h5><span class="label label-primary">Available colors</span></h5>
+            <div class="container-menu">
 
-      <% variations[2][1]['variations'].each do |var| %>
-          <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
-      <% end %>
+              <% variations[2][1]['variations'].each do |var| %>
+                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
+              <% end %>
 
-    </div>
+            </div>
 
+            <h5><span class="label label-primary">Available sizes</span></h5>
+            <div class="container-menu">
 
-    <h5><span class="label label-primary">Available sizes</span></h5>
-    <div class="container-menu">
+              <% variations[1][1]['variations'].each do |var| %>
+                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
+              <% end %>
 
-      <% variations[1][1]['variations'].each do |var| %>
-          <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
-      <% end %>
+            </div>
 
-    </div>
+            <h5><span class="label label-primary">Pre created products with logos</span></h5>
+            <div class="container-menu">
 
-        <h5><span class="label label-primary">Available sizes</span></h5>
-        <div class="container-menu">
+              <% variations[0][1]['variations'].each do |var| %>
+                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
+                    <% if var[1]['title'].eql?('null') %>
+                        <img src="http://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
+                    <% else %>
+                        <%= var[1]['title'] %>
+                    <% end %>
+                  </button>
+              <% end %>
 
-          <% variations[0][1]['variations'].each do |var| %>
-              <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button"><%= var[1]['title'] %></button>
-          <% end %>
-
-        </div>
+            </div>
+        <% end %>
 
 
         <button id="btn_w" onclick="window.location.href = '/admin/add_variation/<%= product_i['id'] %>'" class="btn btn-success menu-buttons" type="button">Add
-      variations
-    </button>
+          variations
+        </button>
     <% end %>
 
     <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
