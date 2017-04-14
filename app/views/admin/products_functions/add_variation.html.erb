@@ -79,6 +79,8 @@
                                   '<% end %>' +
                                   '<% end %>' +
                                   '</div>' +
+                                  '<input type="number" name="source_w" class="hidden" id="source_w" value="0">' +
+                                  '<input type="number" name="source_h" class="hidden" id="source_h" value="0">' +
                                   '<input type="number" name="var_s" class="hidden" id="var_s" value="0">' +
                                   '<input type="text" name="id_pic" class="hidden" id="id_pic" value="null">' +
                                   '<input type="number" name="pos-x" class="hidden" id="pos-x" value="100">' +
@@ -92,53 +94,8 @@
                               var yElement = document.getElementById('pos-y');
                               var widthElement = document.getElementById('width-p');
                               var heightElement = document.getElementById('height-p');
-
-                            /*function loadLogoDrop() {
-                             document.getElementById("logo-drop").className += ' dropzone';
-                             var myDropzone = new Dropzone("div#logo-drop", {
-                             url: 'add/gallery/logo',
-                             autoProcessQueue: true,
-                             uploadMultiple: false,
-                             parallelUploads: 100,
-                             maxFiles: 100,
-                             headers: {
-                             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                             },
-                             method: 'put',
-                             remote: true,
-
-                             // The setting up of the dropzone
-                             init: function () {
-                             var myDropzone = this;
-
-                             this.on("sending", function (file, xhr, formData) {
-                             formData.append("id", ' #@product_id ');
-                             formData.append("name", 'product..img..set');
-                             formData.append("color", '#ffffff');
-                             });
-                             this.on("success", function (file, xhr) {
-                             this.removeAllFiles();
-                             });
-
-                             // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                             // of the sending event because uploadMultiple is set to true.
-                             this.on("sendingmultiple", function () {
-                             // Gets triggered when the form is actually being sent.
-                             // Hide the success button or the complete form.
-                             });
-                             this.on("successmultiple", function (files, response) {
-                             // Gets triggered when the files have successfully been sent.
-                             // Redirect user or notify of success.
-                             });
-                             this.on("errormultiple", function (files, response) {
-                             // Gets triggered when there was an error sending the files.
-                             // Maybe show form again, and notify user of error
-                             });
-                             }
-                             });
-                             }
-
-                             loadLogoDrop();*/
+                              var s_w = document.getElementById('source_w');
+                              var s_h = document.getElementById('source_h');
 
                           function changePic(src) {
                               console.log(src)
@@ -275,6 +232,8 @@
                                   layer.draw();
                               };
                               imageObj1.src = '<%= AdminHelper.get_product_by_id(@product_id)['images'][0]['url']['https'] %>';
+                              s_w.value = baseImg.width();
+                              s_h.value = baseImg.height();
 
                               var imageObj2 = new Image();
                               imageObj2.onload = function () {

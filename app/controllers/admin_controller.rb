@@ -50,7 +50,8 @@ class AdminController < ApplicationController
       p params['var_s']
       case params['var_s']
         when "0"
-          object = "{\"image_id\": \"#{params['id_pic']}\", \"x\": \"#{params['pos-x']}\", \"y\": \"#{params['pos-y']}\", \"width\": \"#{params['width-p']}\", \"height\": \"#{params['height-p']}\"}"
+          object = "{\"image_id\": \"#{params['id_pic']}\", \"x\": \"#{params['pos-x']}\", \"y\": \"#{params['pos-y']}\", \"width\": \"#{params['width-p']}\", \"height\": \"#{params['height-p']}\", \"s_w\": \"#{params['source_w']}\", \"s_h\": \"#{params['source_h']}\"}"
+          p JSON.parse(object)
           RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: '+0'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
           @product = AdminHelper.get_product_by_id(@product_id)
         when "1"

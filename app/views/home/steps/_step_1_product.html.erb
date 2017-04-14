@@ -1,3 +1,265 @@
 <body>
+<div id="overall-container">
+
+  <div id="image-container">
+    <img src="<%= @product['images'].first['url']['https'] %>">
+  </div>
+
+  <div class="wrap">
+    <h5><%= @product['title'] %></h5>
+    <h6><%= @product['price']['value'] %></h6>
+  </div>
+  <div class="wrap">
+    <span><%= get_teaser(@product['description']) %></span><span id="dots">...</span><span class="complete"><%= get_complete(@product['description']) %></span>
+
+    <div style="text-align: end; padding-top: 9px">
+      <span id="more-toggle">Read more</span>
+    </div>
+  </div>
+
+  <hr style="margin-bottom: 0">
+
+  <div style="margin-bottom: 10px">
+    <div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>
+    <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>
+  </div>
+
+  <% variations = [] %>
+  <% @product['modifiers'].each do |modifiers| %>
+      <% variations.push(modifiers) %>
+  <% end %>
+
+  <% unless variations.blank? %>
+      <div id="icon_loader" class="jcarousel-wrapper">
+        <div id="myCarousel" class="jcarousel" data-jcarousel="true">
+          <ul id="container-logo" style="left: 0; top: 0;">
+            <% variations[1][1]['variations'].each do |var| %>
+                <li>
+                  <span class="badge badge-size"><%= var[1]['title'] %></span>
+                </li>
+            <% end %>
+          </ul>
+        </div>
+        <button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        <button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+  <% end %>
+
+  <script id="fold">
+
+      var innerHTML22 = {};
+
+      $(document).ready(function () {
+          innerHTML22.heightTT = $("#icon_loader").height();
+          console.log(innerHTML22.heightTT);
+      });
+
+      var iconShow = $("#icon-show");
+      var iconHide = $("#icon-hide");
+      var loader = $("#icon_loader");
+
+      iconShow.click(function () {
+          loader.animate({
+              height: innerHTML22.heightTT
+          }, 400, function () {
+              loader.css({
+                  overflow: 'visible'
+              });
+          });
+          iconShow.addClass(" hidden");
+          iconHide.removeClass(" hidden");
+      });
+
+      iconHide.click(function () {
+          loader.animate({
+              height: 0
+          }, 400, function () {
+              loader.css({
+                  overflow: 'hidden'
+              });
+          });
+          iconHide.addClass(" hidden");
+          iconShow.removeClass(" hidden");
+      });
+
+
+      //Photo slider
+      (function ($) {
+          $(function () {
+              $('.jcarousel').jcarousel();
+
+              $('.jcarousel-control-prev')
+                  .on('jcarouselcontrol:active', function () {
+                      $(this).removeClass('inactive');
+                  })
+                  .on('jcarouselcontrol:inactive', function () {
+                      $(this).addClass('inactive');
+                  })
+                  .jcarouselControl({
+                      target: '-=1'
+                  });
+
+              $('.jcarousel-control-next')
+                  .on('jcarouselcontrol:active', function () {
+                      $(this).removeClass('inactive');
+                  })
+                  .on('jcarouselcontrol:inactive', function () {
+                      $(this).addClass('inactive');
+                  })
+                  .jcarouselControl({
+                      target: '+=1'
+                  });
+
+              $('.jcarousel-pagination')
+                  .on('jcarouselpagination:active', 'a', function () {
+                      $(this).addClass('active');
+                  })
+                  .on('jcarouselpagination:inactive', 'a', function () {
+                      $(this).removeClass('active');
+                  })
+                  .jcarouselPagination();
+          });
+      })(jQuery);
+
+  </script>
+
+  <hr style="margin-bottom: 0">
+
+  <div style="margin-bottom: 10px">
+    <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6>
+    </div>
+    <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>
+  </div>
+
+  <% variations = [] %>
+  <% @product['modifiers'].each do |modifiers| %>
+      <% variations.push(modifiers) %>
+  <% end %>
+
+  <% unless variations.blank? %>
+      <div id="icon_loader_logo" class="jcarousel-wrapper">
+        <div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">
+          <ul id="container-logo-2" style="left: 0; top: 0;">
+            <% variations[0][1]['variations'].each do |var| %>
+                <li>
+                  <% if var[1]['title'].eql?('null') %>
+                      <img src="http://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
+                  <% else %>
+                      <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
+                  <% end %>
+                </li>
+            <% end %>
+          </ul>
+        </div>
+        <button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        <button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+  <% end %>
+
+  <script id="fold_logo">
+
+      var innerHTML13 = {};
+
+      $(document).ready(function () {
+          innerHTML13.heightTT = $("#icon_loader_logo").height();
+          console.log(innerHTML13.heightTT);
+      });
+
+      var iconShow_logo = $("#icon-show-logo");
+      var iconHide_logo = $("#icon-hide-logo");
+      var loader_logo = $("#icon_loader_logo");
+
+      iconShow_logo.click(function () {
+          loader_logo.animate({
+              height: innerHTML13.heightTT
+          }, 400, function () {
+              loader_logo.css({
+                  overflow: 'visible'
+              });
+          });
+          iconShow_logo.addClass(" hidden");
+          iconHide_logo.removeClass(" hidden");
+      });
+
+      iconHide_logo.click(function () {
+          loader_logo.animate({
+              height: 0
+          }, 400, function () {
+              loader_logo.css({
+                  overflow: 'hidden'
+              });
+          });
+          iconHide_logo.addClass(" hidden");
+          iconShow_logo.removeClass(" hidden");
+      });
+
+
+      //Photo slider
+      (function ($) {
+          $(function () {
+              $('.jcarousel').jcarousel();
+
+              $('.jcarousel-control-prev')
+                  .on('jcarouselcontrol:active', function () {
+                      $(this).removeClass('inactive');
+                  })
+                  .on('jcarouselcontrol:inactive', function () {
+                      $(this).addClass('inactive');
+                  })
+                  .jcarouselControl({
+                      target: '-=1'
+                  });
+
+              $('.jcarousel-control-next')
+                  .on('jcarouselcontrol:active', function () {
+                      $(this).removeClass('inactive');
+                  })
+                  .on('jcarouselcontrol:inactive', function () {
+                      $(this).addClass('inactive');
+                  })
+                  .jcarouselControl({
+                      target: '+=1'
+                  });
+
+              $('.jcarousel-pagination')
+                  .on('jcarouselpagination:active', 'a', function () {
+                      $(this).addClass('active');
+                  })
+                  .on('jcarouselpagination:inactive', 'a', function () {
+                      $(this).removeClass('active');
+                  })
+                  .jcarouselPagination();
+          });
+      })(jQuery);
+
+  </script>
+
+  <script>
+      var state = true;
+      $("#more-toggle").on('click', function () {
+          if (state) {
+              $(this).text("Read less");
+              $(".complete").show();
+              $("#dots").hide();
+          } else {
+              $(this).text("Read more");
+              $(".complete").hide();
+              $("#dots").show();
+          }
+          state = !state;
+      });
+  </script>
+
+</div>
+<div id="selection-btn-s">
+
+  <button class="btn btn-default">CUSTOMIZE IT</button>
+  <button class="btn btn-default">ADD TO CART</button>
+
+</div>
 
 </body>

@@ -1,3 +1,70 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#selection-btn-s {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 90px;
+  text-align: center;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+#selection-btn-s button {
+  width: 60%;
+  margin-bottom: 6px;
+}
+
+#image-container {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+#image-container img {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.complete {
+  display: none;
+}
+
+#more-toggle {
+  color: #dedede;
+  cursor: pointer;
+}
+
+div.wrap h5, h6, h1, h2, h3, h4, p, span {
+  margin: 2px 0;
+}
+
+div.wrap {
+  margin: 8px 0;
+}
+
+#overall-container {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 90px;
+  overflow: auto;
+  position: absolute;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.badge-size {
+  margin: 2px;
+  cursor: pointer;
+  background: #dedede;
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 1330px) {
+}

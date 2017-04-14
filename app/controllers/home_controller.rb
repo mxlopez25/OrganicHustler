@@ -6,6 +6,7 @@ class HomeController < ApplicationController
 
   def product
     @product = HomeHelper.get_product_by_id(params[:id])
+    @step = 1
   end
 
 end

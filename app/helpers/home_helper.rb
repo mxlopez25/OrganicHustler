@@ -43,4 +43,12 @@ module HomeHelper
     JSON.parse(response.body)['result']
   end
 
+  def get_teaser(text)
+    "#{text[0, 30]}"
+  end
+
+  def get_complete(text)
+    "#{text[30..-1]}"
+  end
+
 end
