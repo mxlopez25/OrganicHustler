@@ -1,5 +1,5 @@
 <body>
-<div id="overall-c" class="co-sty">
+<div id="overall-container">
 
   <div style="margin: 10px auto" id="container">
   </div>
@@ -49,7 +49,7 @@
       <ul id="container-logo" style="left: 0; top: 0;">
         <% Gallery.first.pictures.all.each do |image| %>
             <li class="items-scroll-container">
-              <img onclick="addToPic('<%= image.image.url(:large) %>')" src="<%= image.image.url(:thumb) %>" alt="" height="30">
+              <img onclick="addToPic('<%= image.image.url(:large) %>', '<%= image.id %>')" src="<%= image.image.url(:thumb) %>" alt="" height="30">
             </li>
         <% end %>
       </ul>
@@ -99,11 +99,25 @@
 
   </script>
 
-  <button id="restart-btn" class="btn btn-default">
+</div>
+
+<div id="selection-btn-s">
+
+  <input type="text" class="hidden" id="product_id" name="product_id">
+  <input type="text" class="hidden" id="image_id" name="image_id">
+  <input type="text" class="hidden" id="x" name="x">
+  <input type="text" class="hidden" id="y" name="y">
+  <input type="text" class="hidden" id="width" name="width">
+  <input type="text" class="hidden" id="height" name="height">
+  <input type="text" class="hidden" id="s_w" name="s_w">
+  <input type="text" class="hidden" id="s_h" name="s_h">
+
+  <button type="reset" class="btn btn-default">
     <span class="cell-btn">START OVER</span></button>
-  <button id="done-btn" class="btn btn-default">
+  <button type="submit" class="btn btn-default">
     <span class="cell-btn" style="color: white">DONE</span></button>
 </div>
+
 </body>
 
 <script id="set-colored">
@@ -159,6 +173,17 @@
 </script>
 
 <script>
+
+    var product_id_u = document.getElementById('product_id');
+    var image_id_u = document.getElementById('image_id');
+    var x_u = document.getElementById('x');
+    var y_u = document.getElementById('y');
+    var width_u = document.getElementById('width');
+    var height_u = document.getElementById('height');
+    var s_w_u = document.getElementById('s_w');
+    var s_h_u = document.getElementById('s_h');
+
+    product_id_u.value = '<%= @product['id'] %>';
 
     //Photo slider
     (function ($) {
@@ -216,6 +241,9 @@
         preventDefault: false
     });
 
+    s_w_u.value = width;
+    s_h_u.value = height;
+
     var layer = new Konva.Layer();
     stage.add(layer);
 
@@ -239,7 +267,7 @@
         return anchor;
     }
 
-    function addToPic(imageToAdd) {
+    function addToPic(imageToAdd, imageId) {
 
         var logo = new Konva.Image({
             width: 200,
@@ -261,6 +289,8 @@
 
         var border;
 
+        image_id_u.value = imageId;
+
         var imageLogo = new Image();
         imageLogo.onload = function () {
             logo.image(imageLogo);
@@ -276,7 +306,7 @@
         elements.push(selected);
 
         logo_group.on('click tap', function () {
-            if (border.visible() == false) {
+            if (border.visible() === false) {
                 hideAll();
                 border.show();
                 selected = logo_group;
@@ -288,11 +318,19 @@
             }
         });
 
+        logo_group.on('dragend', function () {
+            x_u.value = logo_group.x;
+            y_u.value = logo_group.y;
+
+            console.log(product_id_u.value, image_id_u.value, x_u.value, y_u.value, width_u.value, height_u.value, s_w_u.value, s_h_u.value);
+
+        });
+
         imageLogo.src = imageToAdd;
     }
 
     var anim_zoom_in = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             var image = selected.get('.image')[0];
             var border = selected.get('.borders')[0];
 
@@ -305,11 +343,13 @@
             image.width(image.width() + image.width() * frame.timeDiff / 1000);
             image.height(image.height() + image.height() * frame.timeDiff / 1000);
 
+            width_u = image.width;
+            height_u = image.height;
         }
     }, layer);
 
     var anim_zoom_out = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             selected.width(11000);
             selected.height(11000);
             var image = selected.get('.image')[0];
@@ -324,30 +364,45 @@
             image.width(image.width() - image.width() * frame.timeDiff / 1000);
             image.height(image.height() - image.height() * frame.timeDiff / 1000);
 
+            width_u = image.width;
+            height_u = image.height;
+
         }
     }, layer);
 
     var anim_right = new Konva.Animation(function (frame) {
         if (selected != null) {
             selected.x(selected.x() + (65 * frame.timeDiff / 1000));
+
+            x_u.value = selected.x;
+            y_u.value = selected.y;
         }
     }, layer);
 
     var anim_left = new Konva.Animation(function (frame) {
         if (selected != null) {
             selected.x(selected.x() - (65 * frame.timeDiff / 1000));
+
+            x_u.value = selected.x;
+            y_u.value = selected.y;
         }
     }, layer);
 
     var anim_up = new Konva.Animation(function (frame) {
         if (selected != null) {
             selected.y(selected.y() - (65 * frame.timeDiff / 1000));
+
+            x_u.value = selected.x;
+            y_u.value = selected.y;
         }
     }, layer);
 
     var anim_down = new Konva.Animation(function (frame) {
         if (selected != null) {
             selected.y(selected.y() + (65 * frame.timeDiff / 1000));
+
+            x_u.value = selected.x;
+            y_u.value = selected.y;
         }
     }, layer);
 
@@ -450,11 +505,5 @@
     };
 
     imageBgPro.src = '<%= @product['images'][0]['url']['https'] %>';
-
-    window.onresize = function () {
-        console.log($("#overall-c").width());
-        base_co.height(base_co.width());
-        imageBgPro.src = '<%= @product['images'][0]['url']['https'] %>';
-    };
 
 </script>

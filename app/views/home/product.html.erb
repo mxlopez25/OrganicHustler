@@ -5,10 +5,10 @@
   <title><%= @product['title'] %></title>
 
 </head>
-<% if @step.eql?(1) %>
+<% if @step.eql?('1') %>
     <%= render 'home/steps/step_1_product' %>
-<% elsif @step.eql?(2) %>
+<% elsif @step.eql?('2') %>
     <%= render 'home/steps/step_2_product' %>
-<% elsif @step.eql?(3) %>
+<% elsif @step.eql?('3') %>
     <%= render 'home/steps/step_3_product' %>
 <% end %>
