@@ -9,8 +9,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
 # POST /resource
   def create
-    params[:user][:id_moltin] = ApplicationHelper.get_user_id_moltin(params[:user])
-    p params
     super
   end
 

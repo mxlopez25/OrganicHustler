@@ -9,4 +9,10 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
+  def add_to_cart
+    if params['user_signed'].eql?('false')
+      user
+    end
+  end
+
 end

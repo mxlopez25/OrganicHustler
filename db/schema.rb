@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170415150022) do
+ActiveRecord::Schema.define(version: 20170415170201) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -46,6 +46,8 @@ ActiveRecord::Schema.define(version: 20170415150022) do
     t.datetime "updated_at", null: false
     t.integer "position_e_x"
     t.integer "position_e_y"
+    t.string "size_leter"
+    t.decimal "size_price", precision: 10
   end
 
   create_table "carts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -90,6 +92,12 @@ ActiveRecord::Schema.define(version: 20170415150022) do
     t.float    "top_margin",    limit: 24
     t.float    "right_margin",  limit: 24
     t.float    "bottom_margin", limit: 24
+  end
+
+  create_table "temp_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

@@ -1,4 +1,10 @@
 <body>
+
+<script>
+    var selected_size = null;
+    var avaliable_sizes = [];
+</script>
+
 <div id="overall-container">
 
   <div id="image-container">
@@ -101,7 +107,10 @@
           <ul id="container-logo" style="left: 0; top: 0;">
             <% variations[1][1]['variations'].each do |var| %>
                 <li>
-                  <span class="badge badge-size"><%= var[1]['title'] %></span>
+                  <span id="<%= var[1]['id'] %>" onclick="changeSize('<%= var[1]['id'] %>')" class="badge badge-size"><%= var[1]['title'] %></span>
+                  <script>
+                      avaliable_sizes.push("<%= var[1]['id'] %>");
+                  </script>
                 </li>
             <% end %>
           </ul>
@@ -383,7 +392,78 @@
 
   <button class="btn btn-default" onclick="window.location.href='/product/<%= @product['id'] %>/2'">CUSTOMIZE IT
   </button>
-  <button class="btn btn-default">ADD TO CART</button>
+  <button class="btn btn-default" onclick="addToCart()">ADD TO CART</button>
+
+  <script>
+
+      function changeSize(id) {
+          for (var i = 0; i < avaliable_sizes.length; i++) {
+
+              size = avaliable_sizes[i];
+
+              if (size === id) {
+                  console.log(size, id);
+                  $('#' + size).addClass('badge_selected');
+                  selected_size = id
+              } else {
+                  $('#' + size).removeClass('badge_selected');
+              }
+          }
+
+      }
+
+      function addToCart() {
+
+          if (selected_size !== null) {
+              var source_p = '<%= @product['id'] %>';
+              var product_id_e = '<%= @product['id'] %>';
+              if ("<% @parameters['product_id'].blank? %>" === "false") {
+                  product_id_e = '<% @parameters['product_id'] %>'
+              }
+              var image_id_e = '<%= @parameters['image_id'] %>';
+              var width = '<%= @parameters['width_u'] %>';
+              var height = '<%= @parameters['height_u'] %>';
+              var x = '<%= @parameters['x_u'] %>';
+              var y = '<%= @parameters['y_u'] %>';
+              var s_w = '<%= @parameters['s_w'] %>';
+              var s_h = '<%= @parameters['s_h'] %>';
+              var has_logo = '<%= !@parameters['image_id'].blank? %>';
+              var has_emblem = '<%= !@parameters['emblem_id'].blank? %>';
+              var emblem_id = '<%= @parameters['emblem_id'] %>';
+              var user_online = '<%= user_signed_in? %>';
+              console.log(user_online);
+
+              $.ajax({
+                  type: "POST",
+                  url: "/add_cart",
+                  data: {
+                      size: selected_size,
+                      source_p: source_p,
+                      m_id: product_id_e,
+                      logo_id: image_id_e,
+                      dim_x: x,
+                      dim_y: y,
+                      relation_x: s_w,
+                      relation_y: s_h,
+                      width: width,
+                      height: height,
+                      has_logo: has_logo,
+                      has_emblem: has_emblem,
+                      emblem_id: emblem_id,
+                      user_signed: user_online
+                      //Missing attributes check migrations
+
+                  },
+                  success: function (data, status, xhr) {
+
+                  },
+                  dataType: 'json'
+              });
+          } else {
+              alert('Select a size');
+          }
+      }
+  </script>
 
 </div>
 
