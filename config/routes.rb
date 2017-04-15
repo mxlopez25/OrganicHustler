@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
   get '/product/:id/:step' => 'home#product'
+  post '/product/:id/:step' => 'home#product'
 
   get '/admin/home' => 'admin#main'
   get '/admin/products' => 'admin#products'

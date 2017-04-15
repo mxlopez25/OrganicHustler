@@ -2,7 +2,73 @@
 <div id="overall-container">
 
   <div id="image-container">
-    <img src="<%= @product['images'].first['url']['https'] %>">
+    <% if @parameters['product_id'].nil? %>
+        <img src="<%= @product['images'].first['url']['https'] %>">
+    <% else %>
+        <script>
+
+            var width = '<%= @parameters['width_u'] %>';
+            var height = '<%= @parameters['height_u'] %>';
+            var x = '<%= @parameters['x_u'] %>';
+            var y = '<%= @parameters['y_u'] %>';
+            var s_w = '<%= @parameters['s_w'] %>';
+            var s_h = '<%= @parameters['s_h'] %>';
+
+            var contain = $('#image-container');
+            contain.height(contain.width());
+
+            var stage = new Konva.Stage({
+                container: 'image-container',
+                width: contain.width(),
+                height: contain.height(),
+                preventDefault: false
+            });
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var baseImg = new Konva.Image({
+                width: contain.width(),
+                height: contain.height(),
+                draggable: false,
+                preventDefault: false
+            });
+
+            var logoImg = new Konva.Image({
+                width: contain.width() * width / s_w,
+                height: contain.height() * height / s_h,
+                preventDefault: false
+            });
+
+            var logoGroup = new Konva.Group({
+                x: contain.width() * x / s_w,
+                y: contain.width() * y / s_h,
+                preventDefault: false
+            });
+
+            layer.add(baseImg);
+            layer.add(logoGroup);
+            logoGroup.add(logoImg);
+
+            var imageObj1 = new Image();
+            imageObj1.onload = function () {
+                baseImg.image(imageObj1);
+                layer.draw();
+            };
+            imageObj1.src = '<%= get_product(@parameters['product_id'])['images'].first['url']['https'] %>';
+
+            var imageObj2 = new Image();
+            imageObj2.onload = function () {
+                logoImg.image(imageObj2);
+                layer.draw();
+                imageObj2.width = contain.width() * width / s_w;
+                console.log(imageObj2.width, contain.width(), width, s_w);
+                imageObj2.height = contain.height() * height / s_h;
+                console.log(imageObj2.height);
+            };
+            imageObj2.src = '<%= get_thumb_g_id(@parameters['image_id'], :thumb) %>';
+            layer.draw();
+        </script>
+    <% end %>
   </div>
 
   <div class="wrap">
@@ -35,7 +101,7 @@
           <ul id="container-logo" style="left: 0; top: 0;">
             <% variations[1][1]['variations'].each do |var| %>
                 <li>
-                  <span class="badge ba  dge-size"><%= var[1]['title'] %></span>
+                  <span class="badge badge-size"><%= var[1]['title'] %></span>
                 </li>
             <% end %>
           </ul>
@@ -155,7 +221,6 @@
                       <script id="create-shape">
                           createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>')
                           function createShape(id, width, height, x, y, s_w, s_h) {
-                              console.log(id);
                               var container = $('#' + id);
                               container.height(container.width());
 

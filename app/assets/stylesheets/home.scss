@@ -18,15 +18,14 @@
 }
 
 #image-container {
-  width: 100%;
+  width: 60%;
   text-align: center;
   padding: 10px;
-  margin-bottom: 5px;
+  margin: 0 auto;
 }
 
-#image-container img {
-  width: 60%;
-  margin: 0 auto;
+#image-container img, div canvas, canvas {
+  width: 100%;
 }
 
 .complete {

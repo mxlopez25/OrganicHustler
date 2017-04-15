@@ -103,19 +103,21 @@
 
 <div id="selection-btn-s">
 
-  <input type="text" class="hidden" id="product_id" name="product_id">
-  <input type="text" class="hidden" id="image_id" name="image_id">
-  <input type="text" class="hidden" id="x" name="x">
-  <input type="text" class="hidden" id="y" name="y">
-  <input type="text" class="hidden" id="width" name="width">
-  <input type="text" class="hidden" id="height" name="height">
-  <input type="text" class="hidden" id="s_w" name="s_w">
-  <input type="text" class="hidden" id="s_h" name="s_h">
+  <%= form_tag "/product/#{@product['id']}/1", method: 'post' do %>
+      <input type="text" class="hidden" id="product_id" name="product_id">
+      <input type="text" class="hidden" id="image_id" name="image_id">
+      <input type="text" class="hidden" id="x_u" name="x_u">
+      <input type="text" class="hidden" id="y_u" name="y_u">
+      <input type="text" class="hidden" id="width_u" name="width_u">
+      <input type="text" class="hidden" id="height_u" name="height_u">
+      <input type="text" class="hidden" id="s_w" name="s_w">
+      <input type="text" class="hidden" id="s_h" name="s_h">
 
-  <button type="reset" class="btn btn-default">
-    <span class="cell-btn">START OVER</span></button>
-  <button type="submit" class="btn btn-default">
-    <span class="cell-btn" style="color: white">DONE</span></button>
+      <button type="reset" class="btn btn-default">
+        <span class="cell-btn">START OVER</span></button>
+      <button type="submit" class="btn btn-default">
+        <span class="cell-btn" style="color: white">DONE</span></button>
+  <% end %>
 </div>
 
 </body>
@@ -176,10 +178,10 @@
 
     var product_id_u = document.getElementById('product_id');
     var image_id_u = document.getElementById('image_id');
-    var x_u = document.getElementById('x');
-    var y_u = document.getElementById('y');
-    var width_u = document.getElementById('width');
-    var height_u = document.getElementById('height');
+    var x_u = document.getElementById('x_u');
+    var y_u = document.getElementById('y_u');
+    var width_u = document.getElementById('width_u');
+    var height_u = document.getElementById('height_u');
     var s_w_u = document.getElementById('s_w');
     var s_h_u = document.getElementById('s_h');
 
@@ -269,6 +271,11 @@
 
     function addToPic(imageToAdd, imageId) {
 
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].destroy();
+            layer.draw();
+        }
+
         var logo = new Konva.Image({
             width: 200,
             height: 200,
@@ -319,8 +326,8 @@
         });
 
         logo_group.on('dragend', function () {
-            x_u.value = logo_group.x;
-            y_u.value = logo_group.y;
+            x_u.value = logo_group.x();
+            y_u.value = logo_group.y();
 
             console.log(product_id_u.value, image_id_u.value, x_u.value, y_u.value, width_u.value, height_u.value, s_w_u.value, s_h_u.value);
 
@@ -343,8 +350,8 @@
             image.width(image.width() + image.width() * frame.timeDiff / 1000);
             image.height(image.height() + image.height() * frame.timeDiff / 1000);
 
-            width_u = image.width;
-            height_u = image.height;
+            width_u.value = image.width();
+            height_u.value = image.height();
         }
     }, layer);
 
@@ -364,45 +371,45 @@
             image.width(image.width() - image.width() * frame.timeDiff / 1000);
             image.height(image.height() - image.height() * frame.timeDiff / 1000);
 
-            width_u = image.width;
-            height_u = image.height;
+            width_u.value = image.width();
+            height_u.value = image.height();
 
         }
     }, layer);
 
     var anim_right = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             selected.x(selected.x() + (65 * frame.timeDiff / 1000));
 
-            x_u.value = selected.x;
-            y_u.value = selected.y;
+            x_u.value = selected.x();
+            y_u.value = selected.y();
         }
     }, layer);
 
     var anim_left = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             selected.x(selected.x() - (65 * frame.timeDiff / 1000));
 
-            x_u.value = selected.x;
-            y_u.value = selected.y;
+            x_u.value = selected.x();
+            y_u.value = selected.y();
         }
     }, layer);
 
     var anim_up = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             selected.y(selected.y() - (65 * frame.timeDiff / 1000));
 
-            x_u.value = selected.x;
-            y_u.value = selected.y;
+            x_u.value = selected.x();
+            y_u.value = selected.y();
         }
     }, layer);
 
     var anim_down = new Konva.Animation(function (frame) {
-        if (selected != null) {
+        if (selected !== null) {
             selected.y(selected.y() + (65 * frame.timeDiff / 1000));
 
-            x_u.value = selected.x;
-            y_u.value = selected.y;
+            x_u.value = selected.x();
+            y_u.value = selected.y();
         }
     }, layer);
 
