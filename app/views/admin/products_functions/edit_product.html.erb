@@ -237,7 +237,7 @@
               <% variations[0][1]['variations'].each do |var| %>
                   <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
                     <% if var[1]['title'].eql?('null') %>
-                        <img src="http://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
+                        <img src="https://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
                     <% else %>
                         <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
                     <% end %>
