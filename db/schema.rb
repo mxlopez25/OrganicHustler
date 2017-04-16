@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170415170201) do
+ActiveRecord::Schema.define(version: 20170416142545) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20170415170201) do
     t.integer "position_e_y"
     t.string "size_leter"
     t.decimal "size_price", precision: 10
+    t.integer "cart_id"
   end
 
   create_table "carts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -56,6 +57,7 @@ ActiveRecord::Schema.define(version: 20170415170201) do
     t.integer "n_products"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "temp_user_id"
   end
 
   create_table "galleries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -74,14 +76,16 @@ ActiveRecord::Schema.define(version: 20170415170201) do
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "gallery_id"
     t.string   "color"
+    t.string "type"
+    t.decimal "price", precision: 10
   end
 
   create_table "relation_logos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
