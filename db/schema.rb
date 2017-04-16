@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170416142545) do
+ActiveRecord::Schema.define(version: 20170416154431) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -44,8 +44,7 @@ ActiveRecord::Schema.define(version: 20170416142545) do
     t.string "emblem_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "position_e_x"
-    t.integer "position_e_y"
+    t.integer "position_id"
     t.string "size_leter"
     t.decimal "size_price", precision: 10
     t.integer "cart_id"
@@ -54,10 +53,32 @@ ActiveRecord::Schema.define(version: 20170416142545) do
   create_table "carts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.boolean "is_active"
     t.decimal "total_m", precision: 10
-    t.integer "n_products"
+    t.integer "n_products", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "temp_user_id"
+  end
+
+  create_table "emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "picture_file_name"
+    t.string "picture_content_type"
+    t.integer "picture_file_size"
+    t.datetime "picture_updated_at"
+    t.decimal "pos_1_x", precision: 10
+    t.decimal "pos_1_y", precision: 10
+    t.decimal "pos_2_x", precision: 10
+    t.decimal "pos_2_y", precision: 10
+    t.decimal "pos_3_x", precision: 10
+    t.decimal "pos_3_y", precision: 10
+    t.decimal "pos_4_x", precision: 10
+    t.decimal "pos_4_y", precision: 10
+    t.decimal "emblem_cost", precision: 10
+    t.decimal "width", precision: 10
+    t.decimal "height", precision: 10
+    t.decimal "rel_x", precision: 10
+    t.decimal "rel_y", precision: 10
   end
 
   create_table "galleries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

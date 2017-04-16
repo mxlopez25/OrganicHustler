@@ -1,3 +1,4 @@
+include AdminHelper
 class HomeController < ApplicationController
 
   def index
@@ -9,22 +10,50 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
-  def add_to_cart
+  def self.get_user(params, current_user)
+    user = nil
+    p current_user
     if params['user_signed'].eql?('false')
-      user = nil
       if session[:temp_user_id].nil?
         user = TempUser.create
         p ("user_created with id: #{user.id}")
         session[:temp_user_id] = user.id
 
+      else
+        user = TempUser.find(session[:temp_user_id])
+      end
+    else
+      user = current_user
+    end
+    return user
+  end
+
+  def add_to_cart
+    user = HomeController.get_user(params, current_user)
+
+    if user.cart.nil?
         user.create_cart
         user.cart.is_active = true
         user.cart.total_m = 0
         user.cart.n_products = 0
+        user.cart.save!
         p user.cart
+    end
 
-      else
-        user = TempUser.find(session[:temp_user_id])
+    product_source = get_product(params['source_p'])
+
+    variations = []
+    product_source['modifiers'].each do |modifiers|
+      variations.push(modifiers)
+    end
+
+    size_price = 0
+    size_letter = ''
+    variations[1][1]['variations'].each do |var|
+      if var[1]['id'].eql? params['size']
+        size_price = HomeController.to_decimal(var[1]['mod_price'][1..-1])
+        size_letter = var[1]['title']
+      end
       end
 
       price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
@@ -40,14 +69,14 @@ class HomeController < ApplicationController
       end
 
       unless params['emblem_id'].blank?
-        emblem = Picture.find(params['emblem_id'])
-        price_logo = logo.price
-        if price_logo.nil?
-          price_logo = 0
+        emblem = Emblem.find(params['emblem_id'])
+        price_emblem = emblem.emblem_cost
+        if price_emblem.nil?
+          price_emblem = 0
         end
       end
 
-      total_m = price_logo + price_product
+    total_m = price_logo + price_product + price_emblem
 
       product = CartProduct.create do |u|
         u.m_id = params['m_id']
@@ -60,21 +89,30 @@ class HomeController < ApplicationController
         u.height = HomeController.to_decimal(params['height'])
         u.total_m = total_m
         u.has_logo = !params['logo_id'].blank?
-        u.has_emblem = false #Missing emblem.rb model
+        u.has_emblem = false
         u.emblem_id = params['emblem_id']
-        u.position_e_x = HomeController.to_decimal(params['emblem_x'])
-        u.position_e_y = HomeController.to_decimal(params['emblem_y'])
-        u.size_letter = '' #Add logic missing
-        #Missing some attributes see migrations
+        u.position_id = HomeController.to_integer(params['position'])
+        u.size_leter = size_letter
+        u.size_price = size_price
       end
 
       user.cart.cart_products << product
       user.cart.n_products = user.cart.n_products + 1
-      user.cart.total_m = user.cart.total_m + total_m
+    user.cart.total_m = user.cart.total_m + total_m + size_price
+    user.cart.save!
 
       p user.cart.cart_products.all
+  end
 
-    end
+
+  def delete_from_cart
+    id = params['item_id']
+    user = HomeController.get_user(params, current_user)
+    product = user.cart.cart_products.find(id)
+    user.cart.n_products = user.cart.n_products - 1
+    user.cart.total_m = user.cart.total_m - product.total_m - product.size_price
+    user.cart.save!
+    product.destroy
   end
 
   def self.to_decimal(n_text)
@@ -82,6 +120,14 @@ class HomeController < ApplicationController
       return 0
     else
       return n_text.to_d
+    end
+  end
+
+  def self.to_integer(n_text)
+    if n_text.blank?
+      return 0
+    else
+      return n_text.to_i
     end
   end
 
