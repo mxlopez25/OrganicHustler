@@ -11,6 +11,11 @@ class HomeController < ApplicationController
   end
 
   def self.get_user(params, current_user)
+
+    return user
+  end
+
+  def add_to_cart
     user = nil
     p current_user
     if params['user_signed'].eql?('false')
@@ -25,11 +30,6 @@ class HomeController < ApplicationController
     else
       user = current_user
     end
-    return user
-  end
-
-  def add_to_cart
-    user = HomeController.get_user(params, current_user)
 
     if user.cart.nil?
         user.create_cart
@@ -107,7 +107,22 @@ class HomeController < ApplicationController
 
   def delete_from_cart
     id = params['item_id']
-    user = HomeController.get_user(params, current_user)
+
+    user = nil
+    p current_user
+    if params['user_signed'].eql?('false')
+      if session[:temp_user_id].nil?
+        user = TempUser.create
+        p ("user_created with id: #{user.id}")
+        session[:temp_user_id] = user.id
+
+      else
+        user = TempUser.find(session[:temp_user_id])
+      end
+    else
+      user = current_user
+    end
+
     product = user.cart.cart_products.find(id)
     user.cart.n_products = user.cart.n_products - 1
     user.cart.total_m = user.cart.total_m - product.total_m - product.size_price
