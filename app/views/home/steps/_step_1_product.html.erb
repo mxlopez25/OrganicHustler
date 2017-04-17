@@ -456,7 +456,8 @@
 
                   },
                   success: function (data, status, xhr) {
-
+                      var counter = parent.document.getElementById('counter');
+                      counter.innerHTML = parseInt(counter.innerHTML) + 1;
                   },
                   dataType: 'json'
               });

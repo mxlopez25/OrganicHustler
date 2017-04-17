@@ -32,12 +32,12 @@ class HomeController < ApplicationController
     end
 
     if user.cart.nil?
-        user.create_cart
-        user.cart.is_active = true
-        user.cart.total_m = 0
-        user.cart.n_products = 0
-        user.cart.save!
-        p user.cart
+      user.create_cart
+      user.cart.is_active = true
+      user.cart.total_m = 0
+      user.cart.n_products = 0
+      user.cart.save!
+      p user.cart
     end
 
     product_source = get_product(params['source_p'])
@@ -54,54 +54,54 @@ class HomeController < ApplicationController
         size_price = HomeController.to_decimal(var[1]['mod_price'][1..-1])
         size_letter = var[1]['title']
       end
-      end
+    end
 
-      price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
-      price_logo = 0
-      price_emblem = 0
+    price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
+    price_logo = 0
+    price_emblem = 0
 
-      unless params['logo_id'].blank?
-        logo = Picture.find(params['logo_id'])
-        price_logo = logo.price
-        if price_logo.nil?
-          price_logo = 0
-        end
+    unless params['logo_id'].blank?
+      logo = Picture.find(params['logo_id'])
+      price_logo = logo.price
+      if price_logo.nil?
+        price_logo = 0
       end
+    end
 
-      unless params['emblem_id'].blank?
-        emblem = Emblem.find(params['emblem_id'])
-        price_emblem = emblem.emblem_cost
-        if price_emblem.nil?
-          price_emblem = 0
-        end
+    unless params['emblem_id'].blank?
+      emblem = Emblem.find(params['emblem_id'])
+      price_emblem = emblem.emblem_cost
+      if price_emblem.nil?
+        price_emblem = 0
       end
+    end
 
     total_m = price_logo + price_product + price_emblem
 
-      product = CartProduct.create do |u|
-        u.m_id = params['m_id']
-        u.logo_id = params['logo_id']
-        u.dim_x = HomeController.to_decimal(params['dim_x'])
-        u.dim_y = HomeController.to_decimal(params['dim_y'])
-        u.relation_x = HomeController.to_decimal(params['relation_x'])
-        u.relation_y = HomeController.to_decimal(params['relation_y'])
-        u.width = HomeController.to_decimal(params['width'])
-        u.height = HomeController.to_decimal(params['height'])
-        u.total_m = total_m
-        u.has_logo = !params['logo_id'].blank?
-        u.has_emblem = false
-        u.emblem_id = params['emblem_id']
-        u.position_id = HomeController.to_integer(params['position'])
-        u.size_leter = size_letter
-        u.size_price = size_price
-      end
+    product = CartProduct.create do |u|
+      u.m_id = params['m_id']
+      u.logo_id = params['logo_id']
+      u.dim_x = HomeController.to_decimal(params['dim_x'])
+      u.dim_y = HomeController.to_decimal(params['dim_y'])
+      u.relation_x = HomeController.to_decimal(params['relation_x'])
+      u.relation_y = HomeController.to_decimal(params['relation_y'])
+      u.width = HomeController.to_decimal(params['width'])
+      u.height = HomeController.to_decimal(params['height'])
+      u.total_m = total_m
+      u.has_logo = !params['logo_id'].blank?
+      u.has_emblem = false
+      u.emblem_id = params['emblem_id']
+      u.position_id = HomeController.to_integer(params['position'])
+      u.size_leter = size_letter
+      u.size_price = size_price
+    end
 
-      user.cart.cart_products << product
-      user.cart.n_products = user.cart.n_products + 1
+    user.cart.cart_products << product
+    user.cart.n_products = user.cart.n_products + 1
     user.cart.total_m = user.cart.total_m + total_m + size_price
     user.cart.save!
 
-      p user.cart.cart_products.all
+
   end
 
 

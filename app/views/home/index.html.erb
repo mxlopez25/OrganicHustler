@@ -1,49 +1,30 @@
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+<div class="header mobilenot " style="margin-top: 60px;">
+  <h1 class="text-center ht" style="margin-top: 160px;">
 
+    ECO FRIENDLY
 
-  <div class="container-fluid" style="overflow: visible;">
-    <a href="#search"><i class=" glyphicon glyphicon-search iconx"></i> </a>
-    <a href="#catalog"><i class="glyphicon glyphicon-shopping-cart iconx"></i></a>
-    <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+  </h1>
 
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+  <div class="container">
 
-      </button>
+    <div class="row text-center" style="margin-bottom:90px;">
 
+      <article class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <button class="button button1 btn ">SHOP MEN</button>
+      </article>
 
-    </div>
+      <article class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin-bottom: 70px;">
+        <button class="button button1 btn">SHOP WOMEN</button>
+      </article>
 
-
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="#story">STORY</a>
-        </li>
-        <li>
-          <a href="#catalog-men">SHOP MEN</a>
-        </li>
-        <li>
-          <a href="#catalog-women">SHOP WOMEN</a>
-        </li>
-        <li>
-          <a href="#customize">CUSTOMIZE</a>
-        </li>
-        <li>
-          <a href="#contact">CONTACT US</a>
-        </li>
-        <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
-      </ul>
     </div>
   </div>
-</nav>
 
 
-<div class="header ">
-  <h1 class="text-center ht">
+</div>
+
+<div class="header desktopnot " style="margin-top: 60px;">
+  <h1 class="text-center ht" style="margin-top: 160px;">
 
     ECO <br>FRIENDLY
 
@@ -52,13 +33,13 @@
 
   <div class="container">
 
-    <div class="row text-center">
+    <div class="row text-center" style="margin-bottom:90px;">
 
       <article class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
         <button class="button button1 btn ">SHOP MEN</button>
       </article>
 
-      <article class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <article class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin-bottom: 70px;">
         <button class="button button1 btn">SHOP WOMEN</button>
       </article>
 
@@ -69,7 +50,7 @@
 
 </div>
 
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+<div id="carousel-example-generic" class="carousel slide desktopnot" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -79,37 +60,28 @@
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
-    <div class="item active">
-      <img src="<%= url_to_image 'index/dress2.png' %>" style="height: 200px;margin-right: auto; margin-left: auto; margin-top: 50px; margin-bottom: 50px;">
-
-      <div class="carousel-caption">
-        ...
-      </div>
-    </div>
-    <div class="item">
-      <img src="<%= url_to_image 'index/dress.png' %>" style="height: 200px; margin-right: auto; margin-left: auto; margin-top: 50px; margin-bottom: 50px;">
-      <div class="carousel-caption">
-      </div>
-    </div>
-    <div class="item">
-      <img src="<%= url_to_image 'index/shirt.png' %>" style="height: 200px; margin-right: auto; margin-left: auto; margin-top: 50px; margin-bottom: 50px;">
-      <div class="carousel-caption">
-      </div>
-    </div>
-
+    <% first = true %>
+    <% get_showcase_items.each do |item| %>
+        <div class="item
+          <% if first %> active
+          <% first = false end %>">
+          <img src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px;margin-right: auto; margin-left: auto; margin-top: 50px; margin-bottom: 50px;">
+          <div class="carousel-caption">
+            ...
+          </div>
+        </div>
+    <% end %>
   </div>
 
   <!-- Controls -->
   <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
+    <span class="fa fa-chevron-left" style="position: absolute; top: 140px" aria-hidden="true"></span>
   </a>
   <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
+    <span class="fa fa-chevron-right" style="position: absolute; top: 140px" aria-hidden="true"></span>
   </a>
 </div>
-<div style="margin-left: auto; margin-right:auto; text-align: center;">
+<div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">
   <article>
     <button class="button button2 btn" style="color:black;">CUSTOMIZE</button>
 
@@ -117,34 +89,327 @@
 </div>
 
 
-<div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
+<div style="margin-top: 50px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
 
-  <img src="<%= url_to_image 'index/shirt.png' %>">
-  <h4>Outfit</h4>
+  <img src="<%= url_to_image 'index/men.jpg' %>" style="height: 300px;">
+
   <article>
     <button class="button button2 btn" style="color:black;">SHOP MEN</button>
 
   </article>
+</div>
+
+<div class="container mobilenot">
+  <div class="row">
+
+    <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-10 col-md-10 col-lg-10">
+
+      <img src="Images/shirt.png" style="height: 300px;">
+      <h4 class="text-center">Shirt </h4>
+      <h5 class="text-center"> Cotton+Quality</h5>
+      <article>
+        <button class="button button2 btn" style="color:black;">CUSTOMIZE</button>
+
+      </article>
+    </div>
 
 
-  <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
+    <div style=" margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-2 col-md-2 col-lg-2 bcolor">
 
-    <img src="<%= url_to_image 'index/dress.png' %>" style="height: 300px;">
-    <h4>Outfit</h4>
-    <article>
-      <button class="button button2 btn" style="color:black; ">FULL COLLECTION</button>
-
-    </article>
-
-    <h2 style="margin-top: 50px;">#ORGANICHUSTLER</h2>
+      <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+      <img src="Images/shirt.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <img src="Images/shirt.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <img src="Images/shirt.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <button class="btn-sm btn-link center-block" style="color:black;  "><h4> MORE </h4></button>
 
 
-    <HR style="border-width: 7px; border-color: pink; width: 50%">
-
-    <div style="text-align: center;">
-
-      <span style="border-left:5px solid pink;height:75px; margin-left: auto; margin-right: auto; float: left;"></span>
-      <div/>
     </div>
   </div>
 </div>
+
+
+<div style="margin-top: 15px; margin-bottom: 15px;">
+  <%= video_tag('video.mp4', controls: false, autobuffer: true, autoplay: true, loop: true) %>
+</div>
+
+
+
+
+
+<div class="container mobilenot">
+  <div class="row">
+
+    <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-10 col-md-10 col-lg-10">
+
+      <img src="Images/dress2.png" style="height: 300px;">
+      <h4 class="text-center">Shirt </h4>
+      <h5 class="text-center"> Cotton+Quality</h5>
+      <article>
+        <button class="button button2 btn" style="color:black;">CUSTOMIZE</button>
+
+      </article>
+    </div>
+
+
+    <div style=" margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-2 col-md-2 col-lg-2 bcolor">
+
+      <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+      <img src="Images/dress2.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <img src="Images/dress2.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <img src="Images/dress2.png" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px;">
+      <button class="btn-sm btn-link center-block" style="color:black;  "><h4> MORE </h4></button>
+
+
+    </div>
+  </div>
+</div>
+
+<hr style="width: 80%; margin-top: 80px; border-width: 1px;">
+
+
+<div style="margin-top: 50px; margin-left: auto; margin-right:auto; text-align: center;">
+
+  <img src="Images/wom.png" style="height: 450px;">
+
+  <article>
+    <button class="button button2 btn" style="color:black; ">FULL COLLECTION</button>
+
+  </article>
+
+  <h1 style="margin-top: 70px;">#ORGANICHUSTLER</h1>
+
+
+  <hr>
+</div>
+
+
+<div class="container desktopnot">
+  <div class="row row-centered ">
+    <div class="col-xs-5 col-lg-5 text-center center thumb
+  				col-cen col-centered">
+      <img class="img1" src="Images/al.jpg" align="middle">
+      <p class="text-center">Organic Hustler Video 1</p>
+      <button class="center-block  btn-sm btn-link" style="color:black; ">VIEW ></button>
+    </div>
+
+    <div class="col-xs-2 col-lg-2 vertical-line col-cen
+  				col-centered " style="height: 150px; width:1px; ">
+    </div>
+
+
+    <div class="col-xs-5 col-lg-5 text-center center thumb
+  				col-cen col-centered">
+      <img class="img2" src="Images/th.jpg" align="middle">
+      <p class="text-center">Organic Hustler Video 2</p>
+      <button class="  btn-sm btn-link center-block" style="color:black;  "> VIEW ></button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="container mobilenot">
+  <div class="row row-centered ">
+    <div class="col-xs-5 col-lg-5 text-center center
+  				col-cen col-centered  ">
+
+      <img class="img1lg" src="Images/al.jpg" align="left">
+
+
+    </div>
+
+    <div class="col-xs-2 col-lg-2 vertical-line col-cen
+  				col-centered " style="height: 250px; width:1px; ">
+    </div>
+
+
+    <div class="col-xs-5 col-lg-5 text-center center
+  				col-cen col-centered ">
+      <img class="img2lg" src="Images/th.jpg" align="right">
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="container text-center desktopnot">
+
+  <div class=" text-center center col-cen col-centered " style="margin-top: 8px;">
+
+    <img class="img3" src="Images/sun.jpg" align="middle" style="margin-bottom: 15px; width: 200px; height: 150px; margin-right:auto; margin: auto; display: block;">
+    <p class="text-center " style="margin-top: 15px;">Organic Hustler Video 3</p>
+    <button class=" button buttonig btn text-center" style="color:black;">FOLLOW US ON INSTAGRAM</button>
+
+
+  </div>
+  <span style="width: 100%" class="hr2"></span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container text-center mobilenot">
+
+  <div class=" text-center center col-cen col-centered " style="margin-top: 30px; margin-bottom: 30px;">
+
+    <button class=" button buttonig btn text-center" style="color:black;">FOLLOW US ON INSTAGRAM</button>
+
+
+  </div>
+  <span style="width: 100%" class="hr2 desktopnot"></span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container text-center desktopnot">
+
+  <div class="row center col-cen col-centered desktopnot">
+    <a class="btn btn-social-icon btn-facebook col-sm-3 col-xs-3 col-lg-3 margin mm">
+      <span class="fa fa-facebook"></span>
+
+    </a>
+    <a class="btn btn-social-icon btn-twitter col-sm-3 col-xs-3 col-lg-3   mm">
+      <span class="fa fa-twitter"></span>
+
+    </a>
+
+    <a class="btn btn-social-icon btn-instagram col-sm-3 col-xs-3 col-lg-3  mm">
+      <span class="fa fa-instagram"></span>
+
+    </a>
+
+    <a class="btn btn-social-icon btn-google col-sm-3 col-xs-3 col-lg-3 mm">
+      <span class="fa fa-google"></span>
+
+    </a>
+
+
+  </div>
+  <span style="width: 100%" class="hr2 desktopnot"></span>
+
+</div>
+
+
+
+
+
+
+<div class="container-fluid blc desktopnot">
+  <div class="row" style="margin-top: 20px;">
+    <h3 style="color: white;"> BRAND</h3>
+    <br>
+    <h4 style="color: #A4A4A4;"> STORY </h4>
+    <h4 style="color: #A4A4A4;"> SHOP MEN</h4>
+    <h4 style="color: #A4A4A4;"> SHOP WOMEN </h4>
+    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
+    <br>
+    <h3 style="color: white;"> SHOP</h3>
+    <br>
+    <h4 style="color: #A4A4A4;"> STORY </h4>
+    <h4 style="color: #A4A4A4;"> SHOP MEN</h4>
+    <h4 style="color: #A4A4A4;"> SHOP WOMEN </h4>
+    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
+    <br>
+    <h3 style="color: white;"> VISIT</h3>
+    <h4 style="color: #A4A4A4; margin-bottom: 30px; margin-top: 10px;"> 12 ERICSSON STREET <br> BOSTON, MA Q2122</h4>
+
+    <img src="Images/ico.png" style="width: 60px;">
+
+    <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
+
+
+  </div>
+</div>
+
+<div class="container-fluid blc mobilenot">
+  <div class="row" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+
+    <div class="col-md-2" style="text-align: left;">
+      <h3 style="color: white;"> BRAND</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;"> STORY </h5>
+      <h5 style="color: #A4A4A4;"> SHOP MEN</h5>
+      <h5 style="color: #A4A4A4;"> SHOP WOMEN </h5>
+      <h5 style="color: #A4A4A4;"> CONTACT US</h5>
+
+
+    </div>
+
+    <div class="col-md-2" style="text-align: left;">
+      <h3 style="color: white;">SHOP</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;">LOOKS </h5>
+      <h5 style="color: #A4A4A4;"> HATS</h5>
+      <h5 style="color: #A4A4A4;">MEN </h5>
+      <h5 style="color: #A4A4A4;"> WOMEN</h5>
+      <h5 style="color: #A4A4A4;"> MEN</h5>
+
+
+    </div>
+
+    <div class="col-md-2" style="text-align: left;">
+      <h3 style="color: white;"> FIND US AT</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;"> INSTAGRAM </h5>
+      <h5 style="color: #A4A4A4;"> TWITTER </h5>
+      <h5 style="color: #A4A4A4;"> YOUTUBE</h5>
+      <h5 style="color: #A4A4A4;"> FACEBOOK</h5>
+      <h5 style="color: #A4A4A4;"> E-MAIL</h5>
+
+
+    </div>
+
+    <div class="col-md-6">
+
+      <div class="vertical-line" style="height: 250px; width:1px; float: left; ">
+      </div>
+
+
+      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
+      <input type="" name="" placeholder="Email Address">
+
+
+      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> SEARCH SHOP</h3>
+
+      <input type="" name="">
+      <div>
+        <img src="Images/ico.png" style="width: 30px; margin-top: 50px;">
+
+        <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
+
+      </div>
+
+    </div>
+
+
+  </div>
+</div>
+</body>

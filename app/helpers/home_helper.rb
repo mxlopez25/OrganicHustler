@@ -51,4 +51,24 @@ module HomeHelper
     "#{text[30..-1]}"
   end
 
+  def get_showcase_items
+    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products?limit=5", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    JSON.parse(response.body)['result']
+  end
+
+  def get_item_count
+    user = current_user
+    if user.nil?
+      if session[:temp_user_id].nil?
+        user = TempUser.create
+        p ("user_created with id: #{user.id}")
+        session[:temp_user_id] = user.id
+
+      else
+        user = TempUser.find(session[:temp_user_id])
+      end
+    end
+    user.cart.n_products
+  end
+
 end

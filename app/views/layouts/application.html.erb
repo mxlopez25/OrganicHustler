@@ -13,7 +13,6 @@
     <title>Organic Hustler</title>
 
     <%= javascript_include_tag 'jquery.min.js' %>
-
     <!-- Bootstrap Core -->
     <%= stylesheet_link_tag 'bootstrap.css' %>
     <%= javascript_include_tag 'bootstrap.js' %>
@@ -33,6 +32,99 @@
     <%= stylesheet_link_tag 'home' %>
 
   </head>
+
+  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top desktopnot">
+
+
+    <div class="container-fluid" style="overflow: visible;">
+
+      <a href="#search"><i class="fa fa-search iconx"></i> </a>
+      <a href="#catalog"><i class="fa fa-shopping-cart iconx"><span id="counter" class="badge badge-size"><%= get_item_count %></span></i></a>
+      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+
+      <div class="navbar-header">
+        <button id="toggle_menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="#story">STORY</a>
+          </li>
+          <li>
+            <a href="#catalog-men">SHOP MEN</a>
+          </li>
+          <li>
+            <a href="#catalog-women">SHOP WOMEN</a>
+          </li>
+          <li>
+            <a href="#customize">CUSTOMIZE</a>
+          </li>
+          <li>
+            <a href="#contact">CONTACT US</a>
+          </li>
+          <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top mobilenot">
+
+    <div class="container-fluid" style="overflow: visible;">
+      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo  "></a>
+      <button type="button" class="btn btn-link">Get in Touch</button>
+      <div class=" vertical-line col-cen
+  				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
+      </div>
+      <button type="button" class="btn btn-link">Instagram</button>
+      <div class=" vertical-line col-cen
+  				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
+      </div>
+      <button type="button" class="btn btn-link">Twitter</button>
+      <div style="float: right; margin-top: 10px; margin-right: 4px;">
+        <a href="#catalog"><i class="fa fa-shopping-cart iconx"></i></a>
+      </div>
+      <div style="float: right; margin-top: 10px; margin-right: 30px;">
+
+        <form>
+          <input type="text" name="search" placeholder="Search..">
+        </form>
+
+      </div>
+
+
+      <div class="collapse navbar-collapse wth" style="margin-top: 5px;" id="navbar">
+        <ul class="nav navbar-nav navbar-center wth">
+          <li>
+            <a href="#story">LOOKS</a>
+          </li>
+          <li>
+            <a href="#catalog-men">HATS</a>
+          </li>
+          <li>
+            <a href="#catalog-women">MEN</a>
+          </li>
+          <li>
+            <a href="#customize">WOMEN</a>
+          </li>
+          <li>
+            <a href="#contact">BRAND</a>
+          </li>
+
+        </ul>
+      </div>
+
+      <br>
+      <br>
+    </div>
+
+  </nav>
 
   <%= yield %>
 
