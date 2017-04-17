@@ -68,6 +68,16 @@ module HomeHelper
         user = TempUser.find(session[:temp_user_id])
       end
     end
+    
+    if user.cart.nil?
+      user.create_cart
+      user.cart.is_active = true
+      user.cart.total_m = 0
+      user.cart.n_products = 0
+      user.cart.save!
+      p user.cart
+    end
+
     user.cart.n_products
   end
 
