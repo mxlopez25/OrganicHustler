@@ -10,11 +10,6 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
-  def self.get_user(params, current_user)
-
-    return user
-  end
-
   def add_to_cart
     user = nil
     p current_user
