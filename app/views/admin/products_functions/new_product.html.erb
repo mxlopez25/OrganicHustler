@@ -162,6 +162,41 @@
       </div>
     </div>
 
+    <!--Requires Shipping-->
+    <div class="form-group row">
+      <label for="requires_shipping" class="col-sm-3 col-label">Requires Shipping</label>
+      <div class="col-sm-9">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="requires_shipping" id="requires_shipping1" value="1"> Yes
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="requires_shipping" id="requires_shipping0" value="0"> No
+          </label>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Catalog Only-->
+    <div class="form-group row">
+      <label for="catalog_only" class="col-sm-3 col-label">Catalog Only</label>
+      <div class="col-sm-9">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="catalog_only" id="catalog_only0" value="1"> Yes
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="catalog_only" id="catalog_only0" value="0"> No
+          </label>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="card modal-h">
@@ -192,7 +227,7 @@
       function save(id) {
 
           $.ajax({
-              url: "/customs/edit/product",
+              url: "/customs/new/product",
               type: "POST",
               data: {
                   title: $("#title_edit").val(),
@@ -206,7 +241,9 @@
                   stock_level: $("#stock_level_edit").val(),
                   stock_status: $('input:radio[name="stock_status_edit"]:checked').val(),
                   description: $("#description_edit").val(),
-                  slug: $('#tags_edit').val()
+                  slug: $('#tags_edit').val(),
+                  requires_shipping: $('input:radio[name="requires_shipping"]:checked').val(),
+                  catalog_only: $('input:radio[name="catalog_only"]:checked').val()
               },
               dataType: "html",
               success: function (data) {

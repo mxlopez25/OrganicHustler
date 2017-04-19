@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   get '/custom/load_logo_w_color' => 'customs#load_logo_w_color'
 
   post '/customs/reload_table' => 'customs#table_products'
+  post '/customs/new/product' => 'customs#new_product'
 
   put '/customs/edit/product' => 'customs#save_product'
   put '/customs/upload_image' => 'customs#upload_image'

@@ -212,28 +212,32 @@
             <% variations.push(modifiers) %>
         <% end %>
 
-        <% if !variations.blank? %>
+        <% unless variations.blank? %>
             <h5><span class="label label-primary">Available colors</span></h5>
             <div class="container-menu">
 
+              <% unless variations[2][1]['variations'].blank? %>
               <% variations[2][1]['variations'].each do |var| %>
                   <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
+              <% end %>
               <% end %>
 
             </div>
 
+
             <h5><span class="label label-primary">Available sizes</span></h5>
             <div class="container-menu">
-
+              <% unless variations[1][1]['variations'].blank? %>
               <% variations[1][1]['variations'].each do |var| %>
                   <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
+              <% end %>
               <% end %>
 
             </div>
 
             <h5><span class="label label-primary">Pre created products with logos</span></h5>
             <div class="container-menu">
-
+              <% unless variations[0][1]['variations'].blank? %>
               <% variations[0][1]['variations'].each do |var| %>
                   <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
                     <% if var[1]['title'].eql?('null') %>
@@ -242,6 +246,7 @@
                         <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
                     <% end %>
                   </button>
+              <% end %>
               <% end %>
 
             </div>

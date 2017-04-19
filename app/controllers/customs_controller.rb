@@ -1,3 +1,5 @@
+require 'rest_client'
+
 class CustomsController < ApplicationController
 
   layout 'customs_bl'
@@ -48,6 +50,28 @@ class CustomsController < ApplicationController
 
   def save_product
     AdminHelper.edit_product(params)
+    render :nothing => true, :status => 200
+  end
+
+  def new_product
+    fields = {
+        :title => params['title'],
+        :sku => params['sku'],
+        :status => params['status'],
+        :category => params['category'],
+        :brand => params['brand'],
+        :price => params['price'],
+        :tax_band => params['tax_band'],
+        :sale_price => params['sale_price'],
+        :stock_level => params['stock_level'],
+        :stock_status => params['stock_status'],
+        :description => params['description'],
+        :slug => params['slug'].gsub(',', ' '),
+        :requires_shipping => params['requires_shipping'],
+        :catalog_only => params['catalog_only']
+    }
+
+    RestClient.post('https://api.molt.in/v1/products', fields, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
     render :nothing => true, :status => 200
   end
 
