@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170416154431) do
+ActiveRecord::Schema.define(version: 20170419235443) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -56,7 +56,8 @@ ActiveRecord::Schema.define(version: 20170416154431) do
     t.integer "n_products", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "temp_user_id"
+    t.integer "overall_user_id"
+    t.string "overall_user_type", limit: 45, default: "TempUser", collation: "utf8_general_ci"
   end
 
   create_table "emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -79,6 +80,7 @@ ActiveRecord::Schema.define(version: 20170416154431) do
     t.decimal "height", precision: 10
     t.decimal "rel_x", precision: 10
     t.decimal "rel_y", precision: 10
+    t.string "id_moltin"
   end
 
   create_table "galleries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
