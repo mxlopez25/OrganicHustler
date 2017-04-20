@@ -210,7 +210,7 @@
     <div id="emblems-drop" class="container-menu">
       <% Emblem.where(id_moltin: @product['id']).each do |logo| %>
           <% p logo %>
-          <div class="items-logo-container">
+          <div class="items-emblems-container">
             <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
           </div>
       <% end %>
@@ -272,7 +272,7 @@
     <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
   </div>
 
-  <script id="logo_drop_load">
+  <script id="drop_load">
 
       function loadLogoDrop() {
           document.getElementById("logo-drop").className += ' dropzone';
@@ -296,6 +296,50 @@
                       formData.append("id", '<%= product_i['id'] %>');
                       formData.append("name", 'product..img..set');
                       formData.append("color", '#ffffff');
+                  });
+                  this.on("success", function (file, xhr) {
+                      this.removeAllFiles();
+                  });
+
+                  // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+                  // of the sending event because uploadMultiple is set to true.
+                  this.on("sendingmultiple", function () {
+                      // Gets triggered when the form is actually being sent.
+                      // Hide the success button or the complete form.
+                  });
+                  this.on("successmultiple", function (files, response) {
+                      // Gets triggered when the files have successfully been sent.
+                      // Redirect user or notify of success.
+                  });
+                  this.on("errormultiple", function (files, response) {
+                      // Gets triggered when there was an error sending the files.
+                      // Maybe show form again, and notify user of error
+                  });
+              }
+          });
+      }
+      function loadEmblemDrop() {
+          document.getElementById("emblem-drop").className += ' dropzone';
+          var myDropzone = new Dropzone("div#emblem-drop", {
+              url: 'add/gallery/logo',
+              autoProcessQueue: true,
+              uploadMultiple: false,
+              parallelUploads: 100,
+              maxFiles: 100,
+              headers: {
+                  'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+              },
+              method: 'put',
+              remote: true,
+
+              // The setting up of the dropzone
+              init: function () {
+                  var myDropzone = this;
+
+                  this.on("sending", function (file, xhr, formData) {
+                    /*formData.append("id", '');
+                     formData.append("name", 'product..img..set');
+                     formData.append("color", '#ffffff');*/
                   });
                   this.on("success", function (file, xhr) {
                       this.removeAllFiles();
