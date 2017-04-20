@@ -208,15 +208,11 @@
     <h5><span class="label label-primary">Available emblems</span></h5>
 
     <div id="emblems-drop" class="container-menu">
-      <% if get_gallery(product_i['id']).nil? %>
-          <% create_gallery(product_i['id']) %>
-      <% else %>
-          <% get_gallery(product_i['id']).pictures.all.each do |logo| %>
-              <% p logo %>
-              <div class="items-logo-container">
-                <img onclick="addToPic('<%= logo.image.url(:large) %>')" src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
-              </div>
-          <% end %>
+      <% Emblem.find_by(id_moltin: @product['id']).each do |logo| %>
+          <% p logo %>
+          <div class="items-logo-container">
+            <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
+          </div>
       <% end %>
     </div>
 
@@ -232,9 +228,9 @@
             <div class="container-menu">
 
               <% unless variations[2][1]['variations'].blank? %>
-              <% variations[2][1]['variations'].each do |var| %>
-                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
-              <% end %>
+                  <% variations[2][1]['variations'].each do |var| %>
+                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
+                  <% end %>
               <% end %>
 
             </div>
@@ -243,9 +239,9 @@
             <h5><span class="label label-primary">Available sizes</span></h5>
             <div class="container-menu">
               <% unless variations[1][1]['variations'].blank? %>
-              <% variations[1][1]['variations'].each do |var| %>
-                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
-              <% end %>
+                  <% variations[1][1]['variations'].each do |var| %>
+                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
+                  <% end %>
               <% end %>
 
             </div>
@@ -253,15 +249,15 @@
             <h5><span class="label label-primary">Pre created products with logos</span></h5>
             <div class="container-menu">
               <% unless variations[0][1]['variations'].blank? %>
-              <% variations[0][1]['variations'].each do |var| %>
-                  <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
-                    <% if var[1]['title'].eql?('null') %>
-                        <img src="https://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
-                    <% else %>
-                        <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
-                    <% end %>
-                  </button>
-              <% end %>
+                  <% variations[0][1]['variations'].each do |var| %>
+                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
+                        <% if var[1]['title'].eql?('null') %>
+                            <img src="https://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
+                        <% else %>
+                            <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
+                        <% end %>
+                      </button>
+                  <% end %>
               <% end %>
 
             </div>
