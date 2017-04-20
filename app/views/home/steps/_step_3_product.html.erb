@@ -11,12 +11,10 @@
   <div id="icon_loader" class="jcarousel-wrapper row">
     <div id="myCarousel" class="jcarousel" data-jcarousel="true">
       <ul id="container-logo" style="left: 0; top: 0;">
-        <% unless Emblem.find_by(id_moltin: @product['id']).blank? %>
-        <% Emblem.find_by(id_moltin: @product['id']).each do |image| %>
+        <% Emblem.where(id_moltin: @product['id']).each do |image| %>
             <li class="items-scroll-container">
               <img onclick="addToPic('<%= image.picture.url(:medium) %>')" src="<%= image.picture.url(:thumb) %>" alt="" height="30">
             </li>
-        <% end %>
         <% end %>
       </ul>
     </div>

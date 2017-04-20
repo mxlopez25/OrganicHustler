@@ -208,7 +208,7 @@
     <h5><span class="label label-primary">Available emblems</span></h5>
 
     <div id="emblems-drop" class="container-menu">
-      <% Emblem.find_by(id_moltin: @product['id']).each do |logo| %>
+      <% Emblem.where(id_moltin: @product['id']).each do |logo| %>
           <% p logo %>
           <div class="items-logo-container">
             <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
