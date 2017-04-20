@@ -199,6 +199,21 @@
           <% get_gallery(product_i['id']).pictures.all.each do |logo| %>
               <% p logo %>
               <div class="items-logo-container">
+                <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
+              </div>
+          <% end %>
+      <% end %>
+    </div>
+
+    <h5><span class="label label-primary">Available emblems</span></h5>
+
+    <div id="emblems-drop" class="container-menu">
+      <% if get_gallery(product_i['id']).nil? %>
+          <% create_gallery(product_i['id']) %>
+      <% else %>
+          <% get_gallery(product_i['id']).pictures.all.each do |logo| %>
+              <% p logo %>
+              <div class="items-logo-container">
                 <img onclick="addToPic('<%= logo.image.url(:large) %>')" src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
               </div>
           <% end %>
