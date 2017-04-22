@@ -104,7 +104,12 @@ module AdminHelper
   end
 
   def get_thumb_g_id(id, size)
+    if !id.blank?
     Picture.get_id_url(id, size)
+    else
+      ''
+    end
+
   end
 
 

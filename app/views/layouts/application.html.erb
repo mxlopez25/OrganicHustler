@@ -1,187 +1,311 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <%= csrf_meta_tags %>
+  <%= csrf_meta_tags %>
 
-    <title>Organic Hustler</title>
+  <title>Organic Hustler</title>
 
-    <%= javascript_include_tag 'jquery.min.js' %>
-    <!-- Bootstrap Core -->
-    <%= stylesheet_link_tag 'bootstrap.css' %>
-    <%= javascript_include_tag 'bootstrap.js' %>
+  <%= javascript_include_tag 'jquery.min.js' %>
+  <!-- Bootstrap Core -->
+  <%= stylesheet_link_tag 'bootstrap.css' %>
+  <%= javascript_include_tag 'bootstrap.js' %>
 
-    <%= javascript_include_tag 'dragable.min' %>
-    <%= stylesheet_link_tag 'style-fc' %>
-    <%= javascript_include_tag 'jquery.jcarousel' %>
+  <%= javascript_include_tag 'dragable.min' %>
+  <%= stylesheet_link_tag 'style-fc' %>
+  <%= javascript_include_tag 'jquery.jcarousel' %>
 
-    <%= stylesheet_link_tag 'application' %>
-    <%= javascript_include_tag 'application.js' %>
+  <%= stylesheet_link_tag 'application' %>
+  <%= javascript_include_tag 'application.js' %>
 
-    <!-- Plugin CSS -->
-    <%= stylesheet_link_tag 'magnific-popup/magnific-popup' %>
+  <!-- Plugin CSS -->
+  <%= stylesheet_link_tag 'magnific-popup/magnific-popup' %>
 
-    <!-- Theme CSS -->
-    <%= stylesheet_link_tag 'index/estilos' %>
-    <%= stylesheet_link_tag 'home' %>
+  <!-- Theme CSS -->
+  <%= stylesheet_link_tag 'index/estilos' %>
+  <%= stylesheet_link_tag 'home' %>
 
-  </head>
+</head>
 
-  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top desktopnot">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top desktopnot">
 
-    <div class="container-fluid" style="overflow: hidden">
+  <div class="container-fluid" style="overflow: hidden">
 
-      <a href="#search"><i class="fa fa-search iconx"></i> </a>
-      <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"><span id="counter" class="badge badge-size"><%= get_item_count %></span></i></a>
-      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+    <a href="#search"><i class="fa fa-search iconx"></i> </a>
+    <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"><span id="counter" class="badge badge-size"><%= get_item_count %></span></i></a>
+    <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
 
-      <div class="navbar-header">
-        <button id="toggle_menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </div>
-
-
-      <div class="collapse navbar-collapse" id="navbar">
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a href="#story">STORY</a>
-          </li>
-          <li>
-            <a href="#catalog-men">SHOP MEN</a>
-          </li>
-          <li>
-            <a href="#catalog-women">SHOP WOMEN</a>
-          </li>
-          <li>
-            <a href="#customize">CUSTOMIZE</a>
-          </li>
-          <li>
-            <a href="#contact">CONTACT US</a>
-          </li>
-          <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
-        </ul>
-      </div>
+    <div class="navbar-header">
+      <button id="toggle_menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
-  </nav>
 
-  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top mobilenot">
 
-    <div class="container-fluid" style="overflow: visible;">
-      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo  "></a>
-      <button type="button" class="btn btn-link">Get in Touch</button>
-      <div class=" vertical-line col-cen
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#story">STORY</a>
+        </li>
+        <li>
+          <a href="#catalog-men">SHOP MEN</a>
+        </li>
+        <li>
+          <a href="#catalog-women">SHOP WOMEN</a>
+        </li>
+        <li>
+          <a href="#customize">CUSTOMIZE</a>
+        </li>
+        <li>
+          <a href="#contact">CONTACT US</a>
+        </li>
+        <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top mobilenot">
+
+  <div class="container-fluid" style="overflow: visible;">
+    <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo  "></a>
+    <button type="button" class="btn btn-link">Get in Touch</button>
+    <div class=" vertical-line col-cen
   				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
-      </div>
-      <button type="button" class="btn btn-link">Instagram</button>
-      <div class=" vertical-line col-cen
+    </div>
+    <button type="button" class="btn btn-link">Instagram</button>
+    <div class=" vertical-line col-cen
   				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
-      </div>
-      <button type="button" class="btn btn-link">Twitter</button>
+    </div>
+    <button type="button" class="btn btn-link">Twitter</button>
 
-      <div style="float: right; margin-top: 10px; margin-right: 30px;">
+    <div style="float: right; margin-top: 10px; margin-right: 30px;">
 
-        <form>
-          <input type="text" name="search" placeholder="Search..">
-        </form>
+      <form>
+        <input type="text" name="search" placeholder="Search..">
+      </form>
 
-      </div>
+    </div>
 
-      <div style="float: right; margin-top: 10px; margin-right: 4px;">
-        <a><i id="myBtn_2" class="fa fa-shopping-cart iconx"></i></a>
-      </div>
+    <div style="float: right; margin-top: 10px; margin-right: 4px;">
+      <a><i id="myBtn_2" class="fa fa-shopping-cart iconx"></i></a>
+      <span id="counter" class="badge badge-size"><%= get_item_count %></span>
+    </div>
 
-      <!-- The Modal -->
-      <div id="myModal" class="modal">
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
 
-        <div id="triangle" class="triangle"></div>
-        <!-- Modal content -->
-        <div id="modal_c" class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
+      <div id="triangle" class="triangle"></div>
+      <!-- Modal content -->
+      <div id="modal_c" class="modal-content">
+        <span class="close">&times;</span>
+        <h3 style="color: #3F3F3F; text-align: center; margin-right: auto; margin-left: auto">Your Bag</h3>
+        <hr>
+
+        <div id="product_loader" class="jcarousel-wrapper">
+          <div id="product-loader-carousel" style="width: 100%; height: 200px" class="jcarousel" data-jcarousel="true">
+            <ul id="product-container" style="left: 0; top: 0;">
+              <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+                  <li class="element_product">
+                    <div id="<%= product.id %>" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+
+                    </div>
+
+                    <script id="create-shape">
+                        createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
+                        function createShape(id, width, height, x, y, s_w, s_h) {
+                            var container = $('#' + id);
+                            container.height(container.width());
+
+                            var stage = new Konva.Stage({
+                                container: id,
+                                width: container.width(),
+                                height: container.height()
+                            });
+                            var layer = new Konva.Layer();
+                            stage.add(layer);
+
+                            var baseImg = new Konva.Image({
+                                width: container.width(),
+                                height: container.height(),
+                                draggable: false
+                            });
+
+                            var logoImg = new Konva.Image({
+                                width: container.width() * width / s_w,
+                                height: container.height() * height / s_h
+                            });
+
+                            var logoGroup = new Konva.Group({
+                                x: container.width() * x / s_w,
+                                y: container.width() * y / s_h
+                            });
+
+                            layer.add(baseImg);
+                            layer.add(logoGroup);
+                            logoGroup.add(logoImg);
+
+                            var imageObj1 = new Image();
+                            imageObj1.onload = function () {
+                                baseImg.image(imageObj1);
+                                layer.draw();
+                            };
+                            imageObj1.src = '<%= get_product(product.m_id)['images'].first['url']['https'] %>';
+
+                            var imageObj2 = new Image();
+                            imageObj2.onload = function () {
+                                logoImg.image(imageObj2);
+                                layer.draw();
+                                imageObj2.width = container.width() * width / s_w;
+                                console.log(imageObj2.width, container.width(), width, s_w);
+                                imageObj2.height = container.height() * height / s_h;
+                                console.log(imageObj2.height);
+                            };
+                            imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                            layer.draw();
+                        }
+                    </script>
+                  </li>
+              <% end %>
+            </ul>
+          </div>
+          <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+          <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
 
+        <script>
+
+            //Photo slider
+            (function ($) {
+                $(function () {
+                    $('.jcarousel').jcarousel();
+
+                    $('.jcarousel-control-prev')
+                        .on('jcarouselcontrol:active', function () {
+                            $(this).removeClass('inactive');
+                        })
+                        .on('jcarouselcontrol:inactive', function () {
+                            $(this).addClass('inactive');
+                        })
+                        .jcarouselControl({
+                            target: '-=1'
+                        });
+
+                    $('.jcarousel-control-next')
+                        .on('jcarouselcontrol:active', function () {
+                            $(this).removeClass('inactive');
+                        })
+                        .on('jcarouselcontrol:inactive', function () {
+                            $(this).addClass('inactive');
+                        })
+                        .jcarouselControl({
+                            target: '+=1'
+                        });
+
+                    $('.jcarousel-pagination')
+                        .on('jcarouselpagination:active', 'a', function () {
+                            $(this).addClass('active');
+                        })
+                        .on('jcarouselpagination:inactive', 'a', function () {
+                            $(this).removeClass('active');
+                        })
+                        .jcarouselPagination();
+                });
+            })(jQuery);
+        </script>
+
+
       </div>
 
-      <script>
-          // Get the modal
-          var modal = document.getElementById('myModal');
-
-          // Get the button that opens the modal
-          var btn = document.getElementById("myBtn_2");
-
-          // Get the <span> element that closes the modal
-          var span = document.getElementsByClassName("close")[0];
-
-          var btn_j = $('#myBtn_2');
-          var triangle = document.getElementById('triangle');
-          var modal_c = document.getElementById('modal_c');
-          // When the user clicks on the button, open the modal
-          btn.onclick = function () {
-              modal.style.display = "block";
-
-              triangle.style.left = (btn.getBoundingClientRect().left - (7)).toString() + "px";
-              triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
-              modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
-              modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
-          };
-
-          $(window).on('resize', function () {
-              triangle.style.left = (btn.getBoundingClientRect().left - (7)).toString() + "px";
-              triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
-              modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
-              modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
-          });
-
-          // When the user clicks on <span> (x), close the modal
-          span.onclick = function () {
-              modal.style.display = "none";
-          };
-
-          // When the user clicks anywhere outside of the modal, close it
-          window.onclick = function (event) {
-              if (event.target === modal) {
-                  modal.style.display = "none";
-              }
-          }
-      </script>
-
-
-      <div class="collapse navbar-collapse wth" style="margin-top: 5px;" id="navbar">
-        <ul class="nav navbar-nav navbar-center wth">
-          <li>
-            <a href="#story">LOOKS</a>
-          </li>
-          <li>
-            <a href="#catalog-men">HATS</a>
-          </li>
-          <li>
-            <a href="#catalog-women">MEN</a>
-          </li>
-          <li>
-            <a href="#customize">WOMEN</a>
-          </li>
-          <li>
-            <a href="#contact">BRAND</a>
-          </li>
-
-        </ul>
-      </div>
-
-      <br>
-      <br>
     </div>
 
-  </nav>
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
 
-  <%= yield %>
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn_2");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        var btn_j = $('#myBtn_2');
+        var triangle = document.getElementById('triangle');
+        var modal_c = document.getElementById('modal_c');
+        // When the user clicks on the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+
+            triangle.style.right = (100 - ((btn.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
+            triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
+            modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
+            modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
+
+            var carousel_p = document.getElementById('product-loader-carousel');
+            $('.element_product').each(function () {
+                console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+            });
+        };
+
+        $(window).on('resize', function () {
+            triangle.style.right = (100 - ((btn.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
+            triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
+            modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
+            modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+
+    <div class="collapse navbar-collapse wth" style="margin-top: 5px;" id="navbar">
+      <ul class="nav navbar-nav navbar-center wth">
+        <li>
+          <a href="#story">LOOKS</a>
+        </li>
+        <li>
+          <a href="#catalog-men">HATS</a>
+        </li>
+        <li>
+          <a href="#catalog-women">MEN</a>
+        </li>
+        <li>
+          <a href="#customize">WOMEN</a>
+        </li>
+        <li>
+          <a href="#contact">BRAND</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <br>
+    <br>
+  </div>
+
+</nav>
+
+<%= yield %>
 
 </html>
