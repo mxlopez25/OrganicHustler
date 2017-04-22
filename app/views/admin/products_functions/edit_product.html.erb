@@ -211,7 +211,7 @@
       <% Emblem.where(id_moltin: @product['id']).each do |logo| %>
           <% p logo %>
           <div class="items-emblems-container">
-            <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
+            <img src="<%= logo.picture.url(:thumb) %>" alt="" height="30px">
           </div>
       <% end %>
     </div>
