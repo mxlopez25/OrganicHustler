@@ -43,6 +43,10 @@ Rails.application.routes.draw do
   put '/customs/save_variation' => 'customs#save_variation'
 
   put '/admin/product/edit/add/gallery/logo' => 'galleries#create'
-  put '/admin/product/edit/add/emblems' => 'emblems#create'
+
+  namespace :support_controllers do
+    get 'add/emblems/:id_p' => 'emblems#add_emblems'
+    put 'add/emblems' => 'emblems#create'
+  end
 
 end

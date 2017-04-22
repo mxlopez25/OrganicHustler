@@ -1,0 +1,528 @@
+<nav class="navbar navbar-inverse sidebar" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Organic Hustler</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-home"></span></a>
+        </li>
+        <li class="active">
+          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-product-hunt"></span></a>
+        </li>
+        <li>
+          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-picture-o"></span></a>
+        </li>
+        <li>
+          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-truck"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<body style="background-color: #dedede">
+
+<div class="center-div">
+  <div class="card notification-ask" style="background: #ffffff">
+    <h3>Add variation</h3>
+    <hr>
+    <div style="text-align: left">
+      <%= form_tag '/support_controllers/add/emblems', :name => 'addEmblemsForm', :method => :put do %>
+          <div style="margin: 10px">
+            <div id="emblems-drop" class="container-menu-emblem dropzone">
+              <% Emblem.where(id_moltin: @product_id).each do |logo| %>
+                  <% p logo %>
+                  <div class="items-emblems-container">
+                    <img src="<%= logo.picture.url(:thumb) %>" alt="" height="30px">
+                  </div>
+              <% end %>
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-addon">Price emblem</span>
+              <label for="emblem_cost"></label><input class="form-control" aria-label="Amount (to the nearest dollar)" type="number" step="any" min="0" id="emblem_cost" value="">
+              <span class="input-group-addon">$</span>
+            </div>
+
+            <input class="hidden" type="text" id="width_u" value="100" name="width_u">
+            <input class="hidden" type="text" id="height_u" value="100" name="height_u">
+
+            <input class="hidden" type="text" id="rel_x" value="400" name="rel_x">
+            <input class="hidden" type="text" id="rel_y" value="400" name="rel_y">
+
+            <input class="hidden" type="text" id="id_moltin" value="<%= @product_id %>" name="id_moltin">
+
+            <h4>Position 1</h4>
+            <div id="container_1" style="width: 400px; height: 400px;"></div>
+
+            <input class="hidden" type="text" id="pos_1_x" value="100" name="pos_1_x">
+            <input class="hidden" type="text" id="pos_1_y" value="100" name="pos_1_y">
+
+            <h4>Position 2</h4>
+            <div id="container_2" style="width: 400px; height: 400px;"></div>
+
+            <input class="hidden" type="text" id="pos_2_x" value="100" name="pos_2_x">
+            <input class="hidden" type="text" id="pos_2_y" value="100" name="pos_2_y">
+
+            <h4>Position 3</h4>
+            <div id="container_3" style="width: 400px; height: 400px;"></div>
+
+            <input class="hidden" type="text" id="pos_3_x" value="100" name="pos_3_x">
+            <input class="hidden" type="text" id="pos_3_y" value="100" name="pos_3_y">
+
+            <h4>Position 4</h4>
+            <div id="container_4" style="width: 400px; height: 400px;"></div>
+
+            <input class="hidden" type="text" id="pos_4_x" value="100" name="pos_4_x">
+            <input class="hidden" type="text" id="pos_4_y" value="100" name="pos_4_y">
+
+          </div>
+
+          <button id="button_submit" type="submit" style="width: 100%; margin-top: 10px" class="btn btn-primary">ADD</button>
+
+          <script>
+
+              var emblem_cost = document.getElementById('emblem_cost');
+
+              var width_u = document.getElementById('width_u');
+              var height_u = document.getElementById('height_u');
+
+              var rel_x = document.getElementById('rel_x');
+              var rel_y = document.getElementById('rel_y');
+
+              var pos_1_x = document.getElementById('pos_1_x');
+              var pos_1_y = document.getElementById('pos_1_y');
+              var pos_2_x = document.getElementById('pos_2_x');
+              var pos_2_y = document.getElementById('pos_2_y');
+              var pos_3_x = document.getElementById('pos_3_x');
+              var pos_3_y = document.getElementById('pos_3_y');
+              var pos_4_x = document.getElementById('pos_4_x');
+              var pos_4_y = document.getElementById('pos_4_y');
+
+              function addAnchor(group, x, y, name) {
+                  var layer = group.getLayer();
+                  var anchor = new Konva.Circle({
+                      x: x,
+                      y: y,
+                      stroke: '#666',
+                      fill: '#ddd',
+                      strokeWidth: 2,
+                      radius: 8,
+                      name: name,
+                      draggable: true,
+                      dragOnTop: false
+                  });
+                  anchor.on('dragmove', function () {
+                      update(this);
+                      layer.draw();
+                  });
+                  anchor.on('mousedown touchstart', function () {
+                      group.setDraggable(false);
+                      this.moveToTop();
+                  });
+                  anchor.on('dragend', function () {
+                      group.setDraggable(true);
+                      layer.draw();
+                  });
+                  // add hover styling
+                  anchor.on('mouseover', function () {
+                      var layer = this.getLayer();
+                      document.body.style.cursor = 'pointer';
+                      this.setStrokeWidth(4);
+                      layer.draw();
+                  });
+                  anchor.on('mouseout', function () {
+                      var layer = this.getLayer();
+                      document.body.style.cursor = 'default';
+                      this.setStrokeWidth(2);
+                      layer.draw();
+                  });
+                  group.add(anchor);
+              }
+
+              var container_1 = $('#container_1');
+              container_1.height(container_1.width());
+
+              var container_2 = $('#container_2');
+              container_2.height(container_2.width());
+
+              var container_3 = $('#container_3');
+              container_3.height(container_3.width());
+
+              var container_4 = $('#container_4');
+              container_4.height(container_4.width());
+
+              var stage_1 = new Konva.Stage({
+                  name: 'stage_1',
+                  container: 'container_1',
+                  width: container_1.width(),
+                  height: container_1.height()
+              });
+
+              var stage_2 = new Konva.Stage({
+                  name: 'stage_2',
+                  container: 'container_2',
+                  width: container_2.width(),
+                  height: container_2.height()
+              });
+
+              var stage_3 = new Konva.Stage({
+                  name: 'stage_3',
+                  container: 'container_3',
+                  width: container_3.width(),
+                  height: container_3.height()
+              });
+
+              var stage_4 = new Konva.Stage({
+                  name: 'stage_4',
+                  container: 'container_4',
+                  width: container_4.width(),
+                  height: container_4.height()
+              });
+
+              var layer_1 = new Konva.Layer();
+              stage_1.add(layer_1);
+
+              var layer_2 = new Konva.Layer();
+              stage_2.add(layer_2);
+
+              var layer_3 = new Konva.Layer();
+              stage_3.add(layer_3);
+
+              var layer_4 = new Konva.Layer();
+              stage_4.add(layer_4);
+
+              var baseImg_1 = new Konva.Image({
+                  width: container_1.width(),
+                  height: container_1.height(),
+                  draggable: false
+              });
+
+              var baseImg_2 = new Konva.Image({
+                  width: container_2.width(),
+                  height: container_3.height(),
+                  draggable: false
+              });
+
+              var baseImg_3 = new Konva.Image({
+                  width: container_3.width(),
+                  height: container_3.height(),
+                  draggable: false
+              });
+
+              var baseImg_4 = new Konva.Image({
+                  width: container_4.width(),
+                  height: container_4.height(),
+                  draggable: false
+              });
+
+              var logoImg_1 = new Konva.Image({
+                  width: 100,
+                  height: 100
+              });
+              var logoGroup_1 = new Konva.Group({
+                  x: 100,
+                  y: 100,
+                  draggable: true
+              });
+
+              var logoImg_2 = new Konva.Image({
+                  width: 100,
+                  height: 100
+              });
+              var logoGroup_2 = new Konva.Group({
+                  x: 100,
+                  y: 100,
+                  draggable: true
+              });
+
+              var logoImg_3 = new Konva.Image({
+                  width: 100,
+                  height: 100
+              });
+              var logoGroup_3 = new Konva.Group({
+                  x: 100,
+                  y: 100,
+                  draggable: true
+              });
+
+              var logoImg_4 = new Konva.Image({
+                  width: 100,
+                  height: 100
+              });
+              var logoGroup_4 = new Konva.Group({
+                  x: 100,
+                  y: 100,
+                  draggable: true
+              });
+
+              layer_1.add(baseImg_1);
+              layer_1.add(logoGroup_1);
+              logoGroup_1.add(logoImg_1);
+
+              layer_2.add(baseImg_2);
+              layer_2.add(logoGroup_2);
+              logoGroup_2.add(logoImg_2);
+
+              layer_3.add(baseImg_3);
+              layer_3.add(logoGroup_3);
+              logoGroup_3.add(logoImg_3);
+
+              layer_4.add(baseImg_4);
+              layer_4.add(logoGroup_4);
+              logoGroup_4.add(logoImg_4);
+
+              addAnchor(logoGroup_1, 0, 0, 'topLeft');
+              addAnchor(logoGroup_1, 100, 0, 'topRight');
+              addAnchor(logoGroup_1, 100, 100, 'bottomRight');
+              addAnchor(logoGroup_1, 0, 100, 'bottomLeft');
+
+              logoGroup_1.on('dragend', function () {
+                  pos_1_x.value = logoGroup_1.x();
+                  pos_1_y.value = logoGroup_1.y();
+              });
+
+              logoGroup_2.on('dragend', function () {
+                  pos_2_x.value = logoGroup_2.x();
+                  pos_2_y.value = logoGroup_2.y();
+              });
+
+              logoGroup_3.on('dragend', function () {
+                  pos_3_x.value = logoGroup_3.x();
+                  pos_3_y.value = logoGroup_3.y();
+              });
+
+              logoGroup_4.on('dragend', function () {
+                  pos_4_x.value = logoGroup_4.x();
+                  pos_4_y.value = logoGroup_4.y();
+              });
+
+              var imageObj1 = new Image();
+              imageObj1.onload = function () {
+                  baseImg_1.image(imageObj1);
+                  layer_1.draw();
+              };
+              imageObj1.src = '<%= AdminHelper.get_product_by_id(@product_id)['images'][0]['url']['https'] %>';
+
+              var imageObj2 = new Image();
+              imageObj2.onload = function () {
+                  baseImg_2.image(imageObj2);
+                  layer_2.draw();
+              };
+              imageObj2.src = '<%= AdminHelper.get_product_by_id(@product_id)['images'][0]['url']['https'] %>';
+
+              var imageObj3 = new Image();
+              imageObj3.onload = function () {
+                  baseImg_3.image(imageObj3);
+                  layer_3.draw();
+              };
+              imageObj3.src = '<%= AdminHelper.get_product_by_id(@product_id)['images'][0]['url']['https'] %>';
+
+              var imageObj4 = new Image();
+              imageObj4.onload = function () {
+                  baseImg_4.image(imageObj4);
+                  layer_4.draw();
+              };
+              imageObj4.src = '<%= AdminHelper.get_product_by_id(@product_id)['images'][0]['url']['https'] %>';
+
+              rel_x.value = baseImg_1.width();
+              rel_y.value = baseImg_1.height();
+
+              var logo_1 = new Image();
+              logo_1.onload = function () {
+                  logoImg_1.image(logo_1);
+                  layer_1.draw();
+              };
+
+              var logo_2 = new Image();
+              logo_2.onload = function () {
+                  logoImg_2.image(logo_2);
+                  layer_2.draw();
+              };
+
+              var logo_3 = new Image();
+              logo_3.onload = function () {
+                  logoImg_3.image(logo_3);
+                  layer_3.draw();
+              };
+
+              var logo_4 = new Image();
+              logo_4.onload = function () {
+                  logoImg_4.image(logo_4);
+                  layer_4.draw();
+              };
+
+              layer_1.draw();
+              layer_2.draw();
+              layer_3.draw();
+              layer_4.draw();
+
+              function update(activeAnchor) {
+
+                  var group_1 = logoGroup_1;
+                  var group_2 = logoGroup_2;
+                  var group_3 = logoGroup_3;
+                  var group_4 = logoGroup_4;
+
+                  var topLeft = group_1.get('.topLeft')[0];
+                  var topRight = group_1.get('.topRight')[0];
+                  var bottomRight = group_1.get('.bottomRight')[0];
+                  var bottomLeft = group_1.get('.bottomLeft')[0];
+
+                  var image_1 = group_1.get('Image')[0];
+                  var image_2 = group_2.get('Image')[0];
+                  var image_3 = group_3.get('Image')[0];
+                  var image_4 = group_4.get('Image')[0];
+
+                  var anchorX = activeAnchor.getX();
+                  var anchorY = activeAnchor.getY();
+                  // update anchor positions
+                  switch (activeAnchor.getName()) {
+                      case 'topLeft':
+                          topRight.setY(anchorY);
+                          bottomLeft.setX(anchorX);
+                          break;
+                      case 'topRight':
+                          topLeft.setY(anchorY);
+                          bottomRight.setX(anchorX);
+                          break;
+                      case 'bottomRight':
+                          bottomLeft.setY(anchorY);
+                          topRight.setX(anchorX);
+                          break;
+                      case 'bottomLeft':
+                          bottomRight.setY(anchorY);
+                          topLeft.setX(anchorX);
+                          break;
+                  }
+                  image_1.position(topLeft.position());
+                  var width = topRight.getX() - topLeft.getX();
+                  var height = bottomLeft.getY() - topLeft.getY();
+
+                  width_u.value = width;
+                  height_u.value = height;
+
+                  if (width && height) {
+                      image_1.width(width);
+                      image_1.height(height);
+
+                      image_2.width(width);
+                      image_2.height(height);
+
+                      image_3.width(width);
+                      image_3.height(height);
+
+                      image_4.width(width);
+                      image_4.height(height);
+
+                      layer_1.draw();
+                      layer_2.draw();
+                      layer_3.draw();
+                      layer_4.draw();
+                  }
+              }
+
+          </script>
+
+          <script>
+              var myDropzone = new Dropzone("div#emblems-drop", { // The camelized version of the ID of the form element
+
+                  // The configuration we've talked about above
+                  url: '/support_controllers/add/emblems',
+                  autoProcessQueue: false,
+                  uploadMultiple: true,
+                  parallelUploads: 1,
+                  maxFiles: 1,
+                  method: 'put',
+                  headers: {
+                      'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                  },
+                  accept: function (file, done) {
+
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          logo_1.src = e.target.result;
+                          layer_1.draw();
+
+                          logo_2.src = e.target.result;
+                          layer_2.draw();
+
+                          logo_3.src = e.target.result;
+                          layer_3.draw();
+
+                          logo_4.src = e.target.result;
+                          layer_4.draw();
+                      };
+                      reader.readAsDataURL(file);
+
+                      console.log(file);
+                      done();
+                  },
+
+                  // The setting up of the dropzone
+                  init: function () {
+                      var myDropzone = this;
+
+                      // First change the button to actually tell Dropzone to process the queue.
+                      document.getElementById('button_submit').addEventListener("click", function (e) {
+                          // Make sure that the form isn't actually being sent.
+                          console.log('hola');
+                          e.preventDefault();
+                          e.stopPropagation();
+                          myDropzone.processQueue();
+                      });
+
+                      // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+                      // of the sending event because uploadMultiple is set to true.
+                      this.on("sending", function (file, xhr, formData) {
+                          formData.append("id_moltin", '<%= @product_id %>');
+                          formData.append('emblem_cost', emblem_cost.value);
+
+                          formData.append('width_u', width_u.value);
+                          formData.append('height_u', height_u.value);
+
+                          formData.append('rel_x', rel_x.value);
+                          formData.append('rel_y', rel_y.value);
+
+                          formData.append('pos_1_x', pos_1_x.value);
+                          formData.append('pos_1_y', pos_1_y.value);
+                          formData.append('pos_2_x', pos_2_x.value);
+                          formData.append('pos_2_y', pos_2_y.value);
+                          formData.append('pos_3_x', pos_3_x.value);
+                          formData.append('pos_3_y', pos_3_y.value);
+                          formData.append('pos_4_x', pos_4_x.value);
+                          formData.append('pos_4_y', pos_4_y.value);
+                      });
+                      this.on("sendingmultiple", function () {
+                          // Gets triggered when the form is actually being sent.
+                          // Hide the success button or the complete form.
+                      });
+                      this.on("successmultiple", function (files, response) {
+                          // Gets triggered when the files have successfully been sent.
+                          // Redirect user or notify of success.
+                      });
+                      this.on("errormultiple", function (files, response) {
+                          // Gets triggered when there was an error sending the files.
+                          // Maybe show form again, and notify user of error
+                      });
+                  }
+              });
+          </script>
+
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>
+</body>

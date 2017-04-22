@@ -216,6 +216,10 @@
       <% end %>
     </div>
 
+    <button id="btn_w" onclick="window.location.href = '/support_controllers/add/emblems/<%= product_i['id'] %>'" class="btn btn-success menu-buttons" type="button">Add
+      emblems
+    </button>
+
     <% unless product_i['is_variation'] %>
 
         <% variations = [] %>
@@ -234,7 +238,6 @@
               <% end %>
 
             </div>
-
 
             <h5><span class="label label-primary">Available sizes</span></h5>
             <div class="container-menu">
@@ -279,7 +282,7 @@
           var myDropzone = new Dropzone("div#logo-drop", {
               url: 'add/gallery/logo',
               autoProcessQueue: true,
-              uploadMultiple: false,
+              uploadMultiple: true,
               parallelUploads: 100,
               maxFiles: 100,
               headers: {
@@ -318,53 +321,7 @@
               }
           });
       }
-      function loadEmblemDrop() {
-          document.getElementById("emblems-drop").className += ' dropzone';
-          var myDropzone = new Dropzone("div#emblems-drop", {
-              url: 'add/gallery/logo',
-              autoProcessQueue: true,
-              uploadMultiple: false,
-              parallelUploads: 100,
-              maxFiles: 100,
-              headers: {
-                  'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-              },
-              method: 'put',
-              remote: true,
-
-              // The setting up of the dropzone
-              init: function () {
-                  var myDropzone = this;
-
-                  this.on("sending", function (file, xhr, formData) {
-                    /*formData.append("id", '');
-                     formData.append("name", 'product..img..set');
-                     formData.append("color", '#ffffff');*/
-                  });
-                  this.on("success", function (file, xhr) {
-                      this.removeAllFiles();
-                  });
-
-                  // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                  // of the sending event because uploadMultiple is set to true.
-                  this.on("sendingmultiple", function () {
-                      // Gets triggered when the form is actually being sent.
-                      // Hide the success button or the complete form.
-                  });
-                  this.on("successmultiple", function (files, response) {
-                      // Gets triggered when the files have successfully been sent.
-                      // Redirect user or notify of success.
-                  });
-                  this.on("errormultiple", function (files, response) {
-                      // Gets triggered when there was an error sending the files.
-                      // Maybe show form again, and notify user of error
-                  });
-              }
-          });
-      }
-
       loadLogoDrop();
-      loadEmblemDrop();
 
   </script>
 
