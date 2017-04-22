@@ -118,7 +118,7 @@
                     <div id="<%= product.id %>" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
 
                     </div>
-
+                    <% product_temp = get_product(product.m_id) %>
                     <script id="create-shape">
                         createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
                         function createShape(id, width, height, x, y, s_w, s_h) {
@@ -158,7 +158,7 @@
                                 baseImg.image(imageObj1);
                                 layer.draw();
                             };
-                            imageObj1.src = '<%= get_product(product.m_id)['images'].first['url']['https'] %>';
+                            imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
 
                             var imageObj2 = new Image();
                             imageObj2.onload = function () {
@@ -173,6 +173,9 @@
                             layer.draw();
                         }
                     </script>
+                    <h4><%= product_temp['title'] %></h4>
+
+
                   </li>
               <% end %>
             </ul>
@@ -224,6 +227,9 @@
             })(jQuery);
         </script>
 
+        <hr>
+        <%= get_cart.total_m %>$
+        <hr>
 
       </div>
 

@@ -83,6 +83,31 @@ module HomeHelper
 
   end
 
+  def get_cart
+    user = current_user
+    if user.nil?
+      if session[:temp_user_id].nil?
+        user = TempUser.create
+        p ("user_created with id: #{user.id}")
+        session[:temp_user_id] = user.id
+
+      else
+        user = TempUser.find(session[:temp_user_id])
+      end
+    end
+
+    if user.cart.nil?
+      user.create_cart
+      user.cart.is_active = true
+      user.cart.total_m = 0
+      user.cart.n_products = 0
+      user.cart.save!
+      user.cart
+    else
+      user.cart
+    end
+  end
+
   def get_item_count
     user = current_user
     if user.nil?
