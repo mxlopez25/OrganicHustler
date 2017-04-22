@@ -38,7 +38,7 @@
     <div class="container-fluid" style="overflow: hidden">
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
-      <a href="#catalog"><i class="fa fa-shopping-cart iconx"><span id="counter" class="badge badge-size"><%= get_item_count %></span></i></a>
+      <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"><span id="counter" class="badge badge-size"><%= get_item_count %></span></i></a>
       <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
 
       <div class="navbar-header">
@@ -86,9 +86,7 @@
   				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
       </div>
       <button type="button" class="btn btn-link">Twitter</button>
-      <div style="float: right; margin-top: 10px; margin-right: 4px;">
-        <a href="#catalog"><i class="fa fa-shopping-cart iconx"></i></a>
-      </div>
+
       <div style="float: right; margin-top: 10px; margin-right: 30px;">
 
         <form>
@@ -96,6 +94,65 @@
         </form>
 
       </div>
+
+      <div style="float: right; margin-top: 10px; margin-right: 4px;">
+        <a><i id="myBtn_2" class="fa fa-shopping-cart iconx"></i></a>
+      </div>
+
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+        <div id="triangle" class="triangle"></div>
+        <!-- Modal content -->
+        <div id="modal_c" class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+
+      </div>
+
+      <script>
+          // Get the modal
+          var modal = document.getElementById('myModal');
+
+          // Get the button that opens the modal
+          var btn = document.getElementById("myBtn_2");
+
+          // Get the <span> element that closes the modal
+          var span = document.getElementsByClassName("close")[0];
+
+          var btn_j = $('#myBtn_2');
+          var triangle = document.getElementById('triangle');
+          var modal_c = document.getElementById('modal_c');
+          // When the user clicks on the button, open the modal
+          btn.onclick = function () {
+              modal.style.display = "block";
+
+              triangle.style.left = (btn.getBoundingClientRect().left - (7)).toString() + "px";
+              triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
+              modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
+              modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
+          };
+
+          $(window).on('resize', function () {
+              triangle.style.left = (btn.getBoundingClientRect().left - (7)).toString() + "px";
+              triangle.style.top = (btn.getBoundingClientRect().top + btn_j.height()).toString() + "px";
+              modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
+              modal_c.style.top = (btn.getBoundingClientRect().bottom + 20).toString() + "px";
+          });
+
+          // When the user clicks on <span> (x), close the modal
+          span.onclick = function () {
+              modal.style.display = "none";
+          };
+
+          // When the user clicks anywhere outside of the modal, close it
+          window.onclick = function (event) {
+              if (event.target === modal) {
+                  modal.style.display = "none";
+              }
+          }
+      </script>
 
 
       <div class="collapse navbar-collapse wth" style="margin-top: 5px;" id="navbar">
