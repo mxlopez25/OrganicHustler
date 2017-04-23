@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  is_active: false
+  total_m: 9.99
+  n_products: 1
+
+two:
+  is_active: false
+  total_m: 9.99
+  n_products: 1

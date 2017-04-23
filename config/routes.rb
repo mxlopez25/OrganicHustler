@@ -3,7 +3,10 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
       registrations: 'users/registrations'
   }
-  devise_for :admins
+  devise_for :admins, controllers: {
+      sessions: 'admins/sessions'
+  }
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
@@ -48,5 +51,7 @@ Rails.application.routes.draw do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'
     put 'add/emblems' => 'emblems#create'
   end
+
+  resource :showcases
 
 end

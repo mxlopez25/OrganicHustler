@@ -29,9 +29,75 @@
     </div>
   </div>
 </nav>
-
+<body style="background-color: #dedede">
 <div class="main">
+  <div class="card showcase-part">
+    <h4>Desktop showcase</h4>
+    <hr>
+    <h6>Current showcase</h6>
+    <div style="text-align: left">
+      <% GroupShowcase.all.where(:screen => 0).each do |groupShowcase| %>
 
-  <h1>Home</h1>
+          <h6><%= groupShowcase.name_identity %></h6>
+          <div class="showcase-container">
+          </div>
+          <a id="<%= (groupShowcase.id).to_s+'btn' %>" class="showcase" href="#">Add to showcase</a>
 
+          <!-- The Modal -->
+          <div id="<%= (groupShowcase.id).to_s+'modal' %>" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <%= form_for Showcase.new, :remote => false, :autocomplete => :off do |form| %>
+                  <%= form.file_field :image %>
+                  <%= form.submit 'Submit' %>
+              <% end %>
+            </div>
+
+          </div>
+
+          <script>
+              // Get the modal
+              var modal = document.getElementById('<%= (groupShowcase.id).to_s+'modal' %>');
+
+              // Get the button that opens the modal
+              var btn = document.getElementById("<%= (groupShowcase.id).to_s+'btn' %>");
+
+              // Get the <span> element that closes the modal
+              var span = document.getElementsByClassName("close")[0];
+
+              // When the user clicks on the button, open the modal
+              btn.onclick = function () {
+                  modal.style.display = "block";
+              };
+
+              // When the user clicks on <span> (x), close the modal
+              span.onclick = function () {
+                  modal.style.display = "none";
+              };
+
+              // When the user clicks anywhere outside of the modal, close it
+              window.onclick = function (event) {
+                  if (event.target === modal) {
+                      modal.style.display = "none";
+                  }
+              }
+          </script>
+
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class="card showcase-part">
+    <h4>Desktop showcase</h4>
+    <hr>
+    <h6>Current showcase</h6>
+    <div style="text-align: left">
+
+    </div>
+
+  </div>
 </div>
+</body>

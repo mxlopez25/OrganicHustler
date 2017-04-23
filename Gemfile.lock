@@ -117,6 +117,8 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (~> 0.3.0)
+    paperclip-ffmpeg (1.0.1)
+      paperclip (>= 2.5.2)
     puma (3.8.1)
     rack (2.0.1)
     rack-test (0.6.3)
@@ -213,6 +215,7 @@ DEPENDENCIES
   moltin
   mysql2
   paperclip
+  paperclip-ffmpeg (~> 1.0.1)
   puma (~> 3.0)
   rails (~> 5.0.1)
   rest-client

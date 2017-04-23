@@ -12,6 +12,7 @@ gem 'paperclip'
 gem 'aws-sdk', '~> 2.9.1'
 gem 'font-awesome-sass'
 gem 'figaro'
+gem 'paperclip-ffmpeg', '~> 1.0.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

@@ -13,7 +13,6 @@ video {
   background-size: cover;
   background: image_url('index/Head.jpg') no-repeat center;
   color: #fff;
-  height: 60vh;
   justify-content: center;
   flex-direction: column;
   display: flex;
@@ -222,7 +221,16 @@ hr {
 
 }
 
+img.showcase {
+  width: 100%;
+}
+
 @media screen and (min-width: 765px) {
+
+  img.showcase {
+    width: 40%;
+  }
+
   .desktopnot {
     visibility: hidden;
     clear: both;
