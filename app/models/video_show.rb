@@ -1,5 +1,14 @@
 class VideoShow < ApplicationRecord
   belongs_to :showcase
-  has_attached_file :video, styles: lambda {|a| a.instance.is_image? ? {:small => "x200>", :medium => "x300>", :large => "x400>"} : {:thumb => {:geometry => "100x100#", :format => 'jpg', :time => 10}, :medium => {:geometry => "300x300#", :format => 'jpg', :time => 10}}},
-                    processors: lambda {|a| a.is_video? ? [:ffmpeg] : [:thumbnail]}
+  has_attached_file :video,
+                    :styles => {
+                        :mp4video => {:geometry => '520x390', :format => 'mp4',
+                                      :convert_options => {:output => {:vcodec => 'libx264',
+                                                                       :acodec => 'libfaac', :ab => '56k', :ac => 2}}},
+                        :preview => {:geometry => '300x300>', :format => 'jpg', :time => 5}
+                    },
+                    processors: [:ffmpeg]
+
+  validates_attachment_content_type :video, :content_type => /\Avideo\/.*\Z/
+  validates_presence_of :video
 end

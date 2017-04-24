@@ -109,14 +109,28 @@ div.table_products {
 div.showcase-part {
   float: left;
   margin: 20px 1%;
-  width: 47%;
+  width: 48%;
   padding: 10px;
+}
+
+div.showcase-full {
+  float: left;
+  margin: 20px 1%;
+  width: 98%;
+  padding: 10px;
+}
+
+img.image_showcase_ad {
+  width: 26%;
+  float: left;
+  margin: 2%;
 }
 
 div.showcase-container {
   padding: 7px;
   border-radius: 7px;
   border: 1px solid #dedede;
+  overflow: hidden;
 }
 
 /* The Modal (background) */

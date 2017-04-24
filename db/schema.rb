@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170423200711) do
+ActiveRecord::Schema.define(version: 20170424003819) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 20170423200711) do
     t.integer "screen"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_count"
   end
 
   create_table "image_shows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -139,7 +140,7 @@ ActiveRecord::Schema.define(version: 20170423200711) do
   end
 
   create_table "showcases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.boolean "screen"
+    t.integer "screen"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
