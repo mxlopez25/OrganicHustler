@@ -110,7 +110,7 @@
 
       <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
       <% item = get_product(id) %>
-      <img src="https://<%= item['images'][0]['url']['https'] %>" style="height: 300px;">
+      <img src="<%= item['images'][0]['url']['https'] %>" style="height: 300px;">
       <h4 class="text-center"><%= item['title'] %></h4>
       <h5 class="text-center"> Cotton+Quality</h5>
       <article>
@@ -199,7 +199,9 @@
 
 
 <div style="margin-top: 15px; margin-bottom: 15px;">
-  <%= video_tag('video.mp4', controls: false, autobuffer: true, autoplay: true, loop: true) %>
+
+  <video autoplay="autoplay" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
+
 </div>
 
 
