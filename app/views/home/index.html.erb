@@ -24,7 +24,10 @@
 
 </div>
 
-<div class="header desktopnot " style="margin-top: 50px; overflow: hidden">
+<div class="header desktopnot "
+     style="background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat center;
+         margin-top: 50px;
+         overflow: hidden">
   <h1 class="text-center ht" style="margin-top: 160px;">
 
     ECO <br>FRIENDLY
