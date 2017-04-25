@@ -232,14 +232,14 @@
 
           <% else %>
               <% object = getJson(var[1]['title']) %>
-              <div id="<%= object['image_id'] %>" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px; width: 100%;">
+              <div id="p_2<%= object['image_id'] %>" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px; width: 100%;">
 
               </div>
 
               <script id="create-shape">
                   createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
                   function createShape(id, width, height, x, y, s_w, s_h) {
-                      var container = $('#' + id);
+                      var container = $('#p_2' + id);
                       container.height(container.width());
 
                       var stage = new Konva.Stage({
