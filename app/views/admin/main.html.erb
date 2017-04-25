@@ -49,7 +49,7 @@
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
                     <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
@@ -289,7 +289,7 @@
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
                     <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
