@@ -48,7 +48,8 @@
                 <% elsif !sh.image_show.blank? %>
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= get_product(sh.product_id)['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product(sh.product_id) %>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
@@ -167,7 +168,8 @@
                 <% elsif !sh.image_show.blank? %>
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= get_product(sh.product_id)['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product(sh.product_id) %>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
@@ -286,7 +288,8 @@
                 <% elsif !sh.image_show.blank? %>
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= get_product(sh.product_id)['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product(sh.product_id) %>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
