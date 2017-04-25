@@ -2,10 +2,10 @@ class VideoShow < ApplicationRecord
   belongs_to :showcase
   has_attached_file :video,
                     :styles => {
-                        :mp4video => {:geometry => '1024x600', :format => 'mp4',
+                        :mp4video => {:geometry => '1024x480', :format => 'mp4',
                                       :convert_options => {:output => {:vcodec => 'libx264',
                                                                        :acodec => 'libfaac', :ab => '56k', :ac => 2}}},
-                        :preview => {:geometry => '1024x600', :format => 'jpg', :time => 5}
+                        :preview => {:geometry => '1024x480', :format => 'jpg', :time => 5}
                     },
                     processors: [:ffmpeg]
 
