@@ -73,7 +73,7 @@ div.wrap {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 100; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -92,7 +92,7 @@ div.wrap {
   padding: 20px;
   border: 1px solid #FFFFFF;
   z-index: 4;
-  width: 20%; /* Could be more or less, depending on screen size */
+  width: 85%; /* Could be more or less, depending on screen size */
 }
 
 .triangle {
@@ -121,8 +121,11 @@ div.wrap {
   cursor: pointer;
 }
 
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
+  .modal-content {
+    width: 20%;
+  }
 }
 
-@media (min-width: 1330px) {
+@media screen and (min-width: 1330px) {
 }

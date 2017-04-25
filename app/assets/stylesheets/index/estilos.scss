@@ -275,19 +275,27 @@ img.showcase {
 }
 
 input[type=text] {
-  width: 60%;
+  width: 70%;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   background: white;
-  padding: 12px 20px 12px 40px;
+  padding: 12px 20px;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
 }
 
 input[type=text]:focus {
   width: 90%;
+}
+
+#search-index input[type=text] {
+  width: 13%;
+}
+
+#search-index input[type=text]:focus {
+  width: 20%;
 }
 
 .iconx {
