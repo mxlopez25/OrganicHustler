@@ -166,10 +166,10 @@
                       <source type="video/mp4" src="<%= sh.video_show.video.url(:mp4video) %>"/>
                     </video>
                 <% elsif !sh.image_show.blank? %>
-                    <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
+                    <a href="<%= sh.url_association %>"><img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>"></a>
                 <% elsif !sh.product_id.blank? %>
                     <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
 
