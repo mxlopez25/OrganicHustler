@@ -277,7 +277,7 @@
       <% GroupShowcase.all.where(:screen => 3).each do |groupShowcase| %>
 
           <h6><%= groupShowcase.name_identity %></h6>
-          <div class="showcase-container multi">
+          <div class="showcase-container">
             <% groupShowcase.showcases.all.each do |sh| %>
                 <% if !sh.video_show.blank? %>
                     <video autobuffer="autobuffer" preload="auto" style="width:100%;" controls="controls" width="100%" height="100%" poster="<%= sh.video_show.video.url(:preview) %>">
