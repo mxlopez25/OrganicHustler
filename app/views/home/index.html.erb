@@ -110,7 +110,7 @@
 
       <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
       <% item = get_product(id) %>
-      <img src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 300px;">
+      <img src="https://<%= item['images'][0]['url']['https'] %>" style="height: 300px;">
       <h4 class="text-center"><%= item['title'] %></h4>
       <h5 class="text-center"> Cotton+Quality</h5>
       <article>
