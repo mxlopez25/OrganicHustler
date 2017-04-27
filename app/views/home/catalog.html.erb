@@ -1,10 +1,13 @@
 <body>
 
+<script>
+    var selected_size = null;
+    var avaliable_sizes = [];
+</script>
+
 <div id="items-container" style="margin-top: 100px">
 
-  <% pr_t = '' %>
   <% get_products_f_catalog(params).each do |pr| %>
-      <% pr_t = pr %>
       <div id="item<%= pr['id'] %>" style="float: left; width: 18%; text-align: center; padding: 25px 0 0; margin: 25px 1% 0; background: #ffecf0">
         <img style="height: 100px; margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
         <h5 style="margin-bottom: 10px"><%= pr['title'] %></h5>
@@ -53,7 +56,7 @@
                 console.log(data['id']);
 
                 document.getElementById('general_p_content').innerHTML =
-                    '<div class="content-part" id="image-container" style="padding: 0">' +
+                    '<div class="content-part" id="image-container_quick" style="padding: 0">' +
                     '<img style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
                     '</div>' +
                     '<div class="content-part" style="padding: 0">' +
@@ -72,6 +75,12 @@
                     '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
                     '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
                     '</div>' + get_variation_size(variations) +
+                    '<hr style="margin-bottom: 0">' +
+                    '<div style="margin-bottom: 10px">' +
+                    '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6>' +
+                    '</div>' +
+                    '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                    '</div>' +
                     '</div>';
 
                 var state = true;
@@ -87,6 +96,80 @@
                     }
                     state = !state;
                 });
+
+                var innerHTML22 = {};
+
+                $(document).ready(function () {
+                    innerHTML22.heightTT = $("#icon_loader").height();
+                    console.log(innerHTML22.heightTT);
+                });
+
+                var iconShow = $("#icon-show");
+                var iconHide = $("#icon-hide");
+                var loader = $("#icon_loader");
+
+                iconShow.click(function () {
+                    loader.animate({
+                        height: innerHTML22.heightTT
+                    }, 400, function () {
+                        loader.css({
+                            overflow: 'visible'
+                        });
+                    });
+                    iconShow.addClass(" hidden");
+                    iconHide.removeClass(" hidden");
+                });
+
+                iconHide.click(function () {
+                    loader.animate({
+                        height: 0
+                    }, 400, function () {
+                        loader.css({
+                            overflow: 'hidden'
+                        });
+                    });
+                    iconHide.addClass(" hidden");
+                    iconShow.removeClass(" hidden");
+                });
+
+
+                //Photo slider
+                (function ($) {
+                    $(function () {
+                        $('.jcarousel').jcarousel();
+
+                        $('.jcarousel-control-prev')
+                            .on('jcarouselcontrol:active', function () {
+                                $(this).removeClass('inactive');
+                            })
+                            .on('jcarouselcontrol:inactive', function () {
+                                $(this).addClass('inactive');
+                            })
+                            .jcarouselControl({
+                                target: '-=1'
+                            });
+
+                        $('.jcarousel-control-next')
+                            .on('jcarouselcontrol:active', function () {
+                                $(this).removeClass('inactive');
+                            })
+                            .on('jcarouselcontrol:inactive', function () {
+                                $(this).addClass('inactive');
+                            })
+                            .jcarouselControl({
+                                target: '+=1'
+                            });
+
+                        $('.jcarousel-pagination')
+                            .on('jcarouselpagination:active', 'a', function () {
+                                $(this).addClass('active');
+                            })
+                            .on('jcarouselpagination:inactive', 'a', function () {
+                                $(this).removeClass('active');
+                            })
+                            .jcarouselPagination();
+                    });
+                })(jQuery);
 
                 return false
             },
@@ -109,8 +192,108 @@
 
     function get_variation_size(variations) {
         if (variations.length > 0) {
-            return 'hola'
+
+            var sizes = '';
+
+            for (var attr in variations[1]['variations']) {
+                //missin check of attr
+                sizes = sizes + '<li>' +
+                    '<span id="' + variations[1]['variations'][attr]['id'] + '" onclick="changeSize(' + variations[1]['variations'][attr]['id'] + ')" class="badge badge-size">' + variations[1]['variations'][attr]['title'] + '</span>' +
+                    '<!---->' +
+                    '</li>'
+            }
+
+            return '<div id="icon_loader" class="jcarousel-wrapper">' +
+                '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
+                '<ul id="container-logo" style="left: 0; top: 0;">' +
+                sizes +
+                '</ul>' +
+                '</div>' +
+                '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+                '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
+                '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+                '</div>'
         }
+    }
+
+    function get_variation_customized(variations) {
+        if (variations.length > 0) {
+
+            var customs = '';
+
+            for (var attr in variations[0]['variations']) {
+                //missin check of attr
+                customs = customs + '<li>' +
+
+                    '</li>'
+            }
+
+            return '<div id="icon_loader_logo" class="jcarousel-wrapper">' +
+                '<div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">' +
+                '<ul id="container-logo-2" style="left: 0; top: 0;">' +
+                customs +
+                '</ul>' +
+                '</div>' +
+                '<button style="top: 30px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+                '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
+                'button style="top: 30px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+                '</div>'
+        }
+    }
+
+    createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>')
+    function createShape(id, width, height, x, y, s_w, s_h) {
+        var container = $('#' + id);
+        container.height(container.width());
+
+        var stage = new Konva.Stage({
+            container: id,
+            width: container.width(),
+            height: container.height()
+        });
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var baseImg = new Konva.Image({
+            width: container.width(),
+            height: container.height(),
+            draggable: false
+        });
+
+        var logoImg = new Konva.Image({
+            width: container.width() * width / s_w,
+            height: container.height() * height / s_h
+        });
+
+        var logoGroup = new Konva.Group({
+            x: container.width() * x / s_w,
+            y: container.width() * y / s_h
+        });
+
+        layer.add(baseImg);
+        layer.add(logoGroup);
+        logoGroup.add(logoImg);
+
+        var imageObj1 = new Image();
+        imageObj1.onload = function () {
+            baseImg.image(imageObj1);
+            layer.draw();
+        };
+        imageObj1.src = data['images'].first['url']['https'];
+
+        var imageObj2 = new Image();
+        imageObj2.onload = function () {
+            logoImg.image(imageObj2);
+            layer.draw();
+            imageObj2.width = container.width() * width / s_w;
+            console.log(imageObj2.width, container.width(), width, s_w);
+            imageObj2.height = container.height() * height / s_h;
+            console.log(imageObj2.height);
+        };
+        imageObj2.src = '<%= get_thumb_g_id(id, :thumb) %>';
+        layer.draw();
     }
 
     // When the user clicks on <span> (x), close the modal
