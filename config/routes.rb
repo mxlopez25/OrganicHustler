@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get '/product/:id/:step' => 'home#product'
 
   get '/catalog' => 'home#catalog'
+  get '/catalog/item/:id' => 'home#catalog_item'
 
   post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'

@@ -1,8 +1,19 @@
+require 'json'
 include AdminHelper
 class HomeController < ApplicationController
 
   def index
 
+  end
+
+  def catalog_item
+    al = HomeHelper.get_product_by_id(params['id']).as_json
+    al['variation_pp'] = true
+    if params['variation_ma'].blank?
+      al['variation_pp'] = false
+    end
+    p al
+    render :json => al.to_json
   end
 
   def catalog

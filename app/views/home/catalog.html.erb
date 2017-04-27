@@ -2,17 +2,127 @@
 
 <div id="items-container" style="margin-top: 100px">
 
+  <% pr_t = '' %>
   <% get_products_f_catalog(params).each do |pr| %>
-
+      <% pr_t = pr %>
       <div id="item<%= pr['id'] %>" style="float: left; width: 18%; text-align: center; padding: 25px 0 0; margin: 25px 1% 0; background: #ffecf0">
         <img style="height: 100px; margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
         <h5 style="margin-bottom: 10px"><%= pr['title'] %></h5>
         <h5><%= pr['price']['value'] %></h5>
-        <button class="btn btn-default" style="width: 100%">Quick shop</button>
+        <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-default" style="width: 100%">Quick shop</button>
       </div>
 
   <% end %>
 
 </div>
 
+<!-- The Modal -->
+<div id="quick_view" class="modal_quick modal_base mobilenot">
+
+  <!-- Modal content -->
+  <div class="modal-content_quick modal-content_base">
+    <span id="quick_view_close" class="close" style="position: fixed">&times;</span>
+    <div id="general_p_content">
+
+    </div>
+
+  </div>
+
+</div>
+<script>
+    // Get the modal
+    var modal_quick = document.getElementById('quick_view');
+
+    // Get the <span> element that closes the modal
+    var span_quick = document.getElementById('quick_view_close');
+
+    function open_quick(pr) {
+        $.ajax({
+            type: "get",
+            url: "/catalog/item/" + pr,
+            data: {},
+            success: function (data) {
+
+                var variations = [];
+                for (var variation in data['modifiers']) {
+                    if (data['modifiers'].hasOwnProperty(variation)) {
+                        variations.push(data['modifiers'][variation])
+                    }
+                }
+
+                console.log(data['id']);
+
+                document.getElementById('general_p_content').innerHTML =
+                    '<div class="content-part" id="image-container" style="padding: 0">' +
+                    '<img style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
+                    '</div>' +
+                    '<div class="content-part" style="padding: 0">' +
+                    '<div class="wrap">' +
+                    '<h5>' + data['title'] + '</h5>' +
+                    '<h6>' + data['price']['value'] + '</h6>' +
+                    '</div>' +
+                    '<div class="wrap">' +
+                    '<span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
+                    '<div style="text-align: end; padding-top: 9px">' +
+                    '<span id="more-toggle">Read more</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '<hr style="margin-bottom: 0">' +
+                    '<div style="margin-bottom: 10px">' +
+                    '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
+                    '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
+                    '</div>' + get_variation_size(variations) +
+                    '</div>';
+
+                var state = true;
+                $("#more-toggle").on('click', function () {
+                    if (state) {
+                        $(this).text("Read less");
+                        $(".complete").show();
+                        $("#dots").hide();
+                    } else {
+                        $(this).text("Read more");
+                        $(".complete").hide();
+                        $("#dots").show();
+                    }
+                    state = !state;
+                });
+
+                return false
+            },
+            error: function (data) {
+                return false
+            }
+        });
+        modal_quick.style.display = "block";
+    }
+
+    function image_handler(data) {
+        if (data['variation_pp']) {
+            console.log('klk chapie');
+        } else {
+            return data['images'][0]['url']['https']
+        }
+        return 'html'
+    }
+
+
+    function get_variation_size(variations) {
+        if (variations.length > 0) {
+            return 'hola'
+        }
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span_quick.onclick = function () {
+        modal_quick.style.display = "none";
+    };
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target === modal_quick) {
+            modal_quick.style.display = "none";
+        }
+    }
+</script>
 </body>
