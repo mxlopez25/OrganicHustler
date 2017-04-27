@@ -171,7 +171,7 @@
 
 </div>
 
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="z-index: 1">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="z-index: 1; padding: 10px; height: 100px; border-bottom: #ffffff ">
   <!-- The Modal -->
 
   <div class="desktopnot">
@@ -214,47 +214,59 @@
   </div>
 
   <div class="mobilenot">
-    <div id="search-index" class="container-fluid" style="overflow: visible;">
-      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo  "></a>
-      <button type="button" class="btn btn-link">Get in Touch</button>
-      <div class=" vertical-line col-cen
-  				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
-      </div>
-      <button type="button" class="btn btn-link">Instagram</button>
-      <div class=" vertical-line col-cen
-  				col-centered " style=" margin-top: 10px; height: 20px; width:1px; ">
-      </div>
-      <button type="button" class="btn btn-link">Twitter</button>
-
+    <div id="search-index" class="container-fluid">
+      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+      <% if @parameters.nil? %>
+          <button style="float: left" type="button" class="btn btn-link">Get in Touch</button>
+          <button style="float: left" type="button" class="btn btn-link">Instagram</button>
+          <button style="float: left" type="button" class="btn btn-link">Twitter</button>
+      <% elsif @parameters['action'] != 'catalog' %>
+          <button type="button" class="btn btn-link">Get in Touch</button>
+          <button type="button" class="btn btn-link">Instagram</button>
+          <button type="button" class="btn btn-link">Twitter</button>
+      <% else %>
+          <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
+            <span style="font-weight: lighter; color: #5e5e5e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
+          </h5>
+      <% end %>
       <input style="float: right" type="text" name="search" placeholder="Search..">
 
-      <div style="float: right; margin-top: 10px; margin-right: 4px;">
+      <div style="float: right; margin-right: 4px;">
         <a><i id="myBtn_2" class="fa fa-shopping-cart iconx"></i></a>
       </div>
 
-      <div class="collapse navbar-collapse" style="margin-top: 5px;" id="navbar">
+      <% available = true %>
+
+      <div class="collapse navbar-collapse" style="width: 100%; margin-top: 40px" id="navbar">
         <ul class="nav navbar-nav navbar-center">
           <li>
-            <a href="#story">LOOKS</a>
+            <a style="padding-bottom: 5px" class="
+              <% unless params['looks'].blank? and available %>selected
+              <% end %>" href="/catalog?looks=true">LOOKS</a>
           </li>
           <li>
-            <a href="#catalog-men">HATS</a>
+            <a style="padding-bottom: 5px" class="
+              <% unless params['hats'].blank? and available %>selected
+              <% end %>" href="/catalog?hats=true">HATS</a>
           </li>
           <li>
-            <a href="#catalog-women">MEN</a>
+            <a style="padding-bottom: 5px" class="
+              <% unless params['men'].blank? and available %>selected
+              <% end %>" href="/catalog?men=true">MEN</a>
           </li>
           <li>
-            <a href="#customize">WOMEN</a>
+            <a style="padding-bottom: 5px" class="
+              <% unless params['women'].blank? and available %>selected
+              <% end %>" href="/catalog?women=true">WOMEN</a>
           </li>
           <li>
-            <a href="#contact">BRAND</a>
+            <a style="padding-bottom: 5px" class="
+              <% unless params['brand'].blank? and available %>selected
+              <% end %>" href="/catalog?brand=true">BRAND</a>
           </li>
 
         </ul>
       </div>
-
-      <br>
-      <br>
     </div>
   </div>
 

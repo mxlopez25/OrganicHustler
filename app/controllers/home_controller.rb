@@ -5,6 +5,10 @@ class HomeController < ApplicationController
 
   end
 
+  def catalog
+    @parameters = params
+  end
+
   def product
     @product = HomeHelper.get_product_by_id(params[:id])
     @parameters = params

@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   root to: 'home#index'
   get '/product/:id/:step' => 'home#product'
 
+  get '/catalog' => 'home#catalog'
+
   post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'
 

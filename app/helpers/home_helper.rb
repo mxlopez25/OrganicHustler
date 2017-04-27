@@ -133,4 +133,20 @@ module HomeHelper
     user.cart.n_products
   end
 
+  def get_products_f_catalog(parameters)
+    available_params = ''
+    parameters.each do |t|
+      unless params[t].blank?
+        if t != 'looks' && t != 'hats' && t != 'men' && t != 'women' && t != 'brand' && t != 'controller' && t != 'action'
+          available_params = "#{available_params}?#{t}=#{params[t]}"
+        end
+      end
+    end
+
+    p available_params
+
+    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/#{available_params}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    JSON.parse(response.body)['result']
+  end
+
 end

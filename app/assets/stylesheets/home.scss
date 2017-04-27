@@ -121,6 +121,15 @@ div.wrap {
   cursor: pointer;
 }
 
+a.selected {
+  border-bottom: thick solid green;
+}
+
+a.head-menu {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 @media screen and (min-width: 768px) {
   .modal-content {
     width: 20%;
