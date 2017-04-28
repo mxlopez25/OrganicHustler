@@ -207,7 +207,6 @@
             var size = available_sizes[i];
 
             if (size === id) {
-                console.log(size, id);
                 $('#' + size).addClass('badge_selected');
                 selected_size = id
             } else {
@@ -225,9 +224,10 @@
             for (var attr in variations[1]['variations']) {
                 //missing check of attr
                 sizes = sizes + '<li>' +
-                    '<span id="' + variations[1]['variations'][attr]['id'] + '" onclick="changeSize(' + variations[1]['variations'][attr]['id'] + ')" class="badge badge-size">' + variations[1]['variations'][attr]['title'] + '</span>' +
-                    '<!---->' +
-                    '</li>'
+                    '<span id="' + variations[1]['variations'][attr]['id'].toString() + '" onclick="changeSize(\'' + variations[1]['variations'][attr]['id'].toString() + '\')" class="badge badge-size">' + variations[1]['variations'][attr]['title'] + '</span>' +
+                    '</li>';
+
+                available_sizes.push(variations[1]['variations'][attr]['id'].toString());
             }
 
             return '<div id="icon_loader" class="jcarousel-wrapper">' +
