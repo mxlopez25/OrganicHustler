@@ -8,9 +8,21 @@ class HomeController < ApplicationController
 
   def catalog_item
     al = HomeHelper.get_product_by_id(params['id']).as_json
-    al['variation_pp'] = true
-    if params['variation_ma'].blank?
-      al['variation_pp'] = false
+    al['variation_pp'] = false
+    unless params['variation_ma'].blank?
+      al['variation_pp'] = true
+      al['source_p'] = params['source_p']
+      al['image_id'] = params['logo_id']
+      al['width_u'] = params['width']
+      al['height_u'] = params['height']
+      al['x_u'] = params['dim_x']
+      al['y_u'] = params['dim_y']
+      al['s_w'] = params['relation_x']
+      al['s_h'] = params['relation_y']
+      al['has_image'] = params['has_logo']
+      al['has_emblem'] = params['has_emblem']
+      al['emblem_id'] = params['emblem_id']
+      al['position_id'] = params['position_id']
     end
     p al
     render :json => al.to_json
