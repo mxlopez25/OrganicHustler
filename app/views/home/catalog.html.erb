@@ -2,7 +2,7 @@
 
 <script>
     var selected_size = null;
-    var avaliable_sizes = [];
+    var available_sizes = [];
     var render_custom = [];
 </script>
 
@@ -58,30 +58,34 @@
 
                 document.getElementById('general_p_content').innerHTML =
                     '<div class="content-part" id="image-container_quick" style="padding: 0">' +
-                    '<img style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
+                    '   <img style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
                     '</div>' +
                     '<div class="content-part" style="padding: 0">' +
+                    '   <div class="wrap">' +
+                    '       <h5>' + data['title'] + '</h5>' +
+                    '       <h6>' + data['price']['value'] + '</h6>' +
+                    '   </div>' +
                     '<div class="wrap">' +
-                    '<h5>' + data['title'] + '</h5>' +
-                    '<h6>' + data['price']['value'] + '</h6>' +
-                    '</div>' +
-                    '<div class="wrap">' +
-                    '<span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
-                    '<div style="text-align: end; padding-top: 9px">' +
-                    '<span id="more-toggle">Read more</span>' +
-                    '</div>' +
+                    '   <span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
+                    '   <div style="text-align: end; padding-top: 9px">' +
+                    '       <span id="more-toggle">Read more</span>' +
+                    '   </div>' +
                     '</div>' +
                     '<hr style="margin-bottom: 0">' +
                     '<div style="margin-bottom: 10px">' +
-                    '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
-                    '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
-                    '</div>' + get_variation_size(variations) +
+                    '   <div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
+                    '   <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
+                    '</div>' +
+                    get_variation_size(variations) +
                     '<hr style="margin-bottom: 0">' +
                     '<div style="margin-bottom: 10px">' +
-                    '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6>' +
-                    '</div>' +
-                    '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                    '   <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                    '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
                     '</div>' + get_variation_customized(variations) +
+                    '<div>' +
+                    '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="window.location.href=\'/product/' + data['id'] + '/2\'">CUSTOMIZE IT</button>' +
+                    '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="addToCart()">ADD TO CART</button>' +
+                    '</div>' +
                     '</div>';
 
                 var state = true;
@@ -195,6 +199,21 @@
             return data['images'][0]['url']['https']
         }
         return 'html'
+    }
+
+    function changeSize(id) {
+        for (var i = 0; i < available_sizes.length; i++) {
+
+            var size = available_sizes[i];
+
+            if (size === id) {
+                console.log(size, id);
+                $('#' + size).addClass('badge_selected');
+                selected_size = id
+            } else {
+                $('#' + size).removeClass('badge_selected');
+            }
+        }
     }
 
 
