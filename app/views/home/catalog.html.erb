@@ -3,6 +3,7 @@
 <script>
     var selected_size = null;
     var avaliable_sizes = [];
+    var render_custom = [];
 </script>
 
 <div id="items-container" style="margin-top: 100px">
@@ -80,7 +81,7 @@
                     '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6>' +
                     '</div>' +
                     '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-                    '</div>' +
+                    '</div>' + get_variation_customized(variations) +
                     '</div>';
 
                 var state = true;
@@ -132,6 +133,13 @@
                     iconShow.removeClass(" hidden");
                 });
 
+                for (var i = 0; i < render_custom.length; i++) {
+
+                    var object_json = render_custom[i];
+                    console.log(object_json);
+
+                    createShape(object_json['image_id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data);
+                }
 
                 //Photo slider
                 (function ($) {
@@ -196,7 +204,7 @@
             var sizes = '';
 
             for (var attr in variations[1]['variations']) {
-                //missin check of attr
+                //missing check of attr
                 sizes = sizes + '<li>' +
                     '<span id="' + variations[1]['variations'][attr]['id'] + '" onclick="changeSize(' + variations[1]['variations'][attr]['id'] + ')" class="badge badge-size">' + variations[1]['variations'][attr]['title'] + '</span>' +
                     '<!---->' +
@@ -223,10 +231,16 @@
             var customs = '';
 
             for (var attr in variations[0]['variations']) {
-                //missin check of attr
-                customs = customs + '<li>' +
+                //missing check of attr
+                if (variations[0]['variations'][attr]['title'] !== 'null') {
+                    var changes = JSON.parse(variations[0]['variations'][attr]['title']);
+                    render_custom.push(changes);
+                    customs = customs + '<li>' +
+                        '<div id="' + changes['image_id'] + '" style="width: 100px; height: 100px">' +
+                        '</div>' +
+                        '</li>'
+                }
 
-                    '</li>'
             }
 
             return '<div id="icon_loader_logo" class="jcarousel-wrapper">' +
@@ -237,14 +251,13 @@
                 '</div>' +
                 '<button style="top: 30px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
                 '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-                'button style="top: 30px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                '<button style="top: 30px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
                 '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
                 '</div>'
         }
     }
 
-    createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>')
-    function createShape(id, width, height, x, y, s_w, s_h) {
+    function createShape(id, width, height, x, y, s_w, s_h, data) {
         var container = $('#' + id);
         container.height(container.width());
 
@@ -281,7 +294,7 @@
             baseImg.image(imageObj1);
             layer.draw();
         };
-        imageObj1.src = data['images'].first['url']['https'];
+        imageObj1.src = data['images'][0]['url']['https'];
 
         var imageObj2 = new Image();
         imageObj2.onload = function () {
@@ -292,8 +305,21 @@
             imageObj2.height = container.height() * height / s_h;
             console.log(imageObj2.height);
         };
-        imageObj2.src = '<%= get_thumb_g_id(id, :thumb) %>';
-        layer.draw();
+
+        $.ajax({
+            type: "get",
+            url: "/catalog/get_image?id=" + id + "&style=thumb",
+            data: {},
+            dataType: "html",
+            success: function (data) {
+                imageObj2.src = data;
+                layer.draw();
+            },
+            error: function (data) {
+            }
+        });
+
+
     }
 
     // When the user clicks on <span> (x), close the modal

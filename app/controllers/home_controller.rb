@@ -25,6 +25,10 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
+  def get_image_by_id
+    render text: Picture.find(params[:id]).image.url(params[:style])
+  end
+
   def add_to_cart
     user = nil
     p current_user
