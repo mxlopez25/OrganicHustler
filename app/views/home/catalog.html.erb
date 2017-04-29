@@ -24,6 +24,7 @@
     var elementsBorders = [];
     var elements = [];
     var selected = null;
+    var layer;
 
 </script>
 
@@ -469,7 +470,7 @@
         s_w_u = width;
         s_h_u = height;
 
-        var layer = new Konva.Layer();
+        layer = new Konva.Layer();
         stage.add(layer);
 
         function addBorders(group, x, y, name, h, w) {
