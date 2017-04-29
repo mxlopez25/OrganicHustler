@@ -45,7 +45,7 @@
 <div id="items-container" style="margin-top: 100px">
 
   <% get_products_f_catalog(params).each do |pr| %>
-      <div id="item<%= pr['id'] %>" style="float: left; width: 18%; text-align: center; padding: 25px 0 0; margin: 25px 1% 0; background: #ffecf0">
+      <div class="catalog-item" id="item<%= pr['id'] %>">
         <img style="height: 100px; margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
         <h5 style="margin-bottom: 10px"><%= pr['title'] %></h5>
         <h5><%= pr['price']['value'] %></h5>
