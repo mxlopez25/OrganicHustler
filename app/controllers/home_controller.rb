@@ -2,6 +2,7 @@ require 'json'
 include AdminHelper
 class HomeController < ApplicationController
 
+  @open_quick_m = false
   def index
 
   end
@@ -9,7 +10,9 @@ class HomeController < ApplicationController
   def catalog_item
     al = HomeHelper.get_product_by_id(params['id']).as_json
     al['variation_pp'] = false
+    @open_quick_m = false
     unless params['variation_ma'].blank?
+      @open_quick_m = true
       al['variation_pp'] = true
       al['source_p'] = params['source_p']
       al['image_id'] = params['logo_id']
@@ -29,6 +32,8 @@ class HomeController < ApplicationController
   end
 
   def catalog
+    @open_quick_m
+    p @open_quick_m
     @parameters = params
   end
 
@@ -39,6 +44,20 @@ class HomeController < ApplicationController
 
   def get_image_by_id
     render text: Picture.find(params[:id]).image.url(params[:style])
+  end
+
+  def get_logos_by_id
+
+    logos = []
+    Gallery.where(product_id: params['id']).first.pictures.all.each do |logo|
+      logo_rt = {
+          url: [logo.image.url(:large), logo.image.url(:thumb)],
+          id: logo.id
+      }
+      logos.push(logo_rt)
+    end
+
+    render json: logos.to_json
   end
 
   def add_to_cart

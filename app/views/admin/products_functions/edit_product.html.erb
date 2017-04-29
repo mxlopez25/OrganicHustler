@@ -233,7 +233,7 @@
 
               <% unless variations[2][1]['variations'].blank? %>
                   <% variations[2][1]['variations'].each do |var| %>
-                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= var[1]['title'] %>" type="button"></button>
+                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= getJson(var[1]['title'])['code'] %>" type="button"></button>
                   <% end %>
               <% end %>
 

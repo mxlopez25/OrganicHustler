@@ -42,7 +42,7 @@
 
   <!-- Modal content -->
   <div class="modal-content_quick modal-content_base">
-    <span id="quick_view_close" class="close" style="position: fixed">&times;</span>
+    <span id="quick_view_close" class="close" style="z-index: 100; position: fixed">&times;</span>
     <div id="general_p_content">
 
     </div>
@@ -57,11 +57,42 @@
     // Get the <span> element that closes the modal
     var span_quick = document.getElementById('quick_view_close');
 
-    if (data['changes_made']) {
-        open_quick(data['source_p']);
-    }
+    // When the user clicks on <span> (x), close the modal
+    span_quick.onclick = function () {
+        console.log('in');
+        modal_quick.style.display = "none";
+    };
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        console.log('in');
+        if (event.target === modal_quick) {
+            modal_quick.style.display = "none";
+        }
+    };
+
+    /*if () {
+     $.ajax({
+     type: "get",
+     url: "/catalog/item/" + data['source_p'],
+     data: {},
+     success: function (data) {
+
+     load_p1(data, data['source_p']);
+
+     return false
+     },
+     error: function (data) {
+     return false
+     }
+     });
+     }*/
+
+    var size_x = 0;
+    var size_y = 0;
 
     function load_p1(data, pr) {
+        render_custom = [];
         source_p = pr;
         product_id_e = pr;
         if (data['product_id_e']) {
@@ -88,11 +119,9 @@
             }
         }
 
-        console.log(data['id']);
-
         document.getElementById('general_p_content').innerHTML =
             '<div class="content-part" id="image-container_quick" style="padding: 0">' +
-            '   <img style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
+            '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
             '</div>' +
             '<div class="content-part" style="padding: 0">' +
             '   <div class="wrap">' +
@@ -117,7 +146,7 @@
             '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
             '</div>' + get_variation_customized(variations) +
             '<div>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="window.location.href=\'/product/' + data['id'] + '/2\'">CUSTOMIZE IT</button>' +
+            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="addToCart()">ADD TO CART</button>' +
             '</div>' +
             '</div>';
@@ -125,61 +154,29 @@
         //Creates the image in case it is a variation
         if (variation_img) {
             var container = $('#image-container_quick');
-            container.height(container.width());
 
             var stage = new Konva.Stage({
                 container: 'image-container_quick',
-                width: container.width(),
-                height: container.height()
+                width: size_x,
+                height: size_y
             });
             var layer = new Konva.Layer();
             stage.add(layer);
 
-          /*container.on('click', function(){
-
-           $.ajax({
-           type: "get",
-           url: "/catalog/item/"+pr,
-           data: {
-           variation_ma: false,
-           size: selected_size,
-           source_p: data['source_p'],
-           m_id: pr,
-           logo_id: id,
-           dim_x: x,
-           dim_y: y,
-           relation_x: s_w,
-           relation_y: s_h,
-           width: width,
-           height: height,
-           has_logo: true,
-           has_emblem: false,
-           emblem_id: emblem_id,
-           user_signed: user_online,
-           position_id: 0
-           //Missing attributes check migrations
-
-           },
-           success: function (data) {
-           load_p1(data, data['source_p'])
-           }
-           });
-           });*/
-
             var baseImg = new Konva.Image({
-                width: container.width(),
-                height: container.height(),
+                width: size_x,
+                height: size_y,
                 draggable: false
             });
 
             var logoImg = new Konva.Image({
-                width: container.width() * width / s_w,
-                height: container.height() * height / s_h
+                width: size_x * width / s_w,
+                height: size_y * height / s_h
             });
 
             var logoGroup = new Konva.Group({
-                x: container.width() * x / s_w,
-                y: container.width() * y / s_h
+                x: size_x * x / s_w,
+                y: size_y * y / s_h
             });
 
             layer.add(baseImg);
@@ -197,10 +194,8 @@
             imageObj2.onload = function () {
                 logoImg.image(imageObj2);
                 layer.draw();
-                imageObj2.width = container.width() * width / s_w;
-                console.log(imageObj2.width, container.width(), width, s_w);
-                imageObj2.height = container.height() * height / s_h;
-                console.log(imageObj2.height);
+                imageObj2.width = size_x * width / s_w;
+                imageObj2.height = size_y * height / s_h;
             };
 
             $.ajax({
@@ -235,7 +230,12 @@
 
         $(document).ready(function () {
             innerHTML22.heightTT = $("#icon_loader").height();
-            console.log(innerHTML22.heightTT);
+            var img_load = $('#image_loader');
+
+            size_x = img_load.width();
+            size_y = img_load.height();
+
+            console.log(size_x, size_y);
         });
 
         var iconShow = $("#icon-show");
@@ -313,6 +313,59 @@
         })(jQuery);
     }
 
+    function load_p2(data, pr) {
+
+        var variations = [];
+        for (var variation in data['modifiers']) {
+            if (data['modifiers'].hasOwnProperty(variation)) {
+                variations.push(data['modifiers'][variation])
+            }
+        }
+
+        document.getElementById('general_p_content').innerHTML =
+            '<div class="content-part" id="image-container_quick" style="padding: 0">'
+            + '<div style="margin: 10px auto" id="container"></div>'
+            + '</div>'
+            + '<div class="content-part" style="padding: 0">'
+            + '<h6 style="font-weight: bold">Select color(s):</h6>'
+            + '<input type="checkbox" id="select-all" name="cd" checked>'
+            + '<label for="select-all" style="font-family: \'Open Sans\', \'Helvetica Neue\', Arial, sans-serif; font-size: 10px;">Select all colors</label>'
+            + '<div id="checkboxes">'
+            + load_available_colors(variations)
+            + '</div>'
+            + '<div id="controllers" style="float: left; width: 100%">'
+            + '<div style="margin-left: auto; margin-right: auto; text-align: center">'
+            + '<button id="minus-btn" class="direction"><span class="fa fa-minus resizable"></span></button>'
+            + '<button id="plus-btn" class="direction"><span class="fa fa-plus resizable"></span></button>'
+            + '<button id="left-btn" class="direction"><span class="fa resizable fa-chevron-left"></span></button>'
+            + '<button id="right-btn" class="direction"><span class="fa resizable fa-chevron-right"></span></button>'
+            + '<button id="down-btn" class="direction"><span class="fa resizable fa-chevron-down"></span></button>'
+            + '<button id="up-btn" class="direction"><span class="fa resizable fa-chevron-up"></span></button>'
+            + '</div>'
+            + '</div>'
+            + '<div style="width: 100%; text-align: center">'
+            + '<button id="share" class="btn btn-default">'
+            + '<span>SHARE</span>'
+            + '</button>'
+            + '</div>'
+            + '<hr class="pro">'
+            + '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>'
+            + '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>'
+            + '<div id="icon_loader" class="jcarousel-wrapper row">'
+            + '<div id="myCarousel" class="jcarousel" data-jcarousel="true">'
+            + '<ul id="container-logo" style="left: 0; top: 0;">'
+            + load_available_logos(pr)
+            + '</ul>'
+            + '</div>'
+            + '<button style="border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">'
+            + '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>'
+            + '<button style="border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">'
+            + '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>'
+            + '</div>'
+            + '</div>'
+    }
+
+
     function open_quick(pr) {
         $.ajax({
             type: "get",
@@ -329,6 +382,23 @@
             }
         });
         modal_quick.style.display = "block";
+    }
+
+    function load_p2_ker(pr) {
+        $.ajax({
+            type: "get",
+            url: "/catalog/item/" + pr,
+            data: {},
+            success: function (data) {
+
+                load_p2(data, pr);
+
+                return false
+            },
+            error: function (data) {
+                return false
+            }
+        });
     }
 
     function image_handler(data) {
@@ -393,6 +463,44 @@
         }
     }
 
+    function load_available_colors(variations) {
+        if (variations.length > 0) {
+            var colors = '';
+            for (var attr in variations[2]['variations']) {
+                var changes = JSON.parse(variations[2]['variations'][attr]['title']);
+                colors = colors
+                    + '<div style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
+                    + '<div id="color-picker" class="">'
+                    + '<input type="checkbox" id="' + changes['code'] + '" name="' + changes['code'] + '" onclick="loadLogos()">'
+                    + '</div>'
+                    + '</div>'
+            }
+
+            return colors;
+        }
+        return '';
+    }
+
+    function load_available_logos(pr) {
+        $.ajax({
+            type: "get",
+            url: "/catalog/logos/" + pr,
+            data: {},
+            success: function (data) {
+
+                console.log(data)
+                var logos = '';
+
+                for (var i = 0; i < data.length; i++) {
+                    logos = logos + '<li class="items-scroll-container">'
+                        + '<img onclick="addToPic(' + data[i]['url'][0] + ', ' + data[i]['id'] + ')" src="' + data[i]['url'][1] + '" alt="" height="30">'
+                        + '</li>'
+                }
+
+                return logos;
+            }
+        });
+    }
 
     function get_variation_size(variations) {
         if (variations.length > 0) {
@@ -548,18 +656,6 @@
         });
 
 
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span_quick.onclick = function () {
-        modal_quick.style.display = "none";
-    };
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target === modal_quick) {
-            modal_quick.style.display = "none";
-        }
     }
 </script>
 </body>
