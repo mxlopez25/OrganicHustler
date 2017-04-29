@@ -633,12 +633,6 @@
             }
         });
 
-        function hideAll() {
-            for (var i = 0; i < elementsBorders.length; i++) {
-                elementsBorders[i].hide();
-            }
-        }
-
         var baseImg = new Konva.Image({
             width: width,
             height: height,
@@ -874,6 +868,12 @@
         });
 
         imageLogo.src = imageToAdd;
+    }
+
+    function hideAll() {
+        for (var i = 0; i < elementsBorders.length; i++) {
+            elementsBorders[i].hide();
+        }
     }
 
     function get_variation_size(variations) {
