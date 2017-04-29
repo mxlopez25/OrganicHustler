@@ -21,6 +21,10 @@
     var user_online = '';
     var position_id = 0;
 
+    var elementsBorders = [];
+    var elements = [];
+    var selected = null;
+
 </script>
 
 <div id="items-container" style="margin-top: 100px">
@@ -450,10 +454,6 @@
             });
         })(jQuery);
 
-        var elementsBorders = [];
-        var elements = [];
-        var selected = null;
-
         var base_co = $("#container");
         var width = base_co.width();
         var height = width + 0;
@@ -800,7 +800,7 @@
 
                 for (var i = 0; i < data.length; i++) {
                     logos = logos + '<li class="items-scroll-container">'
-                        + '<img onclick="addToPic(\'' + data[i]['url'][0] + '\', ' + data[i]['id'] + ')" src="' + data[i]['url'][1] + '" alt="" height="30">'
+                        + '<img onclick="addToPic(\'' + data[i]['url'][0].toString() + '\', ' + data[i]['id'] + ')" src="' + data[i]['url'][1] + '" alt="" height="30">'
                         + '</li>'
                 }
 
