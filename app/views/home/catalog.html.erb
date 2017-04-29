@@ -492,71 +492,6 @@
             return anchor;
         }
 
-        function addToPic(imageToAdd, imageId) {
-
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].destroy();
-                layer.draw();
-            }
-
-            var logo = new Konva.Image({
-                width: 200,
-                height: 200,
-                name: 'image',
-                preventDefault: false,
-                ratio: 0.2
-            });
-
-            var logo_group = new Konva.Group({
-                x: 0,
-                y: 0,
-                name: 'group',
-                draggable: true
-            });
-
-            layer.add(logo_group);
-            logo_group.add(logo);
-
-            var border;
-
-            image_id_u = imageId;
-
-            var imageLogo = new Image();
-            imageLogo.onload = function () {
-                logo.image(imageLogo);
-                logo.height(imageLogo.height * 0.2);
-                logo.width(imageLogo.width * 0.2);
-                border = addBorders(logo_group, 0, 0, "borders", imageLogo.height * 0.2, imageLogo.width * 0.2);
-                elementsBorders.push(border);
-                layer.draw();
-            };
-
-            hideAll();
-            selected = logo_group;
-            elements.push(selected);
-
-            logo_group.on('click tap', function () {
-                if (border.visible() === false) {
-                    hideAll();
-                    border.show();
-                    selected = logo_group;
-                    layer.draw();
-                } else {
-                    hideAll();
-                    selected = null;
-                    layer.draw();
-                }
-            });
-
-            logo_group.on('dragend', function () {
-                x_u = logo_group.x();
-                y_u = logo_group.y();
-
-            });
-
-            imageLogo.src = imageToAdd;
-        }
-
         var anim_zoom_in = new Konva.Animation(function (frame) {
             if (selected !== null) {
                 var image = selected.get('.image')[0];
@@ -873,6 +808,71 @@
                 document.getElementById('container-logo').innerHTML = logos;
             }
         });
+    }
+
+    function addToPic(imageToAdd, imageId) {
+
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].destroy();
+            layer.draw();
+        }
+
+        var logo = new Konva.Image({
+            width: 200,
+            height: 200,
+            name: 'image',
+            preventDefault: false,
+            ratio: 0.2
+        });
+
+        var logo_group = new Konva.Group({
+            x: 0,
+            y: 0,
+            name: 'group',
+            draggable: true
+        });
+
+        layer.add(logo_group);
+        logo_group.add(logo);
+
+        var border;
+
+        image_id_u = imageId;
+
+        var imageLogo = new Image();
+        imageLogo.onload = function () {
+            logo.image(imageLogo);
+            logo.height(imageLogo.height * 0.2);
+            logo.width(imageLogo.width * 0.2);
+            border = addBorders(logo_group, 0, 0, "borders", imageLogo.height * 0.2, imageLogo.width * 0.2);
+            elementsBorders.push(border);
+            layer.draw();
+        };
+
+        hideAll();
+        selected = logo_group;
+        elements.push(selected);
+
+        logo_group.on('click tap', function () {
+            if (border.visible() === false) {
+                hideAll();
+                border.show();
+                selected = logo_group;
+                layer.draw();
+            } else {
+                hideAll();
+                selected = null;
+                layer.draw();
+            }
+        });
+
+        logo_group.on('dragend', function () {
+            x_u = logo_group.x();
+            y_u = logo_group.y();
+
+        });
+
+        imageLogo.src = imageToAdd;
     }
 
     function get_variation_size(variations) {
