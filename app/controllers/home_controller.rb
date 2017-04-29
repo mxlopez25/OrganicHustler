@@ -10,8 +10,9 @@ class HomeController < ApplicationController
   def catalog_item
     al = HomeHelper.get_product_by_id(params['id']).as_json
     al['variation_pp'] = false
+    al['source_p'] = params['id']
     @open_quick_m = false
-    unless params['variation_ma'].blank?
+    if params['variation_ma'].eql?('false')
       @open_quick_m = true
       al['variation_pp'] = true
       al['source_p'] = params['source_p']
