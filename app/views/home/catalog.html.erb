@@ -1,11 +1,13 @@
 <body>
 
 <script>
+    //Size variables
     var selected_size = null;
     var available_sizes = [];
     var render_custom = [];
     var variation_img = false;
 
+    //End variables
     var source_p = '';
     var product_id_e = '';
     var image_id_e = '';
@@ -21,11 +23,13 @@
     var user_online = '';
     var position_id = 0;
 
+    //Customization variables
     var elementsBorders = [];
     var elements = [];
     var selected = null;
     var layer;
 
+    //Mid-end custom variables
     var product_id_u = document.getElementById('product_id');
     var image_id_u = document.getElementById('image_id');
     var x_u = document.getElementById('x_u');
@@ -65,6 +69,7 @@
   </div>
 
 </div>
+
 <script>
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
@@ -86,33 +91,19 @@
         }
     };
 
-    /*if () {
-     $.ajax({
-     type: "get",
-     url: "/catalog/item/" + data['source_p'],
-     data: {},
-     success: function (data) {
-
-     load_p1(data, data['source_p']);
-
-     return false
-     },
-     error: function (data) {
-     return false
-     }
-     });
-     }*/
-
     var size_x = 0;
     var size_y = 0;
 
     function load_p1(data, pr) {
+        //Array of customs for that product initialize
         render_custom = [];
         source_p = pr;
         product_id_e = pr;
+
         if (data['product_id_e']) {
             product_id_e = data['product_id_e'];
         }
+
         image_id_e = data['image_id'];
         width = data['width_u'];
         height = data['height_u'];
@@ -247,8 +238,10 @@
             innerHTML22.heightTT = $("#icon_loader").height();
             var img_load = $('#image_loader');
 
-            size_x = img_load.width();
-            size_y = img_load.height();
+            if (size_x === 0) {
+                size_x = img_load.width();
+                size_y = img_load.height();
+            }
 
             console.log(size_x, size_y);
         });
@@ -346,7 +339,7 @@
                 has_logo: true,
                 has_emblem: false,
                 emblem_id: '',
-                user_signed: user_online,
+                user_signed: '<%= user_signed_in? %>',
                 position_id: 0
                 //Missing attributes check migrations
 
