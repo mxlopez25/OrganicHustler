@@ -473,26 +473,6 @@
         layer = new Konva.Layer();
         stage.add(layer);
 
-        function addBorders(group, x, y, name, h, w) {
-            var layer = group.getLayer();
-            var anchor = new Konva.Rect({
-                x: x,
-                y: y,
-                width: w,
-                height: h,
-                stroke: '#A9A9A9',
-                strokeWidth: 3,
-                name: name,
-                draggable: false,
-                dragOnTop: false,
-                preventDefault: false
-            });
-
-            group.add(anchor);
-            layer.draw();
-            return anchor;
-        }
-
         var anim_zoom_in = new Konva.Animation(function (frame) {
             if (selected !== null) {
                 var image = selected.get('.image')[0];
@@ -874,6 +854,26 @@
         for (var i = 0; i < elementsBorders.length; i++) {
             elementsBorders[i].hide();
         }
+    }
+
+    function addBorders(group, x, y, name, h, w) {
+        var layer = group.getLayer();
+        var anchor = new Konva.Rect({
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            stroke: '#A9A9A9',
+            strokeWidth: 3,
+            name: name,
+            draggable: false,
+            dragOnTop: false,
+            preventDefault: false
+        });
+
+        group.add(anchor);
+        layer.draw();
+        return anchor;
     }
 
     function get_variation_size(variations) {
