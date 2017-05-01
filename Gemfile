@@ -15,6 +15,7 @@ gem 'font-awesome-sass'
 gem 'figaro'
 gem 'paperclip-ffmpeg', '~> 1.0.1'
 gem 'ffmpeg'
+gem 'stripe'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
