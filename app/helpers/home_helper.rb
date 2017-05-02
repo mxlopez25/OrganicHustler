@@ -149,4 +149,32 @@ module HomeHelper
     JSON.parse(response.body)['result']
   end
 
+  def get_p_price(id, logo_id, emblem_id, size_price)
+    pr = AdminHelper.get_product_by_id(id)
+
+    price_product = pr['price']['data']['raw']['without_tax'].to_d
+    tax = pr['price']['data']['raw']['tax'].to_d
+    price_logo = 0
+    price_emblem = 0
+
+    unless logo_id.blank?
+      logo = Picture.find(logo_id)
+      price_logo = logo.price
+      if price_logo.nil?
+        price_logo = 0
+      end
+    end
+
+    unless emblem_id.blank?
+      emblem = Emblem.find(emblem_id)
+      price_emblem = emblem.emblem_cost
+      if price_emblem.nil?
+        price_emblem = 0
+      end
+    end
+
+    total_m = price_logo + price_product + price_emblem + size_price
+    [total_m, tax]
+  end
+
 end

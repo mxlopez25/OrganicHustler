@@ -1,104 +1,283 @@
+<% tax_array = [] %>
+<% cost_array = [] %>
 <div style="margin: 100px"></div>
 <script src="https://js.stripe.com/v3/"></script>
+<%= stylesheet_link_tag 'cart' %>
+<div style="margin-left: 7%; margin-right: 7%">
+  <form action="/charge" method="post" id="payment-form">
 
-<style>
+    <div class="content-part">
 
-  .StripeElement {
-    background-color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    box-shadow: 0 1px 3px 0 #e6ebf1;
-    -webkit-transition: box-shadow 150ms ease;
-    transition: box-shadow 150ms ease;
-  }
+      <div class="content-part content-part-10">
+        <label>
+          <div>CHECKOUT DETAILS</div>
+        </label>
+        <input name="cardholder-email" class="field" placeholder="user@domain.com"/>
+      </div>
 
-  .StripeElement--focus {
-    box-shadow: 0 1px 3px 0 #cfd7df;
-  }
+      <div class="content-part content-part-10">
+        <hr>
+      </div>
 
-  .StripeElement--invalid {
-    border-color: #fa755a;
-  }
+      <h3>SHIPPING ADDRESS</h3>
 
-  .StripeElement--webkit-autofill {
-    background-color: #fefde5 !important;
-  }
+      <div class="content-part content-part-5">
+        <label>
+          <div>FIRST NAME</div>
+        </label>
+        <input name="cardholder-first-name" class="field" placeholder="Jane Doe"/>
+      </div>
 
-</style>
+      <div class="content-part content-part-5">
+        <label>
+          <div>LAST NAME</div>
+        </label>
+        <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo"/>
+      </div>
 
-<form action="/charge" method="post" id="payment-form">
-  <div class="form-row">
-    <label for="card-element">
-      Credit or debit card
-    </label>
-    <div id="card-element">
-      <!-- a Stripe Element will be inserted here. -->
+      <div class="content-part content-part-10">
+        <label>
+          <div>STREET ADDRESS</div>
+        </label>
+        <input name="cardholder-street" class="field" placeholder="Vergel #31"/>
+      </div>
+
+      <div class="content-part content-part-3">
+        <label>
+          <div>CITY</div>
+        </label>
+        <input name="cardholder-city" class="field" placeholder="Santo Domingo"/>
+      </div>
+
+      <div class="content-part content-part-3">
+        <label>
+          <div>STATE</div>
+        </label>
+        <input name="cardholder-state" class="field" placeholder="DN"/>
+      </div>
+
+      <div class="content-part content-part-3">
+        <label>
+          <div>ZIP CODE</div>
+        </label>
+        <input name="cardholder-zip" class="field" placeholder="10107"/>
+      </div>
+
+      <div class="content-part content-part-3">
+        <label>
+          <div>AREA</div>
+        </label>
+        <input name="cardholder-area" class="field" placeholder="829" type=""/>
+      </div>
+
+      <div class="content-part content-part-7">
+        <label>
+          <div>NUMBER</div>
+        </label>
+        <input name="cardholder-number" class="field" placeholder="456-7890" type="tel"/>
+      </div>
+
+
+      <div class="content-part content-part-10">
+        <hr>
+      </div>
+
+      <h3>PAYMENT OPTIONS</h3>
+
+      <label>
+        <span>Card</span>
+      </label>
+      <div id="card-element" class="field content-part content-part-10"></div>
+
+      <div class="content-part content-part-10">
+        <hr>
+      </div>
+
+      <h3>GIFT OPTIONS</h3>
+
     </div>
 
-    <!-- Used to display form errors -->
-    <div id="card-errors"></div>
-  </div>
+    <div class="content-part preview-cart">
 
-  <button type="submit">Submit Payment</button>
-</form>
+      <h4><span><%= get_item_count %></span> Items</h4>
+      <hr>
+      <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+
+          <% product_temp = get_product(product.m_id) %>
+          <div class="item-checkout">
+            <div class="content-part content-part-3">
+              <div id="<%= product.id %>cart" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;"></div>
+            </div>
+            <div class="content-part content-part-7">
+              <h4><%= product_temp['title'] %></h4>
+              <div class="content-part content-part-5">
+                <h6>Size: <%= product.size_leter %></h6>
+                <h6>Customized:
+                  <% if product.has_emblem %>YES
+                  <% elsif product.has_logo %>YES
+                  <% else %>NO
+                  <% end %></h6>
+                <h6>Color: BROWN</h6> <!-- Attach to backend -->
+              </div>
+              <div class="content-part content-part-5" style="text-align: center">
+                <h3>Qty: 1</h3> <!-- Attach to backend -->
+                <% pr_price = get_p_price(product.m_id, product.logo_id, product.emblem_id, product.size_price) %> <!--Look the size price with id and do not take it from database-->
+                <h4><%= pr_price[0] %></h4>
+                <% tax_array.push(pr_price[1]) %>
+                <% cost_array.push(pr_price[0]) %>
+              </div>
+            </div>
+          </div>
+
+          <script id="create-shape">
+              createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
+              function createShape(id, width, height, x, y, s_w, s_h) {
+                  var container = $('#' + id);
+                  container.height(container.width());
+
+                  var stage = new Konva.Stage({
+                      container: id,
+                      width: container.width(),
+                      height: container.height()
+                  });
+                  var layer = new Konva.Layer();
+                  stage.add(layer);
+
+                  var baseImg = new Konva.Image({
+                      width: container.width(),
+                      height: container.height(),
+                      draggable: false
+                  });
+
+                  var logoImg = new Konva.Image({
+                      width: container.width() * width / s_w,
+                      height: container.height() * height / s_h
+                  });
+
+                  var logoGroup = new Konva.Group({
+                      x: container.width() * x / s_w,
+                      y: container.width() * y / s_h
+                  });
+
+                  layer.add(baseImg);
+                  layer.add(logoGroup);
+                  logoGroup.add(logoImg);
+
+                  var imageObj1 = new Image();
+                  imageObj1.onload = function () {
+                      baseImg.image(imageObj1);
+                      layer.draw();
+                  };
+                  imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+
+                  var imageObj2 = new Image();
+                  imageObj2.onload = function () {
+                      logoImg.image(imageObj2);
+                      layer.draw();
+                      imageObj2.width = container.width() * width / s_w;
+                      console.log(imageObj2.width, container.width(), width, s_w);
+                      imageObj2.height = container.height() * height / s_h;
+                      console.log(imageObj2.height);
+                  };
+                  imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                  layer.draw();
+              }
+          </script>
+
+      <% end %>
+
+      <h3>ORDER DETAILS</h3>
+      <hr>
+      <div style="overflow: hidden; margin: 5px">
+        <% cost_t = 0 %>
+        <% cost_array.each do |cost| %>
+            <% cost_t = cost_t + cost %>
+        <% end %>
+        <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= cost_t %></h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 5px">
+        <h4 class="t-right">Shipping</h4><h4 class="s-left">(Free US)</h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 5px">
+        <% tax_t = 0 %>
+        <% tax_array.each do |tax| %>
+            <% tax_t = tax_t + tax %>
+        <% end %>
+        <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= tax_t %></h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 40px 5px 5px;">
+        <h4 class="t-right">Estimated total</h4>
+        <h3 style="font-weight: lighter;" class="s-left">$<%= tax_t + cost_t %></h3>
+      </div>
+
+      <hr>
+
+      <input type="checkbox"> I agree to the terms and conditions.
+
+      <button type="submit">Pay $25</button>
+      <div class="outcome">
+        <div class="error"></div>
+        <div class="success">
+          Success! Your Stripe token is <span class="token"></span>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
 
 <script>
-    // Create a Stripe client
     var stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
-
-    // Create an instance of Elements
     var elements = stripe.elements();
 
-    // Custom styling can be passed to options when creating an Element.
-    // (Note that this demo uses a wider set of styles than the guide below.)
-    var style = {
-        base: {
-            color: '#32325d',
-            lineHeight: '24px',
-            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#aab7c4'
-            }
-        },
-        invalid: {
-            color: '#fa755a',
-            iconColor: '#fa755a'
-        }
-    };
+    var card = elements.create('card', {
+        style: {
+            base: {
+                iconColor: '#666EE8',
+                color: '#31325F',
+                lineHeight: '50px',
+                fontWeight: 300,
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSize: '15px',
 
-    // Create an instance of the card Element
-    var card = elements.create('card', {style: style});
-
-    // Add an instance of the card Element into the `card-element` <div>
-    card.mount('#card-element');
-
-    // Handle real-time validation errors from the card Element.
-    card.addEventListener('change', function (event) {
-        var displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
+                '::placeholder': {
+                    color: '#70726C',
+                },
+            },
         }
     });
+    card.mount('#card-element');
 
-    // Handle form submission
-    var form = document.getElementById('payment-form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
+    function setOutcome(result) {
+        var successElement = document.querySelector('.success');
+        var errorElement = document.querySelector('.error');
+        successElement.classList.remove('visible');
+        errorElement.classList.remove('visible');
 
-        stripe.createToken(card).then(function (result) {
-            if (result.error) {
-                // Inform the user if there was an error
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
-            } else {
-                // Send the token to your server
-                stripeTokenHandler(result.token);
-            }
-        });
+        if (result.token) {
+            // Use the token to create a charge or a customer
+            // https://stripe.com/docs/charges
+            successElement.querySelector('.token').textContent = result.token.id;
+            successElement.classList.add('visible');
+        } else if (result.error) {
+            errorElement.textContent = result.error.message;
+            errorElement.classList.add('visible');
+        }
+    }
+
+    card.on('change', function (event) {
+        setOutcome(event);
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var form = document.querySelector('form');
+        var extraDetails = {
+            name: form.querySelector('input[name=cardholder-first-name]').value,
+        };
+        stripe.createToken(card, extraDetails).then(setOutcome);
     });
 </script>
