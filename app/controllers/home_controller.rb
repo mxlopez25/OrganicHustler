@@ -192,4 +192,12 @@ class HomeController < ApplicationController
     end
   end
 
+  def subscribe
+
+    subscriber = Subscriber.new(email: params['email'])
+    subscriber.save!
+
+    redirect_to root_path
+  end
+
 end

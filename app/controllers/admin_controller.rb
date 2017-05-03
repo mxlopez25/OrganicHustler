@@ -17,6 +17,18 @@ class AdminController < ApplicationController
   def orders
   end
 
+  def mailer
+  end
+
+  def mailer_send
+    subject = params['subject']
+    content = params['editor'].html_safe
+    Subscriber.all.each do |user|
+      mail = SubscriptionMailer.new_promotion(user.email, subject, content)
+      mail.deliver_now
+    end
+  end
+
   def new_product
     render 'admin/products_functions/new_product'
   end

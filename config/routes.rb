@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
+
   get '/product/:id/:step' => 'home#product'
+
+  post '/' => 'home#subscribe'
 
   get '/catalog' => 'home#catalog'
   get '/catalog/item/:id' => 'home#catalog_item'
@@ -27,6 +30,7 @@ Rails.application.routes.draw do
   get '/admin/products' => 'admin#products'
   get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
+  get '/admin/mailer' => 'admin#mailer'
 
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/product/edit/:id' => 'admin#edit_product'
@@ -36,6 +40,7 @@ Rails.application.routes.draw do
 
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
   post '/admin/product/new' => 'admin#new_product'
+  post '/admin/mailer' => 'admin#mailer_send'
 
   put '/admin/products' => 'admin#products'
   put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'

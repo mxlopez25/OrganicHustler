@@ -352,4 +352,77 @@
 <%= yield %>
 
 
+<div class="container-fluid blc mobilenot">
+  <div class="row" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;"> BRAND</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;"> STORY </h5>
+      <h5 style="color: #A4A4A4;"> SHOP MEN</h5>
+      <h5 style="color: #A4A4A4;"> SHOP WOMEN </h5>
+      <h5 style="color: #A4A4A4;"> CONTACT US</h5>
+
+
+    </div>
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;">SHOP</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;">LOOKS </h5>
+      <h5 style="color: #A4A4A4;"> HATS</h5>
+      <h5 style="color: #A4A4A4;">MEN </h5>
+      <h5 style="color: #A4A4A4;"> WOMEN</h5>
+      <h5 style="color: #A4A4A4;"> MEN</h5>
+
+
+    </div>
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;"> FIND US AT</h3>
+      <br>
+      <br>
+      <h5 style="color: #A4A4A4;"> INSTAGRAM </h5>
+      <h5 style="color: #A4A4A4;"> TWITTER </h5>
+      <h5 style="color: #A4A4A4;"> YOUTUBE</h5>
+      <h5 style="color: #A4A4A4;"> FACEBOOK</h5>
+      <h5 style="color: #A4A4A4;"> E-MAIL</h5>
+
+
+    </div>
+
+    <div class="col-sm-6">
+
+      <div style="background-color: #5e5e5e; height: 330px; width:1px; float: left; ">
+      </div>
+
+
+      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
+      <%= form_tag root_path, method: :post do %>
+          <% if !@notice %>
+              <input class="foot-form" type="text" name="email" placeholder="Email Address">
+          <% else %>
+              <input class="foot-form" type="text" name="email" placeholder="Successfully saved">
+          <% end %>
+      <% end %>
+
+
+      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> SEARCH SHOP</h3>
+      <input class="foot-form" type="text" name="">
+
+      <div>
+        <img src="<%= GroupShowcase.where(screen: 3, name_identity: 'icon_web_page_2').first.showcases.first.image_show.image.url %>" style="width: 30px; margin-top: 50px;">
+
+        <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 </html>
