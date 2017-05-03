@@ -180,7 +180,8 @@
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
       <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"></i></a>
-      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+      <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first %>
+      <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
       <div class="navbar-header">
         <button id="toggle_menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
