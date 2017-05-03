@@ -180,7 +180,7 @@
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
       <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"></i></a>
-      <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first %>
+      <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
       <div class="navbar-header">
