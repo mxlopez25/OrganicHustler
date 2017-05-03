@@ -507,7 +507,7 @@
       <input type="text" name="">
 
       <div>
-        <img src="<%= url_to_image 'index/ico.png' %>" style="width: 30px; margin-top: 50px;">
+        <img src="<%= GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first.image_show.image.url %>" style="width: 30px; margin-top: 50px;">
 
         <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
 
