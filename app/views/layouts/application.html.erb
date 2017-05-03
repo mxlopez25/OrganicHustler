@@ -35,6 +35,8 @@
 
 <div id="myModal" style="z-index: 100;" class="modal">
 
+  <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
+
   <div id="triangle" class="triangle"></div>
   <!-- Modal content -->
   <div id="modal_c" class="modal-content">
@@ -180,7 +182,6 @@
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
       <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"></i></a>
-      <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
       <div class="navbar-header">
@@ -216,7 +217,7 @@
 
   <div class="mobilenot">
     <div id="search-index" class="container-fluid">
-      <a href="https://www.google.com"> <img src="<%= url_to_image 'index/ico.png' %>" class="imgxx logo"></a>
+      <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
       <% if @parameters.nil? %>
           <button style="float: left" type="button" class="btn btn-link">Get in Touch</button>
           <button style="float: left" type="button" class="btn btn-link">Instagram</button>
