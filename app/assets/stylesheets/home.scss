@@ -173,7 +173,7 @@ div.wrap {
 }
 
 a.selected {
-  border-bottom: thick solid green;
+  border-bottom: 2px solid #89c13e;
 }
 
 a.head-menu {
@@ -182,23 +182,76 @@ a.head-menu {
 }
 
 .catalog-item {
+  border-bottom: 2px lightgray solid;
+  background: white;
+  position: relative;
   float: left;
   width: 96%;
-  margin-left: 2%;
-  margin-right: 2%;
   text-align: center;
   padding: 25px 0 0;
-  background: #ffecf0;
+  overflow: hidden;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: 5px;
+}
+
+.img-con-item {
+  width: auto;
+  height: 60vw;
+}
+
+.btn-bottom_fixed {
+  display: none;
+  position: absolute;
+  border-radius: 0;
+  background: #b692a2;
+  color: white;
+  font-weight: 600;
+  bottom: 0;
+  left: 0;
+}
+
+.filter {
+  text-align: center;
+
+}
+
+.filter-element {
+  float: left;
+  width: 21%;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.filter-element h5 {
+
+  padding: 0;
+  margin: 0;
+  text-align: center;
 }
 
 @media screen and (min-width: 480px) {
+
+  .btn-bottom_fixed {
+    display: block;
+  }
+
   .modal-content {
     width: 30%;
   }
 
+  .img-con-item {
+    width: auto;
+    height: 25vw;
+  }
+
   .catalog-item {
-    width: 18%;
+    border: none;
+    width: 48%;
+    height: 50vw;
     margin: 25px 1% 0;
+    min-height: 254px;
+    background: #f6f8f1;
   }
 }
 
@@ -206,7 +259,32 @@ a.head-menu {
   .modal-content {
     width: 25%;
   }
+
+  .img-con-item {
+    width: auto;
+    height: 14vw;
+  }
+
+  .catalog-item {
+    width: 23%;
+    height: 30vw;
+    max-height: 340px;
+    margin: 25px 1% 0;
+  }
 }
 
 @media screen and (min-width: 1330px) {
+
+  .img-con-item {
+    width: auto;
+    height: 14vw;
+  }
+
+  .catalog-item {
+    width: 14.66667%;
+    height: 30vw;
+    max-height: 350px;
+    margin: 25px 1% 0;
+  }
+
 }
