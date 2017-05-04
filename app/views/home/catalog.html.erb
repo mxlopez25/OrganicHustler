@@ -45,13 +45,45 @@
 <div id="items-container" style="margin-top: 100px; overflow: hidden; margin-bottom: 30px">
 
   <div id="filters" class="mobilenot">
-    <div class="filter-element"><h5>Style</h5></div>
-    <div class="filter-element"><h5>Colors</h5></div>
-    <div class="filter-element"><h5>Materials</h5></div>
-    <div class="filter-element"><h5>6 products found</h5></div>
+
+    <!-- Large button group -->
+    <div class="btn-group filter-element">
+      <button style="font-weight: bold" class="btn btn-default btn-enlarge btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Style
+        <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+      </button>
+      <ul class="dropdown-menu drop-enlarge">
+        <li><h5>Style</h5></li>
+      </ul>
+    </div>
+
+    <!-- Large button group -->
+    <div class="btn-group filter-element">
+      <button style="font-weight: bold" class="btn btn-default btn-enlarge btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Colors
+        <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+      </button>
+      <ul class="dropdown-menu drop-enlarge">
+        <li><h5>Colors</h5></li>
+      </ul>
+    </div>
+
+    <!-- Large button group -->
+    <div class="btn-group filter-element">
+      <button style="font-weight: bold" class="btn btn-default btn-enlarge btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Material
+        <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+      </button>
+      <ul class="dropdown-menu drop-enlarge">
+        <li><h5>Material</h5></li>
+      </ul>
+    </div>
+
+    <% objects = get_products_f_catalog(params) %>
+    <div class="filter-element"><h5 style="font-weight: bold"><%= objects.length %> products found</h5></div>
   </div>
 
-  <% get_products_f_catalog(params).each do |pr| %>
+  <% objects.each do |pr| %>
       <div class="catalog-item" id="item<%= pr['id'] %>">
         <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
         <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
@@ -59,7 +91,6 @@
         <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop
         </button>
       </div>
-
   <% end %>
 
 </div>

@@ -39,7 +39,7 @@
 
   <div id="triangle" class="triangle"></div>
   <!-- Modal content -->
-  <div id="modal_c" class="modal-content">
+  <div id="modal_c" style="padding: 0;" class="modal-content">
     <span class="close">&times;</span>
     <h3 style="color: #3F3F3F; text-align: center; margin-right: auto; margin-left: auto">Your Bag</h3>
     <hr>
@@ -162,12 +162,12 @@
     </script>
 
     <hr>
-    <%= get_cart.total_m %>$
+    <span style="color: #e5bbd1">Subtotal</span>
+    <span style="font-size: x-large; float: right"><%= get_cart.total_m %>$</span>
     <hr>
 
-    <button class="btn btn-default" style="width: 100%">CAN'T READ
-    </button>
-    <button class="btn btn-default" style="width: 100%">CAN'T READ</button>
+    <button class="btn btn-default" style="width: 100%">CHECKOUT</button>
+    <button class="btn btn-default" style="width: 100%">VIEW BAG</button>
 
   </div>
 
@@ -181,7 +181,7 @@
     <div class="container-fluid" style="overflow: hidden">
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
-      <a id="myBtn_1"><i class="fa fa-shopping-cart iconx"></i></a>
+      <a id="myBtn_1"><i><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
       <div class="navbar-header">
@@ -228,13 +228,13 @@
           <button type="button" class="btn btn-link">Twitter</button>
       <% else %>
           <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
-            <span style="font-weight: lighter; color: #5e5e5e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
+            <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
           </h5>
       <% end %>
-      <input style="float: right" type="text" name="search" placeholder="Search..">
+      <input style="background: #f0f5e6; float: right" type="text" name="search" placeholder="Search..">
 
       <div style="float: right; margin-right: 4px;">
-        <a><i id="myBtn_2" class="fa fa-shopping-cart iconx"></i></a>
+        <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       </div>
 
       <% available = true %>
@@ -244,27 +244,27 @@
           <li>
             <a style="padding-bottom: 5px" class="
               <% unless params['looks'].blank? and available %>selected
-              <% end %>" href="/catalog?looks=true">LOOKS</a>
+              <% end %>" href="/catalog?looks=true&view=looks">LOOKS</a>
           </li>
           <li>
             <a style="padding-bottom: 5px" class="
               <% unless params['hats'].blank? and available %>selected
-              <% end %>" href="/catalog?hats=true">HATS</a>
+              <% end %>" href="/catalog?hats=true&view=hats">HATS</a>
           </li>
           <li>
             <a style="padding-bottom: 5px" class="
               <% unless params['men'].blank? and available %>selected
-              <% end %>" href="/catalog?men=true">MEN</a>
+              <% end %>" href="/catalog?men=true&view=men">MEN</a>
           </li>
           <li>
             <a style="padding-bottom: 5px" class="
               <% unless params['women'].blank? and available %>selected
-              <% end %>" href="/catalog?women=true">WOMEN</a>
+              <% end %>" href="/catalog?women=true&view=women">WOMEN</a>
           </li>
           <li>
             <a style="padding-bottom: 5px" class="
               <% unless params['brand'].blank? and available %>selected
-              <% end %>" href="/catalog?brand=true">BRAND</a>
+              <% end %>" href="/catalog?brand=true&view=brand">BRAND</a>
           </li>
 
         </ul>

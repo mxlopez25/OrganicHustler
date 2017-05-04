@@ -140,12 +140,17 @@ module HomeHelper
         if t != 'looks' && t != 'hats' && t != 'men' && t != 'women' && t != 'brand' && t != 'controller' && t != 'action'
           available_params = "#{available_params}?#{t}=#{params[t]}"
         end
+
+      end
+    end
+    id_cat = ''
+    AdminHelper.get_categories.each do |category|
+      if category['slug'].eql?(params['view'])
+        id_cat = category['id']
       end
     end
 
-    p available_params
-
-    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/#{available_params}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     JSON.parse(response.body)['result']
   end
 
