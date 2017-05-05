@@ -222,12 +222,21 @@
 
     <% unless product_i['is_variation'] %>
 
-        <% variations = [] %>
+        <% variations = ['', '', ''] %>
         <% product_i['modifiers'].each do |modifiers| %>
-            <% variations.push(modifiers) %>
+
+            <% if modifiers[1]['title'].eql?('Color')
+                 variations[2] = modifiers
+               elsif modifiers[1]['title'].eql?('Size')
+                 variations[1] = modifiers
+               elsif modifiers[1]['title'].eql?('Logo preset')
+                 variations[0] = modifiers
+               end %>
+
         <% end %>
 
         <% unless variations.blank? %>
+            <% unless variations[2].blank? %>
             <h5><span class="label label-primary">Available colors</span></h5>
             <div class="container-menu">
 
@@ -238,7 +247,9 @@
               <% end %>
 
             </div>
+            <% end %>
 
+            <% unless variations[1].blank? %>
             <h5><span class="label label-primary">Available sizes</span></h5>
             <div class="container-menu">
               <% unless variations[1][1]['variations'].blank? %>
@@ -248,7 +259,9 @@
               <% end %>
 
             </div>
+            <% end %>
 
+            <% unless variations[0].blank? %>
             <h5><span class="label label-primary">Pre created products with logos</span></h5>
             <div class="container-menu">
               <% unless variations[0][1]['variations'].blank? %>
@@ -264,6 +277,7 @@
               <% end %>
 
             </div>
+        <% end %>
         <% end %>
 
 

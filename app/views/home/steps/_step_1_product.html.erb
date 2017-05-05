@@ -96,9 +96,15 @@
     <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>
   </div>
 
-  <% variations = [] %>
+  <% variations = ['', '', ''] %>
   <% @product['modifiers'].each do |modifiers| %>
-      <% variations.push(modifiers) %>
+      <% if modifiers[1]['title'].eql?('Color')
+           variations[2] = modifiers
+         elsif modifiers[1]['title'].eql?('Size')
+           variations[1] = modifiers
+         elsif modifiers[1]['title'].eql?('Logo preset')
+           variations[0] = modifiers
+         end %>
   <% end %>
 
   <% unless variations.blank? %>
@@ -208,9 +214,15 @@
     <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>
   </div>
 
-  <% variations = [] %>
+  <% variations = ['', '', ''] %>
   <% @product['modifiers'].each do |modifiers| %>
-      <% variations.push(modifiers) %>
+      <% if modifiers[1]['title'].eql?('Color')
+           variations[2] = modifiers
+         elsif modifiers[1]['title'].eql?('Size')
+           variations[1] = modifiers
+         elsif modifiers[1]['title'].eql?('Logo preset')
+           variations[0] = modifiers
+         end %>
   <% end %>
 
   <% unless variations.blank? %>

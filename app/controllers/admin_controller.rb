@@ -68,6 +68,10 @@ class AdminController < ApplicationController
           @product = AdminHelper.get_product_by_id(@product_id)
         when "1"
         when "2"
+        when "3"
+
+        else
+          # type code here
       end
 
       render 'admin/products_functions/edit_product'

@@ -48,12 +48,12 @@
 
     <!-- Large button group -->
     <div class="btn-group filter-element">
-      <button style="font-weight: bold" class="btn btn-default btn-enlarge btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button id="button_for_drop" style="font-weight: bold" class="btn btn-default btn-enlarge btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Style
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
-      <ul class="dropdown-menu drop-enlarge">
-        <li><h5>Style</h5></li>
+      <ul id="style-list-filter" class="dropdown-menu drop-enlarge">
+
       </ul>
     </div>
 
@@ -63,7 +63,7 @@
         Colors
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
-      <ul class="dropdown-menu drop-enlarge">
+      <ul id="color-list-filter" class="dropdown-menu drop-enlarge">
         <li><h5>Colors</h5></li>
       </ul>
     </div>
@@ -74,7 +74,7 @@
         Material
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
-      <ul class="dropdown-menu drop-enlarge">
+      <ul id="material-list-filter" class="dropdown-menu drop-enlarge">
         <li><h5>Material</h5></li>
       </ul>
     </div>
@@ -83,17 +83,221 @@
     <div class="filter-element"><h5 style="font-weight: bold"><%= objects.length %> products found</h5></div>
   </div>
 
-  <% objects.each do |pr| %>
-      <div class="catalog-item" id="item<%= pr['id'] %>">
-        <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
-        <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
-        <h5 style="color: #b692a2"> <%= pr['price']['value'] %></h5>
-        <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop
-        </button>
-      </div>
-  <% end %>
+  <% styles = [] %>
+  <% colors = [] %>
+  <% materials = [] %>
+
+  <div id="items" style="min-height: 370px">
+    <% objects.each do |pr| %>
+        <div class="catalog-item" id="item<%= pr['id'] %>">
+          <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
+          <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
+          <h5 style="color: #b692a2"> <%= pr['price']['value'] %></h5>
+          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop
+          </button>
+        </div>
+
+        <% pr['modifiers'].each do |mod| %>
+            <% if mod[1]['title'].eql?('Style')
+                 unless styles.include?(mod)
+                   styles.push(mod)
+                 end
+               elsif mod[1]['title'].eql?('Color')
+                 unless colors.include?(mod)
+                   colors.push(mod)
+                 end
+               elsif mod[1]['title'].eql?('Material')
+                 unless materials.include?(mod)
+                   materials.push(mod)
+                 end
+               end %>
+        <% end %>
+    <% end %>
+  </div>
 
 </div>
+
+<script>
+
+    var received_obj = <%= objects.to_json.html_safe %>;
+    var id_s = get_id_s(received_obj);
+
+    function get_id_s(obj_s) {
+        id_s = [];
+        for (var obj in obj_s) {
+            id_s.push(obj_s[obj]['id']);
+        }
+        return id_s;
+    }
+
+    var styles_json = <%= styles.to_json.html_safe %>;
+    var colors_json = <%= colors.to_json.html_safe %>;
+    var materials_json = <%= materials.to_json.html_safe %>;
+
+    var styles_html = '';
+    var colors_html = '';
+    var materials_html = '';
+
+    var relations_s = {};
+    var relations_c = {};
+    var relations_m = {};
+
+    for (var style in styles_json) {
+        var style_n = styles_json[style][1];
+        var product_id = style_n['product'];
+        var variations = style_n['variations'];
+        for (var variation in variations) {
+
+            var title = variations[variation]['title'];
+            var relation = {};
+
+            if (!(title in relations_s)) {
+                relations_s[title] = relation;
+            }
+            relations_s[title][product_id] = 0;
+        }
+    }
+    for (var color in colors_json) {
+        var color_n = colors_json[color][1];
+        var product_id = color_n['product'];
+        var variations = color_n['variations'];
+        for (var variation in variations) {
+
+            var title = JSON.parse(variations[variation]['title'])['title'];
+            var relation = {};
+
+            if (!(title in relations_c)) {
+                relations_c[title] = relation;
+            }
+            relations_c[title][product_id] = 0;
+        }
+    }
+    for (var material in materials_json) {
+        var material_n = materials_json[material][1];
+        var product_id = material_n['product'];
+        var variations = material_n['variations'];
+        for (var variation in variations) {
+
+            var title = variations[variation]['title'];
+            var relation = {};
+
+            if (!(title in relations_m)) {
+                relations_m[title] = relation;
+            }
+            relations_m[title][product_id] = 0;
+        }
+    }
+
+    var selector_style = document.getElementById('style-list-filter');
+    var selector_color = document.getElementById('color-list-filter');
+    var selector_material = document.getElementById('material-list-filter');
+
+    for (var s in relations_s) {
+        styles_html = styles_html + '<li><a onclick="filter_s(\'' + s + '\')"><h5>' + s + '</h5></a></li>'
+    }
+    selector_style.innerHTML = styles_html;
+
+    for (var c in relations_c) {
+        colors_html = colors_html + '<li><a onclick="filter_c(\'' + c + '\')"><h5>' + c + '</h5></a></li>'
+    }
+    selector_color.innerHTML = colors_html;
+
+    for (var m in relations_m) {
+        materials_html = materials_html + '<li><a onclick="filter_m(\'' + m + '\')"><h5>' + m + '</h5></a></li>'
+    }
+    selector_material.innerHTML = materials_html;
+
+    console.log(relations_s, relations_c, relations_m);
+
+    var filtered_obj_s = id_s;
+    function filter_s(rela) {
+        var button_drop = selector_style.previousElementSibling;
+        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
+        filtered_obj_s = [];
+        for (var s in relations_s) {
+            console.log(s, rela);
+            if (rela === s) {
+                for (var id in relations_s[s]) {
+                    filtered_obj_s.push(id);
+                }
+            }
+        }
+        limit_search();
+    }
+
+    var filtered_obj_c = id_s;
+    function filter_c(rela) {
+        var button_drop = selector_color.previousElementSibling;
+        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
+        filtered_obj_c = [];
+        for (var c in relations_c) {
+            console.log(c, rela);
+            if (rela === c) {
+                for (var id in relations_c[c]) {
+                    filtered_obj_c.push(id);
+                }
+            }
+        }
+        limit_search()
+    }
+
+    var filtered_obj_m = id_s;
+    function filter_m(rela) {
+        var button_drop = selector_material.previousElementSibling;
+        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
+        filtered_obj_m = [];
+        for (var m in relations_m) {
+            console.log(m, rela);
+            if (rela === m) {
+                for (var id in relations_m[m]) {
+                    filtered_obj_m.push(id);
+                }
+            }
+        }
+        limit_search()
+
+    }
+
+    Array.prototype.contains = function (element) {
+        return this.indexOf(element) > -1;
+    };
+
+    function limit_search() {
+
+        var selected_ids = [];
+        for (var id in id_s) {
+            console.log(id, id_s[id], filtered_obj_s);
+
+            if (filtered_obj_s.contains(id_s[id])) {
+                console.log('true');
+                if (filtered_obj_c.contains(id_s[id])) {
+                    console.log('true');
+                    if (filtered_obj_m.contains(id_s[id])) {
+                        console.log('true');
+                        selected_ids.push(id_s[id])
+                    }
+                }
+            }
+        }
+
+        var html_items = '';
+
+        for (var obj in received_obj) {
+            var desired_obj = received_obj[obj];
+            if (selected_ids.contains(desired_obj['id'])) {
+                html_items = html_items + '<div class="catalog-item" id="item' + desired_obj['id'] + '">'
+                    + '<img class="img-con-item" style="margin-bottom: 10px" src="' + desired_obj['images'][0]['url']['https'] + '">'
+                    + '<h5 class="text-uppercase" style="margin-bottom: 10px">' + desired_obj['title'] + '</h5>'
+                    + '<h5 style="color: #b692a2">' + desired_obj['price']['value'] + '</h5>'
+                    + '<button onclick="open_quick(\'' + desired_obj['id'] + '\')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
+                    + '</div>';
+            }
+        }
+
+        document.getElementById('items').innerHTML = html_items;
+    }
+
+</script>
 
 <!-- The Modal -->
 <div id="quick_view" class="modal_quick modal_base">
@@ -118,13 +322,11 @@
 
     // When the user clicks on <span> (x), close the modal
     span_quick.onclick = function () {
-        console.log('in');
         modal_quick.style.display = "none";
     };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        console.log('in');
         if (event.target === modal_quick) {
             modal_quick.style.display = "none";
         }

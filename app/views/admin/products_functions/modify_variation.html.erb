@@ -56,14 +56,24 @@
       <tbody id="list-to-m">
       <% get_product_variations(@product).each do |product| %>
 
-          <% variations = [] %>
+          <% variations = ['', '', ''] %>
           <% variant = false %>
           <% product['modifiers'].each do |modifiers| %>
-              <% variations.push(modifiers) %>
+
+              <% if modifiers[1]['data']['title'].eql?('Color')
+                   variations[2] = modifiers
+                 elsif modifiers[1]['data']['title'].eql?('Size')
+                   variations[1] = modifiers
+                 elsif modifiers[1]['data']['title'].eql?('Logo preset')
+                   variations[0] = modifiers
+                 end
+              %>
+
               <% if modifiers[1]['var_id'].eql?(@id) %>
                   <% variant = true %>
               <% end %>
           <% end %>
+
 
           <% if variant %>
               <tr id="product-row" onclick="window.location.href = '/admin/edit/<%= product['id'] %>'">
