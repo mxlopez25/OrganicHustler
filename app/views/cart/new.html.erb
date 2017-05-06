@@ -3,234 +3,230 @@
 <div style="margin: 100px"></div>
 <script src="https://js.stripe.com/v3/"></script>
 <%= stylesheet_link_tag 'cart' %>
-<div style="overflow: hidden; margin-left: 7%; margin-right: 7%">
-  <form action="/charge" method="post" id="payment-form">
+<div style="overflow: hidden; margin: 50px 7%;">
+  <%= form_tag '/checkout', method: :post, id: 'payment-form' do |f| %>
+      <div class="content-part">
 
-    <div class="content-part">
-
-      <div class="content-part content-part-10">
-        <label>
-          <div>CHECKOUT DETAILS</div>
-        </label>
-        <input name="cardholder-email" class="field" placeholder="user@domain.com"/>
-      </div>
-
-      <div class="content-part content-part-10">
-        <hr>
-      </div>
-
-      <h3>SHIPPING ADDRESS</h3>
-
-      <div class="content-part content-part-5">
-        <label>
-          <div>FIRST NAME</div>
-        </label>
-        <input name="cardholder-first-name" class="field" placeholder="Jane Doe"/>
-      </div>
-
-      <div class="content-part content-part-5">
-        <label>
-          <div>LAST NAME</div>
-        </label>
-        <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo"/>
-      </div>
-
-      <div class="content-part content-part-10">
-        <label>
-          <div>STREET ADDRESS</div>
-        </label>
-        <input name="cardholder-street" class="field" placeholder="Vergel #31"/>
-      </div>
-
-      <div class="content-part content-part-3">
-        <label>
-          <div>CITY</div>
-        </label>
-        <input name="cardholder-city" class="field" placeholder="Santo Domingo"/>
-      </div>
-
-      <div class="content-part content-part-3">
-        <label>
-          <div>STATE</div>
-        </label>
-        <input name="cardholder-state" class="field" placeholder="DN"/>
-      </div>
-
-      <div class="content-part content-part-3">
-        <label>
-          <div>ZIP CODE</div>
-        </label>
-        <input name="cardholder-zip" class="field" placeholder="10107"/>
-      </div>
-
-      <div class="content-part content-part-3">
-        <label>
-          <div>AREA</div>
-        </label>
-        <input name="cardholder-area" class="field" placeholder="829" type=""/>
-      </div>
-
-      <div class="content-part content-part-7">
-        <label>
-          <div>NUMBER</div>
-        </label>
-        <input name="cardholder-number" class="field" placeholder="456-7890" type="tel"/>
-      </div>
-
-
-      <div class="content-part content-part-10">
-        <hr>
-      </div>
-
-      <h3>PAYMENT OPTIONS</h3>
-
-      <label>
-        <span>Card</span>
-      </label>
-      <div id="card-element" class="field content-part content-part-10"></div>
-
-      <div class="content-part content-part-10">
-        <hr>
-      </div>
-
-      <h3>GIFT OPTIONS</h3>
-
-    </div>
-
-    <div class="content-part preview-cart">
-
-      <h4><span><%= get_item_count %></span> Items</h4>
-      <hr>
-      <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-
-          <% product_temp = get_product(product.m_id) %>
-          <div class="item-checkout">
-            <div class="content-part content-part-3">
-              <div id="<%= product.id %>cart" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;"></div>
-            </div>
-            <div class="content-part content-part-7">
-              <h4><%= product_temp['title'] %></h4>
-              <div class="content-part content-part-5">
-                <h6>Size: <%= product.size_leter %></h6>
-                <h6>Customized:
-                  <% if product.has_emblem %>YES
-                  <% elsif product.has_logo %>YES
-                  <% else %>NO
-                  <% end %></h6>
-                <h6>Color: BROWN</h6> <!-- Attach to backend -->
-              </div>
-              <div class="content-part content-part-5" style="text-align: center">
-                <h3>Qty: 1</h3> <!-- Attach to backend -->
-                <% pr_price = get_p_price(product.m_id, product.logo_id, product.emblem_id, product.size_price) %> <!--Look the size price with id and do not take it from database-->
-                <h4><%= pr_price[0] %></h4>
-                <% tax_array.push(pr_price[1]) %>
-                <% cost_array.push(pr_price[0]) %>
-              </div>
-            </div>
-          </div>
-
-          <script id="create-shape">
-              createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
-              function createShape(id, width, height, x, y, s_w, s_h) {
-                  var container = $('#' + id);
-                  container.height(container.width());
-
-                  var stage = new Konva.Stage({
-                      container: id,
-                      width: container.width(),
-                      height: container.height()
-                  });
-                  var layer = new Konva.Layer();
-                  stage.add(layer);
-
-                  var baseImg = new Konva.Image({
-                      width: container.width(),
-                      height: container.height(),
-                      draggable: false
-                  });
-
-                  var logoImg = new Konva.Image({
-                      width: container.width() * width / s_w,
-                      height: container.height() * height / s_h
-                  });
-
-                  var logoGroup = new Konva.Group({
-                      x: container.width() * x / s_w,
-                      y: container.width() * y / s_h
-                  });
-
-                  layer.add(baseImg);
-                  layer.add(logoGroup);
-                  logoGroup.add(logoImg);
-
-                  var imageObj1 = new Image();
-                  imageObj1.onload = function () {
-                      baseImg.image(imageObj1);
-                      layer.draw();
-                  };
-                  imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
-
-                  var imageObj2 = new Image();
-                  imageObj2.onload = function () {
-                      logoImg.image(imageObj2);
-                      layer.draw();
-                      imageObj2.width = container.width() * width / s_w;
-                      console.log(imageObj2.width, container.width(), width, s_w);
-                      imageObj2.height = container.height() * height / s_h;
-                      console.log(imageObj2.height);
-                  };
-                  imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
-                  layer.draw();
-              }
-          </script>
-
-      <% end %>
-
-      <h3>ORDER DETAILS</h3>
-      <hr>
-      <div style="overflow: hidden; margin: 5px">
-        <% cost_t = 0 %>
-        <% cost_array.each do |cost| %>
-            <% cost_t = cost_t + cost %>
-        <% end %>
-        <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= cost_t %></h4>
-      </div>
-
-      <div style="overflow: hidden; margin: 5px">
-        <h4 class="t-right">Shipping</h4><h4 class="s-left">(Free US)</h4>
-      </div>
-
-      <div style="overflow: hidden; margin: 5px">
-        <% tax_t = 0 %>
-        <% tax_array.each do |tax| %>
-            <% tax_t = tax_t + tax %>
-        <% end %>
-        <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= tax_t %></h4>
-      </div>
-
-      <div style="overflow: hidden; margin: 40px 5px 5px;">
-        <h4 class="t-right">Estimated total</h4>
-        <h3 style="font-weight: lighter;" class="s-left">$<%= tax_t + cost_t %></h3>
-      </div>
-
-      <hr>
-
-      <input type="checkbox"> I agree to the terms and conditions.
-
-      <button type="submit">Pay $25</button>
-      <div class="outcome">
-        <div class="error"></div>
-        <div class="success">
-          Success! Your Stripe token is <span class="token"></span>
+        <div class="content-part content-part-10">
+          <label>
+            <div>CHECKOUT DETAILS</div>
+          </label>
+          <input name="cardholder-email" class="field" placeholder="user@domain.com"/>
         </div>
+
+        <div class="content-part content-part-10">
+          <hr>
+        </div>
+
+        <h3>SHIPPING ADDRESS</h3>
+
+        <div class="content-part content-part-5">
+          <label>
+            <div>FIRST NAME</div>
+          </label>
+          <input name="cardholder-first-name" class="field" placeholder="Jane Doe"/>
+        </div>
+
+        <div class="content-part content-part-5">
+          <label>
+            <div>LAST NAME</div>
+          </label>
+          <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo"/>
+        </div>
+
+        <div class="content-part content-part-10">
+          <label>
+            <div>STREET ADDRESS</div>
+          </label>
+          <input name="cardholder-street" class="field" placeholder="Vergel #31"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>CITY</div>
+          </label>
+          <input name="cardholder-city" class="field" placeholder="Santo Domingo"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>STATE</div>
+          </label>
+          <input name="cardholder-state" class="field" placeholder="DN"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>ZIP CODE</div>
+          </label>
+          <input name="cardholder-zip" class="field" placeholder="10107"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>AREA</div>
+          </label>
+          <input name="cardholder-area" class="field" placeholder="829" type=""/>
+        </div>
+
+        <div class="content-part content-part-7">
+          <label>
+            <div>NUMBER</div>
+          </label>
+          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel"/>
+        </div>
+
+
+        <div class="content-part content-part-10">
+          <hr>
+        </div>
+
+        <h3>PAYMENT OPTIONS</h3>
+
+        <label>
+          <span>Card</span>
+        </label>
+        <div id="card-element" class="field content-part content-part-10"></div>
+
+        <div class="content-part content-part-10">
+          <hr>
+        </div>
+
+        <h3>GIFT OPTIONS</h3>
+
       </div>
 
-    </div>
-  </form>
+      <div class="content-part preview-cart">
+
+        <h4><span><%= get_item_count %></span> Items</h4>
+        <hr>
+        <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+
+            <% product_temp = get_product(product.m_id) %>
+            <div class="item-checkout">
+              <div class="content-part content-part-3">
+                <div id="<%= product.id %>cart" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;"></div>
+              </div>
+              <div class="content-part content-part-7">
+                <h4><%= product_temp['title'] %></h4>
+                <div class="content-part content-part-5">
+                  <h6>Size: <%= product.size_leter %></h6>
+                  <h6>Customized:
+                    <% if product.has_emblem %>YES
+                    <% elsif product.has_logo %>YES
+                    <% else %>NO
+                    <% end %></h6>
+                  <h6>Color: BROWN</h6> <!-- Attach to backend -->
+                </div>
+                <div class="content-part content-part-5" style="text-align: center">
+                  <h3>Qty: 1</h3> <!-- Attach to backend -->
+                  <% pr_price = get_p_price(product.m_id, product.logo_id, product.emblem_id, product.size_price) %>
+                  <h4><%= pr_price[0] %></h4>
+                  <% tax_array.push(pr_price[1]) %>
+                  <% cost_array.push(pr_price[0]) %>
+                </div>
+              </div>
+            </div>
+
+            <script id="create-shape">
+                createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
+                function createShape(id, width, height, x, y, s_w, s_h) {
+                    var container = $('#' + id);
+                    container.height(container.width());
+
+                    var stage = new Konva.Stage({
+                        container: id,
+                        width: container.width(),
+                        height: container.height()
+                    });
+                    var layer = new Konva.Layer();
+                    stage.add(layer);
+
+                    var baseImg = new Konva.Image({
+                        width: container.width(),
+                        height: container.height(),
+                        draggable: false
+                    });
+
+                    var logoImg = new Konva.Image({
+                        width: container.width() * width / s_w,
+                        height: container.height() * height / s_h
+                    });
+
+                    var logoGroup = new Konva.Group({
+                        x: container.width() * x / s_w,
+                        y: container.width() * y / s_h
+                    });
+
+                    layer.add(baseImg);
+                    layer.add(logoGroup);
+                    logoGroup.add(logoImg);
+
+                    var imageObj1 = new Image();
+                    imageObj1.onload = function () {
+                        baseImg.image(imageObj1);
+                        layer.draw();
+                    };
+                    imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+
+                    var imageObj2 = new Image();
+                    imageObj2.onload = function () {
+                        logoImg.image(imageObj2);
+                        layer.draw();
+                        imageObj2.width = container.width() * width / s_w;
+                        console.log(imageObj2.width, container.width(), width, s_w);
+                        imageObj2.height = container.height() * height / s_h;
+                        console.log(imageObj2.height);
+                    };
+                    imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                    layer.draw();
+                }
+            </script>
+
+        <% end %>
+
+        <h3>ORDER DETAILS</h3>
+        <hr>
+        <div style="overflow: hidden; margin: 5px">
+          <% cost_t = 0 %>
+          <% cost_array.each do |cost| %>
+              <% cost_t = cost_t + cost %>
+          <% end %>
+          <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= cost_t %></h4>
+        </div>
+
+        <div style="overflow: hidden; margin: 5px">
+          <h4 class="t-right">Shipping</h4><h4 class="s-left">(Free US)</h4>
+        </div>
+
+        <div style="overflow: hidden; margin: 5px">
+          <% tax_t = 0 %>
+          <% tax_array.each do |tax| %>
+              <% tax_t = tax_t + tax %>
+          <% end %>
+          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= tax_t %></h4>
+        </div>
+
+        <div style="overflow: hidden; margin: 40px 5px 5px;">
+          <h4 class="t-right">Estimated total</h4>
+          <h3 style="font-weight: lighter;" class="s-left">$<%= tax_t + cost_t %></h3>
+        </div>
+
+        <hr>
+
+        <input type="checkbox"> I agree to the terms and conditions.
+
+        <button class="btn btn-sp" type="submit">Pay $<%= tax_t + cost_t %></button>
+        <div class="outcome">
+          <div id="error_hand"></div>
+        </div>
+
+      </div>
+  <% end %>
 </div>
 
 <script>
-    var stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+    var stripe = Stripe('pk_test_v1i9VQN3G18s8aYbnwi9Mqim');
     var elements = stripe.elements();
 
     var card = elements.create('card', {
@@ -244,24 +240,65 @@
                 fontSize: '15px',
 
                 '::placeholder': {
-                    color: '#70726C',
-                },
-            },
+                    color: '#70726C'
+                }
+            }
         }
     });
     card.mount('#card-element');
 
     function setOutcome(result) {
-        var successElement = document.querySelector('.success');
-        var errorElement = document.querySelector('.error');
-        successElement.classList.remove('visible');
-        errorElement.classList.remove('visible');
 
         if (result.token) {
-            // Use the token to create a charge or a customer
-            // https://stripe.com/docs/charges
-            successElement.querySelector('.token').textContent = result.token.id;
-            successElement.classList.add('visible');
+
+            // get all the inputs into an array.
+            var $inputs = $('#payment-form').find(':input');
+
+            // not sure if you wanted this, but I thought I'd add it.
+            // get an associative array of just the values.
+            var values = {};
+            $inputs.each(function () {
+                values[this.name] = $(this).val();
+            });
+            values['token'] = result.token;
+
+            $.ajax(
+                {
+                    url: '/checkout',
+                    method: 'post',
+                    datType: 'json',
+                    data: values,
+                    success: function (data) {
+                        console.log(data);
+                        if (data['paid']) {
+                            location.href = '/account'
+                        } else {
+                            var erro_h = document.getElementById('error_hand');
+
+                            var message = {
+                                invalid_number: 'The card number is not a valid credit card number.',
+                                invalid_expiry_month: 'The card\'s expiration month is invalid.',
+                                invalid_expiry_year: 'The card\'s expiration year is invalid.',
+                                invalid_cvc: 'The card\'s security code is invalid.',
+                                invalid_swipe_data: 'The card\'s swipe data is invalid.',
+                                incorrect_number: 'The card number is incorrect.',
+                                expired_card: 'The card has expired.',
+                                incorrect_cvc: 'The card\'s security code is incorrect.',
+                                incorrect_zip: 'The card\'s zip code failed validation.',
+                                card_declined: 'The card was declined.',
+                                missing: 'There is no card on a customer that is being charged.',
+                                processing_error: 'An error occurred while processing the card.'
+                            };
+
+                            erro_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>'
+                        }
+                    },
+                    error: function () {
+
+                    }
+                }
+            );
+
         } else if (result.error) {
             errorElement.textContent = result.error.message;
             errorElement.classList.add('visible');
@@ -276,7 +313,7 @@
         e.preventDefault();
         var form = document.querySelector('form');
         var extraDetails = {
-            name: form.querySelector('input[name=cardholder-first-name]').value,
+            name: form.querySelector('input[name=cardholder-first-name]').value
         };
         stripe.createToken(card, extraDetails).then(setOutcome);
     });

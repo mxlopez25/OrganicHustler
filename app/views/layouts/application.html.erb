@@ -250,9 +250,9 @@
 
       <div style="float: right; margin-right: 4px;">
         <% if user_signed_in? %>
-            <a onclick="location.href = '/account'" class="link-style">ACCOUNT</a>
+            <a href="/account" class="link-style">ACCOUNT</a>
         <% else %>
-            <a onclick="location.href = '/account'" class="link-style">LOG IN</a>
+            <a href="/account" class="link-style">LOG IN</a>
         <% end %>
         <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       </div>
