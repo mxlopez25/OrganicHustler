@@ -143,6 +143,7 @@ module HomeHelper
 
       end
     end
+
     id_cat = ''
     AdminHelper.get_categories.each do |category|
       if category['slug'].eql?(params['view'])
@@ -150,7 +151,13 @@ module HomeHelper
       end
     end
 
-    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    response = ''
+    if parameters['search'].blank?
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    else
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?title=#{parameters['search']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    end
+
     JSON.parse(response.body)['result']
   end
 

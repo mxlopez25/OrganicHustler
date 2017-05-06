@@ -54,6 +54,7 @@
                 </div>
                 <% product_temp = get_product(product.m_id) %>
                 <script id="create-shape">
+                    //Show the custom products
                     createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
                     function createShape(id, width, height, x, y, s_w, s_h) {
                         var container = $('#' + id);
@@ -109,7 +110,6 @@
                 </script>
                 <h4><%= product_temp['title'] %></h4>
 
-
               </li>
           <% end %>
         </ul>
@@ -121,7 +121,6 @@
     </div>
 
     <script>
-
         //Photo slider
         (function ($) {
             $(function () {
@@ -218,20 +217,27 @@
   <div class="mobilenot">
     <div id="search-index" class="container-fluid">
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
-      <% if @parameters.nil? %>
-          <button style="float: left" type="button" class="btn btn-link">Get in Touch</button>
-          <button style="float: left" type="button" class="btn btn-link">Instagram</button>
+      <% if @parameters.nil? || params['action'] != 'catalog' %>
+          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get in Touch
+          </button>
+          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</button>
           <button style="float: left" type="button" class="btn btn-link">Twitter</button>
-      <% elsif @parameters['action'] != 'catalog' %>
-          <button type="button" class="btn btn-link">Get in Touch</button>
-          <button type="button" class="btn btn-link">Instagram</button>
-          <button type="button" class="btn btn-link">Twitter</button>
       <% else %>
           <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
             <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
           </h5>
       <% end %>
-      <input style="background: #f0f5e6; float: right" type="text" name="search" placeholder="Search..">
+
+      <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search..">
+
+      <script>
+          $(document).keyup(function (e) {
+              var search_f = $("#search-input");
+              if (search_f.is(":focus") && (e.keyCode === 13)) {
+                  location.href = '/catalog?search=' + search_f.val();
+              }
+          });
+      </script>
 
       <div style="float: right; margin-right: 4px;">
         <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
