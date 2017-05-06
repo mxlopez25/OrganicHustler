@@ -2,9 +2,11 @@ require 'json'
 include AdminHelper
 class HomeController < ApplicationController
 
+
+  before_action :authenticate_user!, only: 'account'
+
   @open_quick_m = false
   def index
-
   end
 
   def catalog_item
@@ -41,6 +43,10 @@ class HomeController < ApplicationController
   def product
     @product = HomeHelper.get_product_by_id(params[:id])
     @parameters = params
+  end
+
+  def account
+
   end
 
   def get_image_by_id

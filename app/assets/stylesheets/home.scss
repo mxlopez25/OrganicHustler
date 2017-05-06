@@ -1,6 +1,7 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
 #selection-btn-s {
   margin-top: 45px;
@@ -163,6 +164,7 @@ div.wrap {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  margin-right: 20px;
 }
 
 .close:hover,
@@ -179,6 +181,67 @@ a.selected {
 a.head-menu {
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.center-div {
+  position: absolute;
+  overflow: auto;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 500px;
+  height: 500px;
+  max-height: 100%;
+  background-color: transparent;
+  border-radius: 3px;
+  padding: 15px;
+}
+
+div.notification-ask {
+  width: 100%;
+  padding: 10px;
+  overflow: hidden;
+}
+
+div.login-form {
+  margin: 200px auto;
+  background: white;
+  width: 500px;
+  padding: 20px;
+}
+
+.error_message {
+  width: 70%;
+  background: #fdf4f4;
+  border: 1px solid #fd554b;
+  padding: 5px;
+  text-align: justify;
+  margin: 5px auto;
+}
+
+.serious-input {
+  margin: 5px;
+  border-radius: 0;
+  background: #f6f6f6;
+  border: none;
+  line-height: 45px;
+  height: 45px;
+  width: 70%;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 20px;
+  font-family: "Roboto", serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+div.card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+  background: white;
 }
 
 .catalog-item {
@@ -200,13 +263,54 @@ a.head-menu {
   height: 60vw;
 }
 
-.btn-bottom_fixed {
-  display: none;
-  position: absolute;
+.btn-sp {
   border-radius: 0;
   background: #b692a2;
   color: white;
   font-weight: 600;
+}
+
+.submit-btn-form {
+  width: 70%;
+  margin: 5px;
+  font-family: "Roboto", serif;
+  font-weight: 100;
+  height: 45px;
+  line-height: 45px;
+  font-size: 17px;
+  vertical-align: middle;
+  padding: 0;
+}
+
+.link-wrap a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #b692a2;
+  margin: 30px;
+}
+
+.link-style {
+
+  height: 47px;
+  line-height: 47px;
+  text-decoration: none;
+  cursor: pointer;
+  color: #b692a2;
+}
+
+.link-style:hover {;
+  text-decoration: none;
+  color: #b692a2;
+}
+
+.btn-sp:hover, .btn-sp:focus {
+  color: white;
+  background: #c098ac;
+}
+
+.btn-bottom_fixed {
+  display: none;
+  position: absolute;
   bottom: 0;
   left: 0;
 }
@@ -240,6 +344,14 @@ a.head-menu {
   text-align: center;
 }
 
+.modal_c_part {
+  padding: 10px 20px;
+}
+
+.no-spacing-bar {
+  margin: 0;
+}
+
 @media screen and (min-width: 480px) {
 
   .btn-bottom_fixed {
@@ -267,7 +379,7 @@ a.head-menu {
 
 @media screen and (min-width: 768px) {
   .modal-content {
-    width: 300px;
+    width: 335px;
   }
 
   .img-con-item {

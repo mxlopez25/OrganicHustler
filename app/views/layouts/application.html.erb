@@ -41,133 +41,140 @@
   <!-- Modal content -->
   <div id="modal_c" style="padding: 0;" class="modal-content">
     <span class="close">&times;</span>
-    <h3 style="color: #3F3F3F; text-align: center; margin-right: auto; margin-left: auto">Your Bag</h3>
-    <hr>
+    <div class="modal_c_part">
+      <h3 style="color: #3F3F3F; text-align: center; margin: 10px auto;">Your Bag</h3>
+    </div>
+    <hr class="no-spacing-bar">
 
-    <div id="product_loader" class="jcarousel-wrapper">
-      <div id="product-loader-carousel" style="width: 100%; height: 200px" class="jcarousel" data-jcarousel="true">
-        <ul id="product-container" style="left: 0; top: 0;">
-          <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-              <li class="element_product">
-                <div id="<%= product.id %>" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+    <div class="modal_c_part">
+      <div id="product_loader" class="jcarousel-wrapper">
+        <div id="product-loader-carousel" style="width: 100%; min-height: 200px" class="jcarousel" data-jcarousel="true">
+          <ul id="product-container" style="left: 0; top: 0; text-align: center">
+            <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+                <li class="element_product">
+                  <div id="<%= product.id %>" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
 
-                </div>
-                <% product_temp = get_product(product.m_id) %>
-                <script id="create-shape">
-                    //Show the custom products
-                    createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
-                    function createShape(id, width, height, x, y, s_w, s_h) {
-                        var container = $('#' + id);
-                        container.height(container.width());
+                  </div>
+                  <% product_temp = get_product(product.m_id) %>
+                  <script id="create-shape">
+                      //Show the custom products
+                      createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
+                      function createShape(id, width, height, x, y, s_w, s_h) {
+                          var container = $('#' + id);
+                          container.height(container.width());
 
-                        var stage = new Konva.Stage({
-                            container: id,
-                            width: container.width(),
-                            height: container.height()
-                        });
-                        var layer = new Konva.Layer();
-                        stage.add(layer);
+                          var stage = new Konva.Stage({
+                              container: id,
+                              width: container.width(),
+                              height: container.height()
+                          });
+                          var layer = new Konva.Layer();
+                          stage.add(layer);
 
-                        var baseImg = new Konva.Image({
-                            width: container.width(),
-                            height: container.height(),
-                            draggable: false
-                        });
+                          var baseImg = new Konva.Image({
+                              width: container.width(),
+                              height: container.height(),
+                              draggable: false
+                          });
 
-                        var logoImg = new Konva.Image({
-                            width: container.width() * width / s_w,
-                            height: container.height() * height / s_h
-                        });
+                          var logoImg = new Konva.Image({
+                              width: container.width() * width / s_w,
+                              height: container.height() * height / s_h
+                          });
 
-                        var logoGroup = new Konva.Group({
-                            x: container.width() * x / s_w,
-                            y: container.width() * y / s_h
-                        });
+                          var logoGroup = new Konva.Group({
+                              x: container.width() * x / s_w,
+                              y: container.width() * y / s_h
+                          });
 
-                        layer.add(baseImg);
-                        layer.add(logoGroup);
-                        logoGroup.add(logoImg);
+                          layer.add(baseImg);
+                          layer.add(logoGroup);
+                          logoGroup.add(logoImg);
 
-                        var imageObj1 = new Image();
-                        imageObj1.onload = function () {
-                            baseImg.image(imageObj1);
-                            layer.draw();
-                        };
-                        imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+                          var imageObj1 = new Image();
+                          imageObj1.onload = function () {
+                              baseImg.image(imageObj1);
+                              layer.draw();
+                          };
+                          imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
 
-                        var imageObj2 = new Image();
-                        imageObj2.onload = function () {
-                            logoImg.image(imageObj2);
-                            layer.draw();
-                            imageObj2.width = container.width() * width / s_w;
-                            console.log(imageObj2.width, container.width(), width, s_w);
-                            imageObj2.height = container.height() * height / s_h;
-                            console.log(imageObj2.height);
-                        };
-                        imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
-                        layer.draw();
-                    }
-                </script>
-                <h4><%= product_temp['title'] %></h4>
+                          var imageObj2 = new Image();
+                          imageObj2.onload = function () {
+                              logoImg.image(imageObj2);
+                              layer.draw();
+                              imageObj2.width = container.width() * width / s_w;
+                              console.log(imageObj2.width, container.width(), width, s_w);
+                              imageObj2.height = container.height() * height / s_h;
+                              console.log(imageObj2.height);
+                          };
+                          imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                          layer.draw();
+                      }
+                  </script>
+                  <p class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></p>
+                  <p style="font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_temp['price']['value'] %></p>
 
-              </li>
-          <% end %>
-        </ul>
+                </li>
+            <% end %>
+          </ul>
+        </div>
+        <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
-        <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-      <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
-        <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+
+      <script>
+          //Photo slider
+          (function ($) {
+              $(function () {
+                  $('.jcarousel').jcarousel();
+
+                  $('.jcarousel-control-prev')
+                      .on('jcarouselcontrol:active', function () {
+                          $(this).removeClass('inactive');
+                      })
+                      .on('jcarouselcontrol:inactive', function () {
+                          $(this).addClass('inactive');
+                      })
+                      .jcarouselControl({
+                          target: '-=1'
+                      });
+
+                  $('.jcarousel-control-next')
+                      .on('jcarouselcontrol:active', function () {
+                          $(this).removeClass('inactive');
+                      })
+                      .on('jcarouselcontrol:inactive', function () {
+                          $(this).addClass('inactive');
+                      })
+                      .jcarouselControl({
+                          target: '+=1'
+                      });
+
+                  $('.jcarousel-pagination')
+                      .on('jcarouselpagination:active', 'a', function () {
+                          $(this).addClass('active');
+                      })
+                      .on('jcarouselpagination:inactive', 'a', function () {
+                          $(this).removeClass('active');
+                      })
+                      .jcarouselPagination();
+              });
+          })(jQuery);
+      </script>
     </div>
 
-    <script>
-        //Photo slider
-        (function ($) {
-            $(function () {
-                $('.jcarousel').jcarousel();
-
-                $('.jcarousel-control-prev')
-                    .on('jcarouselcontrol:active', function () {
-                        $(this).removeClass('inactive');
-                    })
-                    .on('jcarouselcontrol:inactive', function () {
-                        $(this).addClass('inactive');
-                    })
-                    .jcarouselControl({
-                        target: '-=1'
-                    });
-
-                $('.jcarousel-control-next')
-                    .on('jcarouselcontrol:active', function () {
-                        $(this).removeClass('inactive');
-                    })
-                    .on('jcarouselcontrol:inactive', function () {
-                        $(this).addClass('inactive');
-                    })
-                    .jcarouselControl({
-                        target: '+=1'
-                    });
-
-                $('.jcarousel-pagination')
-                    .on('jcarouselpagination:active', 'a', function () {
-                        $(this).addClass('active');
-                    })
-                    .on('jcarouselpagination:inactive', 'a', function () {
-                        $(this).removeClass('active');
-                    })
-                    .jcarouselPagination();
-            });
-        })(jQuery);
-    </script>
-
-    <hr>
-    <span style="color: #e5bbd1">Subtotal</span>
-    <span style="font-size: x-large; float: right"><%= get_cart.total_m %>$</span>
-    <hr>
-
-    <button class="btn btn-default" style="width: 100%">CHECKOUT</button>
-    <button class="btn btn-default" style="width: 100%">VIEW BAG</button>
-
+    <hr class="no-spacing-bar">
+    <div style="overflow: hidden" class="modal_c_part">
+      <span style="font-size: large;color: #e5bbd1;position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
+      <span style="font-size: x-large; float: right;position: relative;height: 35px;"><%= get_cart.total_m %>$</span>
+    </div>
+    <hr class="no-spacing-bar">
+    <div class="modal_c_part">
+      <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 90%; margin: 5px">CHECKOUT</button>
+      <button class="btn btn-default" style="width: 90%; margin: 5px">VIEW BAG</button>
+    </div>
   </div>
 
 </div>
@@ -180,6 +187,8 @@
     <div class="container-fluid" style="overflow: hidden">
 
       <a href="#search"><i class="fa fa-search iconx"></i> </a>
+
+      <a>LOG IN</a>
       <a id="myBtn_1"><i><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
@@ -240,6 +249,11 @@
       </script>
 
       <div style="float: right; margin-right: 4px;">
+        <% if user_signed_in? %>
+            <a onclick="location.href = '/account'" class="link-style">ACCOUNT</a>
+        <% else %>
+            <a onclick="location.href = '/account'" class="link-style">LOG IN</a>
+        <% end %>
         <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       </div>
 
@@ -420,7 +434,6 @@
 
       <div>
         <img src="<%= GroupShowcase.where(screen: 3, name_identity: 'icon_web_page_2').first.showcases.first.image_show.image.url %>" style="width: 30px; margin-top: 50px;">
-
         <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
 
       </div>

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   get '/product/:id/:step' => 'home#product'
+  get '/account' => 'home#account'
 
   post '/' => 'home#subscribe'
 

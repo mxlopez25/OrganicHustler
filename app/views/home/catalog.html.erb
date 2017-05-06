@@ -93,7 +93,8 @@
           <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
           <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
           <h5 style="color: #b692a2"> <%= pr['price']['value'] %></h5>
-          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop
+          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick
+            Shop
           </button>
         </div>
 
@@ -359,10 +360,18 @@
         user_online = '<%= user_signed_in? %>';
 
 
-        var variations = [];
+        var variations = ['', '', ''];
         for (var variation in data['modifiers']) {
             if (data['modifiers'].hasOwnProperty(variation)) {
-                variations.push(data['modifiers'][variation])
+
+                if (data['modifiers'][variation]['title'] === 'Color') {
+                    variations[2] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Size') {
+                    variations[1] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
+                    variations[0] = data['modifiers'][variation];
+                }
+
             }
         }
 
@@ -394,7 +403,7 @@
             '</div>' + get_variation_customized(variations) +
             '<div>' +
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="addToCart()">ADD TO CART</button>' +
+            '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
             '</div>' +
             '</div>';
 
@@ -1146,6 +1155,7 @@
         layer.draw();
         return anchor;
     }
+
 
     function get_variation_size(variations) {
         if (variations.length > 0) {
