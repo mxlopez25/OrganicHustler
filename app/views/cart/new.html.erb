@@ -96,7 +96,17 @@
 
       </div>
 
-      <div class="content-part preview-cart">
+      <div style="position: relative" class="content-part preview-cart">
+
+        <div id="loading" class="hidden">
+
+          <div class="loader">
+
+          </div>
+
+        </div>
+
+        <div style="padding: 30px">
 
         <h4><span><%= get_item_count %></span> Items</h4>
         <hr>
@@ -220,7 +230,7 @@
         <div class="outcome">
           <div id="error_hand"></div>
         </div>
-
+        </div>
       </div>
   <% end %>
 </div>
@@ -251,6 +261,8 @@
 
         if (result.token) {
 
+            document.getElementById('loading').classList.remove('hidden');
+
             // get all the inputs into an array.
             var $inputs = $('#payment-form').find(':input');
 
@@ -271,7 +283,8 @@
                     success: function (data) {
                         console.log(data);
                         if (data['paid']) {
-                            location.href = '/account'
+                            document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>';
+                            location.href = '/account';
                         } else {
                             var erro_h = document.getElementById('error_hand');
 
@@ -290,11 +303,13 @@
                                 processing_error: 'An error occurred while processing the card.'
                             };
 
-                            erro_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>'
+                            document.getElementById('loading').classList.add('hidden');
+                            erro_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>';
                         }
+
                     },
                     error: function () {
-
+                        document.getElementById('loading').classList.add('hidden');
                     }
                 }
             );

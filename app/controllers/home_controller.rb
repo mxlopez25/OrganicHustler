@@ -1,6 +1,6 @@
 require 'json'
-include AdminHelper
 class HomeController < ApplicationController
+  include AdminHelper
 
 
   before_action :authenticate_user!, only: 'account'

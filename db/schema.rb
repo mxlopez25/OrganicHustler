@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170506202255) do
+ActiveRecord::Schema.define(version: 20170507175627) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20170506202255) do
     t.datetime "updated_at", null: false
     t.integer "overall_user_id"
     t.string "overall_user_type", limit: 45, default: "TempUser", collation: "utf8_general_ci"
+    t.string "order_id"
   end
 
   create_table "emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -116,6 +117,8 @@ ActiveRecord::Schema.define(version: 20170506202255) do
     t.datetime "updated_at", null: false
     t.string "carrier"
     t.string "tracking_code"
+    t.string "overall_user_id"
+    t.string "overall_user_type"
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
