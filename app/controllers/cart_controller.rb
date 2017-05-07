@@ -47,26 +47,26 @@ class CartController < ApplicationController
           :source => token,
       )
 
+      cart = Cart.find(cart_id)
+
       unless charge[:status].eql?('failed')
         order = Order.create do |t|
-          t.cart = Cart.find(cart_id)
+          t.cart = cart
           t.total = cost_t + tax_t
           t.description = 'Order is being processed'
           t.state = 'Processing'
         end
 
         user.orders << order
+        user.cart = ''
         user.save!
 
-        user.cart = nil
 
       end
 
     rescue Stripe::CardError => e
       charge = e.json_body[:error]
-    rescue => e
-      charge = e.message
-      p e.message
+
     end
 
     render :json => charge.to_json.html_safe
