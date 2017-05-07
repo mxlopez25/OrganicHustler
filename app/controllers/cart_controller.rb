@@ -58,6 +58,8 @@ class CartController < ApplicationController
         user.orders << order
         user.save!
 
+        user.cart = nil
+
       end
 
     rescue Stripe::CardError => e
