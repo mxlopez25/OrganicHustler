@@ -88,7 +88,7 @@ class HomeController < ApplicationController
       user.cart.is_active = true
       user.cart.total_m = 0
       user.cart.n_products = 0
-      user.cart.save!
+      user.cart.save
       p user.cart
     end
 

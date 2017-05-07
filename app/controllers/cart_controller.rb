@@ -58,7 +58,7 @@ class CartController < ApplicationController
         end
 
         user.orders << order
-        user.cart = ''
+        user.cart = nil
         user.save!
 
 
