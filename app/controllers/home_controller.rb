@@ -156,23 +156,58 @@ class HomeController < ApplicationController
 
   end
 
+  #Needs some work
+  def get_price(source_p)
+    product_source = get_product(params['source_p'])
+
+    variations = []
+    product_source['modifiers'].each do |modifiers|
+      variations.push(modifiers)
+    end
+
+    size_price = 0
+    size_letter = ''
+    variations[1][1]['variations'].each do |var|
+      if var[1]['id'].eql? params['size']
+        size_price = HomeController.to_decimal(var[1]['mod_price'][1..-1])
+        size_letter = var[1]['title']
+      end
+    end
+
+    price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
+    price_logo = 0
+    price_emblem = 0
+
+    unless params['logo_id'].blank?
+      logo = Picture.find(params['logo_id'])
+      price_logo = logo.price
+      if price_logo.nil?
+        price_logo = 0
+      end
+    end
+
+    unless params['emblem_id'].blank?
+      emblem = Emblem.find(params['emblem_id'])
+      price_emblem = emblem.emblem_cost
+      if price_emblem.nil?
+        price_emblem = 0
+      end
+    end
+
+    total_m = price_logo + price_product + price_emblem + size_price
+    [total_m, size_letter]
+  end
+
 
   def delete_from_cart
     id = params['item_id']
 
     user = nil
     p current_user
-    if params['user_signed'].eql?('false')
-      if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
-
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
-    else
+    if user_signed_in?
       user = current_user
+    else
+      user = TempUser.find(session[:temp_user_id])
     end
 
     product = user.cart.cart_products.find(id)
@@ -180,6 +215,32 @@ class HomeController < ApplicationController
     user.cart.total_m = user.cart.total_m - product.total_m - product.size_price
     user.cart.save!
     product.destroy
+  end
+
+  def cancel_order
+
+    id_order = params[:id_order]
+    id_product_cart = params[:id_product_cart]
+
+    user = nil
+    if user_signed_in?
+      user = current_user
+    else
+      user = TempUser.find(session[:temp_user_id])
+    end
+
+    order_a = user.orders.find(id_order)
+    unless order_a.state.eql?('shipped')
+      cart_a = order_a.cart
+      product = cart_a.cart_products.find(id_product_cart)
+      cart_a.n_products = user.cart.n_products - 1
+      cart_a.total_m = user.cart.total_m - product.total_m - product.size_price
+      cart_a.save!
+      product.destroy
+    end
+
+    redirect_to '/account'
+
   end
 
   def self.to_decimal(n_text)

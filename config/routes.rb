@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get '/product/:id/:step' => 'home#product'
   get '/account' => 'home#account'
+  get '/cancel_order' => 'home#cancel_order'
 
   post '/' => 'home#subscribe'
 
@@ -42,6 +43,8 @@ Rails.application.routes.draw do
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
   post '/admin/product/new' => 'admin#new_product'
   post '/admin/mailer' => 'admin#mailer_send'
+  post '/admin/orders/:id_o' => 'admin#order_details'
+  post '/admin/orders' => 'admin#order_search'
 
   put '/admin/products' => 'admin#products'
   put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'

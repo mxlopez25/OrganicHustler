@@ -32,3 +32,85 @@
     </div>
   </div>
 </nav>
+<body style="background-color: #dedede">
+<div class="main">
+
+  <div class="content-part-7 card">
+    <h2>Orders</h2>
+    <hr style="width: 44px; margin: 0 auto 50px; border-color: black">
+    <%= form_tag '/admin/orders', method: :post do %>
+        <input style="margin: 0" class="content-part-7 serious-input" type="text" placeholder="Order ID" name="search-field">
+        <button style="margin: 0;" type="submit" class="btn btn-sp content-part-3">Search</button>
+    <% end %>
+    <div style="overflow: hidden; width: 100%">
+      <hr style="border-color: black; width: 30%">
+    </div>
+    <table style="width: 100%">
+      <thead>
+      <tr class="t-head">
+        <th>Select</th>
+        <th>Las modified</th>
+        <th>Order id</th>
+        <th>Total</th>
+        <th>State</th>
+        <th>Description</th>
+        <th>Carrier</th>
+        <th>Tracking code</th>
+        <th>User id</th>
+        <th>Address info</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% Order.all.order(updated_at: :asc).each do |o| %>
+          <tr>
+            <td>
+              <input onclick="click_radio('<%= o.id %>')" class="selected-r" name="order" type="radio" id="selection_<%= o.id %>" value="<%= o.id %>">
+            </td>
+            <td><%= time_ago_in_words o.updated_at %></td>
+            <td><%= o.id %></td>
+            <td><%= o.total %></td> <!--TODO: Needs to calculate prices don't take from db-->
+            <td><%= o.state %></td>
+            <td><%= o.description %></td>
+            <td><%= o.carrier || 'not assigned' %></td>
+            <td><%= o.tracking_code || 'not assigned' %></td>
+            <td><%= o.overall_user.id %></td>
+            <td><%= (o.overall_user.user_adress || {:city => 'none'})[:city] %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="content-part-3 card">
+    <button style="width: 100%" onclick="see_details()" class="btn btn-default">See items/details</button>
+  </div>
+
+  <script>
+      var selected = 0;
+      function click_radio(id) {
+          var element = document.getElementById('selection_' + id);
+          if (element.checked) {
+              selected = element.value
+          }
+      }
+
+      function see_details() {
+          $.ajax({
+              url: '/admin/orders/' + selected,
+              method: 'POST',
+              data: {},
+              dataType: "html",
+              success: function (data) {
+
+              },
+              error: function () {
+
+              }
+
+          })
+      }
+
+  </script>
+
+</div>
+</body>

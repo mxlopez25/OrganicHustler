@@ -20,6 +20,16 @@ class AdminController < ApplicationController
   def mailer
   end
 
+  def order_search
+    id = params['search-field']
+    render '/admin/orders'
+  end
+
+  def order_details
+    id_o = params['id_o']
+    render '/admin/orders'
+  end
+
   def mailer_send
     subject = params['subject']
     content = params['editor'].html_safe
