@@ -7,9 +7,13 @@ class GalleriesController < ApplicationController
     @gallery = Gallery.find_by_product_id(params['id'])
     p @gallery
     if params[:file]
-      @gallery.pictures.create(image: params['file']['tempfile'], color: params[:color])
+      params[:file].each do |file|
+        p file
+        @gallery.pictures.create(image: params[:file][file].tempfile, color: params[:color])
+        @gallery.save!
+      end
+
     end
-    @gallery.save
   end
 
 end

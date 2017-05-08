@@ -13,8 +13,9 @@
       <hr style="width: 44px; margin: 0 auto 50px; border-color: black">
 
       <% current_user.orders.each do |o| %>
-          <% o.cart.cart_products.each do |product| %>
-              <div id="<%= product.id %>_orders" style="width: 100px; height: 100px">
+          <% o.cart.cart_products.where("created_at > ?", 10.days.ago).each do |product| %>
+              <div style="overflow: hidden; width: 100%; text-align: left; border-bottom: lightgrey solid 1px; padding-bottom: 10px; margin-bottom: 10px">
+                <div id="<%= product.id %>_orders" style="width: 100px; height: 100px; float: left">
 
               </div>
               <% product_temp = get_product(product.m_id) %>
@@ -72,8 +73,13 @@
                       layer.draw();
                   }
               </script>
-              <p class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></p>
-              <p style="font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_temp['price']['value'] %></p>
+                <div style="float: left">
+                  <h4 class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></h4>
+                  <h5 style="float: right"> | Bag id: <%= o.id %></h5>
+                  <h5 style="float: right">Product id: <%= product_temp['id'] %></h5>
+                  <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_temp['price']['value'] %></h4>
+                </div>
+              </div>
           <% end %>
       <% end %>
 
