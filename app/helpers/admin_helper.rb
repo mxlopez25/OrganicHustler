@@ -112,5 +112,9 @@ module AdminHelper
 
   end
 
+  def get_image_im
+    system
+  end
+
 
 end

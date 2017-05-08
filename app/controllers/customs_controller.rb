@@ -1,7 +1,9 @@
 require 'rest_client'
+require 'RMagick'
+require 'tempfile'
 
 class CustomsController < ApplicationController
-
+  include Magick
   layout 'customs_bl'
 
   def table_products
@@ -76,7 +78,26 @@ class CustomsController < ApplicationController
   end
 
   def upload_image
-    AdminHelper.set_image(params['file'].tempfile, params['id'])
+
+    image = Magick::Image::from_blob(params['file'].read).first
+    square_p = image.columns
+    if square_p < image.rows
+      square_p = image.rows
+    end
+
+    image.resize_to_fit!(square_p, square_p)
+    new_img = ::Magick::Image.new(square_p, square_p)
+    filled = new_img.matte_floodfill(1, 1)
+    filled.composite!(image, Magick::CenterGravity, ::Magick::OverCompositeOp)
+    file = Tempfile.new(['rmagicFile', '.png'])
+    p file.path
+    filled.write(file.path)
+
+    AdminHelper.set_image(file.path, params['id'])
+
+    file.close
+    file.unlink
+
     render :nothing => true, :status => 200
   end
 

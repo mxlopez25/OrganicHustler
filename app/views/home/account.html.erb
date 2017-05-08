@@ -14,7 +14,7 @@
 
       <% current_user.orders.each do |o| %>
           <% o.cart.cart_products.each do |product| %>
-              <div id="<%= product.id %>_orders" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
+              <div id="<%= product.id %>_orders" style="width: 100px; height: 100px">
 
               </div>
               <% product_temp = get_product(product.m_id) %>
@@ -23,7 +23,6 @@
                   createShape('<%= product.id %>_orders', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
                   function createShape(id, width, height, x, y, s_w, s_h) {
                       var container = $('#' + id);
-                      container.height(container.width());
 
                       var stage = new Konva.Stage({
                           container: id,
@@ -58,7 +57,7 @@
                           baseImg.image(imageObj1);
                           layer.draw();
                       };
-                      imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+                      imageObj1.src = 'https://<%= product_temp['images'].first['segments']['domain'] %>fill/100w/100h/<%= product_temp['images'].first['segments']['suffix'] %>';
 
                       var imageObj2 = new Image();
                       imageObj2.onload = function () {
