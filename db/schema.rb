@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508154012) do
+ActiveRecord::Schema.define(version: 20170509043933) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -38,21 +38,18 @@ ActiveRecord::Schema.define(version: 20170508154012) do
     t.decimal "relation_y", precision: 10
     t.decimal "width", precision: 10
     t.decimal "height", precision: 10
-    t.decimal "total_m", precision: 10
     t.boolean "has_logo"
     t.boolean "has_emblem"
     t.string "emblem_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position_id"
-    t.string "size_leter"
-    t.decimal "size_price", precision: 10
     t.integer "cart_id"
+    t.string "size_id"
   end
 
   create_table "carts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.boolean "is_active"
-    t.decimal "total_m", precision: 10
     t.integer "n_products", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -110,7 +107,6 @@ ActiveRecord::Schema.define(version: 20170508154012) do
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.decimal "total", precision: 10
     t.string "state"
     t.text "description", limit: 65535
     t.datetime "created_at", null: false

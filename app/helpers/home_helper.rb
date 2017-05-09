@@ -3,12 +3,6 @@ require 'rest_client'
 
 module HomeHelper
 
-  @token = nil
-
-  class << self
-    attr_accessor :token
-  end
-
   def self.generate_token
     moltin_client = Moltin::Api::Client
     if self.token.nil? || !moltin_client.authenticated?
@@ -41,14 +35,6 @@ module HomeHelper
   def self.get_product_by_id(id)
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}", {:Authorization => "Bearer #{self.generate_token}"})
     JSON.parse(response.body)['result']
-  end
-
-  def get_teaser(text)
-    "#{text[0, 30]}"
-  end
-
-  def get_complete(text)
-    "#{text[30..-1]}"
   end
 
   def get_showcase_items
@@ -161,6 +147,8 @@ module HomeHelper
     JSON.parse(response.body)['result']
   end
 
+=begin
+
   def get_p_price(id, logo_id, emblem_id, size_price)
     pr = AdminHelper.get_product_by_id(id)
 
@@ -188,5 +176,59 @@ module HomeHelper
     total_m = price_logo + price_product + price_emblem + size_price
     [total_m, tax]
   end
+=end
+
+
+  def product_price(p_cart_id)
+    product = CartProduct.find(p_cart_id)
+    product_main = HomeHelper.get_product_by_id(product.m_id)
+
+    product_price = HomeController.to_decimal(product_main['price']['data']['raw']['without_tax'])
+    base_product_tax = HomeController.to_decimal(product_main['price']['data']['raw']['tax'])
+    price_logo = 0
+    price_emblem = 0
+
+    unless product.logo_id.blank?
+      logo = Picture.find(product.logo_id)
+      price_logo = logo.price || 0
+    end
+
+    unless product.emblem_id.blank?
+      emblem = Emblem.find(product.emblem_id)
+      price_emblem = emblem.emblem_cost || 0
+    end
+
+    size_price = 0
+    product_main['modifiers'].each do |modifier|
+      if modifier[1]['title'].eql?('Size')
+        size_price = HomeController.to_decimal(modifier[1]['variations'][product.size_id]['mod_price'])
+      end
+    end
+
+    total_m = (product_price + size_price + price_logo + price_emblem)
+    real_product_tax = total_m * base_product_tax/product_price
+
+    [product_price, real_product_tax, size_price, price_logo, price_emblem, (total_m + real_product_tax)]
+
+  end
+
+  def get_price(order_id = nil)
+    user = nil
+    if user_signed_in?
+      user = current_user
+    else
+      user = TempUser.find(session[:temp_user_id])
+    end
+
+    if order_id.nil?
+      total_price = 0
+      user.cart.cart_products.each do |t|
+        total_price += product_price(t.id).last
+      end
+
+      return total_price
+    end
+  end
+
 
 end

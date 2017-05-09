@@ -93,20 +93,7 @@ class HomeController < ApplicationController
     end
 
     product_source = get_product(params['source_p'])
-
-    variations = []
-    product_source['modifiers'].each do |modifiers|
-      variations.push(modifiers)
-    end
-
-    size_price = 0
-    size_letter = ''
-    variations[1][1]['variations'].each do |var|
-      if var[1]['id'].eql? params['size']
-        size_price = HomeController.to_decimal(var[1]['mod_price'][1..-1])
-        size_letter = var[1]['title']
-      end
-    end
+    size_id = params['size']
 
     price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
     price_logo = 0
@@ -139,63 +126,19 @@ class HomeController < ApplicationController
       u.relation_y = HomeController.to_decimal(params['relation_y'])
       u.width = HomeController.to_decimal(params['width'])
       u.height = HomeController.to_decimal(params['height'])
-      u.total_m = total_m
       u.has_logo = !params['logo_id'].blank?
       u.has_emblem = false
       u.emblem_id = params['emblem_id']
       u.position_id = HomeController.to_integer(params['position'])
-      u.size_leter = size_letter
-      u.size_price = size_price
+      u.size_id = size_id
     end
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
-    user.cart.total_m = user.cart.total_m + total_m + size_price
+    user.cart.total_m = user.cart.total_m + total_m
     user.cart.save!
 
 
-  end
-
-  #Needs some work
-  def get_price(source_p)
-    product_source = get_product(params['source_p'])
-
-    variations = []
-    product_source['modifiers'].each do |modifiers|
-      variations.push(modifiers)
-    end
-
-    size_price = 0
-    size_letter = ''
-    variations[1][1]['variations'].each do |var|
-      if var[1]['id'].eql? params['size']
-        size_price = HomeController.to_decimal(var[1]['mod_price'][1..-1])
-        size_letter = var[1]['title']
-      end
-    end
-
-    price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
-    price_logo = 0
-    price_emblem = 0
-
-    unless params['logo_id'].blank?
-      logo = Picture.find(params['logo_id'])
-      price_logo = logo.price
-      if price_logo.nil?
-        price_logo = 0
-      end
-    end
-
-    unless params['emblem_id'].blank?
-      emblem = Emblem.find(params['emblem_id'])
-      price_emblem = emblem.emblem_cost
-      if price_emblem.nil?
-        price_emblem = 0
-      end
-    end
-
-    total_m = price_logo + price_product + price_emblem + size_price
-    [total_m, size_letter]
   end
 
 
@@ -266,5 +209,7 @@ class HomeController < ApplicationController
 
     redirect_to root_path
   end
+
+  def get
 
 end
