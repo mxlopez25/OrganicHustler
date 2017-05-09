@@ -1,7 +1,7 @@
 require 'json'
 class HomeController < ApplicationController
   include AdminHelper
-
+  include CartHelper
 
   before_action :authenticate_user!, only: 'account'
 
@@ -135,7 +135,6 @@ class HomeController < ApplicationController
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
-    user.cart.total_m = user.cart.total_m + total_m
     user.cart.save!
 
 
@@ -173,11 +172,11 @@ class HomeController < ApplicationController
     end
 
     order_a = user.orders.find(id_order)
+    refund(order_a, id_product_cart)
     unless order_a.state.eql?('shipped')
       cart_a = order_a.cart
       product = cart_a.cart_products.find(id_product_cart)
       cart_a.n_products = user.cart.n_products - 1
-      cart_a.total_m = user.cart.total_m - product.total_m - product.size_price
       cart_a.save!
       product.destroy
     end
@@ -209,7 +208,5 @@ class HomeController < ApplicationController
 
     redirect_to root_path
   end
-
-  def get
 
 end

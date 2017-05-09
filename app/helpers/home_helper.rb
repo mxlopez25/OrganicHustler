@@ -3,6 +3,12 @@ require 'rest_client'
 
 module HomeHelper
 
+  token = nil
+
+  class << self
+    attr_accessor :token
+  end
+
   def self.generate_token
     moltin_client = Moltin::Api::Client
     if self.token.nil? || !moltin_client.authenticated?
@@ -58,7 +64,6 @@ module HomeHelper
     if user.cart.nil?
       user.create_cart
       user.cart.is_active = true
-      user.cart.total_m = 0
       user.cart.n_products = 0
       user.cart.save!
       p user.cart
@@ -85,7 +90,6 @@ module HomeHelper
     if user.cart.nil?
       user.create_cart
       user.cart.is_active = true
-      user.cart.total_m = 0
       user.cart.n_products = 0
       user.cart.save!
       user.cart
@@ -110,7 +114,6 @@ module HomeHelper
     if user.cart.nil?
       user.create_cart
       user.cart.is_active = true
-      user.cart.total_m = 0
       user.cart.n_products = 0
       user.cart.save!
       p user.cart
@@ -147,38 +150,6 @@ module HomeHelper
     JSON.parse(response.body)['result']
   end
 
-=begin
-
-  def get_p_price(id, logo_id, emblem_id, size_price)
-    pr = AdminHelper.get_product_by_id(id)
-
-    price_product = pr['price']['data']['raw']['without_tax'].to_d
-    tax = pr['price']['data']['raw']['tax'].to_d
-    price_logo = 0
-    price_emblem = 0
-
-    unless logo_id.blank?
-      logo = Picture.find(logo_id)
-      price_logo = logo.price
-      if price_logo.nil?
-        price_logo = 0
-      end
-    end
-
-    unless emblem_id.blank?
-      emblem = Emblem.find(emblem_id)
-      price_emblem = emblem.emblem_cost
-      if price_emblem.nil?
-        price_emblem = 0
-      end
-    end
-
-    total_m = price_logo + price_product + price_emblem + size_price
-    [total_m, tax]
-  end
-=end
-
-
   def product_price(p_cart_id)
     product = CartProduct.find(p_cart_id)
     product_main = HomeHelper.get_product_by_id(product.m_id)
@@ -198,17 +169,12 @@ module HomeHelper
       price_emblem = emblem.emblem_cost || 0
     end
 
-    size_price = 0
-    product_main['modifiers'].each do |modifier|
-      if modifier[1]['title'].eql?('Size')
-        size_price = HomeController.to_decimal(modifier[1]['variations'][product.size_id]['mod_price'])
-      end
-    end
+    size_price = HomeController.to_decimal(get_variation(product_main, 'Size', product.size_id)['mod_price'])
 
     total_m = (product_price + size_price + price_logo + price_emblem)
     real_product_tax = total_m * base_product_tax/product_price
 
-    [product_price, real_product_tax, size_price, price_logo, price_emblem, (total_m + real_product_tax)]
+    [product_price, real_product_tax, size_price, price_logo, price_emblem, total_m, (total_m + real_product_tax)]
 
   end
 
@@ -230,5 +196,15 @@ module HomeHelper
     end
   end
 
+
+  def get_variation(pr, title, id)
+    variation = nil
+    pr['modifiers'].each do |modifier|
+      if modifier[1]['title'].eql?(title)
+        variation = modifier[1]['variations'][id]
+      end
+    end
+    variation
+  end
 
 end

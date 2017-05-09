@@ -120,7 +120,7 @@
               <div class="content-part content-part-7">
                 <h4><%= product_temp['title'] %></h4>
                 <div class="content-part content-part-5">
-                  <h6>Size: <%= product.size_leter %></h6> <!--FIX MISSING ATRIBUTES-->
+                  <h6>Size: <%= get_variation(product_temp, 'Size', product.size_id)['title'] %></h6> <!--FIX MISSING ATRIBUTES-->
                   <h6>Customized:
                     <% if product.has_emblem %>YES
                     <% elsif product.has_logo %>YES
@@ -130,10 +130,10 @@
                 </div>
                 <div class="content-part content-part-5" style="text-align: center">
                   <h3>Qty: 1</h3> <!-- Attach to backend -->
-                  <% pr_price = get_p_price(product.m_id, product.logo_id, product.emblem_id, product.size_price) %>
-                  <h4><%= pr_price[0] %></h4>
+                  <% pr_price = product_price(product.id) %>
+                  <h4><%= pr_price[5] %></h4>
                   <% tax_array.push(pr_price[1]) %>
-                  <% cost_array.push(pr_price[0]) %>
+                  <% cost_array.push(pr_price[5]) %>
                 </div>
               </div>
             </div>

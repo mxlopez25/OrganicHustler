@@ -7,7 +7,6 @@ class CartController < ApplicationController
   end
 
   def create
-    p params
     user = nil
 
     if user_signed_in?
@@ -21,9 +20,9 @@ class CartController < ApplicationController
     cart_id = get_cart_id
 
     CartProduct.where(cart_id: cart_id).each do |product|
-      pr_price = get_p_price(product.m_id, product.logo_id, product.emblem_id, product.size_price)
+      pr_price = product_price(product.id)
       tax_array.push(pr_price[1])
-      cost_array.push(pr_price[0])
+      cost_array.push(pr_price[5])
     end
 
     cost_t = 0
@@ -52,9 +51,9 @@ class CartController < ApplicationController
       unless charge[:status].eql?('failed')
         order = Order.create do |t|
           t.cart = cart
-          t.total = cost_t + tax_t
           t.description = 'Order is being processed'
           t.state = 'Processing'
+          t.charge_id = charge.id
         end
 
         user.orders << order

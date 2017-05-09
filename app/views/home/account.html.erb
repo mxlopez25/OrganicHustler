@@ -1,4 +1,5 @@
 <body>
+<%= stylesheet_link_tag 'cart' %>
 <div style="margin-top: 200px; margin-bottom: 200px">
   <div style="overflow: hidden; text-align: center">
     <h1>My Account</h1>
@@ -87,6 +88,7 @@
                       </li>
                       <li><a href="#">Update order</a></li>
                       <li><a href="#">Checkout details</a></li>
+                      <li><a href="#">Track order</a></li>
                     </ul>
                   </div>
 
@@ -94,7 +96,7 @@
                   <h5>Bag id: <%= o.id %></h5>
                   <h5>Bag status: <%= o.state %></h5>
                   <h5>Product id: <%= product_temp['id'] %></h5>
-                  <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_temp['price']['value'] %></h4>
+                  <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_price(product.id).last %></h4>
                 </div>
               </div>
           <% end %>
@@ -105,6 +107,75 @@
     <div class="content-part" style="padding-left: 20px; padding-right: 20px">
       <h2>Account details</h2>
       <hr style="width: 44px; margin: 0 auto 50px; border-color: black">
+      <div style="width: 100%; text-align: left">
+        <h4>
+          Address
+        </h4>
+        <hr>
+
+        <%= form_for current_user %>
+        <div class="content-part content-part-5">
+          <label>
+            <div>FIRST NAME</div>
+          </label>
+          <input name="cardholder-first-name" class="field" placeholder="Jane Doe"/>
+        </div>
+
+        <div class="content-part content-part-5">
+          <label>
+            <div>LAST NAME</div>
+          </label>
+          <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo"/>
+        </div>
+
+        <div class="content-part content-part-10">
+          <label>
+            <div>STREET ADDRESS</div>
+          </label>
+          <input name="cardholder-street" class="field" placeholder="Vergel #31"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>CITY</div>
+          </label>
+          <input name="cardholder-city" class="field" placeholder="Santo Domingo"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>STATE</div>
+          </label>
+          <input name="cardholder-state" class="field" placeholder="DN"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>ZIP CODE</div>
+          </label>
+          <input name="cardholder-zip" class="field" placeholder="10107"/>
+        </div>
+
+        <div class="content-part content-part-3">
+          <label>
+            <div>AREA</div>
+          </label>
+          <input name="cardholder-area" class="field" placeholder="829" type=""/>
+        </div>
+
+        <div class="content-part content-part-7">
+          <label>
+            <div>NUMBER</div>
+          </label>
+          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel"/>
+        </div>
+
+
+        <div style="width: 100%; float: left">
+          <hr>
+        </div>
+
+      </div>
     </div>
 
   </div>
