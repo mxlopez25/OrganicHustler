@@ -70,5 +70,6 @@ Rails.application.routes.draw do
   end
 
   resource :showcases
+  resource :user_addresses
 
 end

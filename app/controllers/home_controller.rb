@@ -46,7 +46,10 @@ class HomeController < ApplicationController
   end
 
   def account
-
+    @address = current_user.user_address
+    unless @address
+      @address = current_user.create_user_address
+    end
   end
 
   def get_image_by_id

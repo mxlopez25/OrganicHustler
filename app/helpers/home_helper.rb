@@ -186,6 +186,7 @@ module HomeHelper
       user = TempUser.find(session[:temp_user_id])
     end
 
+
     if order_id.nil?
       total_price = 0
       user.cart.cart_products.each do |t|

@@ -113,63 +113,70 @@
         </h4>
         <hr>
 
-        <%= form_for current_user %>
+        <%= form_for @address, :url => user_addresses_path do |f| %>
         <div class="content-part content-part-5">
           <label>
             <div>FIRST NAME</div>
           </label>
-          <input name="cardholder-first-name" class="field" placeholder="Jane Doe"/>
+          <%= f.text_field :name, class: 'field', value: current_user['user_name'], :disabled => true %>
         </div>
+
 
         <div class="content-part content-part-5">
           <label>
             <div>LAST NAME</div>
           </label>
-          <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo"/>
+          <%= f.text_field :last_name, class: 'field', value: current_user['user_last_name'], :disabled => true %>
         </div>
 
         <div class="content-part content-part-10">
           <label>
             <div>STREET ADDRESS</div>
           </label>
-          <input name="cardholder-street" class="field" placeholder="Vergel #31"/>
+          <%= f.text_field :street_address, class: 'field', value: @address.street_address %>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>CITY</div>
           </label>
-          <input name="cardholder-city" class="field" placeholder="Santo Domingo"/>
+          <%= f.text_field :city, class: 'field', value: @address.city %>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>STATE</div>
           </label>
-          <input name="cardholder-state" class="field" placeholder="DN"/>
+          <%= f.text_field :state, class: 'field', value: @address.state %>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>ZIP CODE</div>
           </label>
-          <input name="cardholder-zip" class="field" placeholder="10107"/>
+          <%= f.text_field :zip_code, class: 'field', value: @address.zip_code %>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>AREA</div>
           </label>
-          <input name="cardholder-area" class="field" placeholder="829" type=""/>
+          <%= f.text_field :area, class: 'field', value: @address.area %>
         </div>
 
         <div class="content-part content-part-7">
           <label>
             <div>NUMBER</div>
           </label>
-          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel"/>
+          <%= f.text_field :number, class: 'field', value: @address.number %>
         </div>
 
+            <div class="content-part content-part-10">
+              <button type="submit" class="btn btn-sp">SET ADDRESS</button>
+            </div>
+
+
+        <% end %>
 
         <div style="width: 100%; float: left">
           <hr>
