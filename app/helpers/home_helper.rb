@@ -18,6 +18,22 @@ module HomeHelper
     self.token
   end
 
+  def get_user_toc
+    user = current_user
+    if user.nil?
+      if session[:temp_user_id].nil?
+        user = TempUser.create
+        p ("user_created with id: #{user.id}")
+        session[:temp_user_id] = user.id
+
+      else
+        user = TempUser.find(session[:temp_user_id])
+      end
+    end
+
+    user
+  end
+
   def get_products
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     JSON.parse(response.body)['result']

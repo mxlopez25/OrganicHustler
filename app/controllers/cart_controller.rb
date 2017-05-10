@@ -1,12 +1,20 @@
+require 'stripe'
 class CartController < ApplicationController
   include HomeHelper
   Stripe.api_key = ENV['STRIPE_SECRET']
 
   def new
 
+    c_id_stripe = get_user_toc['c_stripe_id']
+
+    if c_id_stripe
+      customer = Stripe::Customer.retrieve(c_id_stripe)
+      @card = customer.sources.retrieve(customer['default_source'])
+    end
   end
 
   def create
+
     user = nil
 
     if user_signed_in?
@@ -37,14 +45,31 @@ class CartController < ApplicationController
 
     token = params[:token][:id]
 
+    if params['save_cr'].eql?('on')
+      customer = Stripe::Customer.create(email: user.email, source: token)
+      user.c_stripe_id = customer.id
+      user.save!
+    end
+
     charge = ''
     begin
-      charge = Stripe::Charge.create(
-          :amount => ((cost_t + tax_t)*100).to_i,
-          :currency => "usd",
-          :description => "Example charge",
-          :source => token,
-      )
+      charge = nil
+
+      if user.c_stripe_id
+        charge = Stripe::Charge.create(
+            :amount => ((cost_t + tax_t)*100).to_i,
+            :currency => "usd",
+            :description => "Example charge",
+            :customer => user.c_stripe_id,
+        )
+      else
+        charge = Stripe::Charge.create(
+            :amount => ((cost_t + tax_t)*100).to_i,
+            :currency => "usd",
+            :description => "Example charge",
+            :source => token,
+        )
+      end
 
       cart = Cart.find(cart_id)
 
