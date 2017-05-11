@@ -65,6 +65,9 @@ Rails.application.routes.draw do
 
   put '/admin/product/edit/add/gallery/logo' => 'galleries#create'
 
+  get '/temp_user_act' => 'home#temp_user_act'
+  get '/temporary/user/orders' => 'home#temp_user_order'
+
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'
     put 'add/emblems' => 'emblems#create'

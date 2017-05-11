@@ -21,6 +21,11 @@ class CartController < ApplicationController
       user = current_user
     else
       user = TempUser.find(session[:temp_user_id])
+      user.email = params['cardholder-email']
+      user.save!
+
+      mail = TUserTokenRequestMailer.new_token_request(user)
+      mail.deliver_now
     end
 
     tax_array = []
@@ -55,7 +60,7 @@ class CartController < ApplicationController
     begin
       charge = nil
 
-      if user.c_stripe_id
+      if user['c_stripe_id']
         charge = Stripe::Charge.create(
             :amount => ((cost_t + tax_t)*100).to_i,
             :currency => "usd",

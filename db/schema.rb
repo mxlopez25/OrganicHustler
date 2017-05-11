@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510142530) do
+ActiveRecord::Schema.define(version: 20170511133401) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 20170510142530) do
     t.string "overall_user_id"
     t.string "overall_user_type"
     t.string "charge_id"
+    t.string "tag_link"
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -168,6 +169,14 @@ ActiveRecord::Schema.define(version: 20170510142530) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "temp_user_controls", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "auth_token"
+    t.datetime "t_available"
+    t.string "temp_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "temp_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "email"
     t.datetime "created_at", null: false
@@ -184,6 +193,9 @@ ActiveRecord::Schema.define(version: 20170510142530) do
     t.string "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "order_id"
+    t.string "overall_user_id"
+    t.string "overall_user_type"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

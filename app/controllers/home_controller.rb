@@ -52,6 +52,16 @@ class HomeController < ApplicationController
     end
   end
 
+  def temp_user_act
+
+  end
+
+  def temp_user_order
+
+    @user = TempUser.find(TempUserControl.where(auth_token: params['token']).temp_user_id)
+
+  end
+
   def get_image_by_id
     render text: Picture.find(params[:id]).image.url(params[:style])
   end

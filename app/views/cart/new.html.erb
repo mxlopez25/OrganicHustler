@@ -13,7 +13,7 @@
           <label>
             <div>CHECKOUT DETAILS</div>
           </label>
-          <input name="cardholder-email" class="field" placeholder="user@domain.com" value="<%= user['email'] %>"/>
+          <input name="cardholder-email" class="field" placeholder="user@domain.com" value="<%= user['email'] %>" required>
         </div>
 
         <div class="content-part content-part-10">
@@ -26,58 +26,58 @@
           <label>
             <div>FIRST NAME</div>
           </label>
-          <input name="cardholder-first-name" class="field" placeholder="Jane Doe" value="<%= user['user_name'] %>"/>
+          <input name="cardholder-first-name" class="field" placeholder="Jane Doe" value="<%= user['user_name'] %>" required>
         </div>
 
         <div class="content-part content-part-5">
           <label>
             <div>LAST NAME</div>
           </label>
-          <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo" value="<%= user['user_last_name'] %>"/>
+          <input name="cardholder-last-name" class="field" placeholder="Acosta Pozo" value="<%= user['user_last_name'] %>" required>
         </div>
 
-        <% address = user.user_address || [] %>
+        <% address = user.user_address || {} %>
 
         <div class="content-part content-part-10">
           <label>
             <div>STREET ADDRESS</div>
           </label>
-          <input name="cardholder-street" class="field" placeholder="Vergel #31" value="<%= address['street_address'] %>"/>
+          <input name="cardholder-street" class="field" placeholder="Vergel #31" value="<%= address['street_address'] %>" required>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>CITY</div>
           </label>
-          <input name="cardholder-city" class="field" placeholder="Santo Domingo" value="<%= address['city'] %>"/>
+          <input name="cardholder-city" class="field" placeholder="Santo Domingo" value="<%= address['city'] %>" required>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>STATE</div>
           </label>
-          <input name="cardholder-state" class="field" placeholder="DN" value="<%= address['state'] %>"/>
+          <input name="cardholder-state" class="field" placeholder="DN" value="<%= address['state'] %>" required>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>ZIP CODE</div>
           </label>
-          <input name="cardholder-zip" class="field" placeholder="10107" value="<%= address['zip_code'] %>"/>
+          <input name="cardholder-zip" class="field" placeholder="10107" value="<%= address['zip_code'] %>" required>
         </div>
 
         <div class="content-part content-part-3">
           <label>
             <div>AREA CODE</div>
           </label>
-          <input name="cardholder-area" class="field" placeholder="829" value="<%= address['area'] %>"/>
+          <input name="cardholder-area" class="field" placeholder="829" value="<%= address['area'] %>" required>
         </div>
 
         <div class="content-part content-part-7">
           <label>
             <div>NUMBER</div>
           </label>
-          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel" value="<%= address['number'] %>"/>
+          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel" value="<%= address['number'] %>" required>
         </div>
 
 
@@ -308,7 +308,11 @@
                         console.log(data);
                         if (data['paid']) {
                             document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>';
-                            location.href = '/account';
+                            if (<%= user_signed_in? %>) {
+                                location.href = '/account';
+                            } else {
+                                location.href = '/temp_user_act'
+                            }
                         } else {
                             var erro_h = document.getElementById('error_hand');
 

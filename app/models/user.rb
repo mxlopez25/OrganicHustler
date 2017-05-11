@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_one :cart, as: :overall_user
-  has_one :user_address
+  has_one :user_address, as: :overall_user
   has_many :orders, as: :overall_user
   # Include default users modules. Others available are:
   # :lockable, :timeoutable and :omniauthable

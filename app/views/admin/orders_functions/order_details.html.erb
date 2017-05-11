@@ -63,7 +63,8 @@
           <input id="height" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>H,</span>
           <input id="weight" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>Oz</span>
         </div>
-        <button type="button" onclick="get_shipping_tag(15)" class="btn btn-default" style="width: 70%">Generate sipping
+        <button type="button" onclick="get_shipping_tag(<%= @order.id %>)" class="btn btn-default" style="width: 70%">Generate
+          sipping
           tag
         </button>
 

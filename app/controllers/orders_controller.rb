@@ -2,11 +2,18 @@ require 'easypost'
 class OrdersController < ApplicationController
   EasyPost.api_key = ENV['EASYPOST_SECRET']
 
+  layout 'admin'
+  before_action :authenticate_admin!
+
   def update
 
   end
 
   def get_tag
+
+    order = Order.find(params['order'])
+    client = Useorder
+    p client
 
     from_address = EasyPost::Address.create(
         company: 'EasyPost',
@@ -19,7 +26,7 @@ class OrdersController < ApplicationController
     )
 
     to_address = EasyPost::Address.create(
-        name: 'George Costanza',
+        name: params['client_name'],
         company: 'Vandelay Industries',
         street1: '1 E 161st St.',
         city: 'Bronx',
