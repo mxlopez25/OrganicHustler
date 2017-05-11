@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
+  get '/admin/orders/:id_o' => 'admin#order_details'
 
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/product/edit/:id' => 'admin#edit_product'
@@ -43,8 +44,8 @@ Rails.application.routes.draw do
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
   post '/admin/product/new' => 'admin#new_product'
   post '/admin/mailer' => 'admin#mailer_send'
-  post '/admin/orders/:id_o' => 'admin#order_details'
   post '/admin/orders' => 'admin#order_search'
+  post '/admin/orders/tag' => 'orders#get_tag'
 
   put '/admin/products' => 'admin#products'
   put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'
@@ -71,5 +72,6 @@ Rails.application.routes.draw do
 
   resource :showcases
   resource :user_addresses
+  resource :orders
 
 end

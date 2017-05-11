@@ -68,13 +68,13 @@
             </td>
             <td><%= time_ago_in_words o.updated_at %></td>
             <td><%= o.id %></td>
-            <td><%= o.total %></td> <!--TODO: Needs to calculate prices don't take from db-->
+            <td><%= get_price o.id %></td> <!--TODO: Needs to calculate prices don't take from db-->
             <td><%= o.state %></td>
             <td><%= o.description %></td>
             <td><%= o.carrier || 'not assigned' %></td>
             <td><%= o.tracking_code || 'not assigned' %></td>
             <td><%= o.overall_user.id %></td>
-            <td><%= (o.overall_user.user_adress || {:city => 'none'})[:city] %></td>
+            <td><%= (o.overall_user.user_address || {:city => 'none'})[:city] %></td>
           </tr>
       <% end %>
       </tbody>
@@ -95,20 +95,9 @@
       }
 
       function see_details() {
-          $.ajax({
-              url: '/admin/orders/' + selected,
-              method: 'POST',
-              data: {},
-              dataType: "html",
-              success: function (data) {
-                  location.href = '/admin/orders'
-              },
-              error: function () {
-
-              }
-
-          });
-          console.log('in')
+          if (selected !== 0) {
+              location.href = '/admin/orders/' + selected
+          }
       }
 
   </script>

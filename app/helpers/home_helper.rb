@@ -210,6 +210,13 @@ module HomeHelper
       end
 
       return total_price
+    else
+      total_price = 0
+      Order.find(order_id).cart.cart_products.each do |t|
+        total_price += product_price(t.id).last
+      end
+
+      return total_price
     end
   end
 

@@ -17,6 +17,7 @@ gem 'paperclip-ffmpeg', '~> 1.0.1'
 gem 'ffmpeg'
 gem 'stripe'
 gem 'rmagick'
+gem 'easypost'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

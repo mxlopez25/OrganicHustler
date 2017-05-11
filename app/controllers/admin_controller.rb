@@ -27,7 +27,8 @@ class AdminController < ApplicationController
 
   def order_details
     id_o = params['id_o']
-    render '/admin/orders'
+    @order = Order.find(id_o)
+    render '/admin/orders_functions/order_details'
   end
 
   def mailer_send
