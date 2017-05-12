@@ -141,10 +141,20 @@ div button {
 
 .direction {
   border-radius: 0;
-  display: inline-block;
-  border: #afafaf solid;
-  border-width: 1px;
+  border: 1px solid #afafaf;
   transition: all .35s
+}
+
+.resizable {
+  width: 16.6%;
+  max-width: 40px;
+  height: 30px;
+  margin: 5px;
+}
+
+button.border-bg-sty {
+  background: white;
+  border: solid thin #b692a2;
 }
 
 .direction.active, .direction:hover {
@@ -181,11 +191,6 @@ div button {
 
 @media (min-width: 0px) and (max-width: 450px) {
 
-  .direction {
-    width: 15%;
-    height: 8vw;
-    background: rgba(255, 255, 255, 0);
-  }
 
   .co-sty {
     width: 75%;

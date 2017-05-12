@@ -76,11 +76,11 @@
 
 
           <% if variant %>
-              <tr id="product-row" onclick="window.location.href = '/admin/edit/<%= product['id'] %>'">
+              <tr id="product-row">
                 <td>
                   <input id="select-obj" type="checkbox" name="select-obj" onclick="add_item(this, '<%= product['id'] %>')">
                 </td>
-                <td><%= variations[1][1]['var_title'] %></td>
+                <td onclick="window.location.href = '/admin/edit/<%= product['id'] %>'"><%= variations[1][1]['var_title'] %></td>
                 <td><%= variations[2][1]['var_title'] %></td>
                 <td><%= product['title'] %></td>
                 <td class="price" style="text-align: right"><%= product['price']['data']['raw']['with_tax'] %></td>

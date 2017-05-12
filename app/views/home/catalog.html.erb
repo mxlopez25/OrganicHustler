@@ -591,7 +591,6 @@
                 emblem_id: '',
                 user_signed: '<%= user_signed_in? %>',
                 position_id: 0
-                //Missing attributes check migrations
 
             },
             success: function (data) {
@@ -602,10 +601,18 @@
 
     function load_p2(data, pr) {
 
-        var variations = [];
+        var variations = ['', '', ''];
         for (var variation in data['modifiers']) {
             if (data['modifiers'].hasOwnProperty(variation)) {
-                variations.push(data['modifiers'][variation])
+
+                if (data['modifiers'][variation]['title'] === 'Color') {
+                    variations[2] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Size') {
+                    variations[1] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
+                    variations[0] = data['modifiers'][variation];
+                }
+
             }
         }
 
@@ -624,16 +631,16 @@
             + '</div>'
             + '<div id="controllers" style="float: left; width: 100%">'
             + '<div style="margin-left: auto; margin-right: auto; text-align: center">'
-            + '<button id="minus-btn" class="direction"><span class="fa fa-minus resizable"></span></button>'
-            + '<button id="plus-btn" class="direction"><span class="fa fa-plus resizable"></span></button>'
-            + '<button id="left-btn" class="direction"><span class="fa resizable fa-chevron-left"></span></button>'
-            + '<button id="right-btn" class="direction"><span class="fa resizable fa-chevron-right"></span></button>'
-            + '<button id="down-btn" class="direction"><span class="fa resizable fa-chevron-down"></span></button>'
-            + '<button id="up-btn" class="direction"><span class="fa resizable fa-chevron-up"></span></button>'
+            + '<button id="minus-btn" class="direction border-bg-sty resizable"><div class="fa fa-minus"></div></button>'
+            + '<button id="plus-btn" class="direction border-bg-sty resizable"><div class="fa fa-plus"></div></button>'
+            + '<button id="left-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-left"></div></button>'
+            + '<button id="right-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-right"></div></button>'
+            + '<button id="down-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-down"></div></button>'
+            + '<button id="up-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-up"></div></button>'
             + '</div>'
             + '</div>'
             + '<div style="width: 100%; text-align: center">'
-            + '<button id="share" class="btn btn-default">'
+            + '<button id="share" style="width: 20%" class="direction btn border-bg-sty btn-default">'
             + '<span>SHARE</span>'
             + '</button>'
             + '</div>'
@@ -651,9 +658,9 @@
             + '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>'
             + '</div>'
             + '<div id="selection-btn-s">'
-            + '<button type="reset" class="btn btn-default">'
+            + '<button type="reset" style="width: 100%; margin-top: 10px" class="btn btn-default">'
             + '<span class="cell-btn">START OVER</span></button>'
-            + '<button type="button" onclick="send_variations(product_id_u)" class="btn btn-default">'
+            + '<button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="send_variations(product_id_u)">'
             + '<span class="cell-btn" >DONE</span></button>'
             + '</div>'
             + '</div>';
