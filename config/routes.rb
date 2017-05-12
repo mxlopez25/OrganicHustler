@@ -67,6 +67,11 @@ Rails.application.routes.draw do
 
   get '/temp_user_act' => 'home#temp_user_act'
   get '/temporary/user/orders' => 'home#temp_user_order'
+  get '/temporary/user/menu' => 'home#temp_user_menu'
+
+  delete '/temporary/user/re_send' => 'home#send_verification'
+
+  post '/temporary/user/orders' => 'home#temp_user_order'
 
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'

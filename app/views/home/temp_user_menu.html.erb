@@ -1,0 +1,36 @@
+<body>
+<div id="items-container" style="text-align: center; margin-top: 100px; overflow: hidden; margin-bottom: 30px">
+  <div class="card content-part-5 single-element-center">
+    <%= form_tag '/temporary/user/orders', id: 'form', method: :get do %>
+        <input autocomplete="off" id="token_f" style="width: 100%" placeholder="Token" type="text" class="serious-input" name="token">
+        <button type="button" onclick="orders()" class="btn-sp btn" style="width: 100%">Manage orders</button>
+    <% end %>
+  </div>
+</div>
+
+<script>
+
+    $('#form').submit(function (event) {
+        event.preventDefault();
+        orders();
+    });
+
+    function orders() {
+        $.ajax({
+            url: '/temporary/user/orders',
+            method: 'post',
+            headers: {
+                'Authorization': $('#token_f').val()
+            },
+            dataType: 'text',
+            success: function (data) {
+                location.href = '/temporary/user/orders'
+            },
+            error: function () {
+
+            }
+        });
+    }
+</script>
+
+</body>

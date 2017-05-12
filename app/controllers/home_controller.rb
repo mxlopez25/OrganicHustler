@@ -6,6 +6,7 @@ class HomeController < ApplicationController
   before_action :authenticate_user!, only: 'account'
 
   @open_quick_m = false
+
   def index
   end
 
@@ -56,10 +57,45 @@ class HomeController < ApplicationController
 
   end
 
+  def temp_user_menu
+
+  end
+
   def temp_user_order
 
-    @user = TempUser.find(TempUserControl.where(auth_token: params['token']).temp_user_id)
+    if request.get?
 
+      tuc = TempUserControl.find_by_ip_address(request.env['REMOTE_ADDR'])
+      if tuc
+        p tuc.to_json, session['temp_token']
+        @user = nil
+        if tuc.t_available > Time.now && tuc.auth_token.eql?(session['temp_token'])
+          @user = TempUser.find(tuc.temp_user_id)
+        end
+      end
+
+    elsif request.post?
+      begin
+        temp_user_c = TempUserControl.where(auth_token: request.env['HTTP_AUTHORIZATION'], valid_token: 1).first
+        if temp_user_c
+          @user = TempUser.find(temp_user_c.temp_user_id)
+          temp_user_c.ip_address = request.env['REMOTE_ADDR']
+          temp_user_c.valid_token = false
+          session['temp_token'] = request.env['HTTP_AUTHORIZATION']
+          temp_user_c.save!
+        end
+      rescue => e
+        p e
+      end
+    end
+  end
+
+  def send_verification
+
+    user = TempUser.find_by_email(params['email'])
+
+    mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
+    mail.deliver_now
   end
 
   def get_image_by_id

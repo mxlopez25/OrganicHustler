@@ -1,7 +1,7 @@
 class UserAddressesController < ApplicationController
 
   def update
-    current_user.user_address.update(address_params)
+    current_user.create_user_address(address_params)
   end
 
   def address_params

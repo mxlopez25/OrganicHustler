@@ -1,4 +1,145 @@
 <body>
 <div id="items-container" style="text-align: center; margin-top: 100px; overflow: hidden; margin-bottom: 30px">
+
+  <div style="position: relative" class="card content-part-5 single-element-center">
+
+
+    <div id="loading" class="hidden">
+
+      <div class="loader">
+
+      </div>
+
+    </div>
+
+    <% if @user %>
+        <a onclick="remove_from_system()"><span style="float: right; cursor: pointer; color: orange"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Log out</span></a>
+    <% end %>
+    <h2>Orders</h2>
+    <hr>
+    <% if @user %>
+        <% @user.orders.each do |o| %>
+            <% o.cart.cart_products.where("created_at > ?", 10.days.ago).each do |product| %>
+                <div style="overflow: hidden; width: 100%; text-align: left; border-bottom: lightgrey solid 1px; padding-bottom: 10px; margin-bottom: 10px">
+                  <div id="img-container" class="content-part content-part-3">
+                    <div id="<%= product.id %>_orders" style="width: 100px; height: 100px; float: left">
+
+                    </div>
+                  </div>
+                  <% product_temp = get_product(product.m_id) %>
+                  <script id="create-shape">
+                      //Show the custom products
+                      createShape('<%= product.id %>_orders', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
+                      function createShape(id, width, height, x, y, s_w, s_h) {
+                          var container = $('#' + id);
+
+                          var stage = new Konva.Stage({
+                              container: id,
+                              width: container.width(),
+                              height: container.height()
+                          });
+                          var layer = new Konva.Layer();
+                          stage.add(layer);
+
+                          var baseImg = new Konva.Image({
+                              width: container.width(),
+                              height: container.height(),
+                              draggable: false
+                          });
+
+                          var logoImg = new Konva.Image({
+                              width: container.width() * width / s_w,
+                              height: container.height() * height / s_h
+                          });
+
+                          var logoGroup = new Konva.Group({
+                              x: container.width() * x / s_w,
+                              y: container.width() * y / s_h
+                          });
+
+                          layer.add(baseImg);
+                          layer.add(logoGroup);
+                          logoGroup.add(logoImg);
+
+                          var imageObj1 = new Image();
+                          imageObj1.onload = function () {
+                              baseImg.image(imageObj1);
+                              layer.draw();
+                          };
+                          imageObj1.src = 'https://<%= product_temp['images'].first['segments']['domain'] %>fill/100w/100h/<%= product_temp['images'].first['segments']['suffix'] %>';
+
+                          var imageObj2 = new Image();
+                          imageObj2.onload = function () {
+                              logoImg.image(imageObj2);
+                              layer.draw();
+                              imageObj2.width = container.width() * width / s_w;
+                              console.log(imageObj2.width, container.width(), width, s_w);
+                              imageObj2.height = container.height() * height / s_h;
+                              console.log(imageObj2.height);
+                          };
+                          imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                          layer.draw();
+                      }
+                  </script>
+                  <div class="content-part content-part-7" style="float: left">
+
+
+                    <div style="float: right" class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                          <a href="/cancel_order?id_order=<%= o.id %>&id_product_cart=<%= product.id %>">Cancel
+                            Order</a>
+                        </li>
+                        <li><a href="#">Checkout details</a></li>
+                        <li><a href="#">Track order</a></li>
+                      </ul>
+                    </div>
+
+                    <h4 class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></h4>
+                    <h5>Bag id: <%= o.id %></h5>
+                    <h5>Bag status: <%= o.state %></h5>
+                    <h5>Product id: <%= product_temp['id'] %></h5>
+                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_price(product.id).last %></h4>
+                  </div>
+                </div>
+            <% end %>
+        <% end %>
+    <% else %>
+
+        <h3>User not authenticated, here's a list of possible reasons:</h3>
+        <div style="text-align: left; padding: 20px">
+          <ul>
+            <li><h5>It was authenticated in another devise</h5></li>
+            <li><h5>The submitted token is incorrect</h5></li>
+          </ul>
+        </div>
+        <input id="email" type="text" placeholder="Email" name="email" class="serious-input" style="width: 98%">
+        <span onclick="resend_validation()" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
+    <% end %>
+  </div>
+
 </div>
+
+<script>
+    function remove_from_system() {
+        console.log('hi')
+    }
+
+    function resend_validation() {
+        document.getElementById('loading').classList.remove('hidden');
+        $.ajax({
+            url: '/temporary/user/re_send',
+            method: 'delete',
+            data: {
+                email: $('#email').val()
+            },
+            success: function () {
+                document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>';
+            }
+        })
+    }
+</script>
+
 </body>

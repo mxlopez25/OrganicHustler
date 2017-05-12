@@ -12,8 +12,8 @@ class OrdersController < ApplicationController
   def get_tag
 
     order = Order.find(params['order'])
-    client = Useorder
-    p client
+    addres = order.user_address
+    user = order.overall_user
 
     from_address = EasyPost::Address.create(
         company: 'EasyPost',

@@ -20,17 +20,37 @@ class CartController < ApplicationController
     if user_signed_in?
       user = current_user
     else
-      user = TempUser.find(session[:temp_user_id])
-      user.email = params['cardholder-email']
-      user.save!
+      user = TempUser.find_by_email(params['cardholder-email'])
 
-      mail = TUserTokenRequestMailer.new_token_request(user)
+      if user
+        partial_user = TempUser.find(session[:temp_user_id])
+        session[:temp_user_id] = user.id
+        user.cart = partial_user.cart
+        user.save!
+      else
+        user = TempUser.find(session[:temp_user_id])
+        user.email = params['cardholder-email']
+        user.save!
+      end
+
+      user_address = {
+          :street_address => params['cardholder-street'],
+          :city => params['cardholder-city'],
+          :state => params['cardholder-state'],
+          :zip_code => params['cardholder-zip'],
+          :area => params['cardholder-area'],
+          :number => params['cardholder-number']
+      }
+
+      user.create_user_address(user_address)
+      user.save!
+      mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
       mail.deliver_now
     end
 
     tax_array = []
     cost_array = []
-    cart_id = get_cart_id
+    cart_id = user.cart.id
 
     CartProduct.where(cart_id: cart_id).each do |product|
       pr_price = product_price(product.id)
@@ -68,6 +88,7 @@ class CartController < ApplicationController
             :customer => user.c_stripe_id,
         )
       else
+        p ((cost_t + tax_t)*100).to_i
         charge = Stripe::Charge.create(
             :amount => ((cost_t + tax_t)*100).to_i,
             :currency => "usd",
@@ -84,12 +105,12 @@ class CartController < ApplicationController
           t.description = 'Order is being processed'
           t.state = 'Processing'
           t.charge_id = charge.id
+          t.user_address_id = user.user_address.id
         end
 
         user.orders << order
         user.cart = nil
         user.save!
-
 
       end
 
