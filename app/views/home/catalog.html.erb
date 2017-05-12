@@ -626,8 +626,7 @@
             + '<h6 style="font-weight: bold">Select color(s):</h6>'
             + '<input type="checkbox" id="select-all" name="cd" checked>'
             + '<label for="select-all" style="font-family: \'Open Sans\', \'Helvetica Neue\', Arial, sans-serif; font-size: 10px;">Select all colors</label>'
-            + '<div id="checkboxes">'
-            + load_available_colors(variations)
+            + '<div id="checkboxes-color">'
             + '</div>'
             + '<div id="controllers" style="float: left; width: 100%">'
             + '<div style="margin-left: auto; margin-right: auto; text-align: center">'
@@ -665,7 +664,7 @@
             + '</div>'
             + '</div>';
 
-
+        load_available_colors(pr, variations);
         load_available_logos(pr);
 
         var innerHTML22 = {};
@@ -1031,22 +1030,45 @@
         }
     }
 
-    function load_available_colors(variations) {
+    function load_available_colors(pr, variations) {
         if (variations.length > 0) {
             var colors = '';
-            for (var attr in variations[2]['variations']) {
-                var changes = JSON.parse(variations[2]['variations'][attr]['title']);
-                colors = colors
-                    + '<div style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
-                    + '<div id="color-picker" class="">'
-                    + '<input type="checkbox" id="' + changes['code'] + '" name="' + changes['code'] + '" onclick="loadLogos()">'
-                    + '</div>'
-                    + '</div>'
-            }
+            console.log(variations[2]['variations']);
+
+            $.ajax({
+                url: '/catalog/product/colored/' + pr + '/' + variations[2]['id'],
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+
+                    for (var attr in variations[2]['variations']) {
+                        var changes = JSON.parse(variations[2]['variations'][attr]['title']);
+
+                        var id_var = variations[2]['variations'][attr]['id'];
+                        console.log(id_var);
+
+                        colors = colors
+                            + '<div onclick="change_source(\'' + data[id_var] + '\')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
+                            + '<div id="color-picker" class="">'
+                            + '<input type="checkbox" id="' + changes['code'] + '" name="' + changes['code'] + '">'
+                            + '</div>'
+                            + '</div>'
+                    }
+
+                    document.getElementById('checkboxes-color').innerHTML = colors;
+                },
+                error: function () {
+
+                }
+            });
 
             return colors;
         }
-        return '';
+    }
+
+    function change_source(values) {
+        console.log(values);
     }
 
     function load_available_logos(pr) {

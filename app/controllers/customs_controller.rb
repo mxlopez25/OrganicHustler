@@ -101,9 +101,31 @@ class CustomsController < ApplicationController
     render :nothing => true, :status => 200
   end
 
+  def re_center_upload(dir, id)
+    image = Magick::Image::from_blob(dir.read).first
+    square_p = image.columns
+    if square_p < image.rows
+      square_p = image.rows
+    end
+
+    image.resize_to_fit!(square_p, square_p)
+    new_img = ::Magick::Image.new(square_p, square_p)
+    filled = new_img.matte_floodfill(1, 1)
+    filled.composite!(image, Magick::CenterGravity, ::Magick::OverCompositeOp)
+    file = Tempfile.new(['rmagicFile', '.png'])
+    p file.path
+    filled.write(file.path)
+
+    AdminHelper.set_image(file.path, id)
+
+    file.close
+    file.unlink
+
+  end
+
   def upload_m_image
     p params['products'].split(',').map(&:to_i)
-    params['products'].split(',').map(&:to_i).each { |product_var| AdminHelper.set_image(params['file'].tempfile, product_var) }
+    params['products'].split(',').map(&:to_i).each {|product_var| re_center_upload(params['file'], product_var)}
     render :nothing => true, :status => 200
   end
 

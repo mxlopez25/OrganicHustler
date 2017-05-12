@@ -37,7 +37,7 @@
 
   <div class="head-bread-crumbs card">
     <h4><a class="breadcrumb" href="/admin/products">Products</a> /
-      <a class="breadcrumb" href="/admin/edit/<%= @product %>"><%= @product %></a> / <%= @id %></h4>
+      <a class="breadcrumb" href="/admin/product/edit/<%= @product %>"><%= @product %></a> / <%= @id %></h4>
   </div>
 
   <div class="table_products card modal-g">
@@ -60,20 +60,25 @@
           <% variant = false %>
           <% product['modifiers'].each do |modifiers| %>
 
-              <% if modifiers[1]['data']['title'].eql?('Color')
-                   variations[2] = modifiers
-                 elsif modifiers[1]['data']['title'].eql?('Size')
-                   variations[1] = modifiers
-                 elsif modifiers[1]['data']['title'].eql?('Logo preset')
+              <% p modifiers %>
+
+              <% if modifiers[1]['title'].eql?('Logo preset')
                    variations[0] = modifiers
+                 elsif modifiers[1]['title'].eql?('Size')
+                   variations[1] = modifiers
+                 elsif (modifiers[1]['data'] || {:title => nil})['title'].eql?('Color')
+                   variations[2] = modifiers
                  end
               %>
+
+              <% p variations %>
 
               <% if modifiers[1]['var_id'].eql?(@id) %>
                   <% variant = true %>
               <% end %>
           <% end %>
 
+          <% p variant %>
 
           <% if variant %>
               <tr id="product-row">
