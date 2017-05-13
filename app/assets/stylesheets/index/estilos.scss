@@ -259,9 +259,14 @@ img.showcase {
 }
 
 .imgxx {
-
   height: 50px;
+}
 
+.brand {
+  position: absolute;
+  left: 50%;
+  margin-left: -33px !important; /* 50% of your logo width */
+  display: block;
 }
 
 .thumb {

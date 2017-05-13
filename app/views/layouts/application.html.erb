@@ -180,26 +180,29 @@
 
 </div>
 
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="z-index: 2; padding: 10px; height: 100px; border-bottom: #ffffff ">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-bottom: #ffffff ">
   <!-- The Modal -->
+  <div class="desktopnot container">
 
-  <div class="desktopnot">
 
-    <div class="container-fluid" style="overflow: hidden">
+    <div class="navbar-header">
 
-      <a href="#search"><i class="fa fa-search iconx"></i> </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+
 
       <a>LOG IN</a>
       <a id="myBtn_1"><i><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
-      <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
 
-      <div class="navbar-header">
-        <button id="toggle_menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target=#navbar>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </div>
+    </div>
+
+    <div id="navbar" class="navbar-collapse collapse">
 
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="nav navbar-nav navbar-right">
@@ -224,7 +227,7 @@
     </div>
   </div>
 
-  <div class="mobilenot">
+  <div class="mobilenot container">
     <div id="search-index" class="container-fluid">
       <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
       <% if @parameters.nil? || params['action'] != 'catalog' %>
@@ -292,7 +295,6 @@
       </div>
     </div>
   </div>
-
 
   <script>
       // Get the button that opens the modal
