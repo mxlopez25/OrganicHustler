@@ -78,20 +78,19 @@
     <p style="margin-bottom: 5vw; font-size: 2.3vw; width: 32vw; margin-left: -16vw; text-align: center">Clothing - For
       the solid,<br>selfmode individual with root<br>instincts to pursue their goots.<br>"By Any Means."</p>
     <p style="font-size: 4vw; width: 32vw; margin-left: -15vw; text-align: center">
-      <a onclick="play_video()" class="selectable" style="color: black;text-decoration: none">WATCH VIDEO</a></p>
+      <a onclick="play_video_1()" class="selectable" style="color: black;text-decoration: none">WATCH VIDEO</a></p>
   </div>
 </div>
 
 <script>
 
-    function play_video() {
+    function play_video_1() {
         document.getElementById('video-player').innerHTML = '<video id="video" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>'
         var video = document.getElementById('video');
         video.play();
     }
 
 </script>
-
 
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
 
@@ -388,31 +387,14 @@
   <span style="width: 100%" class="hr2 desktopnot"></span>
 </div>
 
-<div class="container text-center desktopnot">
+<div class="desktopnot">
 
-  <div class="row center col-cen col-centered desktopnot">
-    <a class="btn btn-social-icon btn-facebook col-sm-3 col-xs-3 col-lg-3 margin mm">
-      <span class="fa fa-facebook"></span>
-
-    </a>
-    <a class="btn btn-social-icon btn-twitter col-sm-3 col-xs-3 col-lg-3   mm">
-      <span class="fa fa-twitter"></span>
-
-    </a>
-
-    <a class="btn btn-social-icon btn-instagram col-sm-3 col-xs-3 col-lg-3  mm">
-      <span class="fa fa-instagram"></span>
-
-    </a>
-
-    <a class="btn btn-social-icon btn-google col-sm-3 col-xs-3 col-lg-3 mm">
-      <span class="fa fa-google"></span>
-
-    </a>
-
-
+  <div style="overflow: hidden; margin: 30px auto;border: solid 1px #b692a2; padding: 10px" class="desktopnot">
+    <a style="color: black; width: 24%" class="btn"><span class="fa fa-facebook"></span></a>
+    <a style="color: black; width: 24%" class="btn"><span class="fa fa-twitter"></span></a>
+    <a style="color: black; width: 24%" class="btn"><span class="fa fa-instagram"></span></a>
+    <a style="color: black; width: 24%" class="btn"><span class="fa fa-google"></span></a>
   </div>
-  <span style="width: 100%" class="hr2 desktopnot"></span>
 
 </div>
 
@@ -435,7 +417,8 @@
     <h3 style="color: white;"> VISIT</h3>
     <h4 style="color: #A4A4A4; margin-bottom: 30px; margin-top: 10px;"> 12 ERICSSON STREET <br> BOSTON, MA Q2122</h4>
 
-    <img src="<%= url_to_image 'index/ico.png' %>" style="width: 60px;">
+    <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page_2').first.showcases.first %>
+    <img src="<%= image_icon.image_show.image.url %>" style="width: 60px;">
 
     <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
 
