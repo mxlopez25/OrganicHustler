@@ -95,9 +95,7 @@ input::-webkit-search-cancel-button {
 }
 
 .button {
-  border: none;
   color: white;
-  display: inline-block;
   font-size: 16px;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
@@ -318,7 +316,7 @@ input[type=text].foot-form:focus {
 }
 
 .navbar-header input[type=text]:focus {
-  width: 70%;
+  width: 60%;
 }
 
 .iconx {
