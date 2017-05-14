@@ -237,6 +237,29 @@ img.showcase {
   text-align: center;
 }
 
+.link-to-btn {
+  text-decoration: none;
+  color: #000;
+}
+
+.link-to-btn:hover {
+  text-decoration: none;
+  color: #c098ac;
+}
+
+.link-to-btn:focus {
+  text-decoration: none;
+  color: #c098ac;
+}
+
+.menu-button {
+  float: left;
+  width: 20%;
+  text-decoration: none;
+  color: black;
+  text-align: center;
+}
+
 .brand {
   position: absolute;
   left: 50%;
