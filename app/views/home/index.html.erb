@@ -28,7 +28,7 @@
 
   <div style="overflow: hidden; position: absolute; bottom: 30px">
 
-    <button class="button button-head btn">SHOP MEN</button>
+    <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn">SHOP MEN</button>
 
     <button class="button button-head btn">SHOP WOMEN</button>
 
@@ -85,10 +85,10 @@
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
 
   <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 350px;">
+  <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
-    <button class="btn styling_btn">SHOP MEN</button>
-
+    <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
   </article>
 </div>
 
@@ -184,15 +184,14 @@
 
     </div>
   </div>
+
+  <div style="margin-top: 15px; margin-bottom: 15px;">
+
+    <video autoplay="autoplay" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
+
+  </div>
+
 </div>
-
-
-<div style="margin-top: 15px; margin-bottom: 15px;">
-
-  <video autoplay="autoplay" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
-
-</div>
-
 
 <div class="container mobilenot">
   <div class="row">
