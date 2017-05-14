@@ -24,9 +24,6 @@
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application.js' %>
 
-  <!-- Plugin CSS -->
-  <%= stylesheet_link_tag 'magnific-popup/magnific-popup' %>
-
   <!-- Theme CSS -->
   <%= stylesheet_link_tag 'index/estilos' %>
   <%= stylesheet_link_tag 'home' %>
@@ -180,14 +177,13 @@
 
 </div>
 
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-bottom: #ffffff ">
+<nav class="navbar navbar-default navbar-fixed-top">
   <!-- The Modal -->
   <div class="desktopnot container">
 
-
     <div class="navbar-header">
 
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -202,9 +198,7 @@
 
     </div>
 
-    <div id="navbar" class="navbar-collapse collapse">
-
-      <div class="collapse navbar-collapse" id="navbar">
+    <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li>
             <a href="#story">STORY</a>
@@ -223,7 +217,6 @@
           </li>
           <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
         </ul>
-      </div>
     </div>
   </div>
 
