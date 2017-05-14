@@ -177,8 +177,10 @@
 
 </div>
 
-<nav class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-color: white">
-  <!-- The Modal -->
+<nav class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-color: white; background: white">
+
+  <% available = true %>
+
   <div class="desktopnot container">
 
     <div class="navbar-header">
@@ -209,19 +211,28 @@
     <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a href="#story">STORY</a>
+            <a class="selectable ">STORY</a>
           </li>
           <li>
-            <a href="#catalog-men">SHOP MEN</a>
+            <a class="selectable
+              <% unless params['men'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
           </li>
           <li>
-            <a href="#catalog-women">SHOP WOMEN</a>
+            <a class="selectable
+              <% unless params['women'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
           </li>
           <li>
-            <a href="#customize">CUSTOMIZE</a>
+            <a class="selectable
+              <% unless params['hats'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog'">FULL COLLECTION</a>
           </li>
           <li>
-            <a href="#contact">CONTACT US</a>
+            <a class="selectable ">CUSTOMIZE</a>
+          </li>
+          <li class="selectable ">
+            <a>CONTACT US</a>
           </li>
           <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
         </ul>
@@ -261,8 +272,6 @@
         <% end %>
         <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
       </div>
-
-      <% available = true %>
 
       <div class="collapse navbar-collapse" style="width: 100%; margin-top: 40px" id="navbar">
         <ul class="nav navbar-nav navbar-center">
