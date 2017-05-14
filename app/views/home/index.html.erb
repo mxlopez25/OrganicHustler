@@ -71,7 +71,7 @@
 </div>
 
 <div style="margin-top: 30px; position: relative; width: 100%;" class="desktopnot">
-  <img style="width: 100%" src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/018/original/back_vid_2_img.png?1494731054"><!--#GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url-->
+  <img style="width: 100%" src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
   <div class="text-triangle">
     <p style="font-size: 3.4vw; margin-top: 15vw; margin-bottom: 5vw; width: 30vw; margin-left: -15vw; text-align: center">Our
       Story</p>
@@ -82,12 +82,12 @@
 </div>
 
 
-<div style="margin-top: 50px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
+<div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
 
-  <img src="<%= url_to_image 'index/men.jpg' %>" style="height: 300px;">
+  <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 350px;">
 
   <article>
-    <button class="button button2 btn" style="color:black;">SHOP MEN</button>
+    <button class="btn styling_btn">SHOP MEN</button>
 
   </article>
 </div>
