@@ -34,7 +34,7 @@
 
   <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
 
-  <div id="triangle" class="triangle"></div>
+  <div id="triangle" class="triangle mobilenot"></div>
   <!-- Modal content -->
   <div id="modal_c" style="padding: 0;" class="modal-content">
     <span class="close">&times;</span>
@@ -342,14 +342,10 @@
 
       btn_i.on('click', function () {
           modal.style.display = "block";
-
-          triangle.style.right = null;
-          modal_c.style.right = null;
-
-          triangle.style.left = (100 - ((btn1.getBoundingClientRect().left / window.innerWidth) * 100) - (btn_i.width() * 100 / window.innerWidth) ).toString() + "%";
-          triangle.style.top = (btn1.getBoundingClientRect().top + btn_i.height()).toString() + "px";
-          modal_c.style.left = (100 - ((triangle.getBoundingClientRect().left / window.innerWidth) * 100) - 5).toString() + "%";
-          modal_c.style.top = (btn1.getBoundingClientRect().bottom + 20).toString() + "px";
+          modal_c.style.right = 0;
+          modal_c.style.left = 0;
+          modal_c.style.top = 0;
+          modal_c.style.margin = "30px auto";
 
 
           var carousel_p = document.getElementById('product-loader-carousel');
