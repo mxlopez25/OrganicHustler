@@ -24,7 +24,7 @@
 <div class="header desktopnot " style="background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat center;
     margin-top: 50px;
     overflow: hidden">
-  <h1 class="text-center ht">ECO FRIENDLY</h1>
+  <h1 class="text-center ht">ECO<br>FRIENDLY</h1>
 
   <div style="overflow: hidden; position: absolute; bottom: 30px">
 
@@ -38,12 +38,6 @@
 </div>
 
 <div id="carousel-example-generic" class="carousel slide desktopnot" data-ride="carousel">
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-  </ol>
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
@@ -52,21 +46,22 @@
         <div class="item
           <% if first %> active
           <% first = false end %>">
-          <img src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px;margin-right: auto; margin-left: auto; margin-top: 50px; margin-bottom: 50px;">
-          <div class="carousel-caption">
-            ...
+          <img src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px; margin: 10px auto;">
+          <div class="carousel-cap">
+            <p><%= item['title'] %><br>Eco-Friendly + Customizable</p>
           </div>
         </div>
     <% end %>
   </div>
 
   <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+  <a class="carousel-control" style="left: 0; right: auto" href="#carousel-example-generic" role="button" data-slide="prev">
     <span class="fa fa-chevron-left" style="position: absolute; top: 140px" aria-hidden="true"></span>
   </a>
-  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+  <a class="carousel-control" style="left: auto; right: 0" href="#carousel-example-generic" role="button" data-slide="next">
     <span class="fa fa-chevron-right" style="position: absolute; top: 140px" aria-hidden="true"></span>
   </a>
+
 </div>
 <div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">
   <article>

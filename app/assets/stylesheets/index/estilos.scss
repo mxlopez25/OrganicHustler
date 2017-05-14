@@ -55,12 +55,6 @@ input::-webkit-search-cancel-button {
   text-align: center;
 }
 
-.mainNav {
-  overflow: visible;
-  position: relative;
-
-}
-
 .row {
   text-align: center;
 }
@@ -77,6 +71,10 @@ input::-webkit-search-cancel-button {
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   cursor: pointer;
+}
+
+.carousel-cap {
+  text-align: center;
 }
 
 .button-head {
