@@ -292,16 +292,15 @@
 <hr style="width: 80%; margin-top: 80px; border-width: 1px;">
 
 
-<div style="margin-top: 50px; margin-left: auto; margin-right:auto; text-align: center;">
+<div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
   <% image_show_case = GroupShowcase.where(screen: 3, name_identity: 'relational_image').first.showcases.first %>
-  <img class="showcase" src="<%= image_show_case.image_show.image.url %>">
+  <img style="height: 350px" src="<%= image_show_case.image_show.image.url %>">
 
   <article>
-    <button onclick="location.href = '<%= image_show_case.url_association %>'" class="button button2 btn" style="color:black; ">FULL
-      COLLECTION
+    <button onclick="location.href = '<%= image_show_case.url_association %>'" class="btn styling_btn">
+      FULL COLLECTION
     </button>
-
   </article>
 
 
