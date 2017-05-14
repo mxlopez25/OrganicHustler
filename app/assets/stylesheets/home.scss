@@ -321,17 +321,33 @@ div.card {
 }
 
 .link-style {
+  float: right;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  height: 44px;
+}
 
-  height: 47px;
-  line-height: 47px;
+.link-style a {
+  line-height: 44px;
   text-decoration: none;
   cursor: pointer;
   color: #b692a2;
+  text-align: center;
 }
 
-.link-style:hover {;
+.link-style a:hover {
   text-decoration: none;
   color: #b692a2;
+}
+
+.link-style a:focus {
+  text-decoration: none;
+  color: #b692a2;
+}
+
+#cart_ic {
+  margin: 8px;
+  height: 44px;
 }
 
 .btn-sp:hover, .btn-sp:focus {

@@ -177,24 +177,32 @@
 
 </div>
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top" style="z-index: 2">
   <!-- The Modal -->
   <div class="desktopnot container">
 
     <div class="navbar-header">
 
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+      <button type="button" style="margin-left: 8px" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
-
-
-      <a>LOG IN</a>
-      <a id="myBtn_1"><i><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
+      <div style="float: right; overflow: hidden">
+        <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <img id="cart_ic" src="<%= image_url 'ico_3.png' %>">
+        <% if user_signed_in? %>
+            <h5 class="link-style">
+              <a href="/account">ACCOUNT</a>
+            </h5>
+        <% else %>
+            <h5 class="link-style">
+              <a href="/account">LOG IN</a>
+            </h5>
+        <% end %>
+      </div>
 
     </div>
 
@@ -294,8 +302,8 @@
       var btn2 = document.getElementById("myBtn_2");
       var btn_j = $('#myBtn_2');
 
-      var btn1 = document.getElementById("myBtn_1");
-      var btn_i = $('#myBtn_1');
+      var btn1 = document.getElementById("cart_ic");
+      var btn_i = $('#cart_ic');
 
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
