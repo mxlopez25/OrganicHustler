@@ -40,9 +40,14 @@ module HomeHelper
   end
 
   def get_image(id)
+    begin
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/files/#{id}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     result = JSON.parse(response.body)['result']
     "https://#{result['segments']['domain']}fit/w600/h600/#{result['segments']['suffix']}"
+    rescue
+      p 'No image !################!'
+    end
+
   end
 
   def get_regions(id)
