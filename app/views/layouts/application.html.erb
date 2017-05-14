@@ -194,7 +194,7 @@
 
       <div style="float: right; overflow: hidden">
         <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
-        <img id="cart_ic_1" src="<%= image_url 'ico_3.png' %>">
+        <img id="cart_ic_1" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
         <% if user_signed_in? %>
             <h5 class="link-style">
               <a href="/account">ACCOUNT</a>
@@ -241,39 +241,6 @@
   <div class="mobilenot">
     <div style="padding: 10px; width: 100%" class="navbar-header">
 
-      <div class="menu-center">
-        <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
-
-        <ul class="nav navbar-nav navbar-center">
-          <li>
-            <a style="padding-bottom: 5px" class="
-              <% unless params['looks'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
-          </li>
-          <li>
-            <a style="padding-bottom: 5px" class="
-              <% unless params['hats'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
-          </li>
-          <li>
-            <a style="padding-bottom: 5px" class="
-              <% unless params['men'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
-          </li>
-          <li>
-            <a style="padding-bottom: 5px" class="
-              <% unless params['women'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
-          </li>
-          <li>
-            <a style="padding-bottom: 5px" class="
-              <% unless params['brand'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
-          </li>
-
-        </ul>
-      </div>
-
       <div style="float: right; overflow: hidden; width: 25%">
         <input id="search-input" style="background: #f0f5e6;margin-top: 8px; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search..">
         <% if user_signed_in? %>
@@ -285,7 +252,7 @@
               <a href="/account">LOG IN</a>
             </h5>
         <% end %>
-        <img style="float: right" id="cart_ic" src="<%= image_url 'ico_3.png' %>">
+        <img style="float: right" id="cart_ic_2" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
 
         <script>
             $(document).keyup(function (e) {
@@ -309,14 +276,43 @@
       <% end %>
 
     </div>
+    <div class="navbar-collapse">
+      <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+      <ul>
+        <li>
+          <a style="padding-bottom: 5px" class="
+              <% unless params['looks'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
+        </li>
+        <li>
+          <a style="padding-bottom: 5px" class="
+              <% unless params['hats'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
+        </li>
+        <li>
+          <a style="padding-bottom: 5px" class="
+              <% unless params['men'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
+        </li>
+        <li>
+          <a style="padding-bottom: 5px" class="
+              <% unless params['women'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
+        </li>
+        <li>
+          <a style="padding-bottom: 5px" class="
+              <% unless params['brand'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
+        </li>
 
+      </ul>
+    </div>
   </div>
 
   <script>
       // Get the button that opens the modal
-      var btn2 = document.getElementById("myBtn_2");
-      var btn_j = $('#myBtn_2');
-
+      var btn2 = document.getElementById("cart_ic_2");
+      var btn_j = $('#cart_ic_2');
       var btn_i = $('#cart_ic_1');
 
       // Get the <span> element that closes the modal
@@ -347,6 +343,7 @@
 
       btn_i.on('click', function () {
 
+          console.log('hola');
           $("body").addClass("modal-open");
           modal.style.display = "block";
           modal_c.style.right = 0;

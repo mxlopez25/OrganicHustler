@@ -121,6 +121,7 @@ div.wrap {
 
 /* Modal Content/Box */
 .modal-content {
+  min-width: 290px;
   position: fixed;
   background-color: #fefefe;
   top: 80px;
@@ -350,7 +351,7 @@ div.card {
   color: #b692a2;
 }
 
-#cart_ic {
+.cart_ic {
   margin-top: 8px;
   height: 36px;
 }
