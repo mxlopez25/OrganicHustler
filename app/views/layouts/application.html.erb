@@ -274,38 +274,39 @@
             <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
           </h5>
       <% end %>
-    </div>
 
-    <div class="navbar-collapse">
-      <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
-      <ul id="ul_top_hypers">
-        <li>
-          <a style="padding-bottom: 5px" class="
+      <div class="menu-center">
+        <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <ul id="ul_top_hypers">
+          <li>
+            <a style="padding-bottom: 5px" class="
               <% unless params['looks'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
-        </li>
-        <li>
-          <a style="padding-bottom: 5px" class="
+          </li>
+          <li>
+            <a style="padding-bottom: 5px" class="
               <% unless params['hats'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
-        </li>
-        <li>
-          <a style="padding-bottom: 5px" class="
+          </li>
+          <li>
+            <a style="padding-bottom: 5px" class="
               <% unless params['men'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
-        </li>
-        <li>
-          <a style="padding-bottom: 5px" class="
+          </li>
+          <li>
+            <a style="padding-bottom: 5px" class="
               <% unless params['women'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
-        </li>
-        <li>
-          <a style="padding-bottom: 5px" class="
+          </li>
+          <li>
+            <a style="padding-bottom: 5px" class="
               <% unless params['brand'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
-        </li>
+          </li>
 
-      </ul>
+        </ul>
+      </div>
+
     </div>
   </div>
 
