@@ -8,6 +8,19 @@ video {
   height: auto;
 }
 
+button.styling_btn {
+  margin-top: 30px;
+  color: #c098ac;
+  background: white;
+  border-radius: 0;
+  width: 200px;
+  border-color: #c098ac;
+}
+
+button.styling_btn:hover {
+  color: #c098ac;
+}
+
 .header {
   position: relative;
   width: 100%;
@@ -175,19 +188,6 @@ hr {
 
 }
 
-
-.button2 {
-  background-color: white;
-  color: white;
-  border: 3px solid pink;
-  margin-top: 30px;
-
-}
-
-.button2:hover {
-  background-color: #dedede;
-  color: white;
-}
 
 @media (max-width: 600px) {
   .mobile-only {
