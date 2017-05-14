@@ -77,8 +77,12 @@ module AdminHelper
   end
 
   def self.delete_image(image_id)
+    begin
     response = RestClient.delete("https://api.molt.in/v1/files/#{image_id}", {:Authorization => "Bearer #{self.generate_token}"})
     response.body
+    rescue
+      p 'no image !##############!'
+    end
   end
 
   def get_gallery(id)
