@@ -208,7 +208,6 @@ img.showcase {
     clear: both;
     float: left;
     margin: 10px auto 5px 20px;
-    width: 28%;
     display: none;
   }
 }
@@ -230,6 +229,18 @@ img.showcase {
 
 .imgxx {
   height: 50px;
+}
+
+.menu-center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  width: 10%;
+  position: absolute;
+  height: 100px;
 }
 
 .brand {
@@ -277,9 +288,9 @@ input[type=text].foot-form:focus {
   color: white;
 }
 
-#search-index input[type=text] {
+.navbar-header input[type=text] {
   background: white;
-  width: 13%;
+  width: 40%;
   padding: 12px 20px;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
@@ -289,8 +300,8 @@ input[type=text].foot-form:focus {
   font-size: 16px;
 }
 
-#search-index input[type=text]:focus {
-  width: 20%;
+.navbar-header input[type=text]:focus {
+  width: 70%;
 }
 
 .iconx {

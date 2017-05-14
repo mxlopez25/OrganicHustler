@@ -181,7 +181,7 @@
 
   <% available = true %>
 
-  <div class="desktopnot container">
+  <div class="desktopnot">
 
     <div class="navbar-header">
 
@@ -209,71 +209,42 @@
     </div>
 
     <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a class="selectable ">STORY</a>
-          </li>
-          <li>
-            <a class="selectable
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a class="selectable ">STORY</a>
+        </li>
+        <li>
+          <a class="selectable
               <% unless params['men'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
-          </li>
-          <li>
-            <a class="selectable
+        </li>
+        <li>
+          <a class="selectable
               <% unless params['women'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
-          </li>
-          <li>
-            <a class="selectable
+        </li>
+        <li>
+          <a class="selectable
               <% unless params['hats'].blank? and available %>selected
               <% end %>" onclick="location.href = '/catalog'">FULL COLLECTION</a>
-          </li>
-          <li>
-            <a class="selectable ">CUSTOMIZE</a>
-          </li>
-          <li class="selectable ">
-            <a>CONTACT US</a>
-          </li>
-          <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
-        </ul>
+        </li>
+        <li>
+          <a class="selectable ">CUSTOMIZE</a>
+        </li>
+        <li class="selectable ">
+          <a>CONTACT US</a>
+        </li>
+        <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
+      </ul>
     </div>
   </div>
 
-  <div class="mobilenot container">
-    <div id="search-index" class="container-fluid">
-      <a href="<%= image_icon.url_association %>"> <img src="<%= image_icon.image_show.image.url %>" class="imgxx logo"></a>
-      <% if @parameters.nil? || params['action'] != 'catalog' %>
-          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get in Touch
-          </button>
-          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</button>
-          <button style="float: left" type="button" class="btn btn-link">Twitter</button>
-      <% else %>
-          <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
-            <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
-          </h5>
-      <% end %>
+  <div class="mobilenot">
+    <div style="padding: 10px; width: 100%" class="navbar-header">
 
-      <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search..">
+      <div class="menu-center">
+        <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
 
-      <script>
-          $(document).keyup(function (e) {
-              var search_f = $("#search-input");
-              if (search_f.is(":focus") && (e.keyCode === 13)) {
-                  location.href = '/catalog?search=' + search_f.val();
-              }
-          });
-      </script>
-
-      <div style="float: right; margin-right: 4px;">
-        <% if user_signed_in? %>
-            <a href="/account" class="link-style">ACCOUNT</a>
-        <% else %>
-            <a href="/account" class="link-style">LOG IN</a>
-        <% end %>
-        <a><i id="myBtn_2"><img class="icon" src="<%= image_url 'ico_3.png' %>"></i></a>
-      </div>
-
-      <div class="collapse navbar-collapse" style="width: 100%; margin-top: 40px" id="navbar">
         <ul class="nav navbar-nav navbar-center">
           <li>
             <a style="padding-bottom: 5px" class="
@@ -303,7 +274,43 @@
 
         </ul>
       </div>
+
+      <div style="float: right; overflow: hidden; width: 25%">
+        <input id="search-input" style="background: #f0f5e6;margin-top: 8px; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search..">
+        <% if user_signed_in? %>
+            <h5 class="link-style">
+              <a href="/account">ACCOUNT</a>
+            </h5>
+        <% else %>
+            <h5 class="link-style">
+              <a href="/account">LOG IN</a>
+            </h5>
+        <% end %>
+        <img style="float: right" id="cart_ic" src="<%= image_url 'ico_3.png' %>">
+
+        <script>
+            $(document).keyup(function (e) {
+                var search_f = $("#search-input");
+                if (search_f.is(":focus") && (e.keyCode === 13)) {
+                    location.href = '/catalog?search=' + search_f.val();
+                }
+            });
+        </script>
+
+      </div>
+      <% if @parameters.nil? || params['action'] != 'catalog' %>
+          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get in Touch
+          </button>
+          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</button>
+          <button style="float: left" type="button" class="btn btn-link">Twitter</button>
+      <% else %>
+          <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
+            <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
+          </h5>
+      <% end %>
+
     </div>
+
   </div>
 
   <script>
@@ -311,7 +318,6 @@
       var btn2 = document.getElementById("myBtn_2");
       var btn_j = $('#myBtn_2');
 
-      var btn1 = document.getElementById("cart_ic");
       var btn_i = $('#cart_ic');
 
       // Get the <span> element that closes the modal
@@ -341,6 +347,8 @@
 
 
       btn_i.on('click', function () {
+
+          $("body").addClass("modal-open");
           modal.style.display = "block";
           modal_c.style.right = 0;
           modal_c.style.left = 0;
@@ -354,32 +362,40 @@
               $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
           });
       });
+      /*
 
-
-      $(window).on('resize', function () {
-          triangle.style.right = (100 - ((btn2.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
-          triangle.style.top = (btn2.getBoundingClientRect().top + btn_j.height()).toString() + "px";
-          modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
-          modal_c.style.top = (btn2.getBoundingClientRect().bottom + 20).toString() + "px";
-      });
+       $(window).on('resize', function () {
+       triangle.style.right = (100 - ((btn2.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
+       triangle.style.top = (btn2.getBoundingClientRect().top + btn_j.height()).toString() + "px";
+       modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
+       modal_c.style.top = (btn2.getBoundingClientRect().bottom + 20).toString() + "px";
+       });*/
 
       // When the user clicks on <span> (x), close the modal
       span.onclick = function () {
           modal.style.display = "none";
+          $("body").removeClass("modal-open")
       };
 
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
           if (event.target === modal) {
               modal.style.display = "none";
+              $("body").removeClass("modal-open")
           }
       }
   </script>
 
 </nav>
 
+<body>
 <%= yield %>
 
+<script>
+
+</script>
+
+</body>
 
 <div class="container-fluid blc mobilenot">
   <div class="row" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
