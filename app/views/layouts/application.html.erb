@@ -274,11 +274,11 @@
             <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
           </h5>
       <% end %>
-
     </div>
+
     <div class="navbar-collapse">
       <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
-      <ul>
+      <ul id="ul_top_hypers">
         <li>
           <a style="padding-bottom: 5px" class="
               <% unless params['looks'].blank? and available %>selected
