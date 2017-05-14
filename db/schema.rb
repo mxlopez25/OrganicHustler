@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170512062246) do
+ActiveRecord::Schema.define(version: 20170514055601) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 20170512062246) do
     t.string "product_id"
     t.string "url_association"
     t.integer "group_showcase_id"
+    t.string "caption"
   end
 
   create_table "subscribers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
