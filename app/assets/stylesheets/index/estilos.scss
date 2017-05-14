@@ -42,13 +42,14 @@ button.styling_btn:focus {
 
 .pri-limit {
   width: 45%;
+  max-width: 220px;
   height: 80px;
 }
 
 .center-div-container {
   position: absolute;
   bottom: 15px;
-  z-index: 2;
+  z-index: 1;
   height: 90px;
   overflow: hidden;
   background: transparent;
