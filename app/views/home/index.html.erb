@@ -187,12 +187,11 @@
 
     </div>
   </div>
+</div>
 
-  <div style="margin-top: 15px; margin-bottom: 15px;">
 
-    <video autoplay="autoplay" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
-
-  </div>
+<div class="mobilenot" style="margin-top: 80px; position: relative">
+  <video id="video_desk" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
 
 </div>
 
