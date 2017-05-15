@@ -1322,6 +1322,40 @@
             });
         });
 
+        container.on('click', function () {
+
+            console.log('hola');
+
+            $.ajax({
+                type: "get",
+                url: "/catalog/item/" + pr,
+                data: {
+                    variation_ma: false,
+                    size: selected_size,
+                    source_p: data['source_p'],
+                    m_id: pr,
+                    logo_id: id,
+                    dim_x: x,
+                    dim_y: y,
+                    relation_x: s_w,
+                    relation_y: s_h,
+                    width: width,
+                    height: height,
+                    has_logo: true,
+                    has_emblem: false,
+                    emblem_id: emblem_id,
+                    user_signed: user_online,
+                    position_id: 0
+                    //Missing attributes check migrations
+
+                },
+                success: function (data) {
+                    load_p1(data, data['source_p'])
+                }
+            });
+        });
+
+
         var baseImg = new Konva.Image({
             width: container.width(),
             height: container.height(),
