@@ -79,7 +79,7 @@
     </div>
 
     <% objects = get_products_f_catalog(params) %>
-    <div class="filter-element"><h5 style="font-weight: bold"><%= objects.length %> products found</h5></div>
+    <div class="filter-element mobilenot"><h5 style="font-weight: bold"><%= objects.length %> products found</h5></div>
   </div>
 
   <% styles = [] %>
@@ -351,6 +351,11 @@
             stage_ov.width(1000 * scale);
             stage_ov.height(1000 * scale);
             stage_ov.scale({x: scale, y: scale});
+            stage_ov.draw();
+        } else {
+            stage_ov.width(440);
+            stage_ov.height(440);
+            stage_ov.scale({x: (440 / 1000), y: (440 / 1000)});
             stage_ov.draw();
         }
     }
