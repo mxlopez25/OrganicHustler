@@ -341,6 +341,7 @@
 
           triangle.style.left = null;
           modal_c.style.left = null;
+          $("body").addClass("modal-open");
 
           triangle.style.right = (100 - ((btn2.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
           triangle.style.top = (btn2.getBoundingClientRect().top + btn_j.height()).toString() + "px";
