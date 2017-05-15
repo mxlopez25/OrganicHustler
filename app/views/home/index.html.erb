@@ -197,14 +197,93 @@
   </script>
 </div>
 
-<div style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center;">
+<div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
-  <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 30vw; min-height: 350px">
+  <img src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 50vw; min-height: 450px">
   <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
     <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
   </article>
+
+  <div class="side-list">
+
+    <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+
+    <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_2').first.showcases.first.product_id %>
+    <% item = get_product(id) %>
+
+
+    <% item['modifiers'].first[1]['variations'].each do |var| %>
+        <% if var[1]['title'].eql?('null') %>
+
+        <% else %>
+            <% object = getJson(var[1]['title']) %>
+            <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
+
+            </div>
+
+            <script id="create-shape">
+                createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
+                function createShape(id, width, height, x, y, s_w, s_h) {
+                    var container = $('#' + id);
+                    container.height(container.width());
+
+                    var stage = new Konva.Stage({
+                        container: id,
+                        width: container.width(),
+                        height: container.height()
+                    });
+                    var layer = new Konva.Layer();
+                    stage.add(layer);
+
+                    var baseImg = new Konva.Image({
+                        width: container.width(),
+                        height: container.height(),
+                        draggable: false
+                    });
+
+                    var logoImg = new Konva.Image({
+                        width: container.width() * width / s_w,
+                        height: container.height() * height / s_h
+                    });
+
+                    var logoGroup = new Konva.Group({
+                        x: container.width() * x / s_w,
+                        y: container.width() * y / s_h
+                    });
+
+                    layer.add(baseImg);
+                    layer.add(logoGroup);
+                    logoGroup.add(logoImg);
+
+                    var imageObj1 = new Image();
+                    imageObj1.onload = function () {
+                        baseImg.image(imageObj1);
+                        layer.draw();
+                    };
+                    imageObj1.src = '<%= item['images'].first['url']['https'] %>';
+
+                    var imageObj2 = new Image();
+                    imageObj2.onload = function () {
+                        logoImg.image(imageObj2);
+                        layer.draw();
+                        imageObj2.width = container.width() * width / s_w;
+                        console.log(imageObj2.width, container.width(), width, s_w);
+                        imageObj2.height = container.height() * height / s_h;
+                        console.log(imageObj2.height);
+                    };
+                    imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
+                    layer.draw();
+                }
+            </script>
+        <% end %>
+    <% end %>
+    <button onclick="location.href = '/product/<%= id %>/1'" class="btn-sm btn-link center-block" style="color:black;  ">
+      <h4> MORE </h4></button>
+
+
+  </div>
 </div>
 
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
