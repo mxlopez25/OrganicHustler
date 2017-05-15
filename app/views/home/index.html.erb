@@ -291,7 +291,7 @@
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
   <% image_show_case = GroupShowcase.where(screen: 3, name_identity: 'relational_image').first.showcases.first %>
-  <img style="height: 350px" src="<%= image_show_case.image_show.image.url %>">
+  <img style="height: 50vw; min-height: 350px" src="<%= image_show_case.image_show.image.url %>">
 
 
   <article>
@@ -339,8 +339,7 @@
 
     </div>
 
-    <div class="col-xs-2 col-lg-2 vertical-line col-cen
-  				col-centered " style="height: 250px; width:1px; ">
+    <div style="width: 1px; margin-left: 2.5%; margin-right: 2.5%; float: left; height: 150px; background: #b692a2">
     </div>
 
 
@@ -370,7 +369,7 @@
 
   <div class=" text-center center col-cen col-centered " style="margin-top: 30px; margin-bottom: 30px;">
 
-    <button class=" button buttonig btn text-center" style="color:black;">FOLLOW US ON INSTAGRAM</button>
+    <button class="btn styling_btn">FOLLOW US ON INSTAGRAM</button>
 
 
   </div>
