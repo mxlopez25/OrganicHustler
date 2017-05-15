@@ -40,6 +40,15 @@ button.styling_btn:focus {
   border-color: transparent transparent #ffffff transparent;
 }
 
+.side-list {
+  text-align: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: solid thin #b692a2;
+  padding: 17px;
+}
+
 .pri-limit {
   width: 45%;
   max-width: 220px;

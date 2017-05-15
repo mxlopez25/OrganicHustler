@@ -1,4 +1,4 @@
-<div class="header mobilenot" style="background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat center center; background-size: cover; margin-top: -30px">
+<div class="header mobilenot" style="background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat center center; background-size: cover;">
   <h1 class="text-center ht" style="margin-top: 150px; font-size: 100px; font-weight: 100">ECO FRIENDLY</h1>
 
   <div class="center-div-container" style="overflow: hidden; position: absolute; bottom: 30px">
@@ -96,9 +96,9 @@
 </div>
 
 <div class="container mobilenot">
-  <div class="row">
+  <div style="position: relative">
 
-    <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-10 col-md-10 col-lg-10">
+    <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
 
       <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
       <% item = get_product(id) %>
@@ -111,7 +111,7 @@
     </div>
 
 
-    <div style=" margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-2 col-md-2 col-lg-2 bcolor">
+    <div class="side-list">
 
       <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
