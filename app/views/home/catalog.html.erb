@@ -90,7 +90,7 @@
 
   <div id="items" style="min-height: 370px">
     <% objects.each do |pr| %>
-        <div class="catalog-item" id="item<%= pr['id'] %>">
+        <div onclick="open_quick('<%= "#{pr['id']}" %>')" class="catalog-item" id="item<%= pr['id'] %>">
           <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
           <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
           <h5 style="color: #b692a2"> <%= pr['price']['value'] %></h5>
