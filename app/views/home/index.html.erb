@@ -102,7 +102,7 @@
 
       <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
       <% item = get_product(id) %>
-      <img src="<%= item['images'][0]['url']['https'] %>" style="height: 300px;">
+      <img src="<%= item['images'][0]['url']['https'] %>" style="height: 370px;">
       <h4 class="text-center"><%= item['title'] %></h4>
       <h5 class="text-center">Eco-Friendly+Customizable</h5>
       <article>
@@ -121,7 +121,7 @@
 
           <% else %>
               <% object = getJson(var[1]['title']) %>
-              <div id="<%= object['image_id'] %>" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px; width: 100%;">
+              <div id="<%= object['image_id'] %>" class="img4" style="margin: 5px auto;width: 100px;">
 
               </div>
 
