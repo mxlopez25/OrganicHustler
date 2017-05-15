@@ -370,7 +370,7 @@ div.card {
 #filters {
   text-align: center;
   overflow: visible;
-  height: 30px;
+  height: 50px;
 }
 
 .btn-enlarge {
@@ -385,10 +385,7 @@ div.card {
 .filter-element {
   float: left;
   width: 96%;
-  margin-right: 2%;
-  margin-left: 2%;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px 2%;
 }
 
 #items-container {
