@@ -334,8 +334,21 @@
         }
     };
 
-    var size_x = 0;
-    var size_y = 0;
+    var stage_ov = null;
+
+    function fitStageIntoParentContainer() {
+        var container = document.querySelector('#wrapper-img');
+        // now we need to fit stage into parent
+        var containerWidth = container.offsetWidth;
+        // to do this we need to scale the stage
+        var scale = containerWidth / 1000;
+        if (1000 * scale < 440) {
+            stage_ov.width(1000 * scale);
+            stage_ov.height(1000 * scale);
+            stage_ov.scale({x: scale, y: scale});
+            stage_ov.draw();
+        }
+    }
 
     function load_p1(data, pr) {
         //Array of customs for that product initialize
@@ -377,8 +390,10 @@
         }
 
         document.getElementById('general_p_content').innerHTML =
+            '<div id="wrapper-img">' +
             '<div class="content-part" id="image-container_quick" style="padding: 0">' +
             '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
+            '</div>' +
             '</div>' +
             '<div class="content-part" style="padding: 0">' +
             '   <div class="wrap">' +
@@ -412,28 +427,31 @@
         if (variation_img) {
             var container = $('#image-container_quick');
 
-            var stage = new Konva.Stage({
+            var stageWidth = 1000;
+            var stageHeight = 1000;
+
+            stage_ov = new Konva.Stage({
                 container: 'image-container_quick',
-                width: size_x,
-                height: size_y
+                width: stageWidth,
+                height: stageHeight
             });
             var layer = new Konva.Layer();
-            stage.add(layer);
+            stage_ov.add(layer);
 
             var baseImg = new Konva.Image({
-                width: size_x,
-                height: size_y,
+                width: stage_ov.width(),
+                height: stage_ov.height(),
                 draggable: false
             });
 
             var logoImg = new Konva.Image({
-                width: size_x * width / s_w,
-                height: size_y * height / s_h
+                width: stage_ov.width() * width / s_w,
+                height: stage_ov.height() * height / s_h
             });
 
             var logoGroup = new Konva.Group({
-                x: size_x * x / s_w,
-                y: size_y * y / s_h
+                x: stage_ov.width() * x / s_w,
+                y: stage_ov.height() * y / s_h
             });
 
             layer.add(baseImg);
@@ -451,8 +469,8 @@
             imageObj2.onload = function () {
                 logoImg.image(imageObj2);
                 layer.draw();
-                imageObj2.width = size_x * width / s_w;
-                imageObj2.height = size_y * height / s_h;
+                imageObj2.width = stage_ov.width() * width / s_w;
+                imageObj2.height = stage_ov.height() * height / s_h;
             };
 
             $.ajax({
@@ -467,6 +485,9 @@
                 error: function (data) {
                 }
             });
+
+            fitStageIntoParentContainer();
+            window.addEventListener('resize', fitStageIntoParentContainer);
         }
 
         var state = true;
@@ -487,6 +508,7 @@
 
         $(document).ready(function () {
             innerHTML22.heightTT = $("#icon_loader").height();
+          /*
             var img_load = $('#image_loader');
 
             if (size_x === 0) {
@@ -494,7 +516,7 @@
                 size_y = img_load.height();
             }
 
-            console.log(size_x, size_y);
+           console.log(size_x, size_y);*/
         });
 
         var iconShow = $("#icon-show");

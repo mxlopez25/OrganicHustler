@@ -24,10 +24,18 @@
 }
 
 #image-container_quick {
-  width: 50%;
+  width: 100%;
   text-align: center;
   padding: 10px;
   margin: 0 auto;
+}
+
+#wrapper-img {
+  width: 50%;
+  max-height: 440px;
+  float: left;
+  margin-top: -10px;
+  margin-left: -10px
 }
 
 #image-container img, div canvas, canvas {
