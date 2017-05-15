@@ -621,12 +621,12 @@
                 source_p: pr,
                 m_id: pr,
                 logo_id: image_id_u,
-                dim_x: x_u,
-                dim_y: y_u,
+                dim_x: selected.x(),
+                dim_y: selected.y(),
                 relation_x: s_w_u,
                 relation_y: s_h_u,
-                width: width_u,
-                height: height_u,
+                width: selected.get('.image')[0].width(),
+                height: selected.get('.image')[0].height(),
                 has_logo: true,
                 has_emblem: false,
                 emblem_id: '',
@@ -652,11 +652,19 @@
         if (1000 * scale < 440) {
             stage.width(1000 * scale);
             stage.height(1000 * scale);
+
+            s_w_u = 1000 * scale;
+            s_h_u = 1000 * scale;
+
             stage.scale({x: scale, y: scale});
             stage.draw();
         } else {
             stage.width(440);
             stage.height(440);
+
+            s_w_u = 440;
+            s_h_u = 440;
+
             stage.scale({x: (440 / 1000), y: (440 / 1000)});
             stage.draw();
         }
@@ -703,8 +711,8 @@
             + '</div>'
             + '</div>'
             + '<div style="width: 100%; text-align: center">'
-            + '<button id="share" style="width: 20%" class="direction btn border-bg-sty btn-default">'
-            + '<span>SHARE</span>'
+            + '<button id="share" class="styling_btn btn">'
+            + 'SHARE'
             + '</button>'
             + '</div>'
             + '<hr class="pro">'
@@ -814,9 +822,6 @@
             height: stageHeight,
             preventDefault: false
         });
-
-        //s_w_u = width;
-        //s_h_u = height;
 
         layer = new Konva.Layer();
         stage.add(layer);
