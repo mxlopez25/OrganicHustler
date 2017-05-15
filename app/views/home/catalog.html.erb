@@ -531,7 +531,7 @@
             var object_json = JSON.parse(object_json_main['title']);
             console.log(object_json);
 
-            createShape(object_json['image_id'] + object_json_main['id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data, pr);
+            createShape(object_json['image_id'], object_json_main['id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data, pr);
         }
 
         //Photo slider
@@ -934,7 +934,6 @@
 
     }
 
-
     function open_quick(pr) {
         $.ajax({
             type: "get",
@@ -1188,7 +1187,6 @@
         return anchor;
     }
 
-
     function get_variation_size(variations) {
         if (variations.length > 0) {
 
@@ -1249,12 +1247,12 @@
         }
     }
 
-    function createShape(id, width, height, x, y, s_w, s_h, data, pr) {
-        var container = $('#' + id);
+    function createShape(id, variation, width, height, x, y, s_w, s_h, data, pr) {
+        var container = $('#' + id + variation);
         container.height(container.width());
 
         var stage = new Konva.Stage({
-            container: id,
+            container: id + variation,
             width: container.width(),
             height: container.height()
         });
