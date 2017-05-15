@@ -30,14 +30,6 @@
   margin: 0 auto;
 }
 
-#wrapper-img {
-  width: 50%;
-  max-height: 440px;
-  float: left;
-  margin-top: -10px;
-  margin-left: -10px
-}
-
 #image-container img, div canvas, canvas {
   width: 100%;
 }
@@ -140,20 +132,19 @@ div.wrap {
   width: 85%; /* Could be more or less, depending on screen size */
 }
 
-/* Modal Content/Box */
 .modal-content_quick {
-  background-color: #fefefe;
-  border: 1px solid #FFFFFF;
-  width: 75%; /* Could be more or less, depending on screen size */
-  min-height: 400px;
-  height: 440px;
-  margin-top: 120px;
-  margin-bottom: 0;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .content-part {
   float: left;
-  width: 50%;
+  width: 95%;
   overflow: hidden;
 }
 
@@ -447,6 +438,15 @@ div.card {
   }
 }
 
+#wrapper-img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  max-height: 440px;
+  margin-top: -10px;
+  float: none;
+}
+
 @media screen and (min-width: 480px) {
 
   .single-element-center {
@@ -475,11 +475,26 @@ div.card {
     min-height: 254px;
     background: #f6f8f1;
   }
+
 }
 
 @media screen and (min-width: 768px) {
   .modal-content {
     width: 335px;
+  }
+
+  .content-part {
+    float: left;
+    width: 50%;
+    overflow: hidden;
+  }
+
+  #wrapper-img {
+    width: 50%;
+    max-height: 440px;
+    float: left;
+    margin-top: -10px;
+    margin-left: -10px
   }
 
   .img-con-item {
@@ -492,6 +507,20 @@ div.card {
     height: 30vw;
     max-height: 340px;
     margin: 25px 1% 0;
+  }
+
+  .modal-content_quick {
+    background-color: #fefefe;
+    border: 1px solid #FFFFFF;
+    width: 75%; /* Could be more or less, depending on screen size */
+    min-height: 400px;
+    height: 440px;
+    margin-top: 120px;
+    margin-bottom: 0;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
   }
 }
 
