@@ -114,7 +114,7 @@ div.wrap {
 
 /* The Modal (background) */
 .modal_quick {
-  z-index: 1; /* Sit on top */
+  z-index: 10; /* Sit on top */
   background-color: rgb(255, 255, 255); /* Fallback color */
   background-color: rgba(255, 255, 255, 0.4); /* Black w/ opacity */
 }

@@ -1,6 +1,7 @@
 <body>
 
 <script>
+
     //Size variables
     var selected_size = null;
     var available_sizes = [];
@@ -526,10 +527,11 @@
 
         for (var i = 0; i < render_custom.length; i++) {
 
-            var object_json = render_custom[i];
+            var object_json_main = render_custom[i];
+            var object_json = JSON.parse(object_json_main['title']);
             console.log(object_json);
 
-            createShape(object_json['image_id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data, pr);
+            createShape(object_json['image_id'] + object_json_main['id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data, pr);
         }
 
         //Photo slider
@@ -966,6 +968,7 @@
                 return false
             }
         });
+        modal_quick.style.display = "block";
     }
 
     function image_handler(data) {
@@ -1223,9 +1226,9 @@
                 //missing check of attr
                 if (variations[0]['variations'][attr]['title'] !== 'null') {
                     var changes = JSON.parse(variations[0]['variations'][attr]['title']);
-                    render_custom.push(changes);
+                    render_custom.push(variations[0]['variations'][attr]);
                     customs = customs + '<li>' +
-                        '<div id="' + changes['image_id'] + '" style="width: 100px; height: 100px">' +
+                        '<div id="' + changes['image_id'] + variations[0]['variations'][attr]['id'] + '" style="width: 100px; height: 100px">' +
                         '</div>' +
                         '</li>'
                 }
@@ -1341,5 +1344,17 @@
 
 
     }
+
+
+    var item_s = '<%= params['id'] %>';
+    var item_v = '<%= params['view'] %>';
+    if (item_s !== '') {
+        if (item_v === '2') {
+            load_p2_ker(item_s);
+        } else {
+            open_quick(item_s);
+        }
+    }
+
 </script>
 </body>

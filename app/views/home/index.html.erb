@@ -23,7 +23,8 @@
 
     <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn">SHOP MEN</button>
 
-    <button class="button button-head btn">SHOP WOMEN</button>
+    <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn">SHOP WOMEN
+    </button>
 
     </div>
 
@@ -96,7 +97,7 @@
       <h4 class="text-center"><%= item['title'] %></h4>
       <h5 class="text-center">Eco-Friendly+Customizable</h5>
       <article>
-        <button onclick="location.href = '/product/<%= id %>/2'" class="button styling_btn btn">CUSTOMIZE</button>
+        <button onclick="location.href = '/catalog?id=<%= id %>'" class="button styling_btn btn">CUSTOMIZE</button>
       </article>
     </div>
 
