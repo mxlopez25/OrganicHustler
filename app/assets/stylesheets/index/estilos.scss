@@ -55,9 +55,22 @@ button.styling_btn:focus {
   height: 80px;
 }
 
+.absolute-center {
+  width: 60%;
+  height: 30%;
+  text-align: center;
+  color: white;
+  overflow: visible;
+  margin: auto;
+  position: absolute;
+  top: 8vw;
+  left: 0;
+  right: 0;
+}
+
 .absolute-center-arrow {
-  width: 10%;
-  height: 5vw;
+  width: 6vw;
+  height: 6vw;
   font-size: 5vw;
   text-align: center;
   color: white;

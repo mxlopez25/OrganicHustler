@@ -85,16 +85,6 @@
 
 </script>
 
-<div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
-
-  <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 350px;">
-  <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
-
-  <article>
-    <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
-  </article>
-</div>
-
 <div class="container mobilenot">
   <div style="position: relative">
 
@@ -191,106 +181,31 @@
 
 
 <div class="mobilenot" style="margin-top: 80px; position: relative">
-  <video id="video_desk" loop="loop" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>
-  <i class="absolute-center-arrow fa fa-play" aria-hidden="true"></i>
+  <video id="video_desk" loop="loop" src="<%= ['https://s3.amazonaws.com/store-logo-cloud/video_shows/videos/000/000/007/mp4video/Cars.mp4?1493154154', "GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video)"].first %>"></video>
+  <p style="position: absolute; top: 40px" class="absolute-center">
+    <span style="font-size: 4vw">Our Story</span><br><span style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".</span>
+  </p>
+  <i id="play_btn" onclick="play_video_2()" class="absolute-center-arrow fa fa-play-circle-o" aria-hidden="true"></i>
+  <script>
+
+      function play_video_2() {
+          document.getElementById('play_btn').classList.add('hidden');
+          var video = document.getElementById('video_desk');
+          video.play();
+      }
+
+  </script>
 </div>
 
-<div class="container mobilenot">
-  <div class="row">
+<div style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center;">
 
-    <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-10 col-md-10 col-lg-10">
+  <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 350px;">
+  <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
-      <% id_p_2 = GroupShowcase.where(screen: 0, name_identity: 'secondary_product').first.showcases.first.product_id %>
-      <% item_p_2 = get_product(id_p_2) %>
-
-      <img src="<%= item_p_2['images'][0]['url']['https'] %>" style="height: 300px;">
-      <h4 class="text-center"><%= item_p_2['title'] %></h4>
-      <h5 class="text-center"> Cotton+Quality</h5>
-      <article>
-        <button onclick="location.href = '/product/<%= id_p_2 %>/2'" class="button button2 btn" style="color:black;">CUSTOMIZE</button>
-
-      </article>
-    </div>
-
-
-    <div style=" margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;" class="col-sm-2 col-md-2 col-lg-2 bcolor">
-
-      <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
-
-      <% item_p_2['modifiers'].first[1]['variations'].each do |var| %>
-          <% if var[1]['title'].eql?('null') %>
-
-          <% else %>
-              <% object = getJson(var[1]['title']) %>
-              <div id="p_2<%= object['image_id'] %>" class="img4" style="margin-right: 7px; margin-top: 5px; margin-bottom: 5px; width: 100%;">
-
-              </div>
-
-              <script id="create-shape">
-                  createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
-                  function createShape(id, width, height, x, y, s_w, s_h) {
-                      var container = $('#p_2' + id);
-                      container.height(container.width());
-
-                      var stage = new Konva.Stage({
-                          container: 'p_2' + id,
-                          width: container.width(),
-                          height: container.height()
-                      });
-                      var layer = new Konva.Layer();
-                      stage.add(layer);
-
-                      var baseImg = new Konva.Image({
-                          width: container.width(),
-                          height: container.height(),
-                          draggable: false
-                      });
-
-                      var logoImg = new Konva.Image({
-                          width: container.width() * width / s_w,
-                          height: container.height() * height / s_h
-                      });
-
-                      var logoGroup = new Konva.Group({
-                          x: container.width() * x / s_w,
-                          y: container.width() * y / s_h
-                      });
-
-                      layer.add(baseImg);
-                      layer.add(logoGroup);
-                      logoGroup.add(logoImg);
-
-                      var imageObj1 = new Image();
-                      imageObj1.onload = function () {
-                          baseImg.image(imageObj1);
-                          layer.draw();
-                      };
-                      imageObj1.src = '<%= item_p_2['images'].first['url']['https'] %>';
-
-                      var imageObj2 = new Image();
-                      imageObj2.onload = function () {
-                          logoImg.image(imageObj2);
-                          layer.draw();
-                          imageObj2.width = container.width() * width / s_w;
-                          console.log(imageObj2.width, container.width(), width, s_w);
-                          imageObj2.height = container.height() * height / s_h;
-                          console.log(imageObj2.height);
-                      };
-                      imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
-                      layer.draw();
-                  }
-              </script>
-          <% end %>
-      <% end %>
-
-      <button onclick="location.href = '/product/<%= id_p_2 %>/1'" class="btn-sm btn-link center-block" style="color:black;  ">
-        <h4> MORE </h4></button>
-
-
-    </div>
-  </div>
+  <article>
+    <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
+  </article>
 </div>
-
 
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
