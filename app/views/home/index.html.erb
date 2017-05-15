@@ -121,12 +121,12 @@
 
           <% else %>
               <% object = getJson(var[1]['title']) %>
-              <div id="<%= object['image_id'] %>" class="img4" style="margin: 5px auto;width: 100px;">
+              <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
 
               </div>
 
               <script id="create-shape">
-                  createShape('<%= object['image_id'] %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
+                  createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
                   function createShape(id, width, height, x, y, s_w, s_h) {
                       var container = $('#' + id);
                       container.height(container.width());
