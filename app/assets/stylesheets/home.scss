@@ -23,11 +23,12 @@
   margin: 0 auto;
 }
 
-#image-container_quick {
+.image-container-quick {
   width: 100%;
   text-align: center;
   padding: 10px;
   margin: 0 auto;
+  z-index: 0;
 }
 
 #image-container img, div canvas, canvas {
@@ -441,7 +442,7 @@ div.card {
   }
 }
 
-#wrapper-img {
+.wrapper-img {
   margin-left: auto;
   margin-right: auto;
   width: 75%;
@@ -511,7 +512,7 @@ div.card {
     overflow: hidden;
   }
 
-  #wrapper-img {
+  .wrapper-img {
     width: 50%;
     max-height: 440px;
     float: left;

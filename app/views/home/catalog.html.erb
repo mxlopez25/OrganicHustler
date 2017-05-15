@@ -348,7 +348,7 @@
     var stage_ov = null;
 
     function fitStageIntoParentContainer() {
-        var container = document.querySelector('#wrapper-img');
+        var container = document.querySelector('#wrapper-img-1');
         // now we need to fit stage into parent
         var containerWidth = container.offsetWidth;
         // to do this we need to scale the stage
@@ -407,8 +407,8 @@
         }
 
         document.getElementById('general_p_content').innerHTML =
-            '<div id="wrapper-img">' +
-            '<div class="content-part" id="image-container_quick" style="padding: 0">' +
+            '<div id="wrapper-img-1" class="wrapper-img">' +
+            '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
             '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
             '</div>' +
             '</div>' +
@@ -442,13 +442,13 @@
 
         //Creates the image in case it is a variation
         if (variation_img) {
-            var container = $('#image-container_quick');
+            var container = $('#image-container-quick-1');
 
             var stageWidth = 1000;
             var stageHeight = 1000;
 
             stage_ov = new Konva.Stage({
-                container: 'image-container_quick',
+                container: 'image-container-quick-1',
                 width: stageWidth,
                 height: stageHeight
             });
@@ -640,6 +640,28 @@
         });
     }
 
+    var stage = null;
+
+    function fitStageIntoParentContainer_edit() {
+        var container = document.querySelector('#wrapper-img-2');
+        // now we need to fit stage into parent
+        var containerWidth = container.offsetWidth;
+        // to do this we need to scale the stage
+        var scale = containerWidth / 1000;
+        console.log(containerWidth);
+        if (1000 * scale < 440) {
+            stage.width(1000 * scale);
+            stage.height(1000 * scale);
+            stage.scale({x: scale, y: scale});
+            stage.draw();
+        } else {
+            stage.width(440);
+            stage.height(440);
+            stage.scale({x: (440 / 1000), y: (440 / 1000)});
+            stage.draw();
+        }
+    }
+
     function load_p2(data, pr) {
 
         var variations = ['', '', ''];
@@ -660,8 +682,9 @@
         product_id_u = pr;
 
         document.getElementById('general_p_content').innerHTML =
-            '<div class="content-part" id="image-container_quick" style="padding: 0; width: 50%">'
-            + '<div style="margin: 10px auto; max-width: 400px; max-height: 400px; width: 100%;" id="container"></div>'
+            '<div id="wrapper-img-2" class="wrapper-img">'
+            + '<div class="image-container-quick" id="image-container-quick-2" style="padding: 0;">'
+            + '</div>'
             + '</div>'
             + '<div class="content-part" style="padding: 0">'
             + '<h6 style="font-weight: bold">Select color(s):</h6>'
@@ -782,20 +805,18 @@
             });
         })(jQuery);
 
-        var base_co = $("#container");
-        var width = base_co.width();
-        var height = width + 0;
-        base_co.height(height);
+        var stageWidth = 1000;
+        var stageHeight = 1000;
 
-        var stage = new Konva.Stage({
-            container: 'container',
-            width: width,
-            height: height,
+        stage = new Konva.Stage({
+            container: 'image-container-quick-2',
+            width: stageWidth,
+            height: stageHeight,
             preventDefault: false
         });
 
-        s_w_u = width;
-        s_h_u = height;
+        //s_w_u = width;
+        //s_h_u = height;
 
         layer = new Konva.Layer();
         stage.add(layer);
@@ -940,36 +961,29 @@
             }
         });
 
+        console.log(stage.width(), stage.height(), '##########');
+
         var baseImg = new Konva.Image({
-            width: width,
-            height: height,
-            preventDefault: false
+            width: stage.width(),
+            height: stage.height(),
+            preventDefault: false,
+            draggable: false
         });
 
-        var baseIGroup = new Konva.Group({
-            x: 0,
-            y: 0,
-            preventDefault: false
-        });
-
-        layer.add(baseIGroup);
-        baseIGroup.add(baseImg);
+        layer.add(baseImg);
 
         var imageBgPro = new Image();
         imageBgPro.onload = function () {
-            console.log("pro-reload");
+
             baseImg.image(imageBgPro);
-
-            stage.width(base_co.width());
-            stage.height(base_co.height());
-
-            baseImg.width(base_co.width());
-            baseImg.height(base_co.width());
-
             layer.draw();
         };
 
         imageBgPro.src = data['images'][0]['url']['https'];
+        console.log(data['images'][0]['url']['https']);
+
+        fitStageIntoParentContainer_edit();
+        window.addEventListener('resize', fitStageIntoParentContainer_edit);
 
     }
 
