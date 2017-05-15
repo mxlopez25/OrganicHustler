@@ -85,7 +85,7 @@
 
 </script>
 
-<div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
+<div style="margin-top: -60px; margin-left: auto; margin-right:auto; text-align: center;" class="desktopnot">
 
   <img src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 350px;">
   <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
@@ -104,7 +104,7 @@
       <% item = get_product(id) %>
       <img src="<%= item['images'][0]['url']['https'] %>" style="height: 300px;">
       <h4 class="text-center"><%= item['title'] %></h4>
-      <h5 class="text-center"> Cotton+Quality</h5>
+      <h5 class="text-center">Eco-Friendly+Customizable</h5>
       <article>
         <button onclick="location.href = '/product/<%= id %>/2'" class="button styling_btn btn">CUSTOMIZE</button>
       </article>
