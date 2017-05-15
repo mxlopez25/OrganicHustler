@@ -199,7 +199,7 @@
 
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
-  <img src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 50vw; min-height: 450px">
+  <img src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 50vw; min-height: 350px">
   <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
@@ -286,10 +286,13 @@
   </div>
 </div>
 
+<hr style="width: 80%; margin: 30px auto">
+
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
   <% image_show_case = GroupShowcase.where(screen: 3, name_identity: 'relational_image').first.showcases.first %>
   <img style="height: 350px" src="<%= image_show_case.image_show.image.url %>">
+
 
   <article>
     <button onclick="location.href = '<%= image_show_case.url_association %>'" class="btn styling_btn">
@@ -297,11 +300,12 @@
     </button>
   </article>
 
+  <hr style="width: 80%; margin: 30px auto">
+
   <h3 style="margin-top: 70px; font-weight: 100">#ORGANICHUSTLER</h3>
   <hr style="width: 33px; margin: 20px auto 0;border-color: #b692a2">
 
 </div>
-
 
 <div class="desktopnot" style="margin-top: 20px">
   <div style="margin-left: auto; margin-right: auto; text-align: center">
