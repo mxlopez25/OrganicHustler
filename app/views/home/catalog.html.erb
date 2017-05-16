@@ -371,7 +371,6 @@
         //Array of customs for that product initialize
         render_custom = [];
         source_p = pr;
-        product_id_e = pr;
 
         if (data['product_id_e']) {
             product_id_e = data['product_id_e'];
@@ -739,8 +738,8 @@
             + '</div>'
             + '</div>';
 
-        load_available_colors(pr, variations);
-        load_available_logos(pr);
+        load_available_colors(data['source_p'], variations);
+        load_available_logos(data['source_p']);
 
         var innerHTML22 = {};
 
@@ -1114,7 +1113,7 @@
                         console.log(id_var);
 
                         colors = colors
-                            + '<div onclick="change_source(\'' + data[id_var] + '\')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
+                            + '<div onclick="change_source(' + data[id_var] + ')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
                             + '<div id="color-picker" class="">'
                             + '<input type="checkbox" id="' + changes['code'] + '" name="' + changes['code'] + '">'
                             + '</div>'
@@ -1133,7 +1132,11 @@
     }
 
     function change_source(values) {
+
         console.log(values);
+        product_id_e = values[1].toString();
+        console.log(product_id_e);
+        load_p2_ker(product_id_e)
     }
 
     function load_available_logos(pr) {
@@ -1155,6 +1158,11 @@
 
                 console.log(logos);
                 document.getElementById('container-logo').innerHTML = logos;
+
+                $('.jcarousel').jcarousel('reload', {
+                    animation: 'slow'
+                });
+
             }
         });
     }

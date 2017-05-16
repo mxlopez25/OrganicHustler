@@ -6,8 +6,6 @@ class HomeController < ApplicationController
 
   before_action :authenticate_user!, only: 'account'
 
-  @open_quick_m = false
-
   def index
   end
 
@@ -22,7 +20,7 @@ class HomeController < ApplicationController
     result = JSON.parse(response.body)['result']
     result.each do |r|
       p r
-      variations_obj[(r['modifiers'][mod]['var_id'])] = [r['images'][0]['url']['https'], r['id']]
+      variations_obj[(r['modifiers'][mod]['var_id'])] = "['#{r['images'][0]['url']['https']}', '#{r['id']}']"
     end
 
     render json: variations_obj.to_json
@@ -33,11 +31,13 @@ class HomeController < ApplicationController
     al = HomeHelper.get_product_by_id(params['id']).as_json
     al['variation_pp'] = false
     al['source_p'] = params['id']
-    @open_quick_m = false
+    if al['is_variation']
+      al['source_p'] = al['modifiers'].first[1]['product']
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}/modifiers", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+      al['modifiers'] = JSON.parse(response.body)['result']
+    end
     if params['variation_ma'].eql?('false')
-      @open_quick_m = true
       al['variation_pp'] = true
-      al['source_p'] = params['source_p']
       al['image_id'] = params['logo_id']
       al['width_u'] = params['width']
       al['height_u'] = params['height']
