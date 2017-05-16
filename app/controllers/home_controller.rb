@@ -33,8 +33,8 @@ class HomeController < ApplicationController
     al['source_p'] = params['id']
     if al['is_variation']
       al['source_p'] = al['modifiers'].first[1]['product']
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}/modifiers", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-      al['modifiers'] = JSON.parse(response.body)['result']
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+      al['modifiers'] = JSON.parse(response.body)['result']['modifiers']
     end
     if params['variation_ma'].eql?('false')
       al['variation_pp'] = true
