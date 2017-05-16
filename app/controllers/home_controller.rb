@@ -12,15 +12,14 @@ class HomeController < ApplicationController
   def colored_image
     pr_id = params['pr_id']
     mod = params['mod']
-    var = params['var']
+    actual_id = params['act_obj']
 
     variations_obj = {}
 
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{pr_id}/variations", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     result = JSON.parse(response.body)['result']
     result.each do |r|
-      p r
-      variations_obj[(r['modifiers'][mod]['var_id'])] = "['#{r['images'][0]['url']['https']}', '#{r['id']}']"
+      variations_obj[(r['modifiers'][mod]['var_id'])] = [r['id'].eql?(actual_id), "#{r['id']}"]
     end
 
     render json: variations_obj.to_json

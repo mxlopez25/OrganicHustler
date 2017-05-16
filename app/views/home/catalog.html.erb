@@ -740,7 +740,7 @@
             + '</div>'
             + '</div>';
 
-        load_available_colors(data['source_p'], variations);
+        load_available_colors(data['source_p'], variations, pr);
         load_available_logos(data['source_p']);
 
         var innerHTML22 = {};
@@ -1096,13 +1096,13 @@
         }
     }
 
-    function load_available_colors(pr, variations) {
+    function load_available_colors(pr, variations, act_obj) {
         if (variations.length > 0) {
             var colors = '';
             console.log(variations[2]['variations']);
 
             $.ajax({
-                url: '/catalog/product/colored/' + pr + '/' + variations[2]['id'],
+                url: '/catalog/product/colored/' + pr + '/' + variations[2]['id'] + '/' + act_obj,
                 method: 'get',
                 dataType: 'json',
                 success: function (data) {
@@ -1114,10 +1114,15 @@
                         var id_var = variations[2]['variations'][attr]['id'];
                         console.log(id_var);
 
+                        var mark = '';
+                        if (data[id_var][0] === true) {
+                            mark = '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>'
+                        }
+
                         colors = colors
-                            + '<div onclick="change_source(' + data[id_var] + ')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
+                            + '<div onclick="change_source(\'' + data[id_var][1].toString() + '\')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
                             + '<div id="color-picker" class="">'
-                            + '<input type="checkbox" id="' + changes['code'] + '" name="' + changes['code'] + '">'
+                            + mark
                             + '</div>'
                             + '</div>'
                     }
@@ -1136,7 +1141,7 @@
     function change_source(values) {
 
         console.log(values);
-        product_id_e = values[1].toString();
+        product_id_e = values;
         console.log(product_id_e);
         load_p2_ker(product_id_e)
     }
