@@ -143,12 +143,6 @@ div.wrap {
   height: 100%;
 }
 
-.content-part {
-  float: left;
-  width: 95%;
-  overflow: hidden;
-}
-
 .content-part-3 {
   padding: 10px;
   width: 30%;
@@ -458,6 +452,13 @@ div.card {
   width: 100%;
 }
 
+.content-part {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+
 @media screen and (min-width: 480px) {
 
   .single-element-center {
@@ -490,6 +491,11 @@ div.card {
 }
 
 @media screen and (min-width: 768px) {
+
+  .content-part {
+    width: 50%;
+  }
+
   .modal-content {
     width: 335px;
   }
@@ -504,12 +510,6 @@ div.card {
     margin-right: 2%;
     margin-left: 2%;
     border: none
-  }
-
-  .content-part {
-    float: left;
-    width: 50%;
-    overflow: hidden;
   }
 
   .wrapper-img {
