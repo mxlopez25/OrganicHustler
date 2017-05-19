@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
 
+  get '/shopping_bag' => 'home#bag'
+
   post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'
 

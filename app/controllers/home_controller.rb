@@ -30,6 +30,7 @@ class HomeController < ApplicationController
     al = HomeHelper.get_product_by_id(params['id']).as_json
     al['variation_pp'] = false
     al['source_p'] = params['id']
+    al['product_id_e'] = params['id']
     if al['is_variation']
       al['source_p'] = al['modifiers'].first[1]['product']
       response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
@@ -69,6 +70,10 @@ class HomeController < ApplicationController
     unless @address
       @address = current_user.create_user_address
     end
+  end
+
+  def bag
+
   end
 
   def temp_user_act
