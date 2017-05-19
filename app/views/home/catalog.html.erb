@@ -310,13 +310,26 @@
 <div id="quick_view" class="modal_quick modal_base">
 
   <!-- Modal content -->
-  <div class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
+  <div id="modal-content-center" class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
     <span id="quick_view_close" class="close" style="z-index: 100; position: fixed">&times;</span>
     <div id="general_p_content" class="g-wrapper">
 
     </div>
 
   </div>
+
+  <div id="modal-content-quick-m" class="modal-content-quick-m" style="overflow: hidden; padding: 0; display: none">
+    <span id="quick-view-close-m" class="close" style="z-index: 100; float: left; margin: 0">&times;</span>
+    <div id="general_p_content" class="g-wrapper" style="margin-top: 0; padding-top: 0">
+      Would you like to edit the placement of our emblem?
+
+      <button style="width: 85%; margin: 5px 0 0 0" class="styling_btn btn">EDIT</button>
+      <button style="width: 85%; margin: 5px 0 0 0" class="styling_btn btn">ADD TO CART</button>
+    </div>
+
+  </div>
+
+
 
 </div>
 
@@ -613,7 +626,31 @@
         })(jQuery);
     }
 
+    // Get the modal
+    var modal_quick_m = document.getElementById('modal-content-quick-m');
+    var modal_base = document.getElementById('modal-content-center');
+
+    // Get the <span> element that closes the modal
+    var span_quick_m = document.getElementById('quick-view-close-m');
+
+    // When the user clicks on <span> (x), close the modal
+    span_quick_m.onclick = function () {
+        modal_quick_m.style.display = "none";
+        modal_base.className = 'modal-content_quick modal-content_base';
+    };
+
     function send_variations(pr) {
+        if(emblem_id === '' || selected === null){
+
+            modal_base.className += ' blur';
+            modal_quick_m.style.display = "block";
+            open_quick(pr);
+        }else{
+            sending(pr);
+        }
+    }
+
+    function sending(pr) {
         $.ajax({
             type: "get",
             url: "/catalog/item/" + pr,
@@ -630,9 +667,9 @@
                 height: selected.get('.image')[0].height(),
                 has_logo: true,
                 has_emblem: false,
-                emblem_id: '',
+                emblem_id: emblem_id,
                 user_signed: '<%= user_signed_in? %>',
-                position_id: 0
+                position_id: position_id
 
             },
             success: function (data) {

@@ -143,6 +143,21 @@ div.wrap {
   height: 100%;
 }
 
+.modal-content-quick-m {
+  position: absolute;
+  background-color: #fefefe;
+  padding: 10px;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 50%;
+  height: 45%;
+  text-align: center;
+  border: solid black thin;
+}
+
 .content-part-3 {
   padding: 10px;
   width: 30%;
@@ -387,6 +402,16 @@ div.card {
   margin-top: 0;
 }
 
+div.blur {
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+  background-color: #ffffff;
+
+}
+
 .filter-element h5 {
 
   padding: 0;
@@ -496,6 +521,11 @@ div.card {
 
 @media screen and (min-width: 768px) {
 
+  .modal-content-quick-m {
+    width: 17%;
+    height: 30%;
+  }
+
   .content-part {
     width: 50%;
   }
@@ -563,12 +593,14 @@ div.card {
   .img-con-item {
     width: auto;
     height: 14vw;
+    max-height: 217px;
   }
 
   .catalog-item {
     width: 14.66667%;
     height: 30vw;
     max-height: 350px;
+    max-width: 217px;
     margin: 25px 1% 0;
   }
 
