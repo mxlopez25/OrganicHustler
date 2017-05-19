@@ -322,9 +322,10 @@
     <span id="quick-view-close-m" class="close" style="z-index: 100; float: left; margin: 0">&times;</span>
     <div id="general_p_content" class="g-wrapper" style="margin-top: 0; padding-top: 0">
       Would you like to edit the placement of our emblem?
+      <input type="text" class="hidden" name="product-id-p1" value="">
 
-      <button style="width: 85%; margin: 5px 0 0 0" class="styling_btn btn">EDIT</button>
-      <button style="width: 85%; margin: 5px 0 0 0" class="styling_btn btn">ADD TO CART</button>
+      <button style="width: 85%; margin: 5px 0 0 0" onclick="" class="styling_btn btn">EDIT</button>
+      <button style="width: 85%; margin: 5px 0 0 0" onclick="" class="styling_btn btn">ADD TO CART</button>
     </div>
 
   </div>
@@ -641,10 +642,9 @@
 
     function send_variations(pr) {
         if(emblem_id === '' || selected === null){
-
             modal_base.className += ' blur';
+            $('#product-id-p1').val(pr);
             modal_quick_m.style.display = "block";
-            open_quick(pr);
         }else{
             sending(pr);
         }
