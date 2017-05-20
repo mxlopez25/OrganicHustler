@@ -381,12 +381,11 @@
         }
     }
 
-    function load_p1(data, pr) {
-        //Array of customs for that product initialize
+    function loap_p2(data, pr) {
+
         render_custom = [];
         source_p = pr;
 
-        console.log(data['product_id_e'], '################');
         if (data['product_id_e']) {
             product_id_e = data['product_id_e'];
         }
@@ -403,22 +402,6 @@
         emblem_id = data['emblem_id'];
         position_id = data['position_id'];
         user_online = '<%= user_signed_in? %>';
-
-
-        var variations = ['', '', ''];
-        for (var variation in data['modifiers']) {
-            if (data['modifiers'].hasOwnProperty(variation)) {
-
-                if (data['modifiers'][variation]['title'] === 'Color') {
-                    variations[2] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Size') {
-                    variations[1] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
-                    variations[0] = data['modifiers'][variation];
-                }
-
-            }
-        }
 
         document.getElementById('general_p_content').innerHTML =
             '<div id="wrapper-img-1" class="wrapper-img">' +
@@ -448,6 +431,84 @@
             '   <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
             '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
             '</div>' + get_variation_customized(variations) +
+            '<div>' +
+            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
+            '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
+            '</div>' +
+            '</div>';
+
+    }
+
+    function load_p1(data, pr) {
+        //Array of customs for that product initialize
+        render_custom = [];
+        source_p = pr;
+
+        if (data['product_id_e']) {
+            product_id_e = data['product_id_e'];
+        }
+
+        image_id_e = data['image_id'];
+        width = data['width_u'];
+        height = data['height_u'];
+        x = data['x_u'];
+        y = data['y_u'];
+        s_w = data['s_w'];
+        s_h = data['s_h'];
+        has_logo = data['has_image'];
+        has_emblem = data['has_emblem'];
+        emblem_id = data['emblem_id'];
+        position_id = data['position_id'];
+        user_online = '<%= user_signed_in? %>';
+
+        var variations = ['', '', ''];
+        for (var variation in data['modifiers']) {
+            if (data['modifiers'].hasOwnProperty(variation)) {
+
+                if (data['modifiers'][variation]['title'] === 'Color') {
+                    variations[2] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Size') {
+                    variations[1] = data['modifiers'][variation];
+                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
+                    variations[0] = data['modifiers'][variation];
+                }
+
+            }
+        }
+
+        var p1_ch = '';
+        if ('') {
+            p1_ch = '   <div class="wrap">' +
+                '       <h5>' + data['title'] + '</h5>' +
+                '       <h6>' + data['price']['value'] + '</h6>' +
+                '   </div>' +
+                '<div class="wrap">' +
+                '   <span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
+                '   <div style="text-align: end; padding-top: 9px">' +
+                '       <span id="more-toggle">Read more</span>' +
+                '   </div>' +
+                '</div>' +
+                '<hr style="margin-bottom: 0">' +
+                '<div style="margin-bottom: 10px">' +
+                '   <div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
+                '   <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
+                '</div>' +
+                get_variation_size(variations) +
+                '<hr style="margin-bottom: 0">' +
+                '<div style="margin-bottom: 10px">' +
+                '   <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                '</div>' + get_variation_customized(variations);
+        }
+
+        document.getElementById('general_p_content').innerHTML =
+            '<div id="wrapper-img-1" class="wrapper-img">' +
+            '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
+            '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
+            '</div>' +
+            '</div>' +
+            '<div class="content-part" style="padding: 0">' +
+            p1_ch +
             '<div>' +
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
