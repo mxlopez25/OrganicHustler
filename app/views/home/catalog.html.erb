@@ -324,13 +324,25 @@
       Would you like to edit the placement of our emblem?
       <label for="product-id-p1"></label><input type="text" class="hidden" id="product-id-p1" value="">
 
-      <button style="width: 85%; margin: 5px 0 0 0" onclick="" class="styling_btn btn">EDIT</button>
-      <button style="width: 85%; margin: 5px 0 0 0" onclick="" class="styling_btn btn">ADD TO CART</button>
+      <button style="width: 85%; margin: 5px 0 0 0" onclick="add_emblem(true)" class="styling_btn btn">EDIT</button>
+      <button style="width: 85%; margin: 5px 0 0 0" onclick="add_emblem(false)" class="styling_btn btn">ADD TO CART
+      </button>
     </div>
 
+    <script>
+        function add_emblem(val) {
+            var id_element = $('#product-id-p1').val();
+            if (val) {
+                sending(id_element, true);
+                remove_modal_m()
+            } else {
+                sending(id_element);
+                remove_modal_m();
+            }
+        }
+    </script>
+
   </div>
-
-
 
 </div>
 
@@ -439,7 +451,7 @@
 
     }
 
-    function load_p1(data, pr) {
+    function load_p1(data, pr, n_ble) {
         //Array of customs for that product initialize
         render_custom = [];
         source_p = pr;
@@ -477,28 +489,37 @@
         }
 
         var p1_ch = '';
-        if ('') {
-            p1_ch = '   <div class="wrap">' +
-                '       <h5>' + data['title'] + '</h5>' +
-                '       <h6>' + data['price']['value'] + '</h6>' +
-                '   </div>' +
+        if (n_ble) {
+            p1_ch = '<hr style="margin-bottom: 0" class="desktopnot">' +
+                '<div style="margin-bottom: 10px">' +
+                '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
+                '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
+                '</div>' +
+                get_variation_size(variations)
+
+        } else {
+            p1_ch = '<div class="wrap">' +
+                '<h5>' + data['title'] + '</h5>' +
+                '<h6>' + data['price']['value'] + '</h6>' +
+                '</div>' +
                 '<div class="wrap">' +
-                '   <span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
-                '   <div style="text-align: end; padding-top: 9px">' +
-                '       <span id="more-toggle">Read more</span>' +
-                '   </div>' +
+                '<span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
+                '<div style="text-align: end; padding-top: 9px">' +
+                '<span id="more-toggle">Read more</span>' +
+                '</div>' +
                 '</div>' +
                 '<hr style="margin-bottom: 0">' +
                 '<div style="margin-bottom: 10px">' +
-                '   <div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
-                '   <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
+                '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
+                '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
                 '</div>' +
                 get_variation_size(variations) +
                 '<hr style="margin-bottom: 0">' +
                 '<div style="margin-bottom: 10px">' +
-                '   <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-                '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-                '</div>' + get_variation_customized(variations);
+                '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                '</div>' +
+                get_variation_customized(variations);
         }
 
         document.getElementById('general_p_content').innerHTML =
@@ -597,29 +618,50 @@
             state = !state;
         });
 
-        var innerHTML22 = {};
+        var container_height = {};
+
+        var loader = $("#icon_loader");
+        var loader_logo = $("#icon_loader_logo");
 
         $(document).ready(function () {
-            innerHTML22.heightTT = $("#icon_loader").height();
-          /*
-            var img_load = $('#image_loader');
-
-            if (size_x === 0) {
-                size_x = img_load.width();
-                size_y = img_load.height();
-            }
-
-           console.log(size_x, size_y);*/
+            container_height.height_icon_size = loader.height();
+            container_height.height_cust_size = loader_logo.height();
         });
 
         var iconShow = $("#icon-show");
         var iconHide = $("#icon-hide");
-        var loader = $("#icon_loader");
+
+        var logoShow = $("#icon-show-logo");
+        var logoHide = $("#icon-hide-logo");
+
+        logoShow.click(function () {
+            loader_logo.animate({
+                height: container_height.height_cust_size
+            }, (400 * container_height.height_cust_size / 100), function () {
+                loader_logo.css({
+                    overflow: 'visible'
+                });
+            });
+            logoShow.addClass(" hidden");
+            logoHide.removeClass(" hidden");
+        });
+
+        logoHide.click(function () {
+            loader_logo.animate({
+                height: 0
+            }, (400 * container_height.height_cust_size / 100), function () {
+                loader_logo.css({
+                    overflow: 'hidden'
+                });
+            });
+            logoHide.addClass(" hidden");
+            logoShow.removeClass(" hidden");
+        });
 
         iconShow.click(function () {
             loader.animate({
-                height: innerHTML22.heightTT
-            }, 400, function () {
+                height: container_height.height_icon_size
+            }, (400 * container_height.height_icon_size / 100), function () {
                 loader.css({
                     overflow: 'visible'
                 });
@@ -631,7 +673,7 @@
         iconHide.click(function () {
             loader.animate({
                 height: 0
-            }, 400, function () {
+            }, (400 * container_height.height_icon_size / 100), function () {
                 loader.css({
                     overflow: 'hidden'
                 });
@@ -697,46 +739,50 @@
 
     // When the user clicks on <span> (x), close the modal
     span_quick_m.onclick = function () {
-        modal_quick_m.style.display = "none";
-        modal_base.className = 'modal-content_quick modal-content_base';
+        remove_modal_m()
     };
 
-    function send_variations(pr) {
-        if(emblem_id === '' || selected === null){
-            modal_base.className += ' blur';
-            $('#product-id-p1').val(pr);
-            modal_quick_m.style.display = "block";
-        }else{
-            sending(pr);
-        }
+    function remove_modal_m() {
+        modal_quick_m.style.display = "none";
+        modal_base.className = 'modal-content_quick modal-content_base';
     }
 
-    function sending(pr) {
+    function send_variations(pr) {
+        modal_base.className += ' blur';
+        $('#product-id-p1').val(pr);
+        modal_quick_m.style.display = "block";
+    }
+
+    function sending(pr, emblem) {
+
+        var data = {
+            variation_ma: false,
+            source_p: pr,
+            m_id: pr,
+            logo_id: image_id_u,
+            relation_x: 1000,
+            relation_y: 1000,
+            has_logo: true,
+            has_emblem: false,
+            emblem_id: emblem_id,
+            position_id: position_id
+        };
+
+        if (selected) {
+            data.dim_x = (selected || {x: 0}).x();
+            data.dim_y = (selected || {y: 0}).y();
+            data.width = selected.get('.image')[0].width();
+            data.height = selected.get('.image')[0].height();
+        }
+
         $.ajax({
             type: "get",
             url: "/catalog/item/" + pr,
-            data: {
-                variation_ma: false,
-                source_p: pr,
-                m_id: pr,
-                logo_id: image_id_u,
-                dim_x: selected.x(),
-                dim_y: selected.y(),
-                relation_x: 1000,
-                relation_y: 1000,
-                width: selected.get('.image')[0].width(),
-                height: selected.get('.image')[0].height(),
-                has_logo: true,
-                has_emblem: false,
-                emblem_id: emblem_id,
-                user_signed: '<%= user_signed_in? %>',
-                position_id: position_id
-
-            },
+            data: data,
             success: function (data) {
                 console.log(data);
                 variation_img = true;
-                load_p1(data, data['source_p'])
+                load_p1(data, data['source_p'], emblem)
             }
         });
     }
@@ -1362,6 +1408,10 @@
         group.add(anchor);
         layer.draw();
         return anchor;
+    }
+
+    function get_emblems_placement() {
+
     }
 
     function get_variation_size(variations) {

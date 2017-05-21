@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170514055601) do
+ActiveRecord::Schema.define(version: 20170521055604) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -65,14 +65,6 @@ ActiveRecord::Schema.define(version: 20170514055601) do
     t.string "picture_content_type"
     t.integer "picture_file_size"
     t.datetime "picture_updated_at"
-    t.decimal "pos_1_x", precision: 10
-    t.decimal "pos_1_y", precision: 10
-    t.decimal "pos_2_x", precision: 10
-    t.decimal "pos_2_y", precision: 10
-    t.decimal "pos_3_x", precision: 10
-    t.decimal "pos_3_y", precision: 10
-    t.decimal "pos_4_x", precision: 10
-    t.decimal "pos_4_y", precision: 10
     t.decimal "emblem_cost", precision: 10
     t.decimal "width", precision: 10
     t.decimal "height", precision: 10
@@ -131,6 +123,19 @@ ActiveRecord::Schema.define(version: 20170514055601) do
     t.string   "color"
     t.string "type"
     t.decimal "price", precision: 10
+  end
+
+  create_table "position_emblem_admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.decimal "x", precision: 10
+    t.decimal "y", precision: 10
+    t.decimal "rel_x", precision: 10
+    t.decimal "rel_y", precision: 10
+    t.string "emblem_id"
+    t.decimal "cost", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "width", precision: 10
+    t.decimal "height", precision: 10
   end
 
   create_table "promotion_codes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
