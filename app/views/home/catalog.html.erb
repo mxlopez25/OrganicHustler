@@ -393,64 +393,6 @@
         }
     }
 
-    function loap_p2(data, pr) {
-
-        render_custom = [];
-        source_p = pr;
-
-        if (data['product_id_e']) {
-            product_id_e = data['product_id_e'];
-        }
-
-        image_id_e = data['image_id'];
-        width = data['width_u'];
-        height = data['height_u'];
-        x = data['x_u'];
-        y = data['y_u'];
-        s_w = data['s_w'];
-        s_h = data['s_h'];
-        has_logo = data['has_image'];
-        has_emblem = data['has_emblem'];
-        emblem_id = data['emblem_id'];
-        position_id = data['position_id'];
-        user_online = '<%= user_signed_in? %>';
-
-        document.getElementById('general_p_content').innerHTML =
-            '<div id="wrapper-img-1" class="wrapper-img">' +
-            '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
-            '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
-            '</div>' +
-            '</div>' +
-            '<div class="content-part" style="padding: 0">' +
-            '   <div class="wrap">' +
-            '       <h5>' + data['title'] + '</h5>' +
-            '       <h6>' + data['price']['value'] + '</h6>' +
-            '   </div>' +
-            '<div class="wrap">' +
-            '   <span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
-            '   <div style="text-align: end; padding-top: 9px">' +
-            '       <span id="more-toggle">Read more</span>' +
-            '   </div>' +
-            '</div>' +
-            '<hr style="margin-bottom: 0">' +
-            '<div style="margin-bottom: 10px">' +
-            '   <div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
-            '   <div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
-            '</div>' +
-            get_variation_size(variations) +
-            '<hr style="margin-bottom: 0">' +
-            '<div style="margin-bottom: 10px">' +
-            '   <div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-            '   <div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-            '</div>' + get_variation_customized(variations) +
-            '<div>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
-            '</div>' +
-            '</div>';
-
-    }
-
     function load_p1(data, pr, n_ble) {
         //Array of customs for that product initialize
         render_custom = [];
@@ -495,7 +437,8 @@
                 '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
                 '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
                 '</div>' +
-                get_variation_size(variations)
+                '<div id="emblem-place">' +
+                '</div>';
 
         } else {
             p1_ch = '<div class="wrap">' +
@@ -535,6 +478,8 @@
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
             '</div>' +
             '</div>';
+
+        get_emblems_placement(variations);
 
         //Creates the image in case it is a variation
         if (variation_img) {
@@ -1412,6 +1357,41 @@
 
     function get_emblems_placement() {
 
+        $.ajax({
+            url: '',
+            method: 'get',
+            dataType: 'json',
+            data: {
+                product_id: ''
+            },
+            success: function (data) {
+
+                var emblems = '';
+
+                for (var i = 0; i < data.length; i++) {
+                    emblems += '<li>' +
+                        '<div>' +
+                        '' +
+                        '</div>' +
+                        '</li>'
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+
+        return '<div id="icon_loader" class="jcarousel-wrapper">' +
+            '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
+            '<ul id="container-logo" style="left: 0; top: 0;">' +
+                
+            '</ul>' +
+            '</div>' +
+            '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+            '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
+            '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+            '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+            '</div>'
     }
 
     function get_variation_size(variations) {
