@@ -78,6 +78,7 @@ Rails.application.routes.draw do
 
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'
+    get 'emblems_created' => 'emblems#get_emblems_created'
     put 'add/emblems' => 'emblems#create'
     put 'add/emblems_position' => 'emblems#add_positions'
   end

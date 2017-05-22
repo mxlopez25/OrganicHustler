@@ -35,8 +35,8 @@
     var image_emblem = null;
 </script>
 
-<div class="center-div">
-  <div class="card notification-ask" style="background: #ffffff">
+<div class="center-div" style="width: 100%; height: 100%;">
+  <div class="card notification-ask" style="background: #ffffff; margin-bottom: 20px">
     <h3>Add Emblem</h3>
     <hr>
     <div style="text-align: left">
@@ -49,12 +49,6 @@
                   </div>
               <% end %>
             </div>
-
-            <!--<div class="input-group">
-              <span class="input-group-addon">Price emblem</span>
-              <label for="emblem_cost"></label><input class="form-control" aria-label="Amount (to the nearest dollar)" type="number" step="any" min="0" id="emblem_cost" value="">
-              <span class="input-group-addon">$</span>
-            </div>-->
 
             <input class="hidden" type="text" id="rel_x" value="400" name="rel_x">
             <input class="hidden" type="text" id="rel_y" value="400" name="rel_y">
@@ -71,19 +65,43 @@
                 var positions = [];
                 var rev_positions = [];
 
-                function add_position(position_id, x, y, rel_x, rel_y, cost, width, height, emblem_id) {
+                get_created();
+                function get_created() {
+                    $.ajax({
+                        url: '/support_controllers/emblems_created',
+                        method: 'get',
+                        dataType: 'json',
+                        data: {
+                            product_id: '<%= @product_id %>'
+                        },
+                        success: function (data) {
+
+                            for (var i = 0; i < data.length; i++) {
+                                add_position(data[i].name, data[i].id, data[i].x, data[i].y, data[i].rel_x, data[i].rel_y, data[i].cost, data[i].width, data[i].height, data[i].emblem_id, data[i].url);
+                            }
+
+                        },
+                        error: function (data) {
+
+                        }
+                    });
+                }
+
+
+                function add_position(name, position_id, x, y, rel_x, rel_y, cost, width, height, emblem_id, emblem_url) {
 
                     var position = {
+                        name: name || '',
                         position_id: position_id || -1,
                         element_id: 'pos_' + positions.length,
                         container_id: 'container_' + positions.length,
-                        x: x || 100,
-                        y: y || 100,
-                        rel_x: rel_x || 400,
-                        rel_y: rel_y || 400,
-                        cost: cost || 0,
-                        width: width || 100,
-                        height: height || 100,
+                        x: parseFloat(x) || 100,
+                        y: parseFloat(y) || 100,
+                        rel_x: parseFloat(rel_x) || 400,
+                        rel_y: parseFloat(rel_y) || 400,
+                        cost: parseFloat(cost) || 0,
+                        width: parseFloat(width) || 100,
+                        height: parseFloat(height) || 100,
                         emblem_id: emblem_id || image_emblem[0]
                     };
 
@@ -93,34 +111,37 @@
                         + '<div id="' + position.container_id + '" style="width: 400px; height: 400px; z-index: 2;">'
                         + '</div>'
                         + '<div class="input-group">'
-                        + '<label for="emblem_cost"></label><input class="form-control" aria-label="Amount (to the nearest dollar)" type="number" step="any" min="0" id="emblem_cost" value="">'
+                        + '<label for="emblem_cost"></label><input class="form-control" aria-label="Amount (to the nearest dollar)" type="number" step="0.01" min="0" id="emblem_cost" value="' + position.cost + '">'
                         + '<span class="input-group-addon">$</span>'
+                        + '<div class="input-group">'
+                        + '<span class="input-group-addon">Position name</span>'
+                        + '<label for="emblem_name"></label><input class="form-control" type="text" id="emblem_name" value="' + position.name + '">'
                         + '</div>'
                         + '</div>');
 
                     var stage = new Konva.Stage({
                         container: position.container_id,
-                        width: 400,
-                        height: 400
+                        width: position.rel_x,
+                        height: position.rel_y
                     });
 
                     var layer = new Konva.Layer();
                     stage.add(layer);
 
                     var baseImg = new Konva.Image({
-                        width: 400,
-                        height: 400,
+                        width: position.rel_x,
+                        height: position.rel_y,
                         draggable: false
                     });
 
                     var logoImg = new Konva.Image({
-                        width: 100,
-                        height: 100
+                        width: position.width,
+                        height: position.height
                     });
 
                     var logoGroup = new Konva.Group({
-                        x: 100,
-                        y: 100,
+                        x: position.x,
+                        y: position.y,
                         draggable: true
                     });
 
@@ -129,9 +150,9 @@
                     logoGroup.add(logoImg);
 
                     var anchor_1 = addAnchor(logoGroup, 0, 0, 'topLeft');
-                    var anchor_2 = addAnchor(logoGroup, 100, 0, 'topRight');
-                    var anchor_3 = addAnchor(logoGroup, 100, 100, 'bottomRight');
-                    var anchor_4 = addAnchor(logoGroup, 0, 100, 'bottomLeft');
+                    var anchor_2 = addAnchor(logoGroup, position.width, 0, 'topRight');
+                    var anchor_3 = addAnchor(logoGroup, position.width, position.height, 'bottomRight');
+                    var anchor_4 = addAnchor(logoGroup, 0, position.height, 'bottomLeft');
 
                     logoGroup.on('dragend', function () {
                         position.x = logoGroup.x();
@@ -187,7 +208,7 @@
                         logoImg.image(logo);
                         layer.draw();
                     };
-                    logo.src = image_emblem[1];
+                    logo.src = emblem_url || image_emblem[1];
 
                     positions.push(position);
                 }
@@ -196,6 +217,7 @@
                     var element = document.getElementById(positions[id_sp].element_id);
                     element.parentNode.removeChild(element);
                     rev_positions.push(positions[id_sp]);
+                    positions[id_sp] = {};
                 }
 
               function addAnchor(group, x, y, name) {
@@ -290,14 +312,8 @@
 
               for (var pos in positions) {
                   try {
-                      positions[pos].cost = document.getElementById(positions[pos].element_id).getElementsByTagName('input')[0].value;
-                  } catch (e) {
-                      console.log(e)
-                  }
-              }
-              for (var pos_r in rev_positions) {
-                  try {
-                      rev_positions[pos_r].cost = document.getElementById(rev_positions[pos_r].element_id).getElementsByTagName('input')[0].value;
+                      positions[pos].cost = parseFloat(document.getElementById(positions[pos].element_id).getElementsByTagName('input')[0].value);
+                      positions[pos].name = document.getElementById(positions[pos].element_id).getElementsByTagName('input')[1].value;
                   } catch (e) {
                       console.log(e)
                   }
@@ -312,7 +328,7 @@
                       positions_rev: rev_positions
                   },
                   success: function (data) {
-
+                      location.href = '/support_controllers/add/emblems/<%= @product_id %>'
                   },
                   error: function (data) {
 

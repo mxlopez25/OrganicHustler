@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170521055604) do
+ActiveRecord::Schema.define(version: 20170522155420) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false
@@ -126,16 +126,17 @@ ActiveRecord::Schema.define(version: 20170521055604) do
   end
 
   create_table "position_emblem_admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.decimal "x", precision: 10
-    t.decimal "y", precision: 10
-    t.decimal "rel_x", precision: 10
-    t.decimal "rel_y", precision: 10
+    t.decimal "x", precision: 10, scale: 2
+    t.decimal "y", precision: 10, scale: 2
+    t.decimal "rel_x", precision: 10, scale: 2
+    t.decimal "rel_y", precision: 10, scale: 2
     t.string "emblem_id"
-    t.decimal "cost", precision: 10
+    t.decimal "cost", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "width", precision: 10
-    t.decimal "height", precision: 10
+    t.decimal "width", precision: 10, scale: 2
+    t.decimal "height", precision: 10, scale: 2
+    t.string "name"
   end
 
   create_table "promotion_codes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

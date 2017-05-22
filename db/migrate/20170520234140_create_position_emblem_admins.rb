@@ -6,7 +6,7 @@ class CreatePositionEmblemAdmins < ActiveRecord::Migration[5.0]
       t.decimal :rel_x
       t.decimal :rel_y
       t.string :emblem_id
-      t.decimal :cost
+      t.decimal :cost, :scale => 2
 
       t.timestamps
     end

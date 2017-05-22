@@ -21,23 +21,54 @@ class SupportControllers::EmblemsController < ApplicationController
   end
 
   def add_positions
-
-    position_add = JSON.parse(params['positions_add'].to_json)
+    v = (params['positions_add'].to_json.eql? 'null') ? ('[]') : (params['positions_add'].to_json)
+    position_add = JSON.parse(v)
     v = (params['positions_rev'].to_json.eql? 'null') ? ('[]') : (params['positions_rev'].to_json)
-    p v
     position_rev = JSON.parse(v)
 
     position_add.each do |pos|
-      unless position_rev.include? pos
-        a = PositionEmblemAdmin.create!(emblem_position_params)
+      unless pos.blank?
+        if pos[1]['position_id'].eql? '-1'
+          PositionEmblemAdmin.create(emblem_position_param(pos[0]))
+        else
+          begin
+            position = PositionEmblemAdmin.find(pos[1]['position_id'])
+            position.try(:update_attributes, emblem_position_params(pos[0]))
+          rescue => e
+            p e
+          end
+        end
       end
     end
 
-    render nothing: true
+    position_rev.each do |pos|
+      unless pos.blank?
+        begin
+          PositionEmblemAdmin.destroy(pos[1]['position_id'])
+        rescue => e
+          p e
+        end
+      end
+    end
   end
 
-  def emblem_position_params
-    params.require(:positions_add)['0'].permit(:x, :y, :rel_x, :rel_y, :emblem_id, :cost, :width, :height)
+  def emblem_position_params(id)
+    params.require(:positions_add)[id].permit(:name, :x, :y, :rel_x, :rel_y, :emblem_id, :cost, :width, :height)
+  end
+
+  def get_emblems_created
+
+    positions = []
+
+    Emblem.where(:id_moltin => params['product_id']).each do |emblem|
+      emblem.position_emblem_admins.each do |position|
+        js_position = JSON.parse(position.to_json)
+        js_position[:url] = emblem.picture.url
+        positions.push js_position
+      end
+    end
+
+    render json: positions.to_json
   end
 
   def self.to_decimal(n_text)
