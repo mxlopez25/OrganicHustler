@@ -9,23 +9,35 @@ class SupportControllers::EmblemsController < ApplicationController
   end
 
   def create
-    p params[:file]['0']
-    Emblem.create(
+    emblem = Emblem.create(
         picture: params[:file]['0'],
-        emblem_cost: SupportControllers::EmblemsController.to_decimal(params['emblem_cost']),
-        id_moltin: params['id_moltin'],
+        id_moltin: params['id_moltin']
+    )
 
-        pos_1_x: SupportControllers::EmblemsController.to_decimal(params['pos_1_x']),
-        pos_1_y: SupportControllers::EmblemsController.to_decimal(params['pos_1_y']),
-        pos_2_x: SupportControllers::EmblemsController.to_decimal(params['pos_2_x']),
-        pos_2_y: SupportControllers::EmblemsController.to_decimal(params['pos_2_y']),
-        pos_3_x: SupportControllers::EmblemsController.to_decimal(params['pos_3_x']),
-        pos_3_y: SupportControllers::EmblemsController.to_decimal(params['pos_3_y']),
-        pos_4_x: SupportControllers::EmblemsController.to_decimal(params['pos_4_x']),
-        pos_4_y: SupportControllers::EmblemsController.to_decimal(params['pos_4_y']),
+    json_emblem = JSON.parse(emblem.to_json)
+    json_emblem[:url] = emblem.picture.url
 
-        rel_x: SupportControllers::EmblemsController.to_decimal(params['rel_x']),
-        rel_y: SupportControllers::EmblemsController.to_decimal(params['rel_y']))
+    render json: json_emblem.to_json.html_safe
+  end
+
+  def add_positions
+
+    position_add = JSON.parse(params['positions_add'].to_json)
+    v = (params['positions_rev'].to_json.eql? 'null') ? ('[]') : (params['positions_rev'].to_json)
+    p v
+    position_rev = JSON.parse(v)
+
+    position_add.each do |pos|
+      unless position_rev.include? pos
+        a = PositionEmblemAdmin.create!(emblem_position_params)
+      end
+    end
+
+    render nothing: true
+  end
+
+  def emblem_position_params
+    params.require(:positions_add)['0'].permit(:x, :y, :rel_x, :rel_y, :emblem_id, :cost, :width, :height)
   end
 
   def self.to_decimal(n_text)

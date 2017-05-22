@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'
     put 'add/emblems' => 'emblems#create'
+    put 'add/emblems_position' => 'emblems#add_positions'
   end
 
   resource :showcases
