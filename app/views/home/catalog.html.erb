@@ -498,7 +498,7 @@
                 height: stageHeight
             });
             LAYER = new Konva.Layer();
-            stage_ov.add(layer);
+            stage_ov.add(LAYER);
 
             var baseImg = new Konva.Image({
                 width: stage_ov.width(),
@@ -516,21 +516,21 @@
                 y: stage_ov.height() * y / s_h
             });
 
-            layer.add(baseImg);
-            layer.add(logoGroup);
+            LAYER.add(baseImg);
+            LAYER.add(logoGroup);
             logoGroup.add(logoImg);
 
             var imageObj1 = new Image();
             imageObj1.onload = function () {
                 baseImg.image(imageObj1);
-                layer.draw();
+                LAYER.draw();
             };
             imageObj1.src = data['images'][0]['url']['https'];
 
             var imageObj2 = new Image();
             imageObj2.onload = function () {
                 logoImg.image(imageObj2);
-                layer.draw();
+                LAYER.draw();
                 imageObj2.width = stage_ov.width() * width / s_w;
                 imageObj2.height = stage_ov.height() * height / s_h;
             };
@@ -543,7 +543,7 @@
                     dataType: "html",
                     success: function (data) {
                         imageObj2.src = data;
-                        layer.draw();
+                        LAYER.draw();
                     },
                     error: function (data) {
                     }
@@ -764,6 +764,7 @@
             success: function (data) {
                 console.log(data);
                 variation_img = true;
+                load_p1(data, data['source_p'], emblem, n_logo || true)
                 load_p1(data, data['source_p'], emblem, n_logo || true)
             }
         });
@@ -1392,11 +1393,39 @@
         return anchor;
     }
 
-    function add_embelm(data) {
+    var tempData_array = [];
+    var imageObj = null;
+    var emblemImg = null;
+
+    function add_emblem_item(data) {
+        if (imageObj === null) {
+            emblemImg = new Konva.Image({
+                width: 1000 * parseFloat(data.width) / parseFloat(data.rel_x),
+                height: 1000 * parseFloat(data.height) / parseFloat(data.rel_y),
+                x: 1000 * parseFloat(data.x) / parseFloat(data.rel_x),
+                y: 1000 * parseFloat(data.y) / parseFloat(data.rel_y)
+            });
+
+            LAYER.add(emblemImg);
+
+
+            imageObj = new Image();
+            imageObj.onload = function () {
+                emblemImg.image(imageObj);
+                LAYER.draw();
+            };
+        }
+        emblemImg.width(1000 * parseFloat(data.width) / parseFloat(data.rel_x));
+        emblemImg.height(1000 * parseFloat(data.height) / parseFloat(data.rel_y));
+        emblemImg.x(1000 * parseFloat(data.x) / parseFloat(data.rel_x));
+        emblemImg.y(1000 * parseFloat(data.y) / parseFloat(data.rel_y));
+        imageObj.src = data['url'];
 
     }
 
     function get_emblems_placement(pr, container) {
+
+        tempData_array = [];
 
         $.ajax({
             url: '/catalog/product/emblems/' + pr,
@@ -1408,10 +1437,12 @@
             success: function (data) {
 
                 var emblems = '';
-
                 for (var i = 0; i < data.length; i++) {
+
+                    tempData_array.push(data[i]);
+
                     emblems += '<li>' +
-                        '<div onclick="add_emblem(\'\')" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div onclick="add_emblem_item(tempData_array[' + i + '])" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
                         '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i]['url'] + '">' +
                         '<div><h5 style="width: 100%; font-weight: bold;">' + data[i]['name'] + '</h5></div>' +
