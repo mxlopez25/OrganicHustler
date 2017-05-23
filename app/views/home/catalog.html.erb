@@ -810,7 +810,6 @@
 
     function load_p2(data, pr) {
 
-        image_id_u = -1;
         var variations = ['', '', ''];
         for (var variation in data['modifiers']) {
             if (data['modifiers'].hasOwnProperty(variation)) {
@@ -1209,8 +1208,9 @@
 
                 },
                 success: function (data, status, xhr) {
-                    var counter = parent.document.getElementById('counter');
-                    counter.innerHTML = parseInt(counter.innerHTML) + 1;
+                    modal_quick.style.display = "none";
+                    $("body").removeClass("modal-open");
+                    location.reload();
                 },
                 dataType: 'json'
             });
