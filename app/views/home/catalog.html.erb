@@ -1370,9 +1370,12 @@
 
                 for (var i = 0; i < data.length; i++) {
                     emblems += '<li>' +
-                        '<div style="margin: 4px; width: 100px; height: 150px; background: #f1f1f1; text-align: center">' +
+                        '<div style="margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div style=" background: #f1f1f1;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i]['url'] + '">' +
                         '<div><h5 style="width: 100%">' + data[i]['name'] + '</h5></div>' +
+                        '</div>' +
+                        '<div><h5 style="width: 100%">' + data[i]['cost'] + '</h5></div>' +
                         '</div>' +
                         '</li>'
                 }
