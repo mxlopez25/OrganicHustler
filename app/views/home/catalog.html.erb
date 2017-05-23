@@ -434,8 +434,8 @@
         if (n_ble) {
             p1_ch = '<hr style="margin-bottom: 0" class="desktopnot">' +
                 '<div style="margin-bottom: 10px">' +
-                '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
-                '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
+                '<div id="placement-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
+                '<div id="placement-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
                 '</div>' +
                 '<div id="emblem-place">' +
                 '</div>';
@@ -478,8 +478,6 @@
             '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
             '</div>' +
             '</div>';
-
-        get_emblems_placement(source_p);
 
         //Creates the image in case it is a variation
         if (variation_img) {
@@ -567,17 +565,24 @@
 
         var loader = $("#icon_loader");
         var loader_logo = $("#icon_loader_logo");
+        var loader_placement = $("#emblem-place");
 
         $(document).ready(function () {
             container_height.height_icon_size = loader.height();
             container_height.height_cust_size = loader_logo.height();
+            container_height.height_plac_size = loader_placement.height();
         });
+
+        get_emblems_placement(source_p, container_height);
 
         var iconShow = $("#icon-show");
         var iconHide = $("#icon-hide");
 
         var logoShow = $("#icon-show-logo");
         var logoHide = $("#icon-hide-logo");
+
+        var placementShow = $("#placement-show");
+        var placementHide = $("#placement-hide");
 
         logoShow.click(function () {
             loader_logo.animate({
@@ -625,6 +630,30 @@
             });
             iconHide.addClass(" hidden");
             iconShow.removeClass(" hidden");
+        });
+
+        placementShow.click(function () {
+            loader_placement.animate({
+                height: container_height.height_plac_size
+            }, (400 * container_height.height_plac_size / 100), function () {
+                loader_placement.css({
+                    overflow: 'visible'
+                });
+            });
+            placementShow.addClass(" hidden");
+            placementHide.removeClass(" hidden");
+        });
+
+        placementHide.click(function () {
+            loader_placement.animate({
+                height: 0
+            }, (400 * container_height.height_plac_size / 100), function () {
+                loader_placement.css({
+                    overflow: 'hidden'
+                });
+            });
+            placementHide.addClass(" hidden");
+            placementShow.removeClass(" hidden");
         });
 
         for (var i = 0; i < render_custom.length; i++) {
@@ -1355,7 +1384,12 @@
         return anchor;
     }
 
-    function get_emblems_placement(pr) {
+    function add_embelm(data) {
+
+
+    }
+
+    function get_emblems_placement(pr, container) {
 
         $.ajax({
             url: '/catalog/product/emblems/' + pr,
@@ -1370,12 +1404,12 @@
 
                 for (var i = 0; i < data.length; i++) {
                     emblems += '<li>' +
-                        '<div style="margin: 4px; width: 100px; height: 150px; text-align: center">' +
-                        '<div style=" background: #f1f1f1;">' +
+                        '<div onclick="add_emblem(\'\')" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i]['url'] + '">' +
-                        '<div><h5 style="width: 100%">' + data[i]['name'] + '</h5></div>' +
+                        '<div><h5 style="width: 100%; font-weight: bold;">' + data[i]['name'] + '</h5></div>' +
                         '</div>' +
-                        '<div><h5 style="width: 100%">' + data[i]['cost'] + '</h5></div>' +
+                        '<div><h5 style="width: 100%; color: #c2a5b2">+$' + data[i]['cost'] + '</h5></div>' +
                         '</div>' +
                         '</li>'
                 }
@@ -1391,6 +1425,50 @@
                     '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
                     '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
                     '</div>';
+
+                //Photo slider
+                (function ($) {
+                    $(function () {
+                        $('.jcarousel').jcarousel();
+
+                        $('.jcarousel-control-prev')
+                            .on('jcarouselcontrol:active', function () {
+                                $(this).removeClass('inactive');
+                            })
+                            .on('jcarouselcontrol:inactive', function () {
+                                $(this).addClass('inactive');
+                            })
+                            .jcarouselControl({
+                                target: '-=1'
+                            });
+
+                        $('.jcarousel-control-next')
+                            .on('jcarouselcontrol:active', function () {
+                                $(this).removeClass('inactive');
+                            })
+                            .on('jcarouselcontrol:inactive', function () {
+                                $(this).addClass('inactive');
+                            })
+                            .jcarouselControl({
+                                target: '+=1'
+                            });
+
+                        $('.jcarousel-pagination')
+                            .on('jcarouselpagination:active', 'a', function () {
+                                $(this).addClass('active');
+                            })
+                            .on('jcarouselpagination:inactive', 'a', function () {
+                                $(this).removeClass('active');
+                            })
+                            .jcarouselPagination();
+                    });
+                })(jQuery);
+
+                var loader_placement = $("#emblem-place");
+
+                $(document).ready(function () {
+                    container.height_plac_size = loader_placement.height();
+                });
 
             },
             error: function (data) {
