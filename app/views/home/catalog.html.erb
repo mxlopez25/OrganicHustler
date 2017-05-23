@@ -443,6 +443,10 @@
                 '<div id="placement-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
                 '</div>' +
                 '<div id="emblem-place">' +
+                '</div>' +
+                '<div>' +
+                '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CONTINUE WITHOUT EMBLEM PLACEMENT</button>' +
+                '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
                 '</div>';
 
         } else {
@@ -467,7 +471,11 @@
                 '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
                 '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
                 '</div>' +
-                get_variation_customized(variations);
+                get_variation_customized(variations) +
+                '<div>' +
+                '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
+                '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
+                '</div>';
         }
 
         document.getElementById('general_p_content').innerHTML =
@@ -478,10 +486,6 @@
             '</div>' +
             '<div class="content-part" style="padding: 0">' +
             p1_ch +
-            '<div>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
-            '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
-            '</div>' +
             '</div>';
 
         //Creates the image in case it is a variation
@@ -548,6 +552,10 @@
                     error: function (data) {
                     }
                 });
+            }
+
+            if (has_emblem) {
+
             }
 
 
