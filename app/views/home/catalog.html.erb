@@ -336,7 +336,7 @@
                 sending(id_element, true);
                 remove_modal_m()
             } else {
-                sending(id_element);
+                sending(id_element, false, false);
                 remove_modal_m();
             }
         }
@@ -347,6 +347,10 @@
 </div>
 
 <script>
+
+    //MAIN LAYER
+    var LAYER = null;
+
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
 
@@ -393,7 +397,8 @@
         }
     }
 
-    function load_p1(data, pr, n_ble) {
+    function load_p1(data, pr, n_ble, no_logo) {
+
         //Array of customs for that product initialize
         render_custom = [];
         source_p = pr;
@@ -492,7 +497,7 @@
                 width: stageWidth,
                 height: stageHeight
             });
-            var layer = new Konva.Layer();
+            LAYER = new Konva.Layer();
             stage_ov.add(layer);
 
             var baseImg = new Konva.Image({
@@ -530,18 +535,21 @@
                 imageObj2.height = stage_ov.height() * height / s_h;
             };
 
-            $.ajax({
-                type: "get",
-                url: "/catalog/get_image?id=" + image_id_e + "&style=thumb",
-                data: {},
-                dataType: "html",
-                success: function (data) {
-                    imageObj2.src = data;
-                    layer.draw();
-                },
-                error: function (data) {
-                }
-            });
+            if (no_logo || true) {
+                $.ajax({
+                    type: "get",
+                    url: "/catalog/get_image?id=" + image_id_e + "&style=thumb",
+                    data: {},
+                    dataType: "html",
+                    success: function (data) {
+                        imageObj2.src = data;
+                        layer.draw();
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+
 
             fitStageIntoParentContainer();
             window.addEventListener('resize', fitStageIntoParentContainer);
@@ -727,7 +735,7 @@
         modal_quick_m.style.display = "block";
     }
 
-    function sending(pr, emblem) {
+    function sending(pr, emblem, n_logo) {
 
         var data = {
             variation_ma: false,
@@ -756,7 +764,7 @@
             success: function (data) {
                 console.log(data);
                 variation_img = true;
-                load_p1(data, data['source_p'], emblem)
+                load_p1(data, data['source_p'], emblem, n_logo || true)
             }
         });
     }
@@ -793,6 +801,7 @@
 
     function load_p2(data, pr) {
 
+        image_id_u = -1;
         var variations = ['', '', ''];
         for (var variation in data['modifiers']) {
             if (data['modifiers'].hasOwnProperty(variation)) {
@@ -1274,7 +1283,6 @@
             success: function (data) {
 
                 var logos = '';
-                console.log(data);
 
                 for (var i = 0; i < data.length; i++) {
                     logos = logos + '<li class="items-scroll-container">'
@@ -1385,7 +1393,6 @@
     }
 
     function add_embelm(data) {
-
 
     }
 
