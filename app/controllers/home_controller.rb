@@ -26,6 +26,21 @@ class HomeController < ApplicationController
 
   end
 
+  def emblems
+    positions = []
+
+    Emblem.where(:id_moltin => params['pr_id']).each do |emblem|
+      emblem.position_emblem_admins.each do |position|
+        js_position = JSON.parse(position.to_json)
+        js_position[:url] = emblem.picture.url
+        positions.push js_position
+      end
+    end
+
+    render json: positions.to_json
+
+  end
+
   def catalog_item
     al = HomeHelper.get_product_by_id(params['id']).as_json
     al['variation_pp'] = false

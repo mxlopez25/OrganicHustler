@@ -479,7 +479,7 @@
             '</div>' +
             '</div>';
 
-        get_emblems_placement(variations);
+        get_emblems_placement(source_p);
 
         //Creates the image in case it is a variation
         if (variation_img) {
@@ -1355,10 +1355,10 @@
         return anchor;
     }
 
-    function get_emblems_placement() {
+    function get_emblems_placement(pr) {
 
         $.ajax({
-            url: '',
+            url: '/catalog/product/emblems/' + pr,
             method: 'get',
             dataType: 'json',
             data: {
@@ -1370,28 +1370,31 @@
 
                 for (var i = 0; i < data.length; i++) {
                     emblems += '<li>' +
-                        '<div>' +
-                        '' +
+                        '<div style="margin: 4px; width: 100px; height: 150px; background: #f1f1f1; text-align: center">' +
+                        '<img style="margin: 5px;" height="50px" src="' + data[i]['url'] + '">' +
+                        '<div><h5 style="width: 100%">' + data[i]['name'] + '</h5></div>' +
                         '</div>' +
                         '</li>'
                 }
+
+                document.getElementById('emblem-place').innerHTML = '<div id="icon_loader" class="jcarousel-wrapper">' +
+                    '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
+                    '<ul id="container-logo" style="left: 0; top: 0;">' +
+                    emblems +
+                    '</ul>' +
+                    '</div>' +
+                    '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+                    '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
+                    '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                    '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+                    '</div>';
+
             },
             error: function (data) {
 
             }
         });
 
-        return '<div id="icon_loader" class="jcarousel-wrapper">' +
-            '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
-            '<ul id="container-logo" style="left: 0; top: 0;">' +
-                
-            '</ul>' +
-            '</div>' +
-            '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
-            '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-            '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
-            '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
-            '</div>'
     }
 
     function get_variation_size(variations) {
