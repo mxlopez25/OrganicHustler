@@ -41,12 +41,45 @@
             <div class="form-group">
               <label class="col-md-3" for="modifier">Modifier: </label>
               <select class="col-md-7" name="modifier" id="modifier">
-                <% @modifiers.each do |mod| %>
-                    <option value='<%= mod[0] %>'><%= mod[1]['title'] %></option>
-                <% end %>
+
+
               </select>
             </div>
           </div>
+
+
+          <script>
+              var variations = ['', '', '', '', ''];
+              var data =
+              <%= @modifiers.to_json.html_safe %>
+              for (var variation in data) {
+                  if (data.hasOwnProperty(variation)) {
+
+                      console.log(data[variation]);
+
+                      if (data[variation][1]['title'] === 'Color') {
+                          variations[2] = data[variation];
+                      } else if (data[variation][1]['title'] === 'Size') {
+                          variations[1] = data[variation];
+                      } else if (data[variation][1]['title'] === 'Logo preset') {
+                          variations[0] = data[variation];
+                      } else if (data[variation][1]['title'] === 'Style') {
+                          variations[3] = data[variation];
+                      } else if (data[variation][1]['title'] === 'Material') {
+                          variations[4] = data[variation];
+                      }
+
+                  }
+              }
+
+              for (var v in variations) {
+                  document.getElementById('modifier').innerHTML += '<option value="' + variations[v][1]['id'] + '">' + variations[v][1]['title'] + '</option>'
+              }
+
+
+          </script>
+
+          <hr>
 
           <div id="variable-form" style="margin-left: auto; margin-right: auto;">
           </div>
@@ -250,8 +283,39 @@
                                   '<input type="number" name="var_s" class="hidden" id="var_s" value="1">');
                               break;
                           case 2:
-                              variable_form.html('<div class="form-group"> <label class="col-md-3" for="changes">Color: </label><input class="col-md-7" type="text" id="changes" name="changes"></div><div class="form-group"><label class="col-md-3" for="changes">Price mod: </label><select class="col-md-2" name="sign"><option value="+">+</option><option value="+">-</option><option value="+">=</option></select><input class="col-md-5" type="text" id="price_mod" name="price_mod"></div>' +
+                              variable_form.html('<div class="form-group">' +
+                                  '<label class="col-md-3" for="changes">Color: </label><input class="col-md-7" type="text" id="changes" name="changes">' +
+                                  '</div>' +
+                                  '<div class="form-group">' +
+                                  '<label class="col-md-3" for="changes">Price mod: </label>' +
+                                  '<select class="col-md-2" name="sign">' +
+                                  '<option value="+">+</option>' +
+                                  '<option value="+">-</option>' +
+                                  '<option value="+">=</option>' +
+                                  '</select>' +
+                                  '<input class="col-md-5" type="text" id="price_mod" name="price_mod">' +
+                                  '<label class="col-md-3" for="changes">Color representation: </label><input type="color" name="favcolor" value="#ff0000">' +
+                                  '</div>' +
                                   '<input type="number" name="var_s" class="hidden" id="var_s" value="2">');
+                              break;
+                          case 3:
+                              variable_form.html('<div class="form-group"> <label class="col-md-3" for="changes">Style: </label><input class="col-md-7" type="text" id="changes" name="changes"></div><div class="form-group"><label class="col-md-3" for="changes">Price mod: </label><select class="col-md-2" name="sign"><option value="+">+</option><option value="+">-</option><option value="+">=</option></select><input class="col-md-5" type="text" id="price_mod" name="price_mod"></div>' +
+                                  '<input type="number" name="var_s" class="hidden" id="var_s" value="3">');
+                              break;
+                          case 4:
+                              variable_form.html('<div class="form-group">' +
+                                  '<label class="col-md-3" for="changes">Material: </label><input class="col-md-7" type="text" id="changes" name="changes">' +
+                                  '</div>' +
+                                  '<div class="form-group">' +
+                                  '<label class="col-md-3" for="changes">Price mod: </label>' +
+                                  '<select class="col-md-2" name="sign">' +
+                                  '<option value="+">+</option>' +
+                                  '<option value="+">-</option>' +
+                                  '<option value="+">=</option>' +
+                                  '</select>' +
+                                  '<input class="col-md-5" type="text" id="price_mod" name="price_mod">' +
+                                  '</div>' +
+                                  '<input type="number" name="var_s" class="hidden" id="var_s" value="4">');
                               break;
 
 

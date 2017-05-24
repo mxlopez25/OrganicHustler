@@ -70,8 +70,6 @@ class HomeController < ApplicationController
   end
 
   def catalog
-    @open_quick_m
-    p @open_quick_m
     @parameters = params
   end
 

@@ -73,7 +73,15 @@ class CustomsController < ApplicationController
         :catalog_only => params['catalog_only']
     }
 
-    RestClient.post('https://api.molt.in/v1/products', fields, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    product = RestClient.post('https://api.molt.in/v1/products', fields, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    product = JSON.parse(product)['result']
+    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Logo preset', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Style', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Material', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Size', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Color', type: 'variant'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+
+
     render :nothing => true, :status => 200
   end
 

@@ -74,16 +74,21 @@ class AdminController < ApplicationController
       case params['var_s']
         when "0"
           object = "{\"image_id\": \"#{params['id_pic']}\", \"x\": \"#{params['pos-x']}\", \"y\": \"#{params['pos-y']}\", \"width\": \"#{params['width-p']}\", \"height\": \"#{params['height-p']}\", \"s_w\": \"#{params['source_w']}\", \"s_h\": \"#{params['source_h']}\"}"
-          p JSON.parse(object)
-          RestClient.post("https://#{Moltin::Config.api_host}/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: '+0'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-          @product = AdminHelper.get_product_by_id(@product_id)
+          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: '+0'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
         when "1"
+          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
         when "2"
+          object = "{\"code\": \"#{params['favcolor']}\", \"title\": \"#{params['changes']}\"}"
+          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
         when "3"
-
+          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+        when "4"
+          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
         else
           # type code here
       end
+
+      @product = AdminHelper.get_product_by_id(@product_id)
 
       render 'admin/products_functions/edit_product'
     end
