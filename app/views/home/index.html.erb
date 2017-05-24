@@ -330,8 +330,8 @@
 
 
 <div style="width: 75%" class="container mobilenot">
-  <div class="row row-centered" style="position: relative">
-    <div style="float: left" class="col-xs-5 col-lg-5 text-center center
+  <div class="row row-centered" style="position: relative; height: 250px">
+    <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: auto;" class="col-xs-5 col-lg-5 text-center center
   				col-cen col-centered  ">
 
       <% image_social_1 = GroupShowcase.where(screen: 3, name_identity: 'image_1_social').first.showcases.first %>
@@ -340,11 +340,11 @@
 
     </div>
 
-    <div style="width: 1px; float: left; height: 200px; background: #b692a2; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
+    <div style="width: 1px; float: left; height: 150px; background: #b692a2; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
     </div>
 
 
-    <div style="float: right" class="col-xs-5 col-lg-5 text-center center
+    <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: auto; right: 0;" class="col-xs-5 col-lg-5 text-center center
   				col-cen col-centered ">
 
       <% image_social_2 = GroupShowcase.where(screen: 3, name_identity: 'image_2_social').first.showcases.first %>
