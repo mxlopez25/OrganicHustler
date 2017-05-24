@@ -5,29 +5,31 @@
 <div class="desktopnot" style="margin-top: -50px"></div>
 <div class="mobilenot" style="margin-top: 50px"></div>
 <div style="overflow: hidden; margin: 0 7%;">
-<div class="content-part field-data">
+  <div class="content-part field-data">
 
   <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
       <% product_temp = get_product(product.m_id) %>
-      <div class="item-checkout" style="margin-bottom: 20px">
+        <div class="item-checkout" style="padding-bottom: 20px; overflow: hidden; border-bottom: thin black solid">
         <div style="float: left; width: 33%; position: relative">
           <div id="<%= product.id %>cart" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
         </div>
         <div style="float: left; width: 67%; position: relative">
-          <h4><%= product_temp['title'] %></h4>
+          <h4 class="text_light text-uppercase"><%= product_temp['title'] %></h4>
+          <% pr_price = product_price(product.id) %>
+          <h4 class="text_light_pink">$<%= pr_price[5] %></h4>
+
           <div style="float: left; width: 50%">
-            <h6>Size: <%= get_variation(product_temp, 'Size', product.size_id)['title'] %></h6> <!--FIX MISSING ATRIBUTES-->
-            <h6>Customized:
+            <h6 class="text_light" style="font-weight: 400">Size: <%= get_variation(product_temp, 'Size', product.size_id)['title'] %></h6> <!--FIX MISSING ATRIBUTES-->
+            <h6 class="text_light" style="font-weight: 400">Customized:
               <% if product.has_emblem %>YES
               <% elsif product.has_logo %>YES
               <% else %>NO
               <% end %></h6>
-            <h6>Color: BROWN</h6> <!-- Attach to backend -->
+            <h6 class="text_light" style="font-weight: 400">Color: BROWN</h6> <!-- Attach to backend -->
           </div>
           <div style="float: left; width: 50%; text-align: center">
-            <h3>Qty: 1</h3> <!-- Attach to backend -->
-            <% pr_price = product_price(product.id) %>
-            <h4><%= pr_price[5] %></h4>
+            <h3 style="margin: 10px; padding-top: 15px; padding-bottom: 15px; border: thin black solid;">Qty:
+              1</h3> <!-- Attach to backend -->
             <% tax_array.push(pr_price[1]) %>
             <% cost_array.push(pr_price[5]) %>
           </div>
@@ -92,4 +94,55 @@
   <% end %>
 
 </div>
+  <div style="position: relative; border-width: 1px" class="content-part preview-cart content-part-10">
+
+    <div id="loading" class="hidden">
+
+      <div class="loader">
+
+      </div>
+
+    </div>
+
+    <div style="padding: 10px">
+
+      <div style="overflow: hidden">
+        <h3 class="text_light" style="float: left; margin: 10px 10px 15px;">ORDER DETAILS</h3>
+      </div>
+      <div style="text-align: center; width: 100%">
+        <hr style="border-color: black; margin: 0 10px;">
+      </div>
+      <div style="overflow: hidden; margin: 10px">
+        <% cost_t = 0 %>
+        <% cost_array.each do |cost| %>
+            <% cost_t = cost_t + cost %>
+        <% end %>
+        <h4 class="t-right text_light">Subtotal</h4><h4 class="s-left text_light">$<%= cost_t %></h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 10px">
+        <h4 class="t-right text_light">Shipping</h4><h4 class="s-left text_light">(Free US)</h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 10px">
+        <% tax_t = 0 %>
+        <% tax_array.each do |tax| %>
+            <% tax_t = tax_t + tax %>
+        <% end %>
+        <h4 class="t-right text_light">Estimated Tax</h4><h4 class="s-left text_light">$<%= tax_t %></h4>
+      </div>
+
+      <div style="overflow: hidden; margin: 40px 10px 10px;">
+        <h4 class="t-right text_light">Estimated total</h4>
+        <h3 class="s-left text_light">$<%= tax_t + cost_t %></h3>
+      </div>
+
+      <div style="text-align: center; width: 100%">
+        <hr style="border-color: black; margin: 0 10px;">
+      </div>
+
+      <button class="btn styling_btn text_light" style="margin-bottom: 20px; font-size: 20px; color: black; border-color: black">CHECKOUT</button>
+
+    </div>
+  </div>
 </div>
