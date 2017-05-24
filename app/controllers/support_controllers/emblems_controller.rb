@@ -29,7 +29,7 @@ class SupportControllers::EmblemsController < ApplicationController
     position_add.each do |pos|
       unless pos.blank?
         if pos[1]['position_id'].eql? '-1'
-          PositionEmblemAdmin.create(emblem_position_param(pos[0]))
+          PositionEmblemAdmin.create(emblem_position_params(pos[0]))
         else
           begin
             position = PositionEmblemAdmin.find(pos[1]['position_id'])
