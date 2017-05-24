@@ -97,9 +97,9 @@
     <% objects.each do |pr| %>
         <div onclick="open_quick('<%= "#{pr['id']}" %>')" class="catalog-item" id="item<%= pr['id'] %>">
           <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
-          <h5 class="text-uppercase" style="margin-bottom: 10px"><%= pr['title'] %></h5>
-          <h5 style="color: #b692a2"> <%= pr['price']['value'] %></h5>
-          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick
+          <h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px"><%= pr['title'] %></h5>
+          <h5 style="font-size: 16px; color: #ba97a6; font-family: 'Source Sans Pro', sans-serif; font-weight: 600"> <%= pr['price']['value'] %></h5>
+          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%; font-family: 'Source Sans Pro', sans-serif; font-weight: 600">Quick
             Shop
           </button>
         </div>
@@ -311,7 +311,6 @@
 
   <!-- Modal content -->
   <div id="modal-content-center" class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
-    <span id="quick_view_close" class="close" style="z-index: 100; position: fixed">&times;</span>
     <div id="general_p_content" class="g-wrapper">
 
     </div>
@@ -353,15 +352,6 @@
 
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
-
-    // Get the <span> element that closes the modal
-    var span_quick = document.getElementById('quick_view_close');
-
-    // When the user clicks on <span> (x), close the modal
-    span_quick.onclick = function () {
-        modal_quick.style.display = "none";
-        $("body").removeClass("modal-open")
-    };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
@@ -451,35 +441,36 @@
 
         } else {
             p1_ch = '<div class="wrap">' +
-                '<h5>' + data['title'] + '</h5>' +
-                '<h6>' + data['price']['value'] + '</h6>' +
+                '<h5 class="text-uppercase text_light_20">' + data['title'] + '</h5>' +
+                '<h5 class="text_light_pink">' + data['price']['value'] + '</h5>' +
                 '</div>' +
-                '<div class="wrap">' +
+                '<div class="wrap light-paragraph" style="padding-top: 10px">' +
                 '<span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
-                '<div style="text-align: end; padding-top: 9px">' +
-                '<span id="more-toggle">Read more</span>' +
+                '<div style="text-align: end">' +
+                '<span id="more-toggle" class="text_light_pink">Read more</span>' +
                 '</div>' +
                 '</div>' +
                 '<hr style="margin-bottom: 0">' +
                 '<div style="margin-bottom: 10px">' +
-                '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h6></div>' +
-                '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h6></div>' +
+                '<div id="icon-show" class="hidden"><h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h5></div>' +
+                '<div id="icon-hide"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h5></div>' +
                 '</div>' +
                 get_variation_size(variations) +
                 '<hr style="margin-bottom: 0">' +
                 '<div style="margin-bottom: 10px">' +
-                '<div id="icon-show-logo" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
-                '<div id="icon-hide-logo"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h6></div>' +
+                '<div id="icon-show-logo" class="hidden"><h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h5></div>' +
+                '<div id="icon-hide-logo"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h5></div>' +
                 '</div>' +
                 get_variation_customized(variations) +
                 '<div>' +
-                '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
+                '   <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
                 '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
                 '</div>';
         }
 
         document.getElementById('general_p_content').innerHTML =
             '<div id="wrapper-img-1" class="wrapper-img">' +
+            '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
             '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
             '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
             '</div>' +
@@ -1532,7 +1523,7 @@
             for (var attr in variations[1]['variations']) {
                 //missing check of attr
                 sizes = sizes + '<li>' +
-                    '<span id="' + variations[1]['variations'][attr]['id'].toString() + '" onclick="changeSize(\'' + variations[1]['variations'][attr]['id'].toString() + '\')" class="badge badge-size">' + variations[1]['variations'][attr]['title'] + '</span>' +
+                    '<span style="font-size: 15px" id="' + variations[1]['variations'][attr]['id'].toString() + '" onclick="changeSize(\'' + variations[1]['variations'][attr]['id'].toString() + '\')" class="badge badge-size text_light">' + variations[1]['variations'][attr]['title'] + '</span>' +
                     '</li>';
 
                 available_sizes.push(variations[1]['variations'][attr]['id'].toString());

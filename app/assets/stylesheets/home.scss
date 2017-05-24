@@ -40,16 +40,34 @@
 }
 
 #more-toggle {
-  color: #dedede;
+  color: #c2a5b2;
   cursor: pointer;
 }
 
 div.wrap h5, h6, h1, h2, h3, h4, p, span {
-  margin: 2px 0;
+  margin: 5px 0;
 }
 
 div.wrap {
   margin: 8px 0;
+}
+
+.text_light_pink {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  color: #c2a5b2;
+}
+
+.text_light {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+}
+
+.light-paragraph {
+  color: #7e7e7e;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-style: italic;
 }
 
 #overall-container {
@@ -66,7 +84,7 @@ div.wrap {
 .badge-size {
   margin: 2px;
   cursor: pointer;
-  background: #dedede;
+  background: #e4e4e4;
   font-weight: lighter;
   color: #2E2F30;
 }
@@ -134,6 +152,7 @@ div.wrap {
 }
 
 .modal-content_quick {
+  position: absolute;
   margin: auto;
   top: 0;
   bottom: 0;
@@ -370,6 +389,13 @@ div.card {
   background: #c098ac;
 }
 
+.text_light_20 {
+  font-size: 20px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  color: #0b0b0b;
+}
+
 .btn-bottom_fixed {
   display: none;
   position: absolute;
@@ -481,6 +507,16 @@ div.blur {
   width: 100%;
 }
 
+button.btn-cust {
+  border: none;
+  background: #e8e8e8;
+  border-radius: 0;
+}
+
+button.btn-cust:hover {
+  background: #efefef;
+}
+
 .content-part {
   float: left;
   width: 100%;
@@ -569,8 +605,8 @@ div.blur {
 
   .g-wrapper {
     min-height: 400px;
-    height: 440px;
-    max-height: 440px;
+    height: 470px;
+    max-height: 470px;
   }
 
   .modal-content_quick {
@@ -578,14 +614,12 @@ div.blur {
     border: 1px solid #FFFFFF;
     width: 75%; /* Could be more or less, depending on screen size */
     min-height: 400px;
-    height: 440px;
-    margin-top: 120px;
-    margin-bottom: 0;
-    max-height: 440px;
-    top: auto;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    height: 470px;
+    max-height: 470px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 }
 

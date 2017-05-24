@@ -12,6 +12,8 @@
 
   <title>Organic Hustler</title>
 
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400i,400,600" rel="stylesheet">
+
   <%= javascript_include_tag 'jquery.min.js' %>
   <!-- Bootstrap Core -->
   <%= stylesheet_link_tag 'bootstrap.css' %>
@@ -270,7 +272,8 @@
           <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</button>
           <button style="float: left" type="button" class="btn btn-link">Twitter</button>
       <% else %>
-          <h5 style="font-weight: bold; padding-right: 5px; float: left;">Your items
+          <h5 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 400; padding-right: 5px; float: left;">Your
+            Items
             <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
           </h5>
       <% end %>
