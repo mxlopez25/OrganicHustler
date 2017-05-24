@@ -41,7 +41,8 @@
   <div id="modal_c" style="padding: 0;" class="modal-content">
     <span class="close">&times;</span>
     <div class="modal_c_part">
-      <h3 style="color: #3F3F3F; text-align: center; margin: 10px auto;">Your Bag</h3>
+      <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin: 10px auto;">Your
+        Bag</h3>
     </div>
     <hr class="no-spacing-bar">
 
@@ -110,8 +111,8 @@
                           layer.draw();
                       }
                   </script>
-                  <p class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></p>
-                  <p style="font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= (product_price product.id).last %>
+                  <p class="text-uppercase text_light_20"><%= product_temp['title'] %></p>
+                  <p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;"><%= (product_price product.id).last %>
                     $</p>
 
                 </li>
@@ -167,8 +168,9 @@
 
     <hr class="no-spacing-bar">
     <div style="overflow: hidden" class="modal_c_part">
-      <span style="font-size: large;color: #e5bbd1;position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-      <span style="font-size: x-large; float: right;position: relative;height: 35px;"><%= get_price %>$</span>
+      <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
+      <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= get_price %>
+        $</span>
     </div>
     <hr class="no-spacing-bar">
     <div class="modal_c_part">
@@ -376,16 +378,7 @@
               $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
           });
       });
-      /*
 
-       $(window).on('resize', function () {
-       triangle.style.right = (100 - ((btn2.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
-       triangle.style.top = (btn2.getBoundingClientRect().top + btn_j.height()).toString() + "px";
-       modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
-       modal_c.style.top = (btn2.getBoundingClientRect().bottom + 20).toString() + "px";
-       });*/
-
-      // When the user clicks on <span> (x), close the modal
       span.onclick = function () {
           modal.style.display = "none";
           $("body").removeClass("modal-open")
