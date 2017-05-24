@@ -163,9 +163,9 @@ module HomeHelper
 
     response = ''
     if parameters['search'].blank?
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}&limit=40", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     else
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?title=#{parameters['search']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?title=#{parameters['search']}&limit=40", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
     end
 
     JSON.parse(response.body)['result']

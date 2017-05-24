@@ -524,10 +524,10 @@
 
             var imageObj2 = new Image();
             imageObj2.onload = function () {
-                logoImg.image(imageObj2);
-                LAYER.draw();
                 imageObj2.width = stage_ov.width() * width / s_w;
                 imageObj2.height = stage_ov.height() * height / s_h;
+                logoImg.image(imageObj2);
+                LAYER.draw();
             };
 
             if (no_logo || true) {

@@ -33,8 +33,8 @@ module AdminHelper
     JSON.parse(response.body)['result']
   end
 
-  def self.get_products
-    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products", {:Authorization => "Bearer #{self.generate_token}"})
+  def self.get_products(offset)
+    response = RestClient.get("https://api.molt.in/v1/products?limit=#{offset}&offset=0}", {:Authorization => "Bearer #{self.generate_token}"})
     JSON.parse(response.body)['result']
   end
 

@@ -96,7 +96,8 @@
       </tr>
       </thead>
       <tbody id="list-to-m">
-      <% AdminHelper.get_products.each do |product| %>
+      <% AdminHelper.get_products(40).each do |product| %>
+
           <tr id="product-row">
             <td>
               <script>
