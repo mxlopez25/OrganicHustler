@@ -95,8 +95,8 @@
       <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
       <% item = get_product(id) %>
       <img src="<%= item['images'][0]['url']['https'] %>" style="height: 370px;">
-      <h4 class="text-center"><%= item['title'] %></h4>
-      <h5 class="text-center">Eco-Friendly+Customizable</h5>
+      <h4 class="text-center text_light"><%= item['title'] %></h4>
+      <h5 class="text-center text_light">Eco-Friendly+Customizable</h5>
       <article>
         <button onclick="location.href = '/catalog?id=<%= id %>'" class="button styling_btn btn">CUSTOMIZE</button>
       </article>
@@ -105,7 +105,7 @@
 
     <div class="side-list">
 
-      <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+      <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
 
       <% item['modifiers'].first[1]['variations'].each do |var| %>
@@ -174,7 +174,7 @@
           <% end %>
       <% end %>
       <button onclick="location.href = '/product/<%= id %>/1'" class="btn-sm btn-link center-block" style="color:black;  ">
-        <h4> MORE </h4></button>
+        <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
 
 
     </div>
@@ -202,7 +202,7 @@
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
   <img src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 50vw; min-height: 350px">
-  <p style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
+  <p class="text_light" style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
     <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
@@ -210,7 +210,7 @@
 
   <div class="side-list mobilenot">
 
-    <h4 style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+    <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
     <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_2').first.showcases.first.product_id %>
     <% item = get_product(id) %>
@@ -282,7 +282,7 @@
         <% end %>
     <% end %>
     <button onclick="location.href = '/product/<%= id %>/1'" class="btn-sm btn-link center-block" style="color:black;  ">
-      <h4> MORE </h4></button>
+      <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
 
 
   </div>
@@ -304,7 +304,7 @@
 
   <hr style="width: 80%; margin: 30px auto">
 
-  <h3 style="margin-top: 70px; font-weight: 100">#ORGANICHUSTLER</h3>
+  <h2 class="text_light" style="margin-top: 70px">#ORGANICHUSTLER</h2>
   <hr style="width: 33px; margin: 20px auto 0;border-color: #b692a2">
 
 </div>
