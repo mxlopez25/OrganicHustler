@@ -69,18 +69,35 @@ module HomeHelper
     JSON.parse(response.body)['result']
   end
 
-  def get_cart_id
+  def create_temp_user
+    user = TempUser.create
+    p ("user_created with id: #{user.id}")
+    session[:temp_user_id] = user.id
+
+    user
+  end
+
+  def get_user
     user = current_user
     if user.nil?
       if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
-
+        return create_temp_user
       else
-        user = TempUser.find(session[:temp_user_id])
+        begin
+          user = TempUser.find(session[:temp_user_id])
+          return user
+        rescue => e
+          p e
+          return create_temp_user
+        end
       end
     end
+    user
+  end
+
+  def get_cart_id
+
+    user = get_user
 
     if user.cart.nil?
       user.create_cart

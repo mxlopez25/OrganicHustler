@@ -286,6 +286,7 @@
 
     function setOutcome(result) {
 
+        var error_h = document.getElementById('error_hand');
         if (result.token) {
 
             document.getElementById('loading').classList.remove('hidden');
@@ -316,8 +317,11 @@
                             } else {
                                 location.href = '/temp_user_act'
                             }
+                        } else if (data['sign']) {
+                            console.log('klk yo soy un duro');
+                            location.href = '/users/sign_in';
+                            document.getElementById('loading').classList.add('hidden');
                         } else {
-                            var erro_h = document.getElementById('error_hand');
 
                             var message = {
                                 invalid_number: 'The card number is not a valid credit card number.',
@@ -335,9 +339,8 @@
                             };
 
                             document.getElementById('loading').classList.add('hidden');
-                            erro_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>';
+                            error_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>';
                         }
-
                     },
                     error: function () {
                         document.getElementById('loading').classList.add('hidden');
@@ -346,8 +349,8 @@
             );
 
         } else if (result.error) {
-            errorElement.textContent = result.error.message;
-            errorElement.classList.add('visible');
+            error_h.innerHTML = '<div class="error_message"><h6>' + result.error.message + '</h6></div>';
+            error_h.classList.add('visible');
         }
     }
 
