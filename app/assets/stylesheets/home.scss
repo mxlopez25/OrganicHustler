@@ -63,6 +63,23 @@ div.wrap {
   font-weight: 300;
 }
 
+.message_wrapper {
+  height: 70vh;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.message_container {
+  height: 160px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .light-paragraph {
   color: #7e7e7e;
   font-family: 'Source Sans Pro', sans-serif;
