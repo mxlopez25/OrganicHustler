@@ -540,6 +540,15 @@ button.btn-cust:hover {
   overflow: hidden;
 }
 
+button:focus {
+  background: #c2a5b2;
+}
+
+button:active {
+  background: #ba97a6;
+}
+
+
 
 @media screen and (min-width: 480px) {
 
