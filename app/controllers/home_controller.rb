@@ -184,30 +184,6 @@ class HomeController < ApplicationController
       p user.cart
     end
 
-    product_source = get_product(params[:product][:product_base_id])
-
-    price_product = AdminHelper.get_product_by_id(params[:product][:product_id])['price']['data']['raw']['with_tax'].to_d
-    price_logo = 0
-    price_emblem = 0
-
-    unless params[:product][:logo].blank?
-      logo = Picture.find(params[:product][:logo][:logo_id])
-      price_logo = logo.price
-      if price_logo.nil?
-        price_logo = 0
-      end
-    end
-
-    unless params[:product][:emblem].blank?
-      emblem = Emblem.find(params[:product][:emblem][:emblem_id])
-      price_emblem = emblem.emblem_cost
-      if price_emblem.nil?
-        price_emblem = 0
-      end
-    end
-
-    total_m = price_logo + price_product + price_emblem
-
     product = CartProduct.create do |u|
 
       u.m_id = params[:product][:product_id]
@@ -237,9 +213,22 @@ class HomeController < ApplicationController
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
     user.cart.save!
-
   end
 
+  def get_cart_items
+
+    obj = CartProduct.where(cart_id: get_cart_id)
+    json_obj = JSON.parse(obj.to_json)
+    json_obj.each {|json_data|
+      json_data['product_data'] = get_product(json_data['m_id'])
+      json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
+      json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
+      json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)
+      json_data['price'] = product_price(json_data['id'])
+    }
+
+    render json: json_obj
+  end
 
   def delete_from_cart
     id = params['item_id']

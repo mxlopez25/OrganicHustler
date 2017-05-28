@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   post '/' => 'home#subscribe'
 
   get '/catalog' => 'home#catalog'
+  get '/cart' => 'home#get_cart_items'
   get '/catalog/item/:id' => 'home#catalog_item'
   get '/catalog/get_image' => 'home#get_image_by_id'
   get '/catalog/logos/:id' => 'home#get_logos_by_id'

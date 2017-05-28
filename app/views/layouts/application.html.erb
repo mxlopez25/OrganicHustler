@@ -51,73 +51,8 @@
       <div id="product_loader" class="jcarousel-wrapper">
         <div id="product-loader-carousel" style="width: 100%; min-height: 200px" class="jcarousel" data-jcarousel="true">
           <ul id="product-container" style="left: 0; top: 0; text-align: center">
-            <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-                <li class="element_product">
-                  <div id="<%= product.id %>" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
 
-                  </div>
-                  <% product_temp = get_product(product.m_id) %>
-                  <script id="create-shape">
-                      //Show the custom products
-                      createShape('<%= product.id %>', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
-                      function createShape(id, width, height, x, y, s_w, s_h) {
-                          var container = $('#' + id);
-                          container.height(container.width());
 
-                          var stage = new Konva.Stage({
-                              container: id,
-                              width: container.width(),
-                              height: container.height()
-                          });
-                          var layer = new Konva.Layer();
-                          stage.add(layer);
-
-                          var baseImg = new Konva.Image({
-                              width: container.width(),
-                              height: container.height(),
-                              draggable: false
-                          });
-
-                          var logoImg = new Konva.Image({
-                              width: container.width() * width / s_w,
-                              height: container.height() * height / s_h
-                          });
-
-                          var logoGroup = new Konva.Group({
-                              x: container.width() * x / s_w,
-                              y: container.width() * y / s_h
-                          });
-
-                          layer.add(baseImg);
-                          layer.add(logoGroup);
-                          logoGroup.add(logoImg);
-
-                          var imageObj1 = new Image();
-                          imageObj1.onload = function () {
-                              baseImg.image(imageObj1);
-                              layer.draw();
-                          };
-                          imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
-
-                          var imageObj2 = new Image();
-                          imageObj2.onload = function () {
-                              logoImg.image(imageObj2);
-                              layer.draw();
-                              imageObj2.width = container.width() * width / s_w;
-                              console.log(imageObj2.width, container.width(), width, s_w);
-                              imageObj2.height = container.height() * height / s_h;
-                              console.log(imageObj2.height);
-                          };
-                          imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
-                          layer.draw();
-                      }
-                  </script>
-                  <p class="text-uppercase text_light_20"><%= product_temp['title'] %></p>
-                  <p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;"><%= (product_price product.id).last %>
-                    $</p>
-
-                </li>
-            <% end %>
           </ul>
         </div>
         <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
@@ -127,6 +62,109 @@
       </div>
 
       <script>
+
+          $.ajax({
+              url: '/cart',
+              method: 'get',
+              data: {},
+              dataType: 'json',
+              success: function (data) {
+
+                  console.log(data);
+                  var container = document.getElementById('product-container');
+                  for (var product in data) {
+                      if (data.hasOwnProperty(product)) {
+                          container.innerHTML += '<li class="element_product">' +
+                              '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
+                              '</div>' +
+                              '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
+                              '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + data[product]['price'][6] + '$</p>' +
+                              '</li>';
+                      }
+                  }
+
+                  for (var image in data) {
+                      if (data.hasOwnProperty(image)) {
+
+                          var id = data[image]['id'];
+                          var x = data[image]['dim_x'];
+                          var y = data[image]['dim_y'];
+                          var width = data[image]['width'];
+                          var height = data[image]['height'];
+                          var r_x = data[image]['relation_x'];
+                          var r_y = data[image]['relation_y'];
+
+                          var img_container = $('#' + id + '-catalog-cart');
+                          img_container.height(img_container.width);
+
+                          var stage = new Konva.Stage({
+                              container: id + '-catalog-cart',
+                              width: img_container.width(),
+                              height: img_container.height()
+                          });
+
+                          var layer = new Konva.Layer();
+                          stage.add(layer);
+
+                          var baseImg = new Konva.Image({
+                              width: img_container.width(),
+                              height: img_container.height(),
+                              draggable: false
+                          });
+
+                          var logoImg = new Konva.Image({
+                              x: img_container.width() * x / r_x,
+                              y: img_container.height() * y / r_y,
+                              width: img_container.width() * width / r_x,
+                              height: img_container.height() * height / r_y
+                          });
+
+                          layer.add(baseImg);
+                          layer.add(logoImg);
+
+                          var imageObj1 = new Image();
+                          imageObj1.src = data[image]['product_data']['images'][0]['url']['https'];
+                          baseImg.image(imageObj1);
+
+                          var imageObj2 = new Image();
+                          imageObj2.src = data[image]['logo_url'];
+                          logoImg.image(imageObj2);
+
+                          if (data[image]['emblem_position_data']) {
+                              var emblem_x = data[image]['emblem_position_data']['x'];
+                              var emblem_y = data[image]['emblem_position_data']['y'];
+                              var emblem_width = data[image]['emblem_position_data']['width'];
+                              var emblem_height = data[image]['emblem_position_data']['height'];
+                              var emblem_r_x = data[image]['emblem_position_data']['rel_x'];
+                              var emblem_r_y = data[image]['emblem_position_data']['rel_y'];
+
+                              var emblemImg = new Konva.Image({
+                                  x: img_container.width() * emblem_x / emblem_r_x,
+                                  y: img_container.width() * emblem_y / emblem_r_y,
+                                  width: img_container.width() * emblem_width / emblem_r_x,
+                                  height: img_container.height() * emblem_height / emblem_r_y
+                              });
+
+                              layer.add(emblemImg);
+
+                              var imageObj3 = new Image();
+                              imageObj3.src = data[image]['emblem_url'];
+                              emblemImg.image(imageObj3);
+                          }
+
+                          layer.draw();
+                      }
+                  }
+
+                  // Reload carousel
+                  $('.jcarousel').jcarousel('reload');
+
+              },
+              error: function (data) {
+
+              }
+          });
+
           //Photo slider
           (function ($) {
               $(function () {
