@@ -219,12 +219,7 @@ module HomeHelper
   def get_price(order_id = nil)
     
     if order_id.nil?
-      user = nil
-      if user_signed_in?
-        user = current_user
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
+      user = get_user
 
       total_price = 0
       user.cart.cart_products.each do |t|
