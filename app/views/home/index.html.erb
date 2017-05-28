@@ -13,18 +13,26 @@
 
 </div>
 
-<div class="header desktopnot " style="position: relative; background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat center;
+<div class="header desktopnot " style="position: relative; background: url('https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/017/original/back_g.png?1494040100') no-repeat center;
     margin-top: -40px;
     height: 360px;
     width: 100%;
     overflow: hidden">
 
-  <div style="overflow: hidden; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 170px">
+  <div style="overflow: hidden; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 210px">
 
     <h1 class="text-center ht text_light">ECO<br>FRIENDLY</h1>
-    <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn">SHOP MEN</button>
-    <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn">SHOP WOMEN
+
+    <div style="text-align: center; overflow: hidden;">
+      <div style="overflow: hidden; margin: 50px auto; left: 0; right: 0; width: 244px;">
+        <button style="width: 112px; height: 50px; font-weight: 400; font-size: 14px" onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn text_light">SHOP
+          MEN
+        </button>
+        <button style="width: 112px; height: 50px; font-weight: 400; font-size: 14px" onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn text_light">SHOP
+          WOMEN
     </button>
+      </div>
+    </div>
 
   </div>
 
