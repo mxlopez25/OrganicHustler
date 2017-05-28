@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get '/catalog/logos/:id' => 'home#get_logos_by_id'
   get '/catalog/product/colored/:pr_id/:mod/:act_obj' => 'home#colored_image'
   get '/catalog/product/emblems/:pr_id' => 'home#emblems'
+  get '/catalog/product/emblem/:position_id' => 'home#get_emblem'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'

@@ -50,8 +50,7 @@
 
           <script>
               var variations = ['', '', '', '', ''];
-              var data =
-              <%= @modifiers.to_json.html_safe %>
+              var data = <%= @modifiers.to_json.html_safe %>;
               for (var variation in data) {
                   if (data.hasOwnProperty(variation)) {
 

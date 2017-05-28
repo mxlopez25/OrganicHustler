@@ -38,7 +38,15 @@ class HomeController < ApplicationController
     end
 
     render json: positions.to_json
+  end
 
+  def get_emblem
+    emblem_pos = PositionEmblemAdmin.find(params[:position_id])
+
+    js_object = JSON.parse(emblem_pos.to_json)
+    js_object[:url] = emblem_pos.emblem.picture.url
+
+    render json: js_object.to_json
   end
 
   def catalog_item
@@ -154,8 +162,7 @@ class HomeController < ApplicationController
 
   def add_to_cart
     user = nil
-    p current_user
-    if params['user_signed'].eql?('false')
+    unless user_signed_in?
       if session[:temp_user_id].nil?
         user = TempUser.create
         p ("user_created with id: #{user.id}")
@@ -177,23 +184,22 @@ class HomeController < ApplicationController
       p user.cart
     end
 
-    product_source = get_product(params['source_p'])
-    size_id = params['size']
+    product_source = get_product(params[:product][:product_base_id])
 
-    price_product = AdminHelper.get_product_by_id(params['m_id'])['price']['data']['raw']['with_tax'].to_d
+    price_product = AdminHelper.get_product_by_id(params[:product][:product_id])['price']['data']['raw']['with_tax'].to_d
     price_logo = 0
     price_emblem = 0
 
-    unless params['logo_id'].blank?
-      logo = Picture.find(params['logo_id'])
+    unless params[:product][:logo].blank?
+      logo = Picture.find(params[:product][:logo][:logo_id])
       price_logo = logo.price
       if price_logo.nil?
         price_logo = 0
       end
     end
 
-    unless params['emblem_id'].blank?
-      emblem = Emblem.find(params['emblem_id'])
+    unless params[:product][:emblem].blank?
+      emblem = Emblem.find(params[:product][:emblem][:emblem_id])
       price_emblem = emblem.emblem_cost
       if price_emblem.nil?
         price_emblem = 0
@@ -203,25 +209,34 @@ class HomeController < ApplicationController
     total_m = price_logo + price_product + price_emblem
 
     product = CartProduct.create do |u|
-      u.m_id = params['m_id']
-      u.logo_id = params['logo_id']
-      u.dim_x = HomeController.to_decimal(params['dim_x'])
-      u.dim_y = HomeController.to_decimal(params['dim_y'])
-      u.relation_x = HomeController.to_decimal(params['relation_x'])
-      u.relation_y = HomeController.to_decimal(params['relation_y'])
-      u.width = HomeController.to_decimal(params['width'])
-      u.height = HomeController.to_decimal(params['height'])
-      u.has_logo = !params['logo_id'].blank?
+
+      u.m_id = params[:product][:product_id]
+      u.size_id = params[:product][:size]
+
+      u.has_logo = false
+      unless params[:product][:logo].blank?
+        u.logo_id = params[:product][:logo][:logo_id]
+        u.dim_x = HomeController.to_decimal(params[:product][:logo][:x])
+        u.dim_y = HomeController.to_decimal(params[:product][:logo][:y])
+        u.relation_x = HomeController.to_decimal(params[:product][:logo][:r_x])
+        u.relation_y = HomeController.to_decimal(params[:product][:logo][:r_y])
+        u.width = HomeController.to_decimal(params[:product][:logo][:width])
+        u.height = HomeController.to_decimal(params[:product][:logo][:height])
+        u.has_logo = true
+      end
+
       u.has_emblem = false
-      u.emblem_id = params['emblem_id']
-      u.position_id = HomeController.to_integer(params['position'])
-      u.size_id = size_id
+      unless params[:product][:emblem].blank?
+        u.emblem_id = params[:product][:emblem][:emblem_id]
+        u.position_id = params[:product][:emblem][:position]
+        u.has_emblem = true
+      end
+
     end
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
     user.cart.save!
-
 
   end
 

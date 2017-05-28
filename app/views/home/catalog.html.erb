@@ -95,11 +95,11 @@
 
   <div id="items" style="min-height: 370px">
     <% objects.each do |pr| %>
-        <div onclick="open_quick('<%= "#{pr['id']}" %>')" class="catalog-item" id="item<%= pr['id'] %>">
+        <div onclick="open_quick_1('<%= "#{pr['id']}" %>')" class="catalog-item" id="item<%= pr['id'] %>">
           <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
           <h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px"><%= pr['title'] %></h5>
           <h5 style="font-size: 16px; color: #ba97a6; font-family: 'Source Sans Pro', sans-serif; font-weight: 600"> <%= pr['price']['value'] %></h5>
-          <button onclick="open_quick('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%; font-family: 'Source Sans Pro', sans-serif; font-weight: 600">Quick
+          <button onclick="open_quick_1('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%; font-family: 'Source Sans Pro', sans-serif; font-weight: 600">Quick
             Shop
           </button>
         </div>
@@ -296,7 +296,7 @@
                     + '<img class="img-con-item" style="margin-bottom: 10px" src="' + desired_obj['images'][0]['url']['https'] + '">'
                     + '<h5 class="text-uppercase" style="margin-bottom: 10px">' + desired_obj['title'] + '</h5>'
                     + '<h5 style="color: #b692a2">' + desired_obj['price']['value'] + '</h5>'
-                    + '<button onclick="open_quick(\'' + desired_obj['id'] + '\')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
+                    + '<button onclick="open_quick_1(\'' + desired_obj['id'] + '\')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
                     + '</div>';
             }
         }
@@ -323,19 +323,19 @@
       Would you like to edit the placement of our emblem?
       <label for="product-id-p1"></label><input type="text" class="hidden" id="product-id-p1" value="">
 
-      <button style="width: 85%; margin: 5px 0 0 0" onclick="add_emblem(true)" class="styling_btn btn">EDIT</button>
-      <button style="width: 85%; margin: 5px 0 0 0" onclick="add_emblem(false)" class="styling_btn btn">ADD TO CART
+      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="add_emblem(true)" class="styling_btn btn">EDIT</button>
+      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="add_emblem(false)" class="styling_btn btn">ADD
+        TO CART
       </button>
     </div>
 
     <script>
         function add_emblem(val) {
-            var id_element = $('#product-id-p1').val();
             if (val) {
-                sending(id_element, true);
+                load_p1(product, true);
                 remove_modal_m()
             } else {
-                sending(id_element, false, false);
+                load_p1(product, false);
                 remove_modal_m();
             }
         }
@@ -347,15 +347,15 @@
 
 <script>
 
-    //MAIN LAYER
-    var LAYER = null;
-
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target === modal_quick) {
+            product.remove();
+            logo.remove();
+            emblem.remove();
             modal_quick.style.display = "none";
             $("body").removeClass("modal-open")
         }
@@ -364,69 +364,109 @@
             modal.style.display = "none";
         }
     };
+</script>
 
-    var stage_ov = null;
+<script>
+
+    //Logo variation
+    var logo = {
+        logo_id: null,
+        x: null,
+        y: null,
+        width: null,
+        height: null,
+        r_x: null,
+        r_y: null,
+        remove: function () {
+            product.logo = null;
+            this.logo_id = null;
+            this.x = null;
+            this.y = null;
+            this.width = null;
+            this.height = null;
+            this.r_x = null;
+            this.r_y = null;
+        }
+    };
+
+    //Emblem variation
+    var emblem = {
+        emblem_id: null,
+        position: null,
+        data: null,
+        remove: function () {
+            product.emblem = null;
+            this.emblem_id = null;
+            this.position = null;
+            this.data = null;
+        }
+    };
+
+    //Main product
+    var product = {
+        product_id: null,
+        product_base_id: null,
+        data: null,
+        logo: null,
+        emblem: null,
+        size: null,
+        remove: function () {
+            this.product_id = null;
+            this.product_base_id = null;
+            this.data = null;
+            this.logo = null;
+            this.emblem = null;
+            this.size = null;
+        }
+    };
+
+    //MAIN LAYER
+    var LAYER = null;
+
+    //MAIN STAGE
+    var STAGE = null;
 
     function fitStageIntoParentContainer() {
         var container = document.querySelector('#wrapper-img-1');
         // now we need to fit stage into parent
         var containerWidth = container.offsetWidth;
         // to do this we need to scale the stage
-        var scale = containerWidth / 1000;
-        console.log(containerWidth);
-        if (1000 * scale < 440) {
-            stage_ov.width(1000 * scale);
-            stage_ov.height(1000 * scale);
-            stage_ov.scale({x: scale, y: scale});
-            stage_ov.draw();
+        var scale = containerWidth / 500;
+        if (500 * scale < 440) {
+            STAGE.width(500 * scale);
+            STAGE.height(500 * scale);
+            STAGE.scale({x: scale, y: scale});
+            STAGE.draw();
         } else {
-            stage_ov.width(440);
-            stage_ov.height(440);
-            stage_ov.scale({x: (440 / 1000), y: (440 / 1000)});
-            stage_ov.draw();
+            STAGE.width(440);
+            STAGE.height(440);
+            STAGE.scale({x: (440 / 500), y: (440 / 500)});
+            STAGE.draw();
         }
     }
 
-    function load_p1(data, pr, n_ble, no_logo) {
+    function load_p1(product, view) {
 
         //Array of customs for that product initialize
         render_custom = [];
-        source_p = pr;
-
-        if (data['product_id_e']) {
-            product_id_e = data['product_id_e'];
-        }
-
-        image_id_e = data['image_id'];
-        width = data['width_u'];
-        height = data['height_u'];
-        x = data['x_u'];
-        y = data['y_u'];
-        s_w = data['s_w'];
-        s_h = data['s_h'];
-        has_logo = data['has_image'];
-        has_emblem = data['has_emblem'];
-        emblem_id = data['emblem_id'];
-        position_id = data['position_id'];
-        user_online = '<%= user_signed_in? %>';
 
         var variations = ['', '', ''];
-        for (var variation in data['modifiers']) {
-            if (data['modifiers'].hasOwnProperty(variation)) {
+        for (var variation in product.data['modifiers']) {
+            if (product.data['modifiers'].hasOwnProperty(variation)) {
 
-                if (data['modifiers'][variation]['title'] === 'Color') {
-                    variations[2] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Size') {
-                    variations[1] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
-                    variations[0] = data['modifiers'][variation];
+                if (product.data['modifiers'][variation]['title'] === 'Color') {
+                    variations[2] = product.data['modifiers'][variation];
+                } else if (product.data['modifiers'][variation]['title'] === 'Size') {
+                    variations[1] = product.data['modifiers'][variation];
+                } else if (product.data['modifiers'][variation]['title'] === 'Logo preset') {
+                    variations[0] = product.data['modifiers'][variation];
                 }
 
             }
         }
 
         var p1_ch = '';
-        if (n_ble) {
+        if (view) {
             p1_ch = '<hr style="margin-bottom: 0" class="desktopnot">' +
                 '<div style="margin-bottom: 10px">' +
                 '<div id="placement-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE PLACEMENT</h6></div>' +
@@ -435,17 +475,17 @@
                 '<div id="emblem-place">' +
                 '</div>' +
                 '<div>' +
-                '   <button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="load_p2_ker(\'' + pr.toString() + '\')">CONTINUE WITHOUT EMBLEM PLACEMENT</button>' +
-                '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
+                '<button style="width: 100%; margin-top: 10px" class="btn btn-default" onclick="emblem.remove(); open_quick_2(\'' + product.product_id + '\');">CONTINUE WITHOUT EMBLEM PLACEMENT</button>' +
+                '<button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="open_quick_1(\'' + product.product_id + '\')">ADD TO CART</button>' +
                 '</div>';
 
         } else {
             p1_ch = '<div class="wrap">' +
-                '<h5 class="text-uppercase text_light_20">' + data['title'] + '</h5>' +
-                '<h5 class="text_light_pink">' + data['price']['value'] + '</h5>' +
+                '<h5 class="text-uppercase text_light_20">' + product.data['title'] + '</h5>' +
+                '<h5 class="text_light_pink">' + product.data['price']['value'] + '</h5>' +
                 '</div>' +
                 '<div class="wrap light-paragraph" style="padding-top: 10px">' +
-                '<span>' + data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + data['description'].substr(30) + '</span>' +
+                '<span>' + product.data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + product.data['description'].substr(30) + '</span>' +
                 '<div style="text-align: end">' +
                 '<span id="more-toggle" class="text_light_pink">Read more</span>' +
                 '</div>' +
@@ -463,8 +503,8 @@
                 '</div>' +
                 get_variation_customized(variations) +
                 '<div>' +
-                '   <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_p2_ker(\'' + pr.toString() + '\')">CUSTOMIZE IT</button>' +
-                '   <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
+                '<button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="open_quick_2(\'' + product.product_id + '\')">CUSTOMIZE IT</button>' +
+                '<button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
                 '</div>';
         }
 
@@ -472,7 +512,6 @@
             '<div id="wrapper-img-1" class="wrapper-img">' +
             '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
             '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
-            '   <img id="image_loader" style="max-width: 400px; max-height: 400px; width: 100%" src="' + image_handler(data) + '">' +
             '</div>' +
             '</div>' +
             '<div class="content-part" style="padding: 0">' +
@@ -480,80 +519,76 @@
             '</div>';
 
         //Creates the image in case it is a variation
-        if (variation_img) {
-            console.log('im\'n in :)');
-            var container = $('#image-container-quick-1');
+        var container = $('#image-container-quick-1');
 
-            var stageWidth = 1000;
-            var stageHeight = 1000;
+        var stageWidth = 500;
+        var stageHeight = 500;
 
-            stage_ov = new Konva.Stage({
-                container: 'image-container-quick-1',
-                width: stageWidth,
-                height: stageHeight
+        STAGE = new Konva.Stage({
+            container: 'image-container-quick-1',
+            width: stageWidth,
+            height: stageHeight
+        });
+        LAYER = new Konva.Layer();
+        STAGE.add(LAYER);
+
+        var baseImg = new Konva.Image({
+            width: STAGE.width(),
+            height: STAGE.height(),
+            draggable: false
+        });
+
+        var logoImg = new Konva.Image({
+            width: STAGE.width() * logo.width / logo.r_x,
+            height: STAGE.height() * logo.height / logo.r_y,
+            x: STAGE.width() * logo.x / logo.r_x,
+            y: STAGE.height() * logo.y / logo.r_y
+        });
+
+        LAYER.add(baseImg);
+        LAYER.add(logoImg);
+
+        var imageBase = new Image();
+        imageBase.onload = function () {
+            baseImg.image(imageBase);
+            LAYER.draw();
+        };
+        imageBase.src = product.data['images'][0]['url']['https'];
+
+        var imageLogo = new Image();
+        imageLogo.onload = function () {
+            imageLogo.width = STAGE.width() * logo.width / logo.r_x;
+            imageLogo.height = STAGE.height() * logo.height / logo.r_y;
+            logoImg.image(imageLogo);
+            LAYER.draw();
+        };
+
+        if (product.logo) {
+            $.ajax({
+                type: "get",
+                url: "/catalog/get_image?id=" + product.logo.logo_id,
+                data: {},
+                dataType: "html",
+                success: function (data) {
+                    imageLogo.src = data;
+                    LAYER.draw();
+                },
+                error: function (data) {
+                }
             });
-            LAYER = new Konva.Layer();
-            stage_ov.add(LAYER);
-
-            var baseImg = new Konva.Image({
-                width: stage_ov.width(),
-                height: stage_ov.height(),
-                draggable: false
-            });
-
-            var logoImg = new Konva.Image({
-                width: stage_ov.width() * width / s_w,
-                height: stage_ov.height() * height / s_h
-            });
-
-            var logoGroup = new Konva.Group({
-                x: stage_ov.width() * x / s_w,
-                y: stage_ov.height() * y / s_h
-            });
-
-            LAYER.add(baseImg);
-            LAYER.add(logoGroup);
-            logoGroup.add(logoImg);
-
-            var imageObj1 = new Image();
-            imageObj1.onload = function () {
-                baseImg.image(imageObj1);
-                LAYER.draw();
-            };
-            imageObj1.src = data['images'][0]['url']['https'];
-
-            var imageObj2 = new Image();
-            imageObj2.onload = function () {
-                imageObj2.width = stage_ov.width() * width / s_w;
-                imageObj2.height = stage_ov.height() * height / s_h;
-                logoImg.image(imageObj2);
-                LAYER.draw();
-            };
-
-            if (no_logo || true) {
-                $.ajax({
-                    type: "get",
-                    url: "/catalog/get_image?id=" + image_id_e + "&style=thumb",
-                    data: {},
-                    dataType: "html",
-                    success: function (data) {
-                        imageObj2.src = data;
-                        LAYER.draw();
-                    },
-                    error: function (data) {
-                    }
-                });
-            }
-
-            if (has_emblem) {
-
-            }
-
-
-            fitStageIntoParentContainer();
-            window.addEventListener('resize', fitStageIntoParentContainer);
         }
 
+        if (product.emblem) {
+            imageObj = null;
+            emblemImg = null;
+            add_emblem_item(product.emblem.data, LAYER);
+            LAYER.draw();
+        }
+
+        fitStageIntoParentContainer();
+        window.addEventListener('resize', fitStageIntoParentContainer);
+
+        //More text for description toggle
         var state = true;
         $("#more-toggle").on('click', function () {
             if (state) {
@@ -580,7 +615,7 @@
             container_height.height_plac_size = loader_placement.height();
         });
 
-        get_emblems_placement(source_p, container_height);
+        get_emblems_placement(product.product_base_id, container_height);
 
         var iconShow = $("#icon-show");
         var iconHide = $("#icon-hide");
@@ -669,7 +704,7 @@
             var object_json = JSON.parse(object_json_main['title']);
             console.log(object_json);
 
-            createShape(object_json['image_id'], object_json_main['id'], object_json['width'], object_json['height'], object_json['x'], object_json['y'], object_json['s_w'], object_json['s_h'], data, pr);
+            createShape(object_json['image_id'], object_json_main['id'], parseFloat(object_json['width']), parseFloat(object_json['height']), parseFloat(object_json['x']), parseFloat(object_json['y']), parseFloat(object_json['s_w']), parseFloat(object_json['s_h']));
         }
 
         //Photo slider
@@ -728,9 +763,8 @@
         modal_base.className = 'modal-content_quick modal-content_base';
     }
 
-    function send_variations(pr) {
+    function send_variations() {
         modal_base.className += ' blur';
-        $('#product-id-p1').val(pr);
         modal_quick_m.style.display = "block";
     }
 
@@ -741,8 +775,8 @@
             source_p: pr,
             m_id: pr,
             logo_id: image_id_u,
-            relation_x: 1000,
-            relation_y: 1000,
+            relation_x: 500,
+            relation_y: 500,
             has_logo: true,
             has_emblem: false,
             emblem_id: emblem_id,
@@ -763,8 +797,7 @@
             success: function (data) {
                 console.log(data);
                 variation_img = true;
-                load_p1(data, data['source_p'], emblem, n_logo || true)
-                load_p1(data, data['source_p'], emblem, n_logo || true)
+                load_p1(data, data['source_p'], emblem, n_logo || true);
             }
         });
     }
@@ -776,14 +809,14 @@
         // now we need to fit stage into parent
         var containerWidth = container.offsetWidth;
         // to do this we need to scale the stage
-        var scale = containerWidth / 1000;
+        var scale = containerWidth / 500;
         console.log(containerWidth);
-        if (1000 * scale < 440) {
-            stage.width(1000 * scale);
-            stage.height(1000 * scale);
+        if (500 * scale < 440) {
+            stage.width(500 * scale);
+            stage.height(500 * scale);
 
-            s_w_u = 1000 * scale;
-            s_h_u = 1000 * scale;
+            s_w_u = 500 * scale;
+            s_h_u = 500 * scale;
 
             stage.scale({x: scale, y: scale});
             stage.draw();
@@ -794,31 +827,27 @@
             s_w_u = 440;
             s_h_u = 440;
 
-            stage.scale({x: (440 / 1000), y: (440 / 1000)});
+            stage.scale({x: (440 / 500), y: (440 / 500)});
             stage.draw();
         }
     }
 
-    function load_p2(data, pr) {
+    function load_p2(product) {
 
         var variations = ['', '', ''];
-        for (var variation in data['modifiers']) {
-            if (data['modifiers'].hasOwnProperty(variation)) {
+        for (var variation in product.data['modifiers']) {
+            if (product.data['modifiers'].hasOwnProperty(variation)) {
 
-                if (data['modifiers'][variation]['title'] === 'Color') {
-                    variations[2] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Size') {
-                    variations[1] = data['modifiers'][variation];
-                } else if (data['modifiers'][variation]['title'] === 'Logo preset') {
-                    variations[0] = data['modifiers'][variation];
+                if (product.data['modifiers'][variation]['title'] === 'Color') {
+                    variations[2] = product.data['modifiers'][variation];
+                } else if (product.data['modifiers'][variation]['title'] === 'Size') {
+                    variations[1] = product.data['modifiers'][variation];
+                } else if (product.data['modifiers'][variation]['title'] === 'Logo preset') {
+                    variations[0] = product.data['modifiers'][variation];
                 }
 
             }
         }
-
-        console.log(variations[2]);
-
-        product_id_u = pr;
 
         document.getElementById('general_p_content').innerHTML =
             '<div id="wrapper-img-2" class="wrapper-img">'
@@ -860,15 +889,15 @@
             + '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>'
             + '</div>'
             + '<div id="selection-btn-s">'
-            + '<button type="reset" style="width: 100%; margin-top: 10px" class="btn btn-default">'
+            + '<button id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">'
             + '<span class="cell-btn">START OVER</span></button>'
-            + '<button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="send_variations(product_id_u)">'
+            + '<button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="send_variations()">'
             + '<span class="cell-btn" >DONE</span></button>'
             + '</div>'
             + '</div>';
 
-        load_available_colors(data['source_p'], variations, pr);
-        load_available_logos(data['source_p']);
+        load_available_colors(variations);
+        load_available_logos();
 
         var innerHTML22 = {};
 
@@ -904,7 +933,6 @@
             iconHide.addClass(" hidden");
             iconShow.removeClass(" hidden");
         });
-
 
         //Photo slider
         (function ($) {
@@ -944,8 +972,8 @@
             });
         })(jQuery);
 
-        var stageWidth = 1000;
-        var stageHeight = 1000;
+        var stageWidth = 500;
+        var stageHeight = 500;
 
         stage = new Konva.Stage({
             container: 'image-container-quick-2',
@@ -971,15 +999,13 @@
                 image.width(image.width() + image.width() * frame.timeDiff / 1000);
                 image.height(image.height() + image.height() * frame.timeDiff / 1000);
 
-                width_u = image.width();
-                height_u = image.height();
+                product.logo.width = image.width();
+                product.logo.height = image.height();
             }
         }, layer);
 
         var anim_zoom_out = new Konva.Animation(function (frame) {
             if (selected !== null) {
-                selected.width(11000);
-                selected.height(11000);
                 var image = selected.get('.image')[0];
                 var border = selected.get('.borders')[0];
 
@@ -992,9 +1018,8 @@
                 image.width(image.width() - image.width() * frame.timeDiff / 1000);
                 image.height(image.height() - image.height() * frame.timeDiff / 1000);
 
-                width_u = image.width();
-                height_u = image.height();
-
+                product.logo.width = image.width();
+                product.logo.height = image.height();
             }
         }, layer);
 
@@ -1002,8 +1027,8 @@
             if (selected !== null) {
                 selected.x(selected.x() + (65 * frame.timeDiff / 1000));
 
-                x_u = selected.x();
-                y_u = selected.y();
+                product.logo.x = selected.x();
+                product.logo.y = selected.y();
             }
         }, layer);
 
@@ -1011,8 +1036,8 @@
             if (selected !== null) {
                 selected.x(selected.x() - (65 * frame.timeDiff / 1000));
 
-                x_u = selected.x();
-                y_u = selected.y();
+                product.logo.x = selected.x();
+                product.logo.y = selected.y();
             }
         }, layer);
 
@@ -1020,8 +1045,8 @@
             if (selected !== null) {
                 selected.y(selected.y() - (65 * frame.timeDiff / 1000));
 
-                x_u = selected.x();
-                y_u = selected.y();
+                product.logo.x = selected.x();
+                product.logo.y = selected.y();
             }
         }, layer);
 
@@ -1029,8 +1054,8 @@
             if (selected !== null) {
                 selected.y(selected.y() + (65 * frame.timeDiff / 1000));
 
-                x_u = selected.x();
-                y_u = selected.y();
+                product.logo.x = selected.x();
+                product.logo.y = selected.y();
             }
         }, layer);
 
@@ -1093,11 +1118,13 @@
         btn_restart.on('click', function () {
             for (var i = 0; i < elements.length; i++) {
                 elements[i].destroy();
+
+                logo.remove();
+                product.logo = null;
+
                 layer.draw();
             }
         });
-
-        console.log(stage.width(), stage.height(), '##########');
 
         var baseImg = new Konva.Image({
             width: stage.width(),
@@ -1114,24 +1141,49 @@
             baseImg.image(imageBgPro);
             layer.draw();
         };
+        imageBgPro.src = product.data['images'][0]['url']['https'];
 
-        imageBgPro.src = data['images'][0]['url']['https'];
-        console.log(data['images'][0]['url']['https']);
+        if (product.logo) {
+            $.ajax({
+                type: "get",
+                url: "/catalog/get_image?id=" + product.logo.logo_id,
+                data: {},
+                dataType: "html",
+                success: function (data) {
+                    addToPic(data, product.logo.logo_id);
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+        if (product.emblem) {
+            imageObj = null;
+            emblemImg = null;
+            add_emblem_item(product.emblem.data, layer);
+            LAYER.draw();
+        }
 
         fitStageIntoParentContainer_edit();
         window.addEventListener('resize', fitStageIntoParentContainer_edit);
-
     }
 
-    function open_quick(pr) {
+    function open_quick_1(pr) {
         $.ajax({
             type: "get",
             url: "/catalog/item/" + pr,
             data: {},
             success: function (data) {
 
-                load_p1(data, pr);
+                console.log(data);
 
+                product.product_id = data['id'];
+                if (!data['is_variation']) {
+                    product.product_base_id = data['id'];
+                }
+                product.data = data;
+
+                load_p1(product, false);
                 return false
             },
             error: function (data) {
@@ -1142,14 +1194,15 @@
         modal_quick.style.display = "block";
     }
 
-    function load_p2_ker(pr) {
+    function open_quick_2(pr) {
         $.ajax({
             type: "get",
             url: "/catalog/item/" + pr,
             data: {},
             success: function (data) {
 
-                load_p2(data, pr);
+                product.data = data;
+                load_p2(product);
 
                 return false
             },
@@ -1159,16 +1212,6 @@
         });
         $("body").addClass("modal-open");
         modal_quick.style.display = "block";
-    }
-
-    function image_handler(data) {
-        if (data['variation_pp']) {
-            variation_img = true;
-        } else {
-            variation_img = false;
-            return data['images'][0]['url']['https']
-        }
-        return 'html'
     }
 
     function addToCart() {
@@ -1181,22 +1224,7 @@
                 type: "POST",
                 url: "/add_cart",
                 data: {
-                    size: selected_size,
-                    source_p: source_p,
-                    m_id: product_id_e,
-                    logo_id: image_id_e,
-                    dim_x: x,
-                    dim_y: y,
-                    relation_x: s_w,
-                    relation_y: s_h,
-                    width: width,
-                    height: height,
-                    has_logo: has_logo,
-                    has_emblem: has_emblem,
-                    emblem_id: emblem_id,
-                    user_signed: user_online
-                    //Missing attributes check migrations
-
+                    product: product
                 },
                 success: function (data, status, xhr) {
                     modal_quick.style.display = "none";
@@ -1213,29 +1241,27 @@
     function changeSize(id) {
         for (var i = 0; i < available_sizes.length; i++) {
 
-            var size = available_sizes[i];
+            product.size = available_sizes[i];
 
-            if (size === id) {
-                $('#' + size).addClass('badge_selected');
+            if (product.size === id) {
+                $('#' + product.size).addClass('badge_selected');
                 selected_size = id
             } else {
-                $('#' + size).removeClass('badge_selected');
+                $('#' + product.size).removeClass('badge_selected');
             }
         }
     }
 
-    function load_available_colors(pr, variations, act_obj) {
+    function load_available_colors(variations) {
         if (variations.length > 0) {
             var colors = '';
             console.log(variations[2]['variations']);
 
             $.ajax({
-                url: '/catalog/product/colored/' + pr + '/' + variations[2]['id'] + '/' + act_obj,
+                url: '/catalog/product/colored/' + product.product_base_id + '/' + variations[2]['id'] + '/' + product.product_id,
                 method: 'get',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
-
                     for (var attr in variations[2]['variations']) {
                         var changes = JSON.parse(variations[2]['variations'][attr]['title']);
 
@@ -1268,17 +1294,15 @@
 
     function change_source(values) {
 
-        console.log(values);
-        product_id_e = values;
-        console.log(product_id_e);
-        load_p2_ker(product_id_e)
+        product.product_id = values;
+        open_quick_2(product.product_id);
     }
 
-    function load_available_logos(pr) {
+    function load_available_logos() {
 
         $.ajax({
             type: "get",
-            url: "/catalog/logos/" + pr,
+            url: "/catalog/logos/" + product.product_base_id,
             data: {},
             success: function (data) {
 
@@ -1289,8 +1313,6 @@
                         + '<img onclick="addToPic(\'' + data[i]['url'][0].toString() + '\', ' + data[i]['id'] + ')" src="' + data[i]['url'][1] + '" alt="" height="30">'
                         + '</li>'
                 }
-
-                console.log(logos);
                 document.getElementById('container-logo').innerHTML = logos;
 
                 $('.jcarousel').jcarousel('reload', {
@@ -1308,35 +1330,42 @@
             layer.draw();
         }
 
-        var logo = new Konva.Image({
-            width: 200,
-            height: 200,
+        logo.logo_id = imageId;
+        logo.x = logo.x || 0;
+        logo.y = logo.y || 0;
+        logo.r_x = logo.r_x || 500;
+        logo.r_y = logo.r_y || 500;
+
+        var logo_image = new Konva.Image({
             name: 'image',
-            preventDefault: false,
-            ratio: 0.2
+            preventDefault: false
         });
 
         var logo_group = new Konva.Group({
-            x: 0,
-            y: 0,
+            x: 500 * logo.x / logo.r_x,
+            y: 500 * logo.y / logo.r_y,
             name: 'group',
             draggable: true
         });
 
         layer.add(logo_group);
-        logo_group.add(logo);
+        logo_group.add(logo_image);
 
         var border;
 
-        image_id_u = imageId;
-
         var imageLogo = new Image();
         imageLogo.onload = function () {
-            logo.image(imageLogo);
-            logo.height(imageLogo.height * 0.2);
-            logo.width(imageLogo.width * 0.2);
-            border = addBorders(logo_group, 0, 0, "borders", imageLogo.height * 0.2, imageLogo.width * 0.2);
+            logo.width = (500 * logo.width / logo.r_x) || imageLogo.width * 0.2;
+            logo.height = (500 * logo.height / logo.r_y) || imageLogo.height * 0.2;
+
+            logo_image.image(imageLogo);
+
+            logo_image.width(logo.width);
+            logo_image.height(logo.height);
+
+            border = addBorders(logo_group, 0, 0, "borders", logo.height, logo.width);
             elementsBorders.push(border);
+
             layer.draw();
         };
 
@@ -1358,12 +1387,13 @@
         });
 
         logo_group.on('dragend', function () {
-            x_u = logo_group.x();
-            y_u = logo_group.y();
+            logo.x = logo_group.x();
+            logo.y = logo_group.y();
 
         });
 
         imageLogo.src = imageToAdd;
+        product.logo = logo;
     }
 
     function hideAll() {
@@ -1396,33 +1426,40 @@
     var imageObj = null;
     var emblemImg = null;
 
-    function add_emblem_item(data) {
+    function add_emblem_item(data, layer) {
         if (imageObj === null) {
             emblemImg = new Konva.Image({
-                width: 1000 * parseFloat(data.width) / parseFloat(data.rel_x),
-                height: 1000 * parseFloat(data.height) / parseFloat(data.rel_y),
-                x: 1000 * parseFloat(data.x) / parseFloat(data.rel_x),
-                y: 1000 * parseFloat(data.y) / parseFloat(data.rel_y)
+                width: 500 * parseFloat(data.width) / parseFloat(data.rel_x),
+                height: 500 * parseFloat(data.height) / parseFloat(data.rel_y),
+                x: 500 * parseFloat(data.x) / parseFloat(data.rel_x),
+                y: 500 * parseFloat(data.y) / parseFloat(data.rel_y)
             });
 
-            LAYER.add(emblemImg);
+            layer.add(emblemImg);
 
 
             imageObj = new Image();
             imageObj.onload = function () {
                 emblemImg.image(imageObj);
-                LAYER.draw();
+                layer.draw();
             };
         }
-        emblemImg.width(1000 * parseFloat(data.width) / parseFloat(data.rel_x));
-        emblemImg.height(1000 * parseFloat(data.height) / parseFloat(data.rel_y));
-        emblemImg.x(1000 * parseFloat(data.x) / parseFloat(data.rel_x));
-        emblemImg.y(1000 * parseFloat(data.y) / parseFloat(data.rel_y));
+        emblemImg.width(500 * parseFloat(data.width) / parseFloat(data.rel_x));
+        emblemImg.height(500 * parseFloat(data.height) / parseFloat(data.rel_y));
+        emblemImg.x(500 * parseFloat(data.x) / parseFloat(data.rel_x));
+        emblemImg.y(500 * parseFloat(data.y) / parseFloat(data.rel_y));
         imageObj.src = data['url'];
 
+        emblem.emblem_id = data['emblem_id'];
+        emblem.position = data['id'];
+        emblem.data = data;
+        product.emblem = emblem;
     }
 
     function get_emblems_placement(pr, container) {
+
+        var imageObj = null;
+        var emblemImg = null;
 
         tempData_array = [];
 
@@ -1441,7 +1478,7 @@
                     tempData_array.push(data[i]);
 
                     emblems += '<li>' +
-                        '<div onclick="add_emblem_item(tempData_array[' + i + '])" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div onclick="add_emblem_item(tempData_array[' + i + '], LAYER)" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
                         '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i]['url'] + '">' +
                         '<div><h5 style="width: 100%; font-weight: bold;">' + data[i]['name'] + '</h5></div>' +
@@ -1575,10 +1612,9 @@
         }
     }
 
-    function createShape(id, variation, width, height, x, y, s_w, s_h, data, pr) {
+    function createShape(id, variation, width, height, x, y, s_w, s_h) {
         var container = $('#' + id + variation);
         container.height(container.width());
-        console.log(container);
 
         var stage = new Konva.Stage({
             container: id + variation,
@@ -1590,68 +1626,36 @@
 
         container.on('touchend', function () {
 
-            console.log('hola');
+            logo.remove();
+            emblem.remove();
 
-            $.ajax({
-                type: "get",
-                url: "/catalog/item/" + pr,
-                data: {
-                    variation_ma: false,
-                    size: selected_size,
-                    source_p: data['source_p'],
-                    m_id: pr,
-                    logo_id: id,
-                    dim_x: x,
-                    dim_y: y,
-                    relation_x: s_w,
-                    relation_y: s_h,
-                    width: width,
-                    height: height,
-                    has_logo: true,
-                    has_emblem: false,
-                    emblem_id: emblem_id,
-                    user_signed: user_online,
-                    position_id: 0
-                    //Missing attributes check migrations
+            logo.logo_id = id;
+            logo.x = 500 * x / s_w;
+            logo.y = 500 * y / s_h;
+            logo.width = 500 * width / s_w;
+            logo.height = 500 * height / s_h;
+            logo.r_x = 500;
+            logo.r_y = 500;
+            product.logo = logo;
 
-                },
-                success: function (data) {
-                    load_p1(data, data['source_p'])
-                }
-            });
+            load_p1(product, false);
         });
 
         container.on('click', function () {
 
-            console.log('hola');
+            logo.remove();
+            emblem.remove();
 
-            $.ajax({
-                type: "get",
-                url: "/catalog/item/" + pr,
-                data: {
-                    variation_ma: false,
-                    size: selected_size,
-                    source_p: data['source_p'],
-                    m_id: pr,
-                    logo_id: id,
-                    dim_x: x,
-                    dim_y: y,
-                    relation_x: s_w,
-                    relation_y: s_h,
-                    width: width,
-                    height: height,
-                    has_logo: true,
-                    has_emblem: false,
-                    emblem_id: emblem_id,
-                    user_signed: user_online,
-                    position_id: 0
-                    //Missing attributes check migrations
+            logo.logo_id = id;
+            logo.x = 500 * x / s_w;
+            logo.y = 500 * y / s_h;
+            logo.width = 500 * width / s_w;
+            logo.height = 500 * height / s_h;
+            logo.r_x = 500;
+            logo.r_y = 500;
+            product.logo = logo;
 
-                },
-                success: function (data) {
-                    load_p1(data, data['source_p'])
-                }
-            });
+            load_p1(product, false);
         });
 
 
@@ -1680,16 +1684,14 @@
             baseImg.image(imageObj1);
             layer.draw();
         };
-        imageObj1.src = data['images'][0]['url']['https'];
+        imageObj1.src = product.data['images'][0]['url']['https'];
 
         var imageObj2 = new Image();
         imageObj2.onload = function () {
             logoImg.image(imageObj2);
             layer.draw();
             imageObj2.width = container.width() * width / s_w;
-            console.log(imageObj2.width, container.width(), width, s_w);
             imageObj2.height = container.height() * height / s_h;
-            console.log(imageObj2.height);
         };
 
         $.ajax({
@@ -1712,9 +1714,9 @@
     var item_v = '<%= params['view'] %>';
     if (item_s !== '') {
         if (item_v === '2') {
-            load_p2_ker(item_s);
+            open_quick_2(item_s);
         } else {
-            open_quick(item_s);
+            open_quick_1(item_s);
         }
     }
 
