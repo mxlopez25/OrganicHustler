@@ -1,4 +1,3 @@
-
 require 'rest_client'
 
 module AdminHelper
@@ -61,7 +60,7 @@ module AdminHelper
         :stock_level => params['stock_level'],
         :stock_status => params['stock_status'],
         :description => params['description'],
-        :slug => params['slug'].gsub(',',' ')
+        :slug => params['slug'].gsub(',', ' ')
     }
 
     p fields
@@ -78,8 +77,8 @@ module AdminHelper
 
   def self.delete_image(image_id)
     begin
-    response = RestClient.delete("https://api.molt.in/v1/files/#{image_id}", {:Authorization => "Bearer #{self.generate_token}"})
-    response.body
+      response = RestClient.delete("https://api.molt.in/v1/files/#{image_id}", {:Authorization => "Bearer #{self.generate_token}"})
+      response.body
     rescue
       p 'no image !##############!'
     end
@@ -109,15 +108,27 @@ module AdminHelper
 
   def get_thumb_g_id(id, size)
     if !id.blank?
-    Picture.get_id_url(id, size)
+      Picture.get_id_url(id, size)
     else
       ''
     end
 
   end
 
-  def get_image_im
-    system
+  def get_emblem_image(id)
+    if !id.blank?
+      Emblem.where(:id => id).first.try(:picture).try(:url)
+    else
+      ''
+    end
+  end
+
+  def get_position_emblem(id)
+    if !id.blank?
+      PositionEmblemAdmin.where(:id => id).first.to_json.html_safe
+    else
+      ''
+    end
   end
 
 

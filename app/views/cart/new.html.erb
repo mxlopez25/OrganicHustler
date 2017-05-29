@@ -166,7 +166,7 @@
             </div>
 
             <script id="create-shape">
-                createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
+                createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
                 function createShape(id, width, height, x, y, s_w, s_h) {
                     var container = $('#' + id);
                     container.height(container.width());
@@ -192,8 +192,9 @@
 
                     var logoGroup = new Konva.Group({
                         x: container.width() * x / s_w,
-                        y: container.width() * y / s_h
+                        y: container.height() * y / s_h
                     });
+
 
                     layer.add(baseImg);
                     layer.add(logoGroup);
@@ -211,11 +212,31 @@
                         logoImg.image(imageObj2);
                         layer.draw();
                         imageObj2.width = container.width() * width / s_w;
-                        console.log(imageObj2.width, container.width(), width, s_w);
                         imageObj2.height = container.height() * height / s_h;
-                        console.log(imageObj2.height);
                     };
                     imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+
+                    var position = '<%= get_position_emblem(product.position_id) %>';
+                    var emblem_url = '<%= get_emblem_image(product.emblem_id) %>';
+
+                    if (position !== '') {
+                        position = JSON.parse(position);
+                        var emblemImg = new Konva.Image({
+                            width: container.width() * parseFloat(position['width']) / parseFloat(position['rel_x']),
+                            height: container.height() * parseFloat(position['height']) / parseFloat(position['rel_y']),
+                            x: container.width() * parseFloat(position['x']) / parseFloat(position['rel_x']),
+                            y: container.height() * parseFloat(position['y']) / parseFloat(position['rel_y'])
+                        });
+
+                        layer.add(emblemImg);
+
+                        var imageObj3 = new Image();
+                        imageObj3.onload = function () {
+                            emblemImg.image(imageObj3);
+                            layer.draw();
+                        };
+                        imageObj3.src = emblem_url;
+                    }
                     layer.draw();
                 }
             </script>
