@@ -191,7 +191,7 @@
 
 
 <div id="video-player-desk" class="mobilenot" style="width: 100%; margin-top: 80px; position: relative">
-  <img style="width: 100%" src="https://s3.amazonaws.com/store-logo-cloud<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
+  <img style="width: 100%" src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
   <p style="position: absolute; top: 40px" class="absolute-center">
     <span style="font-size: 4vw">Our Story</span><br><span style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".</span>
   </p>
