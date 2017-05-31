@@ -45,10 +45,10 @@
   <div class="carousel-inner" role="listbox">
     <% first = true %>
     <% get_showcase_items.each do |item| %>
-        <div onclick="location.href = '/catalog?id='<%= item['id'] %>" class="item
+        <div class="item
           <% if first %> active
           <% first = false end %>">
-          <img src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px; margin: 10px auto;">
+          <img onclick="location.href = '/catalog?id=<%= item['id'] %>'" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px; margin: 10px auto;">
           <div class="carousel-cap">
             <p class="text_light"><%= item['title'] %><br>Eco-Friendly + Customizable</p>
           </div>
