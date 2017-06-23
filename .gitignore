@@ -1,0 +1,14 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/.generators
+.idea/.rakeTasks
+.idea/OrganicHustler.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+config/application.yml
+log/development.log
+tmp/cache/
+tmp/pids/
+tmp/restart.txt
+tmp/sockets/
