@@ -129,7 +129,6 @@ div.wrap {
 .modal-content_base {
   background-color: #fefefe;
   padding: 10px;
-  border: thin black solid;
   width: 100%; /* Could be more or less, depending on screen size */
   height: 100%;
 }
@@ -167,7 +166,7 @@ div.wrap {
 
 .modal-content_quick {
   position: absolute;
-  border: thin black solid;
+  border: thin white solid;
   margin: auto;
   top: 0;
   bottom: 0;

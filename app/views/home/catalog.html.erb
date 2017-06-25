@@ -338,6 +338,9 @@
         load_p1(product, false);
     }
 
+    var elements = [];
+    var elementsBorders = [];
+
     //Logo variation
     var logo = {
         logo_id: null,
@@ -483,7 +486,7 @@
         }
 
         document.getElementById('general_p_content').innerHTML =
-            '<i onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px" class="fa fa-times" aria-hidden="true"></i>'+
+            '<span onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>'+
             '<div id="wrapper-img-1" class="wrapper-img">' +
             '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
             '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
@@ -1178,7 +1181,12 @@
             data: {},
             success: function (data) {
 
+                product.product_id = data['id'];
+                if (!data['is_variation']) {
+                    product.product_base_id = data['id'];
+                }
                 product.data = data;
+
                 load_p2(product);
 
                 return false

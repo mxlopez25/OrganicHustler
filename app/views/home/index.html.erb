@@ -177,7 +177,7 @@
   <script>
 
       function play_video_2() {
-          document.getElementById('video-player-desk').innerHTML = '<video style="position: absolute; top: 0; bottom: 0; margin: auto;" id="video_desk" loop muted src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video><h1>Hola</h1>';
+          document.getElementById('video-player-desk').innerHTML = '<video style="position: absolute; top: 0; bottom: 0; margin: auto;" id="video_desk" loop muted src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>';
           var video = document.getElementById('video_desk');
           video.play();
       }
