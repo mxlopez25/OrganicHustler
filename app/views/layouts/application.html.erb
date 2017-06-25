@@ -37,184 +37,188 @@
 
   <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
 
-  <div id="triangle" class="triangle mobilenot"></div>
-  <!-- Modal content -->
-  <div id="modal_c" style="padding: 0;" class="modal-content">
-    <span class="close">&times;</span>
-    <div class="modal_c_part">
-      <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin: 10px auto;">Your
-        Bag</h3>
-    </div>
-    <hr class="no-spacing-bar">
+  <div id="bag_modal" style="float: right; position: fixed;">
+    <div id="triangle" class="triangle mobilenot"></div>
+    <!-- Modal content -->
+    <div id="modal_c" style="padding: 0; position: relative; top: auto; box-shadow: 0 0;" class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal_c_part">
+        <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin: 10px auto;">Your
+          Bag</h3>
+      </div>
+      <hr class="no-spacing-bar">
 
-    <div class="modal_c_part">
-      <div id="product_loader" class="jcarousel-wrapper">
-        <div id="product-loader-carousel" style="width: 100%; min-height: 200px" class="jcarousel" data-jcarousel="true">
-          <ul id="product-container" style="left: 0; top: 0; text-align: center">
+      <div class="modal_c_part">
+        <div id="product_loader" class="jcarousel-wrapper">
+          <div id="product-loader-carousel" style="width: 100%; min-height: 200px" class="jcarousel" data-jcarousel="true">
+            <ul id="product-container" style="left: 0; top: 0; text-align: center">
 
 
-          </ul>
+            </ul>
+          </div>
+          <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+          <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
-        <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
-          <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-        <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
-          <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+
+        <script>
+
+            $.ajax({
+                url: '/cart',
+                method: 'get',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+
+                    console.log(data);
+                    var container = document.getElementById('product-container');
+                    for (var product in data) {
+                        if (data.hasOwnProperty(product)) {
+                            container.innerHTML += '<li class="element_product">' +
+                                '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
+                                '</div>' +
+                                '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
+                                '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + data[product]['price'][6] + '$</p>' +
+                                '</li>';
+                        }
+                    }
+
+                    for (var image in data) {
+                        if (data.hasOwnProperty(image)) {
+
+                            var id = data[image]['id'];
+                            var x = data[image]['dim_x'];
+                            var y = data[image]['dim_y'];
+                            var width = data[image]['width'];
+                            var height = data[image]['height'];
+                            var r_x = data[image]['relation_x'];
+                            var r_y = data[image]['relation_y'];
+
+                            var img_container = $('#' + id + '-catalog-cart');
+                            img_container.height(img_container.width);
+
+                            var stage = new Konva.Stage({
+                                container: id + '-catalog-cart',
+                                width: img_container.width(),
+                                height: img_container.height()
+                            });
+
+                            var layer = new Konva.Layer();
+                            stage.add(layer);
+
+                            var baseImg = new Konva.Image({
+                                width: img_container.width(),
+                                height: img_container.height(),
+                                draggable: false
+                            });
+
+                            var logoImg = new Konva.Image({
+                                x: img_container.width() * x / r_x,
+                                y: img_container.height() * y / r_y,
+                                width: img_container.width() * width / r_x,
+                                height: img_container.height() * height / r_y
+                            });
+
+                            layer.add(baseImg);
+                            layer.add(logoImg);
+
+                            var imageObj1 = new Image();
+                            imageObj1.src = data[image]['product_data']['images'][0]['url']['https'];
+                            baseImg.image(imageObj1);
+
+                            var imageObj2 = new Image();
+                            imageObj2.src = data[image]['logo_url'];
+                            logoImg.image(imageObj2);
+
+                            if (data[image]['emblem_position_data']) {
+                                var emblem_x = data[image]['emblem_position_data']['x'];
+                                var emblem_y = data[image]['emblem_position_data']['y'];
+                                var emblem_width = data[image]['emblem_position_data']['width'];
+                                var emblem_height = data[image]['emblem_position_data']['height'];
+                                var emblem_r_x = data[image]['emblem_position_data']['rel_x'];
+                                var emblem_r_y = data[image]['emblem_position_data']['rel_y'];
+
+                                var emblemImg = new Konva.Image({
+                                    x: img_container.width() * emblem_x / emblem_r_x,
+                                    y: img_container.width() * emblem_y / emblem_r_y,
+                                    width: img_container.width() * emblem_width / emblem_r_x,
+                                    height: img_container.height() * emblem_height / emblem_r_y
+                                });
+
+                                layer.add(emblemImg);
+
+                                var imageObj3 = new Image();
+                                imageObj3.src = data[image]['emblem_url'];
+                                emblemImg.image(imageObj3);
+                            }
+
+                            layer.draw();
+                        }
+                    }
+
+                    // Reload carousel
+                    $('.jcarousel').jcarousel('reload');
+
+                },
+                error: function (data) {
+
+                }
+            });
+
+            //Photo slider
+            (function ($) {
+                $(function () {
+                    $('.jcarousel').jcarousel();
+
+                    $('.jcarousel-control-prev')
+                        .on('jcarouselcontrol:active', function () {
+                            $(this).removeClass('inactive');
+                        })
+                        .on('jcarouselcontrol:inactive', function () {
+                            $(this).addClass('inactive');
+                        })
+                        .jcarouselControl({
+                            target: '-=1'
+                        });
+
+                    $('.jcarousel-control-next')
+                        .on('jcarouselcontrol:active', function () {
+                            $(this).removeClass('inactive');
+                        })
+                        .on('jcarouselcontrol:inactive', function () {
+                            $(this).addClass('inactive');
+                        })
+                        .jcarouselControl({
+                            target: '+=1'
+                        });
+
+                    $('.jcarousel-pagination')
+                        .on('jcarouselpagination:active', 'a', function () {
+                            $(this).addClass('active');
+                        })
+                        .on('jcarouselpagination:inactive', 'a', function () {
+                            $(this).removeClass('active');
+                        })
+                        .jcarouselPagination();
+                });
+            })(jQuery);
+        </script>
       </div>
 
-      <script>
-
-          $.ajax({
-              url: '/cart',
-              method: 'get',
-              data: {},
-              dataType: 'json',
-              success: function (data) {
-
-                  console.log(data);
-                  var container = document.getElementById('product-container');
-                  for (var product in data) {
-                      if (data.hasOwnProperty(product)) {
-                          container.innerHTML += '<li class="element_product">' +
-                              '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
-                              '</div>' +
-                              '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
-                              '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + data[product]['price'][6] + '$</p>' +
-                              '</li>';
-                      }
-                  }
-
-                  for (var image in data) {
-                      if (data.hasOwnProperty(image)) {
-
-                          var id = data[image]['id'];
-                          var x = data[image]['dim_x'];
-                          var y = data[image]['dim_y'];
-                          var width = data[image]['width'];
-                          var height = data[image]['height'];
-                          var r_x = data[image]['relation_x'];
-                          var r_y = data[image]['relation_y'];
-
-                          var img_container = $('#' + id + '-catalog-cart');
-                          img_container.height(img_container.width);
-
-                          var stage = new Konva.Stage({
-                              container: id + '-catalog-cart',
-                              width: img_container.width(),
-                              height: img_container.height()
-                          });
-
-                          var layer = new Konva.Layer();
-                          stage.add(layer);
-
-                          var baseImg = new Konva.Image({
-                              width: img_container.width(),
-                              height: img_container.height(),
-                              draggable: false
-                          });
-
-                          var logoImg = new Konva.Image({
-                              x: img_container.width() * x / r_x,
-                              y: img_container.height() * y / r_y,
-                              width: img_container.width() * width / r_x,
-                              height: img_container.height() * height / r_y
-                          });
-
-                          layer.add(baseImg);
-                          layer.add(logoImg);
-
-                          var imageObj1 = new Image();
-                          imageObj1.src = data[image]['product_data']['images'][0]['url']['https'];
-                          baseImg.image(imageObj1);
-
-                          var imageObj2 = new Image();
-                          imageObj2.src = data[image]['logo_url'];
-                          logoImg.image(imageObj2);
-
-                          if (data[image]['emblem_position_data']) {
-                              var emblem_x = data[image]['emblem_position_data']['x'];
-                              var emblem_y = data[image]['emblem_position_data']['y'];
-                              var emblem_width = data[image]['emblem_position_data']['width'];
-                              var emblem_height = data[image]['emblem_position_data']['height'];
-                              var emblem_r_x = data[image]['emblem_position_data']['rel_x'];
-                              var emblem_r_y = data[image]['emblem_position_data']['rel_y'];
-
-                              var emblemImg = new Konva.Image({
-                                  x: img_container.width() * emblem_x / emblem_r_x,
-                                  y: img_container.width() * emblem_y / emblem_r_y,
-                                  width: img_container.width() * emblem_width / emblem_r_x,
-                                  height: img_container.height() * emblem_height / emblem_r_y
-                              });
-
-                              layer.add(emblemImg);
-
-                              var imageObj3 = new Image();
-                              imageObj3.src = data[image]['emblem_url'];
-                              emblemImg.image(imageObj3);
-                          }
-
-                          layer.draw();
-                      }
-                  }
-
-                  // Reload carousel
-                  $('.jcarousel').jcarousel('reload');
-
-              },
-              error: function (data) {
-
-              }
-          });
-
-          //Photo slider
-          (function ($) {
-              $(function () {
-                  $('.jcarousel').jcarousel();
-
-                  $('.jcarousel-control-prev')
-                      .on('jcarouselcontrol:active', function () {
-                          $(this).removeClass('inactive');
-                      })
-                      .on('jcarouselcontrol:inactive', function () {
-                          $(this).addClass('inactive');
-                      })
-                      .jcarouselControl({
-                          target: '-=1'
-                      });
-
-                  $('.jcarousel-control-next')
-                      .on('jcarouselcontrol:active', function () {
-                          $(this).removeClass('inactive');
-                      })
-                      .on('jcarouselcontrol:inactive', function () {
-                          $(this).addClass('inactive');
-                      })
-                      .jcarouselControl({
-                          target: '+=1'
-                      });
-
-                  $('.jcarousel-pagination')
-                      .on('jcarouselpagination:active', 'a', function () {
-                          $(this).addClass('active');
-                      })
-                      .on('jcarouselpagination:inactive', 'a', function () {
-                          $(this).removeClass('active');
-                      })
-                      .jcarouselPagination();
-              });
-          })(jQuery);
-      </script>
-    </div>
-
-    <hr class="no-spacing-bar">
-    <div style="overflow: hidden" class="modal_c_part">
-      <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-      <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= get_price %>
-        $</span>
-    </div>
-    <hr class="no-spacing-bar">
-    <div class="modal_c_part">
-      <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 90%; margin: 5px">CHECKOUT</button>
-      <button onclick="location.href='/shopping_bag'" class="btn btn-default" style="width: 90%; margin: 5px">VIEW BAG</button>
+      <hr class="no-spacing-bar">
+      <div style="overflow: hidden" class="modal_c_part">
+        <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
+        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= get_price %>
+          $</span>
+      </div>
+      <hr class="no-spacing-bar">
+      <div class="modal_c_part">
+        <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CHECKOUT</button>
+        <button onclick="location.href='/shopping_bag'" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">VIEW
+          BAG
+        </button>
+      </div>
     </div>
   </div>
 
@@ -238,6 +242,7 @@
       <div style="float: right; overflow: hidden">
         <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
         <img id="cart_ic_1" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
+        <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 37px"><%= get_item_count %></span>
         <% if user_signed_in? %>
             <h5 class="link-style">
               <a href="/account">ACCOUNT</a>
@@ -295,7 +300,8 @@
               <a href="/account">LOG IN</a>
             </h5>
         <% end %>
-        <img style="float: right" id="cart_ic_2" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
+        <img style="float: right; z-index: 3;" id="cart_ic_2" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
+        <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 27px; float: right"><%= get_item_count %></span>
 
         <script>
             $(document).keyup(function (e) {
@@ -331,11 +337,11 @@
           </div>
 
           <div class="menu-button">
-          <li>
-            <a class="selectable link-to-btn
+            <li>
+              <a class="selectable link-to-btn
               <% unless params['hats'].blank? and available %> selected
               <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
-          </li>
+            </li>
           </div>
 
           <div class="menu-button">
@@ -368,59 +374,127 @@
   </div>
 
   <script>
-      // Get the button that opens the modal
-      var btn2 = document.getElementById("cart_ic_2");
-      var btn_j = $('#cart_ic_2');
-      var btn_i = $('#cart_ic_1');
 
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
-      // Get the modal
-      var modal = document.getElementById('myModal');
-      var triangle = document.getElementById('triangle');
-      var modal_c = document.getElementById('modal_c');
-      // When the user clicks on the button, open the modal
-      btn2.onclick = function () {
-          modal.style.display = "block";
+      var btn_i = null;
+      var btn_j = null;
 
-          triangle.style.left = null;
-          modal_c.style.left = null;
-          $("body").addClass("modal-open");
+      var span = null;
+      var modal = null;
+      var triangle = null;
+      var modal_c = null;
+      var bagModal = null;
 
-          triangle.style.right = (100 - ((btn2.getBoundingClientRect().right / window.innerWidth) * 100) - (btn_j.width() * 100 / window.innerWidth) ).toString() + "%";
-          triangle.style.top = (btn2.getBoundingClientRect().top + btn_j.height()).toString() + "px";
-          modal_c.style.right = (100 - ((triangle.getBoundingClientRect().right / window.innerWidth) * 100) - 5).toString() + "%";
-          modal_c.style.top = (btn2.getBoundingClientRect().bottom + 20).toString() + "px";
+      var cart_icon_1 = null;
+      var cart_icon_2 = null;
 
-          var carousel_p = document.getElementById('product-loader-carousel');
-          $('.element_product').each(function () {
-              console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-              $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+      var cart_position = null;
+      var triangle_position = null;
+      var triangle_width = null;
+      var cart_width = null;
+      var cart_bottom = null;
+
+      window.onload = function () {
+          btn_j = $('#cart_ic_2');
+          btn_i = $('#cart_ic_1');
+
+          // Get the <span> element that closes the modal
+          span = document.getElementsByClassName("close")[0];
+          // Get the modal
+          modal = document.getElementById('myModal');
+          triangle = document.getElementById('triangle');
+          modal_c = document.getElementById('modal_c');
+          bagModal = document.getElementById('bag_modal');
+
+          cart_icon_1 = document.getElementById('cart_ic_2');
+          cart_icon_2 = document.getElementById('cart_ic_1');
+
+          btn_j.on('click', function () {
+              modal.style.display = "block";
+              $("body").addClass("modal-open");
+
+              cart_position = cart_icon_1.getBoundingClientRect().left;
+              triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
+              triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
+              cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
+              cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
+
+              bagModal.style.top = cart_bottom + 'px';
+              bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
           });
-      };
 
+          btn_i.on('click', function () {
+              modal.style.display = "block";
+              $("body").addClass("modal-open");
 
-      btn_i.on('click', function () {
+              bagModal.style.top = 0;
+              bagModal.style.right = 0;
+              bagModal.style.left = 0;
+              bagModal.style.bottom = 0;
+              bagModal.style.width = '100%';
+              bagModal.style.margin = 'auto';
+              bagModal.style.height = '100%';
+              modal_c.style.height = '100%';
 
-          console.log('hola');
-          $("body").addClass("modal-open");
-          modal.style.display = "block";
-          modal_c.style.right = 0;
-          modal_c.style.left = 0;
-          modal_c.style.top = 0;
-          modal_c.style.margin = "30px auto";
+              if ($(window).width() > 468){
 
+                  cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
 
-          var carousel_p = document.getElementById('product-loader-carousel');
-          $('.element_product').each(function () {
-              console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-              $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+                  bagModal.style.top = cart_bottom + 'px';
+                  modal_c.style.height = 'auto';
+                  bagModal.style.width = '64%';
+
+                  bagModal.style.left = 0;
+                  bagModal.style.right = 0;
+                  bagModal.style.bottom = 'auto';
+
+                  bagModal.style.margin = 'auto';
+              }
           });
-      });
 
-      span.onclick = function () {
-          modal.style.display = "none";
-          $("body").removeClass("modal-open")
+          span.onclick = function () {
+              modal.style.display = "none";
+              $("body").removeClass("modal-open")
+          };
+
+          var width = $(window).width();
+          $(window).on('resize', function(){
+              if($(this).width() !== width){
+                  width = $(this).width();
+
+                  triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
+                  triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
+
+                  if (width > 765) {
+                      cart_position = cart_icon_1.getBoundingClientRect().left;
+                      cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
+                      cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
+                      bagModal.style.top = cart_bottom + 'px';
+                      bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                      bagModal.style.width = 'auto';
+                      bagModal.style.left = 'auto';
+                      bagModal.style.margin = 'auto';
+                  }else if (width > 468){
+                      cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
+                      bagModal.style.top = cart_bottom + 'px';
+                      modal_c.style.height = 'auto';
+                      bagModal.style.width = '64%';
+                      bagModal.style.left = 0;
+                      bagModal.style.right = 0;
+                      bagModal.style.bottom = 'auto';
+                      bagModal.style.margin = 'auto';
+                  }else {
+                      bagModal.style.top = 0;
+                      bagModal.style.right = 0;
+                      bagModal.style.left = 0;
+                      bagModal.style.bottom = 0;
+                      bagModal.style.width = '100%';
+                      bagModal.style.margin = 'auto';
+                      bagModal.style.height = '100%';
+                      modal_c.style.height = '100%'
+                  }
+              }
+          });
+
       };
 
       // When the user clicks anywhere outside of the modal, close it

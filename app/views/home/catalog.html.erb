@@ -314,7 +314,9 @@
             logo.remove();
             emblem.remove();
             modal_quick.style.display = "none";
-            $("body").removeClass("modal-open")
+            $("body").removeClass("modal-open");
+            $('body').css('overflow','auto');
+            $('body').css('position','relative');
         }
 
         if (event.target === modal) {
@@ -327,7 +329,9 @@
         logo.remove();
         emblem.remove();
         modal_quick.style.display = "none";
-        $("body").removeClass("modal-open")
+        $("body").removeClass("modal-open");
+        $('body').css('overflow','auto');
+        $('body').css('position','relative');
     }
     
     function back_p1() {
@@ -1163,6 +1167,8 @@
             }
         });
         $("body").addClass("modal-open");
+        $('body').css('overflow','hidden');
+        $('body').css('position','fixed');
         modal_quick.style.display = "block";
     }
 
@@ -1183,6 +1189,8 @@
             }
         });
         $("body").addClass("modal-open");
+        $('body').css('overflow','hidden');
+        $('body').css('position','fixed');
         modal_quick.style.display = "block";
     }
 
@@ -1199,6 +1207,8 @@
                 success: function (data, status, xhr) {
                     modal_quick.style.display = "none";
                     $("body").removeClass("modal-open");
+                    $('body').css('overflow','auto');
+                    $('body').css('position','relative');
                     location.reload();
                 },
                 dataType: 'json'

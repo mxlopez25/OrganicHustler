@@ -67,18 +67,11 @@
           <input name="cardholder-zip" class="field" placeholder="10107" value="<%= address['zip_code'] %>" required>
         </div>
 
-        <div class="content-part content-part-3 field-data">
+        <div class="content-part content-part-10 field-data">
           <label>
-            <div>AREA</div>
+            <div>PHONE NUMBER</div>
           </label>
-          <input name="cardholder-area" class="field" placeholder="829" value="<%= address['area'] %>" required>
-        </div>
-
-        <div class="content-part content-part-7 field-data">
-          <label>
-            <div>NUMBER</div>
-          </label>
-          <input name="cardholder-number" class="field" placeholder="456-7890" type="tel" value="<%= address['number'] %>" required>
+          <input name="cardholder-number" pattern="[\(]\d{3}[\)][\-]\d{3}[\-]\d{4}" class="field" placeholder="(123)-456-7890" type="tel" value="<%= address['number'] %>" required>
         </div>
 
 

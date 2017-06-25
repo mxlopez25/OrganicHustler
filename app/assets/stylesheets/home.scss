@@ -158,14 +158,11 @@ div.wrap {
 /* Modal Content/Box */
 .modal-content {
   min-width: 290px;
-  position: fixed;
   background-color: #fefefe;
-  top: 80px;
   border-radius: 0;
   padding: 20px;
   border: 1px solid #FFFFFF;
   z-index: 4;
-  width: 85%; /* Could be more or less, depending on screen size */
 }
 
 .modal-content_quick {
@@ -205,9 +202,8 @@ div.wrap {
 }
 
 .triangle {
-  z-index: 8;
-  position: fixed;
-  top: 10px;
+  margin-left: 80%;
+  z-index: 20;
   width: 0;
   height: 0;
   border-style: solid;
@@ -557,12 +553,12 @@ button:active {
     min-width: 50%;
   }
 
-  .btn-bottom_fixed {
-    display: block;
+  .modal-content {
+    width: 100%;
   }
 
-  .modal-content {
-    width: 30%;
+  .btn-bottom_fixed {
+    display: block;
   }
 
   .img-con-item {
