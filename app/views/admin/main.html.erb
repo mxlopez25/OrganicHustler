@@ -33,7 +33,126 @@
   </div>
 </nav>
 <body style="background-color: #dedede">
-<div class="main">
+<div class="main masonry">
+  <div class="card showcase-part">
+    <h4>Multi showcase</h4>
+    <hr>
+    <h6>Current showcase</h6>
+    <div style="text-align: left">
+      <% GroupShowcase.all.where(:screen => 3).each do |groupShowcase| %>
+
+          <h6><%= groupShowcase.name_identity %></h6>
+          <div class="showcase-container">
+            <% groupShowcase.showcases.all.each do |sh| %>
+                <% if !sh.video_show.blank? %>
+                    <video autobuffer="autobuffer" preload="auto" style="width:100%;" controls="controls" width="100%" height="100%" poster="<%= sh.video_show.video.url(:preview) %>">
+                      <source type="video/mp4" src="<%= sh.video_show.video.url(:mp4video) %>"/>
+                    </video>
+                <% elsif !sh.image_show.blank? %>
+                    <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
+                <% elsif !sh.product_id.blank? %>
+                    <% item = get_product(sh.product_id) %>
+                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                <% end %>
+            <% end %>
+
+            <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
+          </div>
+
+
+      <% end %>
+      <!-- The Modal -->
+      <div id="modal" class="modal">
+
+      </div>
+
+      <script>
+          function openModal(id) {
+
+              // Get the modal
+              var modal = document.getElementById('modal');
+
+              var html = '<div class="modal-content">'
+                  + '<span class="close">&times;</span>'
+                  + '<form method="post" action="<%= showcases_path %>" enctype="multipart/form-data">'
+                  + '<input class="hidden" value="1" name="active">'
+                  + '<input class="hidden" value="1" name="screen">'
+                  + '<select name="content_type" id="content-type">'
+                  + '<option value="0">Video</option>'
+                  + '<option value="1">Image</option>'
+                  + '<option value="2">Product</option>'
+                  + '</select>'
+                  + '<div id="video_f" class="">'
+                  + '<label for="image_f">Upload video</label>'
+                  + '<input type="file" name="video">'
+                  + '<label>Url</label>'
+                  + '<input style="width: 100%" type="text" name="url_association">'
+                  + '</div>'
+                  + '<div id="image_f" class="hidden">'
+                  + '<label for="image_f">Upload image</label>'
+                  + '<input type="file" name="image">'
+                  + '<label>Url</label>'
+                  + '<input style="width: 100%" type="text" name="url_association">'
+                  + '</div>'
+
+                  + '<div id="product_f" class="hidden">'
+                  + '<label for="product_f">Product id</label>'
+                  + '<input style="width: 100%" type="text" name="product_id">'
+                  + '</div>'
+
+                  + '<input class="hidden" name="group_showcase_id" type="text" value="' + id + '">'
+
+                  + '<div>'
+                  + '<button type="submit">SUBMIT</button>'
+                  + '</div>'
+                  + '</form>'
+                  + '</div>';
+
+              modal.innerHTML = html;
+              modal.style.display = "block";
+
+              // Get the <span> element that closes the modal
+              var span = document.getElementsByClassName("close")[0];
+
+              // When the user clicks on <span> (x), close the modal
+              span.onclick = function () {
+                  modal.style.display = "none";
+              };
+
+              // When the user clicks anywhere outside of the modal, close it
+              window.onclick = function (event) {
+                  if (event.target === modal) {
+                      modal.style.display = "none";
+                  }
+              };
+
+              var content_type = document.getElementById('content-type');
+              content_type.addEventListener("change", function () {
+                  switch (content_type.value) {
+                      case "0":
+                          document.getElementById('video_f').className = ' ';
+                          document.getElementById('image_f').className = 'hidden';
+                          document.getElementById('product_f').className = 'hidden';
+                          break;
+                      case "1":
+                          document.getElementById('video_f').className = 'hidden';
+                          document.getElementById('image_f').className = ' ';
+                          document.getElementById('product_f').className = 'hidden';
+                          break;
+                      case "2":
+                          document.getElementById('video_f').className = 'hidden';
+                          document.getElementById('image_f').className = 'hidden';
+                          document.getElementById('product_f').className = ' ';
+                          break;
+
+                  }
+              });
+
+          }
+      </script>
+    </div>
+
+  </div>
   <div class="card showcase-part">
     <h4>Desktop showcase</h4>
     <hr>
@@ -55,10 +174,8 @@
                     <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
-
+            <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
           </div>
-          <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
-
 
       <% end %>
 
@@ -174,11 +291,8 @@
                     <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
                 <% end %>
             <% end %>
-
+            <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
           </div>
-          <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
-
-
       <% end %>
 
       <!-- The Modal -->
@@ -271,125 +385,6 @@
           }
       </script>
     </div>
-  </div>
-  <div class="card showcase-part">
-    <h4>Multi showcase</h4>
-    <hr>
-    <h6>Current showcase</h6>
-    <div style="text-align: left">
-      <% GroupShowcase.all.where(:screen => 3).each do |groupShowcase| %>
-
-          <h6><%= groupShowcase.name_identity %></h6>
-          <div class="showcase-container">
-            <% groupShowcase.showcases.all.each do |sh| %>
-                <% if !sh.video_show.blank? %>
-                    <video autobuffer="autobuffer" preload="auto" style="width:100%;" controls="controls" width="100%" height="100%" poster="<%= sh.video_show.video.url(:preview) %>">
-                      <source type="video/mp4" src="<%= sh.video_show.video.url(:mp4video) %>"/>
-                    </video>
-                <% elsif !sh.image_show.blank? %>
-                    <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
-                <% elsif !sh.product_id.blank? %>
-                    <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
-                <% end %>
-            <% end %>
-
-          </div>
-          <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
-
-
-      <% end %>
-      <!-- The Modal -->
-      <div id="modal" class="modal">
-
-      </div>
-
-      <script>
-          function openModal(id) {
-
-              // Get the modal
-              var modal = document.getElementById('modal');
-
-              var html = '<div class="modal-content">'
-                  + '<span class="close">&times;</span>'
-                  + '<form method="post" action="<%= showcases_path %>" enctype="multipart/form-data">'
-                  + '<input class="hidden" value="1" name="active">'
-                  + '<input class="hidden" value="1" name="screen">'
-                  + '<select name="content_type" id="content-type">'
-                  + '<option value="0">Video</option>'
-                  + '<option value="1">Image</option>'
-                  + '<option value="2">Product</option>'
-                  + '</select>'
-                  + '<div id="video_f" class="">'
-                  + '<label for="image_f">Upload video</label>'
-                  + '<input type="file" name="video">'
-                  + '<label>Url</label>'
-                  + '<input style="width: 100%" type="text" name="url_association">'
-                  + '</div>'
-                  + '<div id="image_f" class="hidden">'
-                  + '<label for="image_f">Upload image</label>'
-                  + '<input type="file" name="image">'
-                  + '<label>Url</label>'
-                  + '<input style="width: 100%" type="text" name="url_association">'
-                  + '</div>'
-
-                  + '<div id="product_f" class="hidden">'
-                  + '<label for="product_f">Product id</label>'
-                  + '<input style="width: 100%" type="text" name="product_id">'
-                  + '</div>'
-
-                  + '<input class="hidden" name="group_showcase_id" type="text" value="' + id + '">'
-
-                  + '<div>'
-                  + '<button type="submit">SUBMIT</button>'
-                  + '</div>'
-                  + '</form>'
-                  + '</div>';
-
-              modal.innerHTML = html;
-              modal.style.display = "block";
-
-              // Get the <span> element that closes the modal
-              var span = document.getElementsByClassName("close")[0];
-
-              // When the user clicks on <span> (x), close the modal
-              span.onclick = function () {
-                  modal.style.display = "none";
-              };
-
-              // When the user clicks anywhere outside of the modal, close it
-              window.onclick = function (event) {
-                  if (event.target === modal) {
-                      modal.style.display = "none";
-                  }
-              };
-
-              var content_type = document.getElementById('content-type');
-              content_type.addEventListener("change", function () {
-                  switch (content_type.value) {
-                      case "0":
-                          document.getElementById('video_f').className = ' ';
-                          document.getElementById('image_f').className = 'hidden';
-                          document.getElementById('product_f').className = 'hidden';
-                          break;
-                      case "1":
-                          document.getElementById('video_f').className = 'hidden';
-                          document.getElementById('image_f').className = ' ';
-                          document.getElementById('product_f').className = 'hidden';
-                          break;
-                      case "2":
-                          document.getElementById('video_f').className = 'hidden';
-                          document.getElementById('image_f').className = 'hidden';
-                          document.getElementById('product_f').className = ' ';
-                          break;
-
-                  }
-              });
-
-          }
-      </script>
-    </div>
-
   </div>
 </div>
 </body>
