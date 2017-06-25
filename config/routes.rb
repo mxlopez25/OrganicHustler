@@ -54,20 +54,20 @@ Rails.application.routes.draw do
   post '/admin/orders/tag' => 'orders#get_tag'
 
   put '/admin/products' => 'admin#products'
-  put '/admin/edit_variation/:id_pro/upload_m_image' => 'customs#upload_m_image'
+  put '/admin/edit_variation/:id_pro/upload_m_image' => 'product#upload_m_image'
 
-  get '/customs/load_images/logo/:id' => 'customs#load_logo'
-  get '/customs/load_info' => 'customs#product_info'
-  get '/customs/edit_data' => 'customs#edit_product'
-  get '/custom/delete_image_control' => 'customs#delete_image'
-  get '/custom/load_logo_w_color' => 'customs#load_logo_w_color'
+  get '/product/load_images/logo/:id' => 'product#load_logo'
+  get '/product/load_info' => 'product#product_info'
+  get '/product/edit_data' => 'product#edit_product'
+  get '/custom/delete_image_control' => 'product#delete_image'
+  get '/custom/load_logo_w_color' => 'product#load_logo_w_color'
 
-  post '/customs/reload_table' => 'customs#table_products'
-  post '/customs/new/product' => 'customs#new_product'
+  post '/product/reload_table' => 'product#table_products'
+  post '/product/new/product' => 'product#new_product'
 
-  put '/customs/edit/product' => 'customs#save_product'
-  put '/customs/upload_image' => 'customs#upload_image'
-  put '/customs/save_variation' => 'customs#save_variation'
+  put '/product/edit/product' => 'product#save_product'
+  put '/product/upload_image' => 'product#upload_image'
+  put '/product/save_variation' => 'product#save_variation'
 
   put '/admin/product/edit/add/gallery/logo' => 'galleries#create'
 

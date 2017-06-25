@@ -175,9 +175,16 @@ input::-webkit-search-cancel-button {
   margin-right: 5px;
   padding: 10px;
   float: left;
-  background-color: transparent;
+  background-color: rgba(194,165,178,0.50);
   color: white;
   border: 3px solid #b692a2;
+}
+
+.button-head-phone{
+  width: 112px;
+  height: 50px;
+  font-weight: 400;
+  font-size: 14px
 }
 
 .button-head:hover {
@@ -187,30 +194,25 @@ input::-webkit-search-cancel-button {
 
 .img1 {
   float: left;
-
   width: 120px;
 
 }
 
 .img2 {
   float: right;
-
   width: 120px;
 
 }
 
 .img1lg {
-  float: left;
-
-  width: 400px;
+  float: right;
+  height: 100%;
 
 }
 
 .img2lg {
-  float: right;
-
-  width: 400px;
-
+  float: left;
+  height: 100%;
 }
 
 .bcolor {

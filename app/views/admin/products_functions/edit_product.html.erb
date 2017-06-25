@@ -389,7 +389,7 @@
 
       function saveVariation(type, variation, id) {
           $.ajax({
-              url: "/customs/save_variation",
+              url: "/product/save_variation",
               type: "PUT",
               data: {
                   id: id,
@@ -665,7 +665,7 @@
       function loadDrop() {
           document.getElementById("dropping").className = 'dropzone';
           var myDropzone = new Dropzone("div#dropping", {
-              url: '/customs/upload_image?imageO=true&id='.concat('<%= product_i['id'] %>'),
+              url: '/product/upload_image?imageO=true&id='.concat('<%= product_i['id'] %>'),
               autoProcessQueue: true,
               uploadMultiple: false,
               parallelUploads: 100,
@@ -701,7 +701,7 @@
       function save(id) {
 
           $.ajax({
-              url: "/customs/edit/product",
+              url: "/product/edit/product",
               type: "PUT",
               data: {
                   id: id[0],

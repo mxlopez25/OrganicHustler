@@ -28,7 +28,7 @@
 
   <!-- Theme CSS -->
   <%= stylesheet_link_tag 'cart' %>
-  <%= stylesheet_link_tag 'index/estilos' %>
+  <%= stylesheet_link_tag 'index/styles-index' %>
   <%= stylesheet_link_tag 'home' %>
 
 </head>
@@ -79,7 +79,7 @@
                                 '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
                                 '</div>' +
                                 '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
-                                '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + data[product]['price'][6] + '$</p>' +
+                                '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + parseFloat(data[product]['price'][6]).toFixed(2) + '$</p>' +
                                 '</li>';
                         }
                     }
@@ -209,8 +209,7 @@
       <hr class="no-spacing-bar">
       <div style="overflow: hidden" class="modal_c_part">
         <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= get_price %>
-          $</span>
+        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f",get_price) %></span>
       </div>
       <hr class="no-spacing-bar">
       <div class="modal_c_part">
@@ -420,6 +419,12 @@
 
               bagModal.style.top = cart_bottom + 'px';
               bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+
+              var carousel_p = document.getElementById('product-loader-carousel');
+              $('.element_product').each(function () {
+                  console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                  $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+              });
           });
 
           btn_i.on('click', function () {
@@ -449,6 +454,12 @@
 
                   bagModal.style.margin = 'auto';
               }
+
+              var carousel_p = document.getElementById('product-loader-carousel');
+              $('.element_product').each(function () {
+                  console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                  $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+              });
           });
 
           span.onclick = function () {
@@ -492,6 +503,11 @@
                       bagModal.style.height = '100%';
                       modal_c.style.height = '100%'
                   }
+                  var carousel_p = document.getElementById('product-loader-carousel');
+                  $('.element_product').each(function () {
+                      console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                      $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+                  });
               }
           });
 

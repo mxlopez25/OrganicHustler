@@ -20,7 +20,7 @@ Rails.application.config.assets.precompile += %w( bootstrap.min.css )
 Rails.application.config.assets.precompile += %w( bootstrap.min.js )
 Rails.application.config.assets.precompile += %w( jscolor/jscolor.js )
 Rails.application.config.assets.precompile += %w( jscolor/jscolor.min.js )
-Rails.application.config.assets.precompile += %w( index/estilos.css )
+Rails.application.config.assets.precompile += %w( index/styles-index.css )
 Rails.application.config.assets.precompile += %w( home.css )
 Rails.application.config.assets.precompile += %w( cart.css )
 

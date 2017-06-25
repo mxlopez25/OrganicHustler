@@ -207,7 +207,7 @@
   <script id="margin">
 
       function saveVariation(type, variation, id){
-          $.ajax({url: "/customs/save_variation",
+          $.ajax({url: "/product/save_variation",
               type: "PUT",
               data: {
                   id: id,
@@ -483,7 +483,7 @@
       function save(id) {
 
           $.ajax({
-              url: "/customs/edit/product",
+              url: "/product/edit/product",
               type: "PUT",
               data: {
                   id: id[0],
@@ -526,7 +526,7 @@
 
           document.getElementById("dropping").className = 'dropzone';
           var myDropzone = new Dropzone("div#dropping", {
-              url: '/customs/upload_image?imageO=true&id='.concat(id[0]),
+              url: '/product/upload_image?imageO=true&id='.concat(id[0]),
               autoProcessQueue: true,
               uploadMultiple: false,
               parallelUploads: 100,

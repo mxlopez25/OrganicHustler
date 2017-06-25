@@ -1,47 +1,28 @@
+<%= stylesheet_link_tag 'index/styles-index' %>
+
+<!--HEADER INDEX-->
 <div class="header mobilenot" style="height: 450px; background: url('<%= GroupShowcase.where(:screen => 3, :name_identity => 'header_img').first.showcases.first.image_show.image.url %>') no-repeat left center; background-size: cover;">
   <h1 class="text-center ht-desk text_light" style="margin-top: 150px; font-size: 100px">ECO FRIENDLY</h1>
-
   <div class="center-div-container" style="overflow: hidden; position: absolute; bottom: 30px">
-
     <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn pri-limit" style="float: left">SHOPMEN</button>
-
-    <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn pri-limit" style="float: right">SHOP
-      WOMEN
-    </button>
-
+    <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn pri-limit" style="float: right">SHOPWOMEN</button>
   </div>
-
 </div>
 
-<div class="header desktopnot " style="position: relative; background: url('<%= GroupShowcase.where(:screen => 1, :name_identity => 'header_background').first.showcases.first.image_show.image.url %>') no-repeat center center;
-    margin-top: -40px;
-    height: 360px;
-    width: 100%;
-    overflow: hidden">
-
+<div class="header desktopnot " style="position: relative; background: url('<%= GroupShowcase.where(:screen => 1, :name_identity => 'header_background').first.showcases.first.image_show.image.url %>') no-repeat left center; background-size: cover;margin-top: -40px;height: 360px;width: 100%;overflow: hidden">
   <div style="overflow: hidden; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 240px">
-
     <h1 class="text-center ht text_light" style="font-size: 60px">ECO<br>FRIENDLY</h1>
-
     <div style="text-align: center; overflow: hidden;">
       <div style="overflow: hidden; margin: 50px auto; left: 0; right: 0; width: 244px;">
-        <button style="width: 112px; height: 50px; font-weight: 400; font-size: 14px" onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn text_light">SHOP
-          MEN
-        </button>
-        <button style="width: 112px; height: 50px; font-weight: 400; font-size: 14px" onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn text_light">SHOP
-          WOMEN
-    </button>
+        <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn text_light button-head-phone">SHOP MEN</button>
+        <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn text_light button-head-phone">SHOP WOMEN</button>
       </div>
     </div>
-
   </div>
-
-
 </div>
 
+<!--MOBILE CAROUSEL-->
 <div id="carousel-example-generic" class="carousel slide desktopnot" data-ride="carousel">
-
-  <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
     <% first = true %>
     <% get_showcase_items.each do |item| %>
@@ -51,6 +32,9 @@
           <img onclick="location.href = '/catalog?id=<%= item['id'] %>'" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px; margin: 10px auto;">
           <div class="carousel-cap">
             <p class="text_light"><%= item['title'] %><br>Eco-Friendly + Customizable</p>
+          </div>
+          <div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">
+            <button onclick="location.href = '/catalog?id=<%= item['id'] %>&view=2'" class="btn styling_btn">CUSTOMIZE</button>
           </div>
         </div>
     <% end %>
@@ -64,12 +48,6 @@
     <span class="fa fa-chevron-right" style="position: absolute; top: 140px" aria-hidden="true"></span>
   </a>
 
-</div>
-<div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">
-  <article>
-    <button class="btn styling_btn">CUSTOMIZE</button>
-
-  </article>
 </div>
 
 <div id="video-player" style="margin-top: 30px; position: relative; width: 100%;" class="desktopnot">
@@ -88,7 +66,7 @@
 <script>
 
     function play_video_1() {
-        document.getElementById('video-player').innerHTML = '<video id="video" src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>';
+        document.getElementById('video-player').innerHTML = '<video id="video" loop muted src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video>';
         var video = document.getElementById('video');
         video.play();
     }
@@ -190,20 +168,19 @@
 
 <div id="video-player-desk" class="mobilenot" style="width: 100%; margin-top: 80px; position: relative; overflow: hidden; height: 37vw">
   <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
-  <img style="width: 100%" src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
-  <p style="position: absolute; top: 40px" class="absolute-center">
-    <span style="font-size: 4vw">Our Story</span><br><span style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".</span>
-  </p>
-  <i id="play_btn" onclick="play_video_2()" class="absolute-center-arrow fa fa-play-circle-o" aria-hidden="true"></i>
+    <img style="width: 100%" src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
+    <p style="position: absolute; top: 40px" class="absolute-center">
+      <span style="font-size: 4vw">Our Story</span><br><span style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".</span>
+    </p>
+    <i id="play_btn" onclick="play_video_2()" class="absolute-center-arrow fa fa-play-circle-o" aria-hidden="true"></i>
   </div>
   <script>
 
       function play_video_2() {
-          document.getElementById('play_btn').classList.add('hidden');
+          document.getElementById('video-player-desk').innerHTML = '<video style="position: absolute; top: 0; bottom: 0; margin: auto;" id="video_desk" loop muted src="<%= GroupShowcase.where(screen: 3, name_identity: 'primary_video_show').first.showcases.first.video_show.video.url(:mp4video) %>"></video><h1>Hola</h1>';
           var video = document.getElementById('video_desk');
           video.play();
       }
-
   </script>
 </div>
 
@@ -344,7 +321,7 @@
   				col-cen col-centered  ">
 
       <% image_social_1 = GroupShowcase.where(screen: 3, name_identity: 'image_1_social').first.showcases.first %>
-      <a href="<%= image_social_1.url_association %>"><img class="img1lg" src="<%= image_social_1.image_show.image.url %>" style="width: 100%" align="left"></a>
+      <a href="<%= image_social_1.url_association %>"><img class="img1lg" src="<%= image_social_1.image_show.image.url %>" align="left"></a>
 
 
     </div>
@@ -357,7 +334,7 @@
   				col-cen col-centered ">
 
       <% image_social_2 = GroupShowcase.where(screen: 3, name_identity: 'image_2_social').first.showcases.first %>
-      <a href="<%= image_social_2.url_association %>"><img class="img2lg" src="<%= image_social_2.image_show.image.url %>" style="width: 100%" align="right"></a>
+      <a href="<%= image_social_2.url_association %>"><img class="img2lg" src="<%= image_social_2.image_show.image.url %>" align="right"></a>
 
     </div>
   </div>

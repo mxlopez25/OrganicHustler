@@ -2,7 +2,7 @@ require 'rest_client'
 require 'RMagick'
 require 'tempfile'
 
-class CustomsController < ApplicationController
+class ProductController < ApplicationController
   include Magick
   layout 'customs_bl'
 
