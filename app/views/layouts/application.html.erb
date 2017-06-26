@@ -64,6 +64,24 @@
 
         <script>
 
+            var btn_i = null;
+            var btn_j = null;
+
+            var span = null;
+            var modal = null;
+            var triangle = null;
+            var modal_c = null;
+            var bagModal = null;
+
+            var cart_icon_1 = null;
+            var cart_icon_2 = null;
+
+            var cart_position = null;
+            var triangle_position = null;
+            var triangle_width = null;
+            var cart_width = null;
+            var cart_bottom = null;
+
             $.ajax({
                 url: '/cart',
                 method: 'get',
@@ -164,6 +182,124 @@
                 error: function (data) {
 
                 }
+            }).done(function () {
+                btn_j = $('#cart_ic_2');
+                btn_i = $('#cart_ic_1');
+
+                // Get the <span> element that closes the modal
+                span = document.getElementsByClassName("close")[0];
+                // Get the modal
+                modal = document.getElementById('myModal');
+                triangle = document.getElementById('triangle');
+                modal_c = document.getElementById('modal_c');
+                bagModal = document.getElementById('bag_modal');
+
+                cart_icon_1 = document.getElementById('cart_ic_2');
+                cart_icon_2 = document.getElementById('cart_ic_1');
+
+                btn_j.on('click', function () {
+                    modal.style.display = "block";
+                    $("body").addClass("modal-open");
+
+                    cart_position = cart_icon_1.getBoundingClientRect().left;
+                    triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
+                    triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
+                    cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
+                    cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
+
+                    bagModal.style.top = cart_bottom + 'px';
+                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+
+                    var carousel_p = document.getElementById('product-loader-carousel');
+                    $('.element_product').each(function () {
+                        console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                        $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+                    });
+                });
+
+                btn_i.on('click', function () {
+                    modal.style.display = "block";
+                    $("body").addClass("modal-open");
+
+                    bagModal.style.top = 0;
+                    bagModal.style.right = 0;
+                    bagModal.style.left = 0;
+                    bagModal.style.bottom = 0;
+                    bagModal.style.width = '100%';
+                    bagModal.style.margin = 'auto';
+                    bagModal.style.height = '100%';
+                    modal_c.style.height = '100%';
+
+                    if ($(window).width() > 468){
+
+                        cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
+
+                        bagModal.style.top = cart_bottom + 'px';
+                        modal_c.style.height = 'auto';
+                        bagModal.style.width = '64%';
+
+                        bagModal.style.left = 0;
+                        bagModal.style.right = 0;
+                        bagModal.style.bottom = 'auto';
+
+                        bagModal.style.margin = 'auto';
+                    }
+
+                    var carousel_p = document.getElementById('product-loader-carousel');
+                    $('.element_product').each(function () {
+                        console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                        $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+                    });
+                });
+
+                span.onclick = function () {
+                    modal.style.display = "none";
+                    $("body").removeClass("modal-open")
+                };
+
+                var width = $(window).width();
+                $(window).on('resize', function(){
+                    if($(this).width() !== width){
+                        width = $(this).width();
+
+                        triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
+                        triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
+
+                        if (width > 765) {
+                            cart_position = cart_icon_1.getBoundingClientRect().left;
+                            cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
+                            cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
+                            bagModal.style.top = cart_bottom + 'px';
+                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                            bagModal.style.width = 'auto';
+                            bagModal.style.left = 'auto';
+                            bagModal.style.margin = 'auto';
+                        }else if (width > 468){
+                            cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
+                            bagModal.style.top = cart_bottom + 'px';
+                            modal_c.style.height = 'auto';
+                            bagModal.style.width = '64%';
+                            bagModal.style.left = 0;
+                            bagModal.style.right = 0;
+                            bagModal.style.bottom = 'auto';
+                            bagModal.style.margin = 'auto';
+                        }else {
+                            bagModal.style.top = 0;
+                            bagModal.style.right = 0;
+                            bagModal.style.left = 0;
+                            bagModal.style.bottom = 0;
+                            bagModal.style.width = '100%';
+                            bagModal.style.margin = 'auto';
+                            bagModal.style.height = '100%';
+                            modal_c.style.height = '100%'
+                        }
+                        var carousel_p = document.getElementById('product-loader-carousel');
+                        $('.element_product').each(function () {
+                            console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
+                            $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
+                        });
+                    }
+                });
             });
 
             //Photo slider
@@ -374,145 +510,6 @@
 
   <script>
 
-      var btn_i = null;
-      var btn_j = null;
-
-      var span = null;
-      var modal = null;
-      var triangle = null;
-      var modal_c = null;
-      var bagModal = null;
-
-      var cart_icon_1 = null;
-      var cart_icon_2 = null;
-
-      var cart_position = null;
-      var triangle_position = null;
-      var triangle_width = null;
-      var cart_width = null;
-      var cart_bottom = null;
-
-      window.onload = function () {
-          btn_j = $('#cart_ic_2');
-          btn_i = $('#cart_ic_1');
-
-          // Get the <span> element that closes the modal
-          span = document.getElementsByClassName("close")[0];
-          // Get the modal
-          modal = document.getElementById('myModal');
-          triangle = document.getElementById('triangle');
-          modal_c = document.getElementById('modal_c');
-          bagModal = document.getElementById('bag_modal');
-
-          cart_icon_1 = document.getElementById('cart_ic_2');
-          cart_icon_2 = document.getElementById('cart_ic_1');
-
-          btn_j.on('click', function () {
-              modal.style.display = "block";
-              $("body").addClass("modal-open");
-
-              cart_position = cart_icon_1.getBoundingClientRect().left;
-              triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
-              triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
-              cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
-              cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
-
-              bagModal.style.top = cart_bottom + 'px';
-              bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
-
-              var carousel_p = document.getElementById('product-loader-carousel');
-              $('.element_product').each(function () {
-                  console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                  $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-              });
-          });
-
-          btn_i.on('click', function () {
-              modal.style.display = "block";
-              $("body").addClass("modal-open");
-
-              bagModal.style.top = 0;
-              bagModal.style.right = 0;
-              bagModal.style.left = 0;
-              bagModal.style.bottom = 0;
-              bagModal.style.width = '100%';
-              bagModal.style.margin = 'auto';
-              bagModal.style.height = '100%';
-              modal_c.style.height = '100%';
-
-              if ($(window).width() > 468){
-
-                  cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
-
-                  bagModal.style.top = cart_bottom + 'px';
-                  modal_c.style.height = 'auto';
-                  bagModal.style.width = '64%';
-
-                  bagModal.style.left = 0;
-                  bagModal.style.right = 0;
-                  bagModal.style.bottom = 'auto';
-
-                  bagModal.style.margin = 'auto';
-              }
-
-              var carousel_p = document.getElementById('product-loader-carousel');
-              $('.element_product').each(function () {
-                  console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                  $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-              });
-          });
-
-          span.onclick = function () {
-              modal.style.display = "none";
-              $("body").removeClass("modal-open")
-          };
-
-          var width = $(window).width();
-          $(window).on('resize', function(){
-              if($(this).width() !== width){
-                  width = $(this).width();
-
-                  triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
-                  triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
-
-                  if (width > 765) {
-                      cart_position = cart_icon_1.getBoundingClientRect().left;
-                      cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
-                      cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
-                      bagModal.style.top = cart_bottom + 'px';
-                      bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
-                      bagModal.style.width = 'auto';
-                      bagModal.style.left = 'auto';
-                      bagModal.style.margin = 'auto';
-                  }else if (width > 468){
-                      cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
-                      bagModal.style.top = cart_bottom + 'px';
-                      modal_c.style.height = 'auto';
-                      bagModal.style.width = '64%';
-                      bagModal.style.left = 0;
-                      bagModal.style.right = 0;
-                      bagModal.style.bottom = 'auto';
-                      bagModal.style.margin = 'auto';
-                  }else {
-                      bagModal.style.top = 0;
-                      bagModal.style.right = 0;
-                      bagModal.style.left = 0;
-                      bagModal.style.bottom = 0;
-                      bagModal.style.width = '100%';
-                      bagModal.style.margin = 'auto';
-                      bagModal.style.height = '100%';
-                      modal_c.style.height = '100%'
-                  }
-                  var carousel_p = document.getElementById('product-loader-carousel');
-                  $('.element_product').each(function () {
-                      console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                      $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-                  });
-              }
-          });
-
-      };
-
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
           if (event.target === modal) {
@@ -526,7 +523,6 @@
 
 <body style="padding-top: 100px">
 <%= yield %>
-
 <script>
 
 </script>
