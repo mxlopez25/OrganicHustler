@@ -150,7 +150,7 @@
                 <div style="float: left; width: 50%; text-align: center">
                   <h3>Qty: 1</h3> <!-- Attach to backend -->
                   <% pr_price = product_price(product.id) %>
-                  <h4><%= pr_price[5] %></h4>
+                  <h4><%= format('$%.2f',pr_price[5]) %></h4>
                   <% tax_array.push(pr_price[1]) %>
                   <% cost_array.push(pr_price[5]) %>
                 </div>
@@ -242,7 +242,7 @@
           <% cost_array.each do |cost| %>
               <% cost_t = cost_t + cost %>
           <% end %>
-          <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= cost_t %></h4>
+          <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= format('$%.2f', cost_t) %></h4>
         </div>
 
         <div style="overflow: hidden; margin: 5px">
@@ -254,19 +254,19 @@
           <% tax_array.each do |tax| %>
               <% tax_t = tax_t + tax %>
           <% end %>
-          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= tax_t %></h4>
+          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= format("$%.2f", tax_t) %></h4>
         </div>
 
         <div style="overflow: hidden; margin: 40px 5px 5px;">
           <h4 class="t-right">Estimated total</h4>
-          <h3 style="font-weight: lighter;" class="s-left">$<%= tax_t + cost_t %></h3>
+          <h3 style="font-weight: lighter;" class="s-left">$<%= format("$%.2f", tax_t + cost_t) %></h3>
         </div>
 
         <hr>
 
         <input type="checkbox"> I agree to the terms and conditions.
 
-        <button class="btn btn-sp" type="submit">Pay $<%= tax_t + cost_t %></button>
+        <button class="btn btn-sp" type="submit">Pay $<%= format("$%.2f", tax_t + cost_t) %></button>
         <div class="outcome">
           <div id="error_hand"></div>
         </div>
