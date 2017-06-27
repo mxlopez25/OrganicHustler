@@ -199,8 +199,8 @@
     <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_2').first.showcases.first.product_id %>
     <% item = get_product(id) %>
 
+    <% item['modifiers'].select {|k| item['modifiers'][k.to_s]['title'].eql? 'Logo preset'}.first[1]['variations'].each do |var| %>
 
-    <% item['modifiers'].first[1]['variations'].each do |var| %>
         <% if var[1]['title'].eql?('null') %>
 
         <% else %>
