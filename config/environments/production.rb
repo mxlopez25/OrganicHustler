@@ -98,16 +98,13 @@ Rails.application.configure do
   }
 
   config.action_mailer.delivery_method = :smtp
-
   config.action_mailer.smtp_settings = {
-      :port => ENV['MAILGUN_SMTP_PORT'],
-      :address => ENV['MAILGUN_SMTP_SERVER'],
-      :user_name => ENV['MAILGUN_SMTP_LOGIN'],
-      :password => ENV['MAILGUN_SMTP_PASSWORD'],
-      :domain => ENV['MAILGUN_DOMAIN'],
-      :authenticate => :plain
+      :user_name => 'ecfd9d84a9b30c',
+      :password => '85a5788153802f',
+      :address => 'smtp.mailtrap.io',
+      :domain => 'smtp.mailtrap.io',
+      :port => '2525',
+      :authentication => :cram_md5
   }
-
-  config.action_mailer.default_url_options = {host: ENV['MAILGUN_DOMAIN']}
 
 end

@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'oh@organichustler.herokuapp.com'
+  default from: 'organichustler-9bb916@inbox.mailtrap.io'
   layout 'mailer'
 end

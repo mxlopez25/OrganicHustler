@@ -71,7 +71,7 @@
           <label>
             <div>PHONE NUMBER</div>
           </label>
-          <input name="cardholder-number" pattern="[\(]\d{3}[\)][\-]\d{3}[\-]\d{4}" class="field" placeholder="(123)-456-7890" type="tel" value="<%= address['number'] %>" required>
+          <input id="phone" name="cardholder-number" pattern="[\(]\d{3}[\)][\-]\d{3}[\-]\d{4}" class="field" placeholder="(123)-456-7890" type="tel" value="<%= address['number'] %>" required>
         </div>
 
         <div class="content-part content-part-10">
@@ -242,7 +242,7 @@
           <% cost_array.each do |cost| %>
               <% cost_t = cost_t + cost %>
           <% end %>
-          <h4 class="t-right">Subtotal</h4><h4 class="s-left">$<%= format('$%.2f', cost_t) %></h4>
+          <h4 class="t-right">Subtotal</h4><h4 class="s-left"><%= format('$%.2f', cost_t) %></h4>
         </div>
 
         <div style="overflow: hidden; margin: 5px">
@@ -254,19 +254,19 @@
           <% tax_array.each do |tax| %>
               <% tax_t = tax_t + tax %>
           <% end %>
-          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left">$<%= format("$%.2f", tax_t) %></h4>
+          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left"><%= format("$%.2f", tax_t) %></h4>
         </div>
 
         <div style="overflow: hidden; margin: 40px 5px 5px;">
           <h4 class="t-right">Estimated total</h4>
-          <h3 style="font-weight: lighter;" class="s-left">$<%= format("$%.2f", tax_t + cost_t) %></h3>
+          <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
         </div>
 
         <hr>
 
         <input type="checkbox"> I agree to the terms and conditions.
 
-        <button class="btn btn-sp" type="submit">Pay $<%= format("$%.2f", tax_t + cost_t) %></button>
+        <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", tax_t + cost_t) %></button>
         <div class="outcome">
           <div id="error_hand"></div>
         </div>
@@ -276,6 +276,25 @@
 </div>
 
 <script>
+
+    var phone_field = $("#phone");
+    phone_field.on("change keyup paste", function () {
+        var output;
+        var input = phone_field.val();
+        input = input.replace(/[^0-9]/g, '');
+        var area = input.substr(0, 3);
+        var pre = input.substr(3, 3);
+        var tel = input.substr(6, 4);
+        if (area.length < 3) {
+            output = "(" + area;
+        } else if (area.length == 3 && pre.length < 3) {
+            output = "(" + area + ")" + "-" + pre;
+        } else if (area.length == 3 && pre.length == 3) {
+            output = "(" + area + ")" + "-" + pre + "-" + tel;
+        }
+        phone_field.val(output);
+    });
+
     var stripe = Stripe('pk_test_v1i9VQN3G18s8aYbnwi9Mqim');
     var elements = stripe.elements();
 

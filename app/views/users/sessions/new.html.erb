@@ -5,20 +5,20 @@
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-        <div class="field">
+        <div class="log_in field">
           <input class="serious-input" placeholder="Email" value="" name="user[email]" id="user_email" type="email">
         </div>
 
-        <div class="field">
+        <div class="log_in field">
           <input class="serious-input" placeholder="Password" autocomplete="off" name="user[password]" id="user_password" type="password">
         </div>
 
-        <div class="field hidden">
+        <div class="log_in field hidden">
           <input name="user[remember_me]" value="0" type="hidden"><input checked value="1" name="user[remember_me]" id="user_remember_me" type="checkbox">
           <label for="user_remember_me">Remember me</label>
         </div>
 
-        <div class="actions">
+        <div class="actions log_in field">
           <%= f.submit "Sign in", class: 'btn btn-sp submit-btn-form' %>
         </div>
     <% end %>
