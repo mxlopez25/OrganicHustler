@@ -98,6 +98,7 @@
           <% if var[1]['title'].eql?('null') %>
 
           <% else %>
+              <% p var[1]['title'] %>
               <% object = getJson(var[1]['title']) %>
               <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
 
