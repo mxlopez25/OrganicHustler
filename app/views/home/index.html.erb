@@ -94,6 +94,7 @@
       <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
 
+      <% p item['modifiers'] %>
       <% item['modifiers'].first[1]['variations'].each do |var| %>
           <% if var[1]['title'].eql?('null') %>
 
