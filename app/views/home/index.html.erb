@@ -168,10 +168,10 @@
 <div id="video-player-desk" class="mobilenot" style="width: 100%; margin-top: 80px; position: relative; overflow: hidden; height: 37vw">
   <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
     <img style="width: 100%" src="<%= GroupShowcase.where(:screen => 1, :name_identity => 'back_video_preview_history').first.showcases.first.image_show.image.url %>">
-    <p style="position: absolute; top: 40px" class="absolute-center">
-      <span style="font-size: 4vw">Our Story</span><br><span style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".</span>
+    <p style="position: absolute" class="absolute-center">
+      <span class="text_light" style="font-size: 4vw">Our Story</span><br><span class="text_light" style="font-size: 1.6vw">Clothing - For the solid, selfmade individual with root instincts to pursue<br>their goals. "By Any Means".<br></span>
+      <i id="play_btn" onclick="play_video_2()" class="absolute-center-arrow fa fa-play-circle-o" aria-hidden="true"></i>
     </p>
-    <i id="play_btn" onclick="play_video_2()" class="absolute-center-arrow fa fa-play-circle-o" aria-hidden="true"></i>
   </div>
   <script>
 
