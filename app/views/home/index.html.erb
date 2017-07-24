@@ -185,7 +185,7 @@
 
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
-  <img src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>" style="height: 50vw; min-height: 350px">
+  <img class="centered-images-showcase" src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview').first.showcases.first.image_show.image.url %>">
   <p class="text_light" style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
@@ -265,7 +265,98 @@
             </script>
         <% end %>
     <% end %>
-    <button onclick="location.href = '/product/<%= id %>/1'" class="btn-sm btn-link center-block" style="color:black;  ">
+    <button onclick="location.href = '/catalog?id=<%= id %>'" class="btn-sm btn-link center-block" style="color:black;  ">
+      <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
+
+
+  </div>
+</div>
+
+<hr style="width: 80%; margin: 30px auto">
+
+<div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
+
+  <img class="centered-images-showcase" src="<%= GroupShowcase.where(:screen => 3, :name_identity => 'outfits_looks_ph_preview_2').first.showcases.first.image_show.image.url %>">
+  <p class="text_light" style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
+
+  <article>
+    <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP WOMEN</button>
+  </article>
+
+  <div class="side-list mobilenot">
+
+    <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
+
+    <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_3').first.showcases.first.product_id %>
+    <% item = get_product(id) %>
+
+    <% item['modifiers'].select {|k| item['modifiers'][k.to_s]['title'].eql? 'Logo preset'}.first[1]['variations'].each do |var| %>
+
+        <% if var[1]['title'].eql?('null') %>
+
+        <% else %>
+            <% object = getJson(var[1]['title']) %>
+            <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
+
+            </div>
+
+            <script id="create-shape">
+                createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
+                function createShape(id, width, height, x, y, s_w, s_h) {
+                    var container = $('#' + id);
+                    container.height(container.width());
+
+                    var stage = new Konva.Stage({
+                        container: id,
+                        width: container.width(),
+                        height: container.height()
+                    });
+                    var layer = new Konva.Layer();
+                    stage.add(layer);
+
+                    var baseImg = new Konva.Image({
+                        width: container.width(),
+                        height: container.height(),
+                        draggable: false
+                    });
+
+                    var logoImg = new Konva.Image({
+                        width: container.width() * width / s_w,
+                        height: container.height() * height / s_h
+                    });
+
+                    var logoGroup = new Konva.Group({
+                        x: container.width() * x / s_w,
+                        y: container.width() * y / s_h
+                    });
+
+                    layer.add(baseImg);
+                    layer.add(logoGroup);
+                    logoGroup.add(logoImg);
+
+                    var imageObj1 = new Image();
+                    imageObj1.onload = function () {
+                        baseImg.image(imageObj1);
+                        layer.draw();
+                    };
+                    imageObj1.src = '<%= item['images'].first['url']['https'] %>';
+
+                    var imageObj2 = new Image();
+                    imageObj2.onload = function () {
+                        logoImg.image(imageObj2);
+                        layer.draw();
+                        imageObj2.width = container.width() * width / s_w;
+                        console.log(imageObj2.width, container.width(), width, s_w);
+                        imageObj2.height = container.height() * height / s_h;
+                        console.log(imageObj2.height);
+                    };
+                    imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
+                    layer.draw();
+                }
+            </script>
+        <% end %>
+    <% end %>
+    <button onclick="location.href = '/catalog?id=<%= id %>'" class="btn-sm btn-link center-block" style="color:black;  ">
       <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
 
 
@@ -277,7 +368,7 @@
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
   <% image_show_case = GroupShowcase.where(screen: 3, name_identity: 'relational_image').first.showcases.first %>
-  <img style="max-width: 400px" src="<%= image_show_case.image_show.image.url %>">
+  <img class="centered-images-showcase" src="<%= image_show_case.image_show.image.url %>">
 
 
   <article>

@@ -79,6 +79,10 @@ button.styling_btn:focus {
   cursor: pointer;
 }
 
+.centered-images-showcase{
+  max-width: 80vw;
+}
+
 .center-div-container {
   position: absolute;
   bottom: 15px;
@@ -263,6 +267,10 @@ img.showcase {
     width: 40%;
   }
 
+  .centered-images-showcase{
+    max-width: 30vw;
+  }
+
   .desktopnot {
     visibility: hidden;
     clear: both;
@@ -281,6 +289,8 @@ img.showcase {
     width: 28%;
     display: none;
   }
+
+
 }
 
 .prod {
