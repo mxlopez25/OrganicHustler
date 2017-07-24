@@ -277,7 +277,7 @@
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
 
   <% image_show_case = GroupShowcase.where(screen: 3, name_identity: 'relational_image').first.showcases.first %>
-  <img style="height: 50vw; min-height: 350px" src="<%= image_show_case.image_show.image.url %>">
+  <img style="max-width: 400px" src="<%= image_show_case.image_show.image.url %>">
 
 
   <article>
