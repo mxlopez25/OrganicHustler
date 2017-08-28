@@ -28,6 +28,7 @@ Rails.application.routes.draw do
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
+  get '/mail_token' => 'cart#mail_token'
 
   get '/shopping_bag' => 'home#bag'
 

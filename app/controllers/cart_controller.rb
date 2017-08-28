@@ -63,8 +63,6 @@ class CartController < ApplicationController
 
         user.create_user_address(user_address)
         user.save!
-        mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
-        mail.deliver_now
       end
     end
 
@@ -140,6 +138,12 @@ class CartController < ApplicationController
       end
       render :json => charge.to_json.html_safe
     end
+  end
+
+  def mail_token
+    user = TempUser.find session[:temp_user_id]
+    mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
+    mail.deliver_now
   end
 
 end

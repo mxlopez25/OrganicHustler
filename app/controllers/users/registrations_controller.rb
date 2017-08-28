@@ -9,7 +9,37 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
 # POST /resource
   def create
-    super
+    build_resource(sign_up_params)
+
+    token = params[:user][:temp_user_token_confirmation]
+    p token
+
+    unless token.nil?
+      p 'tempUser here bro'
+    end
+
+    p 'k paso? -1'
+    resource.save
+    yield resource if block_given?
+    if resource.persisted?
+      p 'k paso? 0'
+      if resource.active_for_authentication?
+        p 'k paso? 1'
+        set_flash_message! :notice, :signed_up
+        sign_up(resource_name, resource)
+        respond_with resource, location: after_sign_up_path_for(resource)
+      else
+        p 'k paso? 2'
+        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+        expire_data_after_sign_in!
+        respond_with resource, location: after_inactive_sign_up_path_for(resource)
+      end
+    else
+      p 'k paso? 3', resource
+      clean_up_passwords resource
+      set_minimum_password_length
+      redirect_to '/users/sign_up?tempUser=true'
+    end
   end
 
 # GET /resource/edit
