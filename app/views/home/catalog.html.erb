@@ -379,6 +379,7 @@
     var product = {
         product_id: null,
         product_base_id: null,
+        image_id: null,
         data: null,
         logo: null,
         emblem: null,
@@ -388,6 +389,7 @@
         remove: function () {
             this.product_id = null;
             this.product_base_id = null;
+            this.image_id = null;
             this.data = null;
             this.logo = null;
             this.emblem = null;
@@ -442,6 +444,8 @@
             }
         }
 
+        var images = product.data['images'];
+
         var p1_ch = '';
         if (view) {
             p1_ch = '<hr style="margin-bottom: 0" class="desktopnot">' +
@@ -491,6 +495,7 @@
             '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
             '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
             '</div>' +
+            get_image_option(images) +
             '</div>' +
             '<div class="content-part" style="padding: 0">' +
             p1_ch +
@@ -532,6 +537,7 @@
             LAYER.draw();
         };
         imageBase.src = product.data['images'][0]['url']['https'];
+        product.image_id = product.data['images'][0]['id'];
 
         var imageLogo = new Image();
         imageLogo.onload = function () {
@@ -685,6 +691,46 @@
             createShape(object_json['image_id'], object_json_main['id'], parseFloat(object_json['width']), parseFloat(object_json['height']), parseFloat(object_json['x']), parseFloat(object_json['y']), parseFloat(object_json['s_w']), parseFloat(object_json['s_h']));
         }
 
+        function get_image_option(images) {
+            if (images.length > 0) {
+
+                var images_txt = '';
+
+                for (var i = 0; i < images.length; i++) {
+
+                    console.log(i);
+                    console.log(images);
+                    images_txt = images_txt + '<li>' +
+                        '<img onmouseout="remove_element()" onmouseover="change_element(\'' + images[i]['url']['https'] + '\')" id="' + images[i]['id'] + '" src="' + images[i]['url']['https'] + '" height="70px" ' +
+                        '</li>';
+                }
+
+                var response = '<div style="position: absolute; bottom: 20px;" id="preview_image_cr" class="jcarousel-wrapper">' +
+                    '<div id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">' +
+                    '<ul id="preview_image_container" style="left: 0; top: 0;">' +
+                    'Nothing available' +
+                    '</ul>' +
+                    '</div>' +
+                    '</div>';
+
+                if (images_txt.length) {
+                    response = '<div id="preview_image_cr" class="jcarousel-wrapper">' +
+                        '<div id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">' +
+                        '<ul id="preview_image_container" style="left: 0; top: 0;">' +
+                        images_txt +
+                        '</ul>' +
+                        '</div>' +
+                        '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+                        '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
+                        '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                        '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+                        '</div>'
+                }
+
+                return response
+            }
+        }
+
         //Photo slider
         (function ($) {
             $(function () {
@@ -744,6 +790,53 @@
     function send_variations() {
         modal_base.className += ' blur';
         modal_quick_m.style.display = "block";
+    }
+
+    var TEMP_01 = null;
+    var TEMP_02 = null;
+
+    function remove_element() {
+        if (TEMP_01 !== null) {
+            TEMP_01.destroy();
+            TEMP_02.destroy();
+            LAYER.draw();
+        }
+    }
+
+    function change_element(image) {
+        if (LAYER !== null) {
+
+            var tempImg = new Konva.Image({
+                x: 20,
+                y: 20,
+                width: STAGE.width(),
+                height: STAGE.height(),
+                draggable: false
+            });
+
+            var rect = new Konva.Rect({
+                width: STAGE.width() + 40,
+                cornerRadius: 20,
+                height: STAGE.height() + 40,
+                fill: '#f4f4f4',
+                shadowColor: 'black',
+                shadowBlur: 10,
+                shadowOffset: {x: 10, y: 10},
+                shadowOpacity: 0.5
+            });
+
+            LAYER.add(rect);
+            LAYER.add(tempImg);
+            TEMP_01 = tempImg;
+            TEMP_02 = rect;
+
+            var imageBase = new Image();
+            imageBase.onload = function () {
+                tempImg.image(imageBase);
+                LAYER.draw();
+            };
+            imageBase.src = image;
+        }
     }
 
     function sending(pr, emblem, n_logo) {
