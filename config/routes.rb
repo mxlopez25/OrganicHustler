@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  get '/product/:id/:step' => 'home#product'
+  # get '/product/:id/:step' => 'home#product'
   get '/account' => 'home#account'
   get '/cancel_order' => 'home#cancel_order'
 
@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 
   get '/shopping_bag' => 'home#bag'
 
-  post '/product/:id/:step' => 'home#product'
+  # post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'
 
   get '/admin/home' => 'admin#main'

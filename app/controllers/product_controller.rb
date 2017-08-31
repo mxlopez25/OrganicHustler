@@ -82,11 +82,10 @@ class ProductController < ApplicationController
     RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Color', type: 'variant'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
 
 
-    render :nothing => true, :status => 200
+    render :json => product.to_json, :status => 200
   end
 
   def upload_image
-
     image = Magick::Image::from_blob(params['file'].read).first
     square_p = image.columns
     if square_p < image.rows

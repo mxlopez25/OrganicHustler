@@ -40,193 +40,13 @@
     <h4><a class="breadcrumb" href="/admin/products">Products</a> / New</h4>
   </div>
 
-  <div class="card modal-g">
-
-    <!--Title edit field-->
-    <div class="form-group">
-      <label for="title_edit">Title</label>
-
-    </div>
-
-    <!--SKU edit field-->
-    <div class="form-group">
-      <label for="sku_edit">SKU</label>
-      <input class="form-control" type="text" value="" id="sku_edit" name="sku">
-    </div>
-
-    <!--Status edit field-->
-    <div class="form-group">
-      <label style="float: left; width: 10%">Status</label>
-      <label class="radio-inline">
-        <input type="radio" name="statusI" id="status_r1" value="0"> Draft
-      </label>
-      <label class="radio-inline">
-        <input type="radio" name="statusI" id="status_r2" value="1"> Live
-      </label>
-    </div>
-
-    <!--Category edit field-->
-    <div class="form-group">
-      <label for="category">Category</label>
-      <select class="form-control" id="category" name="category_edit">
-        <% AdminHelper.get_categories.each do |category| %>
-            <option value="<%= category['id'] %>"><%= category['title'] %></option>
-        <% end %>
-      </select>
-    </div>
-
-    <!--Brand edit field-->
-    <div class="form-group">
-      <label for="brand">Brand</label>
-      <select class="form-control" id="category" name="brand_edit">
-        <% AdminHelper.get_brands.each do |brand| %>
-            <option value="<%= brand['id'] %>"><%= brand['title'] %></option>
-        <% end %>
-      </select>
-    </div>
-
-    <!--Price edit field-->
-    <div class="form-group">
-      <label for="price">Price</label>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon2">$</span>
-        <input class="form-control" type="number" step="any" value="" id="price_edit" name="price">
-      </div>
-    </div>
-
-    <!--Tax edit field-->
-    <div class="form-group">
-      <label for="tax">Tax band</label>
-      <select class="form-control" id="tax" name="tax_edit">
-        <% AdminHelper.get_taxes.each do |tax| %>
-            <option value="<%= tax['id'] %>"><%= tax['title'] %></option>
-        <% end %>
-      </select>
-    </div>
-
-    <!--Sale price edit field-->
-    <div class="form-group">
-      <label for="sale_price">Sale price</label>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon2">$</span>
-        <input class="form-control" name="sale_price" type="number" step="any" value="" id="sale_price_edit">
-      </div>
-    </div>
-
-    <!--Stock level edit field-->
-    <div class="form-group">
-      <label for="stock_level">Stock level</label>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon2">#</span>
-        <input class="form-control" type="number" name="stock_level" value="" id="stock_level_edit">
-      </div>
-    </div>
-
-    <!--Stock status edit field-->
-    <div class="form-group row">
-      <label for="stock_status" class="col-sm-3 col-label">Stock status</label>
-      <div class="col-sm-9">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio1" value="0"> Unlimited
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio2" value="1"> In Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio3" value="2"> Low Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="3"> Out Of
-            Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="4"> More
-            Stock Ordered
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="5">
-            Discontinued
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!--Requires Shipping-->
-    <div class="form-group row">
-      <label for="requires_shipping" class="col-sm-3 col-label">Requires Shipping</label>
-      <div class="col-sm-9">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="requires_shipping" id="requires_shipping1" value="1"> Yes
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="requires_shipping" id="requires_shipping0" value="0"> No
-          </label>
-        </div>
-      </div>
-    </div>
-
-
-    <!--Catalog Only-->
-    <div class="form-group row">
-      <label for="catalog_only" class="col-sm-3 col-label">Catalog Only</label>
-      <div class="col-sm-9">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="catalog_only" id="catalog_only0" value="1"> Yes
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="catalog_only" id="catalog_only0" value="0"> No
-          </label>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="card modal-h">
-    <button id="btn_w" onclick="save()" class="btn btn-success menu-buttons" type="button">Save</button>
-  </div>
-
-  <div class="card modal-g">
-
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea rows="3" class="form-control" name="description" id="description_edit"></textarea>
-    </div>
-
-  </div>
-
-  <div class="card modal-g">
-
-    <div class="form-group row">
-      <label for="tags_edit" class="col-sm-3 col-label">Slug</label>
-      <input class="form-control" style="width: 100%" id="tags_edit" name="tags" type="text" value="">
-    </div>
-
-  </div>
-
-
   <div class="card modal-c">
     <button onclick="add_row()">Add row</button>
+    <button onclick="save()">Save</button>
     <table>
       <thead>
       <tr class="heading_table">
+        <th></th>
         <th>Name</th>
         <th>SKU</th>
         <th>Status</th>
@@ -240,10 +60,14 @@
         <th>Catalog Only</th>
         <th>Description</th>
         <th>Slug</th>
+        <th>Images</th>
       </tr>
       </thead>
       <tbody id="tt_body">
-      <tr id="mm_row">
+      <tr id="mm_row" class="product_row_new">
+        <td>
+          <button>Remove</button>
+        </td>
         <td>
           <input class="form-control" type="text" value="" id="title_edit" name="title">
         </td>
@@ -251,20 +75,20 @@
           <input class="form-control" type="text" value="" id="sku_edit" name="sku">
         </td>
         <td>
-          <select>
+          <select id="status_edit" name="status_edit">
             <option value="0">Draft</option>
             <option value="1">Live</option>
           </select>
         </td>
         <td>
-          <select id="category" name="category_edit">
+          <select id="category_edit" name="category_edit">
             <% AdminHelper.get_categories.each do |category| %>
                 <option value="<%= category['id'] %>"><%= category['title'] %></option>
             <% end %>
           </select>
         </td>
         <td>
-          <select id="category" name="brand_edit">
+          <select id="brand_edit" name="brand_edit">
             <% AdminHelper.get_brands.each do |brand| %>
                 <option value="<%= brand['id'] %>"><%= brand['title'] %></option>
             <% end %>
@@ -274,7 +98,7 @@
           <input class="form-control" type="number" step="any" value="" id="price_edit" name="price">
         </td>
         <td>
-          <select id="tax" name="tax_edit">
+          <select id="tax_edit" name="tax_edit">
             <% AdminHelper.get_taxes.each do |tax| %>
                 <option value="<%= tax['id'] %>"><%= tax['title'] %></option>
             <% end %>
@@ -284,7 +108,7 @@
           <input class="form-control" type="number" name="stock_level" value="" id="stock_level_edit">
         </td>
         <td>
-          <select>
+          <select id="stock_status_edit" name="stock_status_edit">
             <option value="0">Unlimited</option>
             <option value="1">Unlimited</option>
             <option value="2">Unlimited</option>
@@ -298,13 +122,13 @@
           </select>
         </td>
         <td>
-          <select>
+          <select id="requires_shipping_edit" name="requires_shipping_edit">
             <option value="0">YES</option>
             <option value="1">NO</option>
           </select>
         </td>
         <td>
-          <select>
+          <select id="catalog_only_edit" name="catalog_only_edit">
             <option value="0">YES</option>
             <option value="1">NO</option>
           </select>
@@ -315,15 +139,17 @@
         <td>
           <input class="form-control" style="width: 100%" id="tags_edit" name="tags" type="text" value="">
         </td>
+        <td>
+          <input type="file" name="img" id="img_edit" multiple>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
 
-
 </div>
 </body>
-
+<link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
 <script>
 
     var mm_row = document.getElementById('mm_row').outerHTML;
@@ -333,14 +159,95 @@
 
     function save() {
 
-        $.ajax({
-            url: "/product/new/product",
-            type: "POST",
-            data: {
-                title: $("#title_edit").val(),
-                sku: $("#sku_edit").val(),
+        var rows = document.getElementsByClassName('product_row_new');
+        $("tr.product_row_new").each(function () {
+            $.ajax({
+                url: "/product/new/product",
+                type: "POST",
+                data: {
+                    title: $(this).find('#title_edit').val(),
+                    sku: $(this).find('#sku_edit').val(),
+                    status: $(this).find('select[name="status_edit"]').val(),
+                    category: $(this).find('select[name="category_edit"]').val(),
+                    brand: $(this).find('select[name="brand_edit"]').val(),
+                    price: $(this).find('#price_edit').val(),
+                    tax_band: $(this).find('select[name="tax_edit"]').val(),
+                    sale_price: $(this).find('#price_edit').val(),
+                    stock_level: $(this).find('#stock_level_edit').val(),
+                    stock_status: $(this).find('select[name="stock_status_edit"]').val(),
+                    description: $(this).find('#description_edit').val(),
+                    slug: $(this).find('#tags_edit').val(),
+                    requires_shipping: $(this).find('select[name="requires_shipping_edit"]').val(),
+                    catalog_only: $(this).find('select[name="catalog_only_edit"]').val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+
+                    var file = $(this).find('#img_edit').files[0];
+                    var fileReader = new FileReader();
+                    fileReader.onloadend = function (e) {
+                        var arrayBuffer = e.target.result;
+                        blobUtil.arrayBufferToBlob(arrayBuffer, 'image/png').then(function (blob) {
+                            console.log('here is a blob', blob);
+                            console.log('its size is', blob.size);
+                            console.log('its type is', blob.type);
+                            $.ajax({
+                                url: '/product/upload_image?imageO=true&id='.concat(data['id']),
+                                method: 'put',
+                                data: {
+                                    file: blob
+                                },
+                                dataType: 'html',
+                                success: function (data) {
+                                    console.log(data)
+                                },
+                                error: function (data) {
+                                    console.log(data)
+                                }
+                            });
+                        }).catch(console.log.bind(console));
+                    };
+                    fileReader.readAsArrayBuffer(file);
+                },
+                error: function (data) {
+                    console.log(data)
+                }
+            });
+        });
+
+        for (var i = 0; i < rows.length; i++) {
+
+            var row = rows[i];
+
+
+          /**/
+        }
+
+
+        function dataURItoBlob(dataURI) {
+            var byteString = atob(dataURI.split(',')[1]);
+
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            var bb = new Blob([ab], {"type": mimeString});
+            return bb;
+        }
+
+      /*$.ajax({
+       url: "/product/new/product",
+       type: "POST",
+       data: {
+       title: $().val(),
+       sku: $("#").val(),
                 status: $('input:radio[name="statusI"]:checked').val(),
-                category: $('select[name="category_edit"]').val(),
+       category: $,
                 brand: $('select[name="brand_edit"]').val(),
                 price: $("#price_edit").val(),
                 tax_band: $('select[name="tax_edit"]').val(),
@@ -356,7 +263,7 @@
             success: function (data) {
                 window.location.href = '/admin/products';
             }
-        });
+       });*/
     }
 
 </script>
