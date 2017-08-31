@@ -224,7 +224,7 @@
 
   <div class="card modal-c">
     <button onclick="add_row()">Add row</button>
-    <table id="tableToModify">
+    <table>
       <thead>
       <tr class="heading_table">
         <th>Name</th>
@@ -326,45 +326,9 @@
 
 <script>
 
-    var mm_row = document.getElementById('mm_row');
-
+    var mm_row = document.getElementById('mm_row').outerHTML;
     function add_row() {
-        var row = document.createElement('tr'); // create row node
-        var name_col = document.createElement('td'); // create column node
-        var sku_col = document.createElement('td'); // create column node
-        var status_col = document.createElement('td'); // create column node
-        var category_col = document.createElement('td'); // create column node
-        var brand_col = document.createElement('td'); // create column node
-        var price_col = document.createElement('td'); // create column node
-        var tax_col = document.createElement('td'); // create column node
-        var stock_col = document.createElement('td'); // create column node
-        var stock_s_col = document.createElement('td'); // create column node
-        var ship_col = document.createElement('td'); // create column node
-        var cat_col = document.createElement('td'); // create column node
-        var desc_col = document.createElement('td'); // create column node
-        var slug_col = document.createElement('td'); // create column node
-
-        row.appendChild(name_col); // append first column to row
-        row.appendChild(sku_col); // append first column to row
-        row.appendChild(status_col); // append first column to row
-        row.appendChild(category_col); // append first column to row
-        row.appendChild(brand_col); // append first column to row
-        row.appendChild(price_col); // append first column to row
-        row.appendChild(tax_col); // append first column to row
-        row.appendChild(stock_col); // append first column to row
-        row.appendChild(stock_s_col); // append first column to row
-        row.appendChild(ship_col); // append first column to row
-        row.appendChild(cat_col); // append first column to row
-        row.appendChild(desc_col); // append first column to row
-        row.appendChild(slug_col); // append first column to row
-
-        name_col.innerHTML = '<input class="form-control" type="text" value="" id="title_edit" name="title">';
-        sku_col.innerHTML = '<input class="form-control" type="text" value="" id="sku_edit" name="sku">';
-        status_col.innerHTML = '<select><option value="0">Draft</option> <option value="1">Live</option></select>';
-        category_col.innerHTML = '';
-
-        var table = document.getElementById("tableToModify"); // find table to append to
-        table.appendChild(row); // append row to table
+        document.getElementById('tt_body').innerHTML += mm_row;
     }
 
     function save() {
