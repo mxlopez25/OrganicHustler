@@ -251,7 +251,18 @@ div.modal-g {
   width: 60%;
 
   float: left;
+}
 
+div.modal-c {
+  text-align: inherit;
+  padding: 16px;
+  margin: 16px 0 16px 5%;
+  min-width: 150%;
+  float: left;
+}
+
+.heading_table th {
+  padding: 10px;
 }
 
 div.items-logo-container {

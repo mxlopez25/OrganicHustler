@@ -45,7 +45,7 @@
     <!--Title edit field-->
     <div class="form-group">
       <label for="title_edit">Title</label>
-      <input class="form-control" type="text" value="" id="title_edit" name="title">
+
     </div>
 
     <!--SKU edit field-->
@@ -57,10 +57,10 @@
     <!--Status edit field-->
     <div class="form-group">
       <label style="float: left; width: 10%">Status</label>
-      <label class="radio-inline" style="width: 40%; float: left">
+      <label class="radio-inline">
         <input type="radio" name="statusI" id="status_r1" value="0"> Draft
       </label>
-      <label class="radio-inline" style="width: 40%; float: left">
+      <label class="radio-inline">
         <input type="radio" name="statusI" id="status_r2" value="1"> Live
       </label>
     </div>
@@ -222,38 +222,177 @@
   </div>
 
 
-  <script>
-
-      function save(id) {
-
-          $.ajax({
-              url: "/product/new/product",
-              type: "POST",
-              data: {
-                  title: $("#title_edit").val(),
-                  sku: $("#sku_edit").val(),
-                  status: $('input:radio[name="statusI"]:checked').val(),
-                  category: $('select[name="category_edit"]').val(),
-                  brand: $('select[name="brand_edit"]').val(),
-                  price: $("#price_edit").val(),
-                  tax_band: $('select[name="tax_edit"]').val(),
-                  sale_price: $("#sale_price_edit").val(),
-                  stock_level: $("#stock_level_edit").val(),
-                  stock_status: $('input:radio[name="stock_status_edit"]:checked').val(),
-                  description: $("#description_edit").val(),
-                  slug: $('#tags_edit').val(),
-                  requires_shipping: $('input:radio[name="requires_shipping"]:checked').val(),
-                  catalog_only: $('input:radio[name="catalog_only"]:checked').val()
-              },
-              dataType: "html",
-              success: function (data) {
-                  window.location.href = '/admin/products';
-              }
-          });
-      }
-
-  </script>
+  <div class="card modal-c">
+    <button onclick="add_row()">Add row</button>
+    <table id="tableToModify">
+      <thead>
+      <tr class="heading_table">
+        <th>Name</th>
+        <th>SKU</th>
+        <th>Status</th>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Price</th>
+        <th>Tax band</th>
+        <th>Stock lever</th>
+        <th>Stock status</th>
+        <th>Needs Shipping</th>
+        <th>Catalog Only</th>
+        <th>Description</th>
+        <th>Slug</th>
+      </tr>
+      </thead>
+      <tbody id="tt_body">
+      <tr id="mm_row">
+        <td>
+          <input class="form-control" type="text" value="" id="title_edit" name="title">
+        </td>
+        <td>
+          <input class="form-control" type="text" value="" id="sku_edit" name="sku">
+        </td>
+        <td>
+          <select>
+            <option value="0">Draft</option>
+            <option value="1">Live</option>
+          </select>
+        </td>
+        <td>
+          <select id="category" name="category_edit">
+            <% AdminHelper.get_categories.each do |category| %>
+                <option value="<%= category['id'] %>"><%= category['title'] %></option>
+            <% end %>
+          </select>
+        </td>
+        <td>
+          <select id="category" name="brand_edit">
+            <% AdminHelper.get_brands.each do |brand| %>
+                <option value="<%= brand['id'] %>"><%= brand['title'] %></option>
+            <% end %>
+          </select>
+        </td>
+        <td>
+          <input class="form-control" type="number" step="any" value="" id="price_edit" name="price">
+        </td>
+        <td>
+          <select id="tax" name="tax_edit">
+            <% AdminHelper.get_taxes.each do |tax| %>
+                <option value="<%= tax['id'] %>"><%= tax['title'] %></option>
+            <% end %>
+          </select>
+        </td>
+        <td>
+          <input class="form-control" type="number" name="stock_level" value="" id="stock_level_edit">
+        </td>
+        <td>
+          <select>
+            <option value="0">Unlimited</option>
+            <option value="1">Unlimited</option>
+            <option value="2">Unlimited</option>
+            <option value="3">Unlimited</option>
+            <option value="4">Unlimited</option>
+            <option value="5">Unlimited</option>
+            <option value="6">Unlimited</option>
+            <option value="7">Unlimited</option>
+            <option value="8">Unlimited</option>
+            <option value="9">Unlimited</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="0">YES</option>
+            <option value="1">NO</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="0">YES</option>
+            <option value="1">NO</option>
+          </select>
+        </td>
+        <td>
+          <textarea rows="1" class="form-control" name="description" id="description_edit"></textarea>
+        </td>
+        <td>
+          <input class="form-control" style="width: 100%" id="tags_edit" name="tags" type="text" value="">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
 
 </div>
 </body>
+
+<script>
+
+    var mm_row = document.getElementById('mm_row');
+
+    function add_row() {
+        var row = document.createElement('tr'); // create row node
+        var name_col = document.createElement('td'); // create column node
+        var sku_col = document.createElement('td'); // create column node
+        var status_col = document.createElement('td'); // create column node
+        var category_col = document.createElement('td'); // create column node
+        var brand_col = document.createElement('td'); // create column node
+        var price_col = document.createElement('td'); // create column node
+        var tax_col = document.createElement('td'); // create column node
+        var stock_col = document.createElement('td'); // create column node
+        var stock_s_col = document.createElement('td'); // create column node
+        var ship_col = document.createElement('td'); // create column node
+        var cat_col = document.createElement('td'); // create column node
+        var desc_col = document.createElement('td'); // create column node
+        var slug_col = document.createElement('td'); // create column node
+
+        row.appendChild(name_col); // append first column to row
+        row.appendChild(sku_col); // append first column to row
+        row.appendChild(status_col); // append first column to row
+        row.appendChild(category_col); // append first column to row
+        row.appendChild(brand_col); // append first column to row
+        row.appendChild(price_col); // append first column to row
+        row.appendChild(tax_col); // append first column to row
+        row.appendChild(stock_col); // append first column to row
+        row.appendChild(stock_s_col); // append first column to row
+        row.appendChild(ship_col); // append first column to row
+        row.appendChild(cat_col); // append first column to row
+        row.appendChild(desc_col); // append first column to row
+        row.appendChild(slug_col); // append first column to row
+
+        name_col.innerHTML = '<input class="form-control" type="text" value="" id="title_edit" name="title">';
+        sku_col.innerHTML = '<input class="form-control" type="text" value="" id="sku_edit" name="sku">';
+        status_col.innerHTML = '<select><option value="0">Draft</option> <option value="1">Live</option></select>';
+        category_col.innerHTML = '';
+
+        var table = document.getElementById("tableToModify"); // find table to append to
+        table.appendChild(row); // append row to table
+    }
+
+    function save() {
+
+        $.ajax({
+            url: "/product/new/product",
+            type: "POST",
+            data: {
+                title: $("#title_edit").val(),
+                sku: $("#sku_edit").val(),
+                status: $('input:radio[name="statusI"]:checked').val(),
+                category: $('select[name="category_edit"]').val(),
+                brand: $('select[name="brand_edit"]').val(),
+                price: $("#price_edit").val(),
+                tax_band: $('select[name="tax_edit"]').val(),
+                sale_price: $("#sale_price_edit").val(),
+                stock_level: $("#stock_level_edit").val(),
+                stock_status: $('input:radio[name="stock_status_edit"]:checked').val(),
+                description: $("#description_edit").val(),
+                slug: $('#tags_edit').val(),
+                requires_shipping: $('input:radio[name="requires_shipping"]:checked').val(),
+                catalog_only: $('input:radio[name="catalog_only"]:checked').val()
+            },
+            dataType: "html",
+            success: function (data) {
+                window.location.href = '/admin/products';
+            }
+        });
+    }
+
+</script>
