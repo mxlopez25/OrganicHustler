@@ -80,7 +80,7 @@
     </button>
     <button type="button" class="btn btn-info" onclick="window.location.href='/admin/product/' + items[0]">Info</button>
     <button type="button" class="btn btn-warning" onclick="window.location.href='/admin/product/edit/' + items[0]">Edit</button>
-    <button type="button" class="btn btn-danger" href="#">Delete</button>
+    <button type="button" class="btn btn-danger" onclick="delete_selection()">Delete</button>
   </div>
 
   <div class="table_products card">
@@ -100,10 +100,7 @@
 
           <tr id="product-row">
             <td>
-              <script>
-                  console.log('<%= product %>')
-              </script>
-              <input id="select-obj" type="checkbox" name="select-obj" onclick="add_item(this, '<%= product['id'] %>')">
+              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, '<%= product['id'] %>')">
             </td>
             <td>
               <% unless product['images'][0].blank? %>
@@ -318,6 +315,32 @@
             $(this).html(s);
         });
 
+        function delete_selection() {
+            var j = 0;
+            var k = items.length;
+
+            for (var i = 0; i < items.length; i++) {
+                $.ajax({
+                    url: '/product',
+                    method: 'delete',
+                    data: {
+                        pro_id: items[i]
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        j = j + 1;
+                        console.log(j)
+                        if (j === k) {
+                            window.location.href = '/admin/products';
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            }
+
+        }
 
     </script>
   </div>

@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'
 
+  delete '/product' => 'product#delete_product'
+
   put '/admin/product/edit/add/gallery/logo' => 'galleries#create'
 
   get '/temp_user_act' => 'home#temp_user_act'

@@ -84,6 +84,15 @@ module AdminHelper
     end
   end
 
+  def self.delete_product(id)
+    begin
+      response = RestClient.delete("https://api.molt.in/v1/products/#{id}", {:Authorization => "Bearer #{self.generate_token}"})
+      response.body
+    rescue
+      p 'no product !##############!'
+    end
+  end
+
   def get_gallery(id)
     Gallery.find_by_product_id(id)
   end

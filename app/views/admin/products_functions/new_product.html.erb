@@ -159,8 +159,8 @@
 
     function save() {
 
-        var rows = document.getElementsByClassName('product_row_new');
         $("tr.product_row_new").each(function () {
+            row = $(this);
             $.ajax({
                 url: "/product/new/product",
                 type: "POST",
@@ -184,31 +184,17 @@
                 success: function (data) {
                     console.log(data);
 
-                    var file = $(this).find('#img_edit').files[0];
-                    var fileReader = new FileReader();
-                    fileReader.onloadend = function (e) {
-                        var arrayBuffer = e.target.result;
-                        blobUtil.arrayBufferToBlob(arrayBuffer, 'image/png').then(function (blob) {
-                            console.log('here is a blob', blob);
-                            console.log('its size is', blob.size);
-                            console.log('its type is', blob.type);
-                            $.ajax({
-                                url: '/product/upload_image?imageO=true&id='.concat(data['id']),
-                                method: 'put',
-                                data: {
-                                    file: blob
-                                },
-                                dataType: 'html',
-                                success: function (data) {
-                                    console.log(data)
-                                },
-                                error: function (data) {
-                                    console.log(data)
-                                }
-                            });
-                        }).catch(console.log.bind(console));
-                    };
-                    fileReader.readAsArrayBuffer(file);
+                    var files = row.find('#img_edit')[0].files;
+
+                    for (var i = 0; i < files.length; i++) {
+                        var reader = new FileReader();
+                        reader.onloadend = function (e) {
+                            var blob = new Blob([this.result], {type: "image/jpeg"});
+                            console.log(blob);
+                            sendRecToPost(blob, '/product/upload_image?imageO=true&id='.concat(data['id']));
+                        };
+                        reader.readAsArrayBuffer(files[i]);
+                    }
                 },
                 error: function (data) {
                     console.log(data)
@@ -216,28 +202,22 @@
             });
         });
 
-        for (var i = 0; i < rows.length; i++) {
+        function sendRecToPost(blob, url) {
 
-            var row = rows[i];
+            var data = new FormData();
+            data.append("file", blob);
 
+            var oReq = new XMLHttpRequest();
+            oReq.open("put", url);
+            oReq.send(data);
 
-          /**/
-        }
-
-
-        function dataURItoBlob(dataURI) {
-            var byteString = atob(dataURI.split(',')[1]);
-
-            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-            var ab = new ArrayBuffer(byteString.length);
-            var ia = new Uint8Array(ab);
-            for (var i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-
-            var bb = new Blob([ab], {"type": mimeString});
-            return bb;
+            oReq.onload = function (oEvent) {
+                if (oReq.status === 200) {
+                    console.log("Uploaded");
+                } else {
+                    console.log("Error " + oReq.status + " occurred uploading your file.");
+                }
+            };
         }
 
       /*$.ajax({

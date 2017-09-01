@@ -6,6 +6,8 @@ class ProductController < ApplicationController
   include Magick
   layout 'customs_bl'
 
+  skip_before_filter :verify_authenticity_token
+
   def table_products
 
     parameters = {}
@@ -36,7 +38,7 @@ class ProductController < ApplicationController
       look_up_text.concat "#{type}#{parameter}&"
     end
 
-    @products = AdminHelper.get_product(look_up_text);
+    @products = AdminHelper.get_product(look_up_text)
 
   end
 
@@ -174,11 +176,10 @@ class ProductController < ApplicationController
         @logos.push(logo)
       end
     end
-
   end
 
-  def add_image_gallery
-
+  def delete_product
+    AdminHelper.delete_product(params['pro_id'])
   end
 
 end
