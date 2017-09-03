@@ -41,7 +41,6 @@
   </div>
 
   <div class="card modal-c">
-    <button onclick="add_row()">Add row</button>
     <button onclick="save()">Save</button>
     <table>
       <thead>
@@ -66,7 +65,7 @@
       <tbody id="tt_body">
       <tr id="mm_row" class="product_row_new">
         <td>
-          <button>Remove</button>
+          <button onclick="delete_row(this)">Remove</button>
         </td>
         <td>
           <input class="form-control" type="text" value="" id="title_edit" name="title">
@@ -143,6 +142,11 @@
           <input type="file" name="img" id="img_edit" multiple>
         </td>
       </tr>
+      <tr id="replace_with">
+        <td>
+          <button onclick="add_row()">Add row</button>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -152,98 +156,103 @@
 <link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
 <script>
 
-    var mm_row = document.getElementById('mm_row').outerHTML;
+    var mm_row = document.getElementById('mm_row').outerHTML + document.getElementById('replace_with').outerHTML;
     function add_row() {
-        document.getElementById('tt_body').innerHTML += mm_row;
+        document.getElementById('replace_with').outerHTML = mm_row;
+    }
+
+    function delete_row(element_row) {
+        var row = element_row.parentNode.parentNode;
+        var overall_parent = row.parentNode;
+        overall_parent.removeChild(row);
     }
 
     function save() {
-
+        var rows = [];
         $("tr.product_row_new").each(function () {
-            row = $(this);
+            rows.push($(this))
+        });
+        var limit_n = rows.length;
+        var current_n = 0;
+        var current = 0;
+
+        request(rows[0]);
+
+        function request(row) {
             $.ajax({
                 url: "/product/new/product",
                 type: "POST",
                 data: {
-                    title: $(this).find('#title_edit').val(),
-                    sku: $(this).find('#sku_edit').val(),
-                    status: $(this).find('select[name="status_edit"]').val(),
-                    category: $(this).find('select[name="category_edit"]').val(),
-                    brand: $(this).find('select[name="brand_edit"]').val(),
-                    price: $(this).find('#price_edit').val(),
-                    tax_band: $(this).find('select[name="tax_edit"]').val(),
-                    sale_price: $(this).find('#price_edit').val(),
-                    stock_level: $(this).find('#stock_level_edit').val(),
-                    stock_status: $(this).find('select[name="stock_status_edit"]').val(),
-                    description: $(this).find('#description_edit').val(),
-                    slug: $(this).find('#tags_edit').val(),
-                    requires_shipping: $(this).find('select[name="requires_shipping_edit"]').val(),
-                    catalog_only: $(this).find('select[name="catalog_only_edit"]').val()
+                    title: row.find('#title_edit').val(),
+                    sku: row.find('#sku_edit').val(),
+                    status: row.find('select[name="status_edit"]').val(),
+                    category: row.find('select[name="category_edit"]').val(),
+                    brand: row.find('select[name="brand_edit"]').val(),
+                    price: row.find('#price_edit').val(),
+                    tax_band: row.find('select[name="tax_edit"]').val(),
+                    sale_price: row.find('#price_edit').val(),
+                    stock_level: row.find('#stock_level_edit').val(),
+                    stock_status: row.find('select[name="stock_status_edit"]').val(),
+                    description: row.find('#description_edit').val(),
+                    slug: row.find('#tags_edit').val(),
+                    requires_shipping: row.find('select[name="requires_shipping_edit"]').val(),
+                    catalog_only: row.find('select[name="catalog_only_edit"]').val()
                 },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
-
-                    var files = row.find('#img_edit')[0].files;
-
-                    for (var i = 0; i < files.length; i++) {
-                        var reader = new FileReader();
-                        reader.onloadend = function (e) {
-                            var blob = new Blob([this.result], {type: "image/jpeg"});
-                            console.log(blob);
-                            sendRecToPost(blob, '/product/upload_image?imageO=true&id='.concat(data['id']));
-                        };
-                        reader.readAsArrayBuffer(files[i]);
-                    }
+                    upload(row, data)
                 },
                 error: function (data) {
                     console.log(data)
                 }
             });
-        });
-
-        function sendRecToPost(blob, url) {
-
-            var data = new FormData();
-            data.append("file", blob);
-
-            var oReq = new XMLHttpRequest();
-            oReq.open("put", url);
-            oReq.send(data);
-
-            oReq.onload = function (oEvent) {
-                if (oReq.status === 200) {
-                    console.log("Uploaded");
-                } else {
-                    console.log("Error " + oReq.status + " occurred uploading your file.");
-                }
-            };
         }
 
-      /*$.ajax({
-       url: "/product/new/product",
-       type: "POST",
-       data: {
-       title: $().val(),
-       sku: $("#").val(),
-                status: $('input:radio[name="statusI"]:checked').val(),
-       category: $,
-                brand: $('select[name="brand_edit"]').val(),
-                price: $("#price_edit").val(),
-                tax_band: $('select[name="tax_edit"]').val(),
-                sale_price: $("#sale_price_edit").val(),
-                stock_level: $("#stock_level_edit").val(),
-                stock_status: $('input:radio[name="stock_status_edit"]:checked').val(),
-                description: $("#description_edit").val(),
-                slug: $('#tags_edit').val(),
-                requires_shipping: $('input:radio[name="requires_shipping"]:checked').val(),
-                catalog_only: $('input:radio[name="catalog_only"]:checked').val()
-            },
-            dataType: "html",
-            success: function (data) {
-                window.location.href = '/admin/products';
+        function upload(row, data) {
+            var files = row.find('#img_edit')[0].files;
+            current = 0;
+
+            function send(i) {
+                var reader = new FileReader();
+                reader.onloadend = function (e) {
+                    var blob = new Blob([this.result], {type: "image/jpeg"});
+                    console.log(blob);
+                    sendRecToPost(blob, '/product/upload_image?imageO=true&id='.concat(data['id']), files.length);
+                };
+                reader.readAsArrayBuffer(files[i]);
             }
-       });*/
+
+            send(current);
+
+            function sendRecToPost(blob, url, limit) {
+
+                var data = new FormData();
+                data.append("file", blob);
+
+                var oReq = new XMLHttpRequest();
+                oReq.open("put", url);
+                oReq.send(data);
+
+                oReq.onload = function (oEvent) {
+                    if (oReq.status === 200) {
+                        console.log("Uploaded");
+                        current = current + 1;
+                        if (current === limit && current_n < (limit_n - 1)) {
+                            current_n = current_n + 1;
+                            request(rows[current_n]);
+                        } else if (current < limit) {
+                            send(current);
+                        } else if (current_n === (limit_n - 1)) {
+                            window.location.href = '/admin/products'
+                        }
+                    } else {
+                        console.log("Error " + oReq.status + " occurred uploading your file.");
+                    }
+                };
+            }
+
+        }
     }
 
 </script>

@@ -78,8 +78,8 @@
   <div class="table_buttons card">
     <button type="button" class="btn btn-success" onclick="window.location.href='/admin/products/new'">New product
     </button>
-    <button type="button" class="btn btn-info" onclick="window.location.href='/admin/product/' + items[0]">Info</button>
-    <button type="button" class="btn btn-warning" onclick="window.location.href='/admin/product/edit/' + items[0]">Edit</button>
+    <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
+    <button type="button" class="btn btn-warning" onclick="edit_selection()">Edit</button>
     <button type="button" class="btn btn-danger" onclick="delete_selection()">Delete</button>
   </div>
 
@@ -87,7 +87,7 @@
     <table class="table" id="table">
       <thead>
       <tr>
-        <th><input id="select-all" type="checkbox" name="select-all"></th>
+        <th></th>
         <th><i class="fa fa-picture-o" aria-hidden="true"></i></th>
         <th onclick="sort_title()" class="header-ele">Title</th>
         <th onclick="sort_inventory()" class="header-ele">Inventory</th>
@@ -212,6 +212,7 @@
 
             inventory_sort = !inventory_sort;
         }
+
         function sort_category() {
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
@@ -251,6 +252,7 @@
 
             category_sort = !category_sort;
         }
+
         function sort_price() {
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
@@ -315,6 +317,18 @@
             $(this).html(s);
         });
 
+        function show_selection() {
+            for (var i = 0; i < items.length; i++) {
+                window.open('/admin/product/' + items[i]);
+            }
+        }
+
+        function edit_selection() {
+            for (var i = 0; i < items.length; i++) {
+                window.open('/admin/product/edit/' + items[i]);
+            }
+        }
+
         function delete_selection() {
             var j = 0;
             var k = items.length;
@@ -329,7 +343,6 @@
                     dataType: 'json',
                     success: function (data) {
                         j = j + 1;
-                        console.log(j)
                         if (j === k) {
                             window.location.href = '/admin/products';
                         }
@@ -339,9 +352,7 @@
                     }
                 });
             }
-
         }
-
     </script>
   </div>
 </div>

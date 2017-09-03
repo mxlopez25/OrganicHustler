@@ -94,6 +94,10 @@ class ProductController < ApplicationController
       square_p = image.rows
     end
 
+    if square_p > 300
+      square_p = 300
+    end
+
     image.resize_to_fit!(square_p, square_p)
     new_img = ::Magick::Image.new(square_p, square_p)
     filled = new_img.matte_floodfill(1, 1)
