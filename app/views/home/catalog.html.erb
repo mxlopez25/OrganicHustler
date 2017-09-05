@@ -411,15 +411,15 @@
         var containerWidth = container.offsetWidth;
         // to do this we need to scale the stage
         var scale = containerWidth / 500;
-        if (500 * scale < 440) {
+        if (500 * scale < 375) {
             STAGE.width(500 * scale);
             STAGE.height(500 * scale);
             STAGE.scale({x: scale, y: scale});
             STAGE.draw();
         } else {
-            STAGE.width(440);
-            STAGE.height(440);
-            STAGE.scale({x: (440 / 500), y: (440 / 500)});
+            STAGE.width(375);
+            STAGE.height(375);
+            STAGE.scale({x: (375 / 500), y: (375 / 500)});
             STAGE.draw();
         }
     }
@@ -491,13 +491,15 @@
 
         document.getElementById('general_p_content').innerHTML =
             '<span onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>'+
-            '<div id="wrapper-img-1" class="wrapper-img">' +
+            '<div style="margin-top: auto; margin-left: auto;" id="wrapper-img-1" class="wrapper-img">' +
             '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
-            '<div class="image-container-quick" id="image-container-quick-1" style="padding: 0">' +
+            '<div>' +
+            '<div class="image-container-quick center-inner-divs" id="image-container-quick-1" style="padding: 0">' +
+            '</div>' +
             '</div>' +
             get_image_option(images) +
             '</div>' +
-            '<div class="content-part" style="padding: 0">' +
+            '<div class="content-part" style="padding: 0; float: none; margin: 0 auto">' +
             p1_ch +
             '</div>';
 
@@ -720,9 +722,9 @@
                         images_txt +
                         '</ul>' +
                         '</div>' +
-                        '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
+                        '<button style="top: 25px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
                         '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-                        '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
+                        '<button style="top: 25px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
                         '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
                         '</div>'
                 }
@@ -807,14 +809,16 @@
         if (LAYER !== null) {
 
             var tempImg = new Konva.Image({
-                x: 20,
-                y: 20,
+                x: 50,
+                y: 50,
                 width: STAGE.width(),
                 height: STAGE.height(),
                 draggable: false
             });
 
             var rect = new Konva.Rect({
+                x: 30,
+                y: 30,
                 width: STAGE.width() + 40,
                 cornerRadius: 20,
                 height: STAGE.height() + 40,
@@ -882,7 +886,7 @@
         // to do this we need to scale the stage
         var scale = containerWidth / 500;
         console.log(containerWidth);
-        if (500 * scale < 440) {
+        if (500 * scale < 375) {
             stage.width(500 * scale);
             stage.height(500 * scale);
 
@@ -892,13 +896,13 @@
             stage.scale({x: scale, y: scale});
             stage.draw();
         } else {
-            stage.width(440);
-            stage.height(440);
+            stage.width(375);
+            stage.height(375);
 
-            s_w_u = 440;
-            s_h_u = 440;
+            s_w_u = 375;
+            s_h_u = 375;
 
-            stage.scale({x: (440 / 500), y: (440 / 500)});
+            stage.scale({x: (375 / 500), y: (375 / 500)});
             stage.draw();
         }
     }

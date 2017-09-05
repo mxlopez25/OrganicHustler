@@ -4,7 +4,9 @@
   <div style="overflow: hidden; text-align: center">
     <h1>My Account</h1>
     <br>
-    <%= link_to 'Log out', destroy_user_session_path, method: :delete, class: 'link-style', style: 'font-size: 20px' %>
+    <div class="link-style" style="float: none;">
+      <%= link_to 'Log out', destroy_user_session_path, method: :delete, style: 'font-size: 20px;' %>
+    </div>
     <hr style="width: 33px; margin: 0 auto 50px;border-color: #b692a2">
     <h3><%= current_user['user_name'] %> <%= current_user['user_last_name'] %></h3>
     <h5 style="color: #5e5e5e"><%= current_user['email'] %></h5>

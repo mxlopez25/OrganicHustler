@@ -9,6 +9,33 @@
   margin: 0;
 }
 
+.center-inner-divs div {
+  margin: 0 auto;
+}
+
+.link-style {
+  margin: 8px;
+  height: 44px;
+}
+
+.link-style a {
+  line-height: 44px;
+  text-decoration: none;
+  cursor: pointer;
+  color: #b692a2;
+  text-align: center;
+}
+
+.link-style a:hover {
+  text-decoration: none;
+  color: #b692a2;
+}
+
+.link-style a:focus {
+  text-decoration: none;
+  color: #b692a2;
+}
+
 .content-part {
   padding: 20px;
 }

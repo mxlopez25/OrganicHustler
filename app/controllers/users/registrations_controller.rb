@@ -14,28 +14,35 @@ class Users::RegistrationsController < Devise::RegistrationsController
     token = params[:user][:temp_user_token_confirmation]
     p token
 
-    unless token.nil?
-      p 'tempUser here bro'
-    end
-
-    p 'k paso? -1'
     resource.save
     yield resource if block_given?
     if resource.persisted?
-      p 'k paso? 0'
+
+      unless token.nil?
+        tuc = TempUserControl.find_by_auth_token token
+        if tuc
+          t_user_id = tuc.temp_user_id
+          t_user = TempUser.find t_user_id
+          if t_user.email.eql? params[:user][:email]
+            t_orders = t_user.orders
+            t_orders.each do |order|
+              order.overall_user = resource
+              order.save!
+            end
+          end
+        end
+      end
+
       if resource.active_for_authentication?
-        p 'k paso? 1'
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)
         respond_with resource, location: after_sign_up_path_for(resource)
       else
-        p 'k paso? 2'
         set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
         expire_data_after_sign_in!
         respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
     else
-      p 'k paso? 3', resource
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to '/users/sign_up?tempUser=true'
