@@ -89,14 +89,7 @@ class ProductController < ApplicationController
 
   def upload_image
     image = Magick::Image::from_blob(params['file'].read).first
-    square_p = image.columns
-    if square_p < image.rows
-      square_p = image.rows
-    end
-
-    if square_p > 300
-      square_p = 300
-    end
+    square_p = 300
 
     image.resize_to_fit!(square_p, square_p)
     new_img = ::Magick::Image.new(square_p, square_p)
@@ -116,10 +109,7 @@ class ProductController < ApplicationController
 
   def re_center_upload(dir, id)
     image = Magick::Image::from_blob(dir.read).first
-    square_p = image.columns
-    if square_p < image.rows
-      square_p = image.rows
-    end
+    square_p = 300
 
     image.resize_to_fit!(square_p, square_p)
     new_img = ::Magick::Image.new(square_p, square_p)

@@ -1,8 +1,0 @@
-class CreateRelationLogos < ActiveRecord::Migration[5.0]
-  def change
-    create_table :relation_logos do |t|
-      t.string  :item_id,   null: false
-      t.timestamps
-    end
-  end
-end
