@@ -40,38 +40,43 @@
     <h4><a class="breadcrumb" href="/admin/products">Products</a> / New</h4>
   </div>
 
-  <div class="card modal-c">
+  <div style="width: 100%; height: 100%; position: relative; overflow-x: scroll">
+    <div class="card modal-c">
     <button onclick="save()">Save</button>
     <table>
       <thead>
       <tr class="heading_table">
         <th></th>
+
         <th>Name</th>
-        <th>SKU</th>
-        <th>Status</th>
-        <th>Category</th>
-        <th>Brand</th>
         <th>Price</th>
-        <th>Tax band</th>
-        <th>Stock lever</th>
-        <th>Stock status</th>
-        <th>Needs Shipping</th>
-        <th>Catalog Only</th>
+        <th>Status</th>
+        <th>Stock</th>
+        <th>SKU</th>
         <th>Description</th>
-        <th>Slug</th>
-        <th>Images</th>
+
+        <th>Size</th>
+        <th>Logo</th>
+        <th>Color</th>
+
+        <th>Category</th>
+        <th>Style</th>
+        <th>Material</th>
+        <th>Brand</th>
+
+        <th>Tax Band</th>
       </tr>
       </thead>
       <tbody id="tt_body">
-      <tr id="mm_row" class="product_row_new">
+      <tr data-id-row="1" id="mm_row" class="product_row_new">
         <td>
           <button onclick="delete_row(this)">Remove</button>
         </td>
         <td>
-          <input class="form-control" type="text" value="" id="title_edit" name="title">
+          <input class="form-control" value="" id="title" name="title">
         </td>
         <td>
-          <input class="form-control" type="text" value="" id="sku_edit" name="sku">
+          <input class="form-control" type="number" step="any" value="" id="price" name="price">
         </td>
         <td>
           <select id="status_edit" name="status_edit">
@@ -80,67 +85,45 @@
           </select>
         </td>
         <td>
-          <select id="category_edit" name="category_edit">
-            <% AdminHelper.get_categories.each do |category| %>
-                <option value="<%= category['id'] %>"><%= category['title'] %></option>
-            <% end %>
-          </select>
+          <input class="form-control" type="number" name="stock" value="" id="stock">
         </td>
         <td>
-          <select id="brand_edit" name="brand_edit">
-            <% AdminHelper.get_brands.each do |brand| %>
-                <option value="<%= brand['id'] %>"><%= brand['title'] %></option>
-            <% end %>
-          </select>
-        </td>
-        <td>
-          <input class="form-control" type="number" step="any" value="" id="price_edit" name="price">
-        </td>
-        <td>
-          <select id="tax_edit" name="tax_edit">
-            <% AdminHelper.get_taxes.each do |tax| %>
-                <option value="<%= tax['id'] %>"><%= tax['title'] %></option>
-            <% end %>
-          </select>
-        </td>
-        <td>
-          <input class="form-control" type="number" name="stock_level" value="" id="stock_level_edit">
-        </td>
-        <td>
-          <select id="stock_status_edit" name="stock_status_edit">
-            <option value="0">Unlimited</option>
-            <option value="1">Unlimited</option>
-            <option value="2">Unlimited</option>
-            <option value="3">Unlimited</option>
-            <option value="4">Unlimited</option>
-            <option value="5">Unlimited</option>
-            <option value="6">Unlimited</option>
-            <option value="7">Unlimited</option>
-            <option value="8">Unlimited</option>
-            <option value="9">Unlimited</option>
-          </select>
-        </td>
-        <td>
-          <select id="requires_shipping_edit" name="requires_shipping_edit">
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-          </select>
-        </td>
-        <td>
-          <select id="catalog_only_edit" name="catalog_only_edit">
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-          </select>
+          <input class="form-control" value="" id="sku" name="sku">
         </td>
         <td>
           <textarea rows="1" class="form-control" name="description" id="description_edit"></textarea>
         </td>
         <td>
-          <input class="form-control" style="width: 100%" id="tags_edit" name="tags" type="text" value="">
+          <button onclick="edit_modal('size_modal', this.parentNode.parentNode.dataset.idRow)">Edit sizes</button>
         </td>
         <td>
-          <input type="file" name="img" id="img_edit" multiple>
+          <button onclick="edit_modal('logo_modal', this.parentNode.parentNode.dataset.idRow)">Edit logos</button>
         </td>
+        <td>
+          <button onclick="edit_modal('color_modal', this.parentNode.parentNode.dataset.idRow)">Edit colors</button>
+        </td>
+        <td>
+          <button onclick="edit_modal('category_modal', this.parentNode.parentNode.dataset.idRow)">Edit categories
+          </button>
+        </td>
+        <td>
+          <button onclick="edit_modal('style_modal', this.parentNode.parentNode.dataset.idRow)">Edit styles</button>
+        </td>
+        <td>
+          <button onclick="edit_modal('material_modal', this.parentNode.parentNode.dataset.idRow)">Edit materials
+          </button>
+        </td>
+        <td>
+          <button onclick="edit_modal('brand_modal', this.parentNode.parentNode.dataset.idRow)">Edit brands</button>
+        </td>
+        <td>
+          <select>
+            <% TaxBand.all.each do |tax| %>
+                <option value="<%= tax.id %>"><%= tax.titulo %></option>
+            <% end %>
+          </select>
+        </td>
+
       </tr>
       <tr id="replace_with">
         <td>
@@ -150,15 +133,94 @@
       </tbody>
     </table>
   </div>
+  </div>
+
+  <div id="dim_back" class="dim_back">
+
+    <div id="size_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 50%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">
+      <button>SAVE</button>
+    </div>
+
+    <div id="logo_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">
+      <input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">
+      <button>SAVE</button>
+    </div>
+
+    <div id="color_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">
+      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">
+      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">
+      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">
+      <h5 style="width: 10%; float: left;">Main color?</h5>
+      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">
+      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">
+      <button style="width: 100%">SAVE</button>
+    </div>
+
+    <div id="category_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <button>SAVE</button>
+    </div>
+
+    <div id="style_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <button>SAVE</button>
+    </div>
+
+    <div id="material_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <button>SAVE</button>
+    </div>
+
+    <div id="brand_modal" class="content_pop">
+      <button style="float: left; width: 10%; margin: 0;">+</button>
+      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
+      <button>SAVE</button>
+    </div>
+
+  </div>
 
 </div>
 </body>
 <link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
 <script>
 
-    var mm_row = document.getElementById('mm_row').outerHTML + document.getElementById('replace_with').outerHTML;
+    var row_count = 1;
+    var acual_row_id = null;
+
+    var modal = null;
+    var dim_back = document.getElementById('dim_back');
+
+    function edit_modal(type, id) {
+        modal = document.getElementById(type);
+        modal.style.display = "block";
+        dim_back.style.display = "block";
+        acual_row_id = id;
+
+        window.onclick = function (event) {
+            if (event.target === dim_back) {
+                modal.style.display = "none";
+                dim_back.style.display = "none";
+            }
+        };
+    }
+
+    var mm_row = document.getElementById('mm_row').cloneNode(true);
+    var mm_btn = document.getElementById('replace_with').outerHTML;
     function add_row() {
-        document.getElementById('replace_with').outerHTML = mm_row;
+        row_count = row_count + 1;
+        mm_row.dataset.idRow = row_count;
+        document.getElementById('replace_with').outerHTML = (mm_row.outerHTML + mm_btn);
     }
 
     function delete_row(element_row) {

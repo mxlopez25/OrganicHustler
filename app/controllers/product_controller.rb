@@ -57,32 +57,73 @@ class ProductController < ApplicationController
     render :nothing => true, :status => 200
   end
 
+  def size_params(size_params)
+    size_params.permit!(:title, :price)
+  end
+
+  def logo_params(logo_params)
+    logo_params.permit!(:price, :image_url)
+  end
+
+
   def new_product
-    fields = {
-        :title => params['title'],
-        :sku => params['sku'],
-        :status => params['status'],
-        :category => params['category'],
-        :brand => params['brand'],
-        :price => params['price'],
-        :tax_band => params['tax_band'],
-        :sale_price => params['sale_price'],
-        :stock_level => params['stock_level'],
-        :stock_status => params['stock_status'],
-        :description => params['description'],
-        :slug => params['slug'].gsub(',', ' '),
-        :requires_shipping => params['requires_shipping'],
-        :catalog_only => params['catalog_only']
-    }
 
-    product = RestClient.post('https://api.molt.in/v1/products', fields, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    product = JSON.parse(product)['result']
-    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Logo preset', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Style', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Material', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Size', type: 'single'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-    RestClient.post("https://api.molt.in/v1/products/#{product['id']}/modifiers", {title: 'Color', type: 'variant'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
+    product = Product.new
+    product.title = params['title']
+    product.price = params['price']
+    product.status = params['status']
+    product.stock = params['stock_level']
+    product.sku = params['sku']
+    product.description = params['description']
 
+    params['sizes'].each do |size|
+      product.sizes << Size.new(size_params size)
+    end
+
+    params['logos'].each do |logo|
+      product.logos << Logo.new(logo_params logo)
+    end
+
+    params['colors'].each do |color|
+      color_c = Color.new
+      color_c.title = color['title']
+      color_c.price = color['price']
+      color_c.code_hex = color['code_hex']
+      color_c.stock = color['stock_level']
+      color_c.main = color['main_color']
+      color_c.save!
+
+      color['images'].each do |image|
+        image_c = ProductImage.create(
+            picture: image['file'],
+            image_url: 'none',
+            color_id: color_c.id,
+            main_picture: image['main']
+        )
+
+        color_c.product_images << image_c
+      end
+    end
+
+    params['categories'].each do |category|
+      product.categories << Category.find_or_create_by!(title: category)
+    end
+
+    params['styles'].each do |style|
+      product.styles << Style.find_or_create_by!(title: style)
+    end
+
+    params['materials'].each do |material|
+      product.materials << Material.find_or_create_by!(title: material)
+    end
+
+    params['brands'].each do |brand|
+      product.brands << Brand.find_or_create_by!(title: brand)
+    end
+
+    product.tax_band = TaxBand.find(params['tax_band_id'])
+    product.moltin_id = '000000000'
+    product.save!
 
     render :json => product.to_json, :status => 200
   end
