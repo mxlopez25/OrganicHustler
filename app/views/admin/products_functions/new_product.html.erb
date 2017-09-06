@@ -137,18 +137,10 @@
 
   <div id="dim_back" class="dim_back">
 
-    <div id="size_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 50%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">
-      <button>SAVE</button>
+    <div style="overflow:hidden;" id="size_modal" class="content_pop">
     </div>
 
     <div id="logo_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">
-      <input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">
-      <button>SAVE</button>
     </div>
 
     <div id="color_modal" class="content_pop">
@@ -195,13 +187,13 @@
 <link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
 <script>
 
-    var sizes = {};
-    var logos = {};
-    var colors = {};
-    var categories = {};
-    var styles = {};
-    var materials = {};
-    var brands = {};
+    var sizes_g = {};
+    var logos_g = {};
+    var colors_g = {};
+    var categories_g = {};
+    var styles_g = {};
+    var materials_g = {};
+    var brands_g = {};
 
     var row_count = 1;
     var actual_row_id = null;
@@ -209,11 +201,130 @@
     var modal = null;
     var dim_back = document.getElementById('dim_back');
 
+    function complete_size(id) {
+
+        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>';
+        var sizes = sizes_g[id];
+        if (sizes) {
+            sizes.forEach(function (size) {
+                html = html + '<div class="size_row" style="overflow: hidden">' +
+                    '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 50%; margin: 0;" value="' + size.title + '" name="title" id="title">' +
+                    '<input style="float: left; width: 40%; margin: 0;" type="number" value="' + size.price + '" placeholder="Price" name="price" id="price">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="size_row" style="overflow: hidden">' +
+                '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
+                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_size_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="size_row" style="overflow: hidden">' +
+            '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
+            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '</div>' + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_size_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_sizes(id) {
+        var rows = $(modal).find('.size_row');
+        sizes_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            sizes_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+                price: $(rows[i]).find('input[id="price"]').val()
+            })
+        }
+    }
+
+    function complete_logo(id) {
+
+        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>';
+        var logos = logos_g[id];
+        if (logos) {
+            logos.forEach(function (logo) {
+                html = html + '<div class="logo_row" style="overflow: hidden">' +
+                    '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<h5 style="float: left; width: 50%; margin: 0;">Images already uploaded</h5>' +
+                    '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="logo_row" style="overflow: hidden">' +
+                '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
+                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_logo_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="logo_row" style="overflow: hidden">' +
+            '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
+            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '</div>' + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_logo_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_logos(id) {
+        var rows = $(modal).find('.logo_row');
+        logos_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            logos_g[id].push({
+                file: $(rows[i]).find('input[id="file"]').files,
+                price: $(rows[i]).find('input[id="price"]').val()
+            })
+        }
+    }
+
     function edit_modal(type, id) {
         modal = document.getElementById(type);
         modal.style.display = "block";
         dim_back.style.display = "block";
         actual_row_id = id;
+        console.log(type);
+
+        switch (type) {
+            case 'size_modal':
+                modal.innerHTML = complete_size(id);
+                break;
+            case 'logo_modal':
+                modal.innerHTML = complete_logo(id);
+                break;
+            case 'color_modal':
+                //complete_color(id);
+                break;
+            case 'category_modal':
+                //complete_category(id);
+                break;
+            case 'style_modal':
+                //complete_style(id);
+                break;
+            case 'material_modal':
+                //complete_material(id);
+                break;
+            case 'brand_modal':
+                //complete_brand(id);
+                break;
+        }
 
         window.onclick = function (event) {
             if (event.target === dim_back) {
