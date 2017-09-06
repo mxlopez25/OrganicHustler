@@ -195,8 +195,16 @@
 <link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
 <script>
 
+    var sizes = {};
+    var logos = {};
+    var colors = {};
+    var categories = {};
+    var styles = {};
+    var materials = {};
+    var brands = {};
+
     var row_count = 1;
-    var acual_row_id = null;
+    var actual_row_id = null;
 
     var modal = null;
     var dim_back = document.getElementById('dim_back');
@@ -205,7 +213,7 @@
         modal = document.getElementById(type);
         modal.style.display = "block";
         dim_back.style.display = "block";
-        acual_row_id = id;
+        actual_row_id = id;
 
         window.onclick = function (event) {
             if (event.target === dim_back) {
