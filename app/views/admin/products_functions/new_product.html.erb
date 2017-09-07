@@ -140,7 +140,7 @@
     <div style="overflow:hidden;" id="size_modal" class="content_pop">
     </div>
 
-    <div id="logo_modal" class="content_pop">
+    <div style="overflow:hidden;" id="logo_modal" class="content_pop">
     </div>
 
     <div id="color_modal" class="content_pop">
@@ -254,14 +254,17 @@
         var logos = logos_g[id];
         if (logos) {
             logos.forEach(function (logo) {
-                html = html + '<div class="logo_row" style="overflow: hidden">' +
+                var rr_data = '<div class="logo_row" data-id-use="' + logo.id + '" data-ocupaid-use="true" style="overflow: hidden">' +
                     '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
-                    '<h5 style="float: left; width: 50%; margin: 0;">Images already uploaded</h5>' +
-                    '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                    '<p style="text-align: center; float: left; width: 25%; margin: 0;">' + logo.file.name + '</p>' +
+                    '<input style="float: left; width: 40%; margin: 0;" type="file" value="" name="file" id="file">' +
+                    '<input style="float: left; width: 25%; margin: 0;" type="number" value="' + logo.price + '" placeholder="Price" name="price" id="price">' +
                     '</div>';
+                console.log(logo.file);
+                html = html + rr_data
             });
         } else {
-            html = html + '<div class="logo_row" style="overflow: hidden">' +
+            html = html + '<div data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
                 '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
                 '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
@@ -272,7 +275,7 @@
     }
 
     function new_logo_row(id) {
-        $(modal).find('#bonnie').replaceWith('<div class="logo_row" style="overflow: hidden">' +
+        $(modal).find('#bonnie').replaceWith('<div  data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
             '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
             '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
@@ -285,14 +288,37 @@
 
     function save_logos(id) {
         var rows = $(modal).find('.logo_row');
+        var holder = logos_g[id];
         logos_g[id] = [];
 
         for (var i = 0; i < rows.length; i++) {
-            logos_g[id].push({
-                file: $(rows[i]).find('input[id="file"]').files,
-                price: $(rows[i]).find('input[id="price"]').val()
-            })
+            console.log(rows[i].dataset.ocupaidUse);
+            if (rows[i].dataset.ocupaidUse === 'false') {
+                logos_g[id].push({
+                    id: i,
+                    file: $(rows[i]).find('input[id="file"]')[0].files[0],
+                    price: $(rows[i]).find('input[id="price"]').val()
+                });
+                console.log(logos_g);
+            } else {
+                var item = get_correct(holder, i);
+                logos_g[id].push({
+                    id: item.id,
+                    file: item.file,
+                    price: $(rows[i]).find('input[id="price"]').val()
+                });
+            }
         }
+    }
+
+    function get_correct(holder, id) {
+        var selected = null;
+        holder.forEach(function (obj) {
+            if (obj.id === id) {
+                selected = obj;
+            }
+        });
+        return selected;
     }
 
     function edit_modal(type, id) {
