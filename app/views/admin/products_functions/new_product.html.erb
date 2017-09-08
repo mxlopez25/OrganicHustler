@@ -329,7 +329,7 @@
                     '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
-                    '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                    '      <input type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                     '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
                     '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
@@ -365,6 +365,50 @@
             '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
             '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
             '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_color_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+
+    function save_colors(id) {
+        var rows = $(modal).find('.color_row');
+        var holder = null;
+        var colors_tt = colors_g[id];
+        if (colors_tt) {
+            holder = colors_tt.colors;
+        }
+        colors_g[id] = {cur_id: 0, colors: []};
+        for (var i = 0; i < rows.length; i++) {
+            console.log(rows[i].dataset.ocupaidUse);
+            if (rows[i].dataset.ocupaidUse === 'false') {
+                colors_g[id].colors.push({
+                    id: colors_g[id].cur_id,
+                    title: $(rows[i]).find('input[id="title"]').val(),
+                    price: $(rows[i]).find('input[id="price"]').val(),
+                    color: $(rows[i]).find('input[id="code_hex"]').val(),
+                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                    preferred: $(rows[i]).find('input[id="main"]').is(":checked"),
+                    files: $(rows[i]).find('input[id="file"]')[0].files,
+                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
+                });
+                colors_g[id].cur_id = colors_g[id].cur_id + 1;
+            } else {
+                var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
+                colors_g[id].colors.push({
+                    id: item.id,
+                    title: $(rows[i]).find('input[id="title"]').val(),
+                    price: $(rows[i]).find('input[id="price"]').val(),
+                    color: $(rows[i]).find('input[id="code_hex"]').val(),
+                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                    preferred: $(rows[i]).find('input[id="main"]').val(),
+                    file: item.files,
+                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
+                });
+            }
+        }
+        console.log(colors_g[id]);
     }
 
     function edit_modal(type, id) {
