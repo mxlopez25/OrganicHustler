@@ -143,17 +143,7 @@
     <div style="overflow:hidden;" id="logo_modal" class="content_pop">
     </div>
 
-    <div id="color_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">
-      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">
-      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">
-      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">
-      <h5 style="width: 10%; float: left;">Main color?</h5>
-      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">
-      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">
-      <button style="width: 100%">SAVE</button>
+    <div style="overflow:hidden;" id="color_modal" class="content_pop">
     </div>
 
     <div id="category_modal" class="content_pop">
@@ -321,6 +311,56 @@
         return selected;
     }
 
+    function complete_color(id) {
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button>';
+        var colors = colors_g[id];
+        if (colors) {
+            colors.forEach(function (color) {
+                var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
+                    '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                    '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                    '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                    '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                    '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                    '</div>';
+                html = html + rr_data
+                //Hey, my name is hecotr what's yours, I would like to know you, do you speak english
+            });
+        } else {
+            html = html + '<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+                '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_color_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+            '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+            '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+            '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+            '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+            '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+            '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
     function edit_modal(type, id) {
         modal = document.getElementById(type);
         modal.style.display = "block";
@@ -336,7 +376,7 @@
                 modal.innerHTML = complete_logo(id);
                 break;
             case 'color_modal':
-                //complete_color(id);
+                modal.innerHTML = complete_color(id);
                 break;
             case 'category_modal':
                 //complete_category(id);
