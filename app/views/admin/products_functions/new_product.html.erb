@@ -146,28 +146,16 @@
     <div style="overflow:hidden;" id="color_modal" class="content_pop">
     </div>
 
-    <div id="category_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <button>SAVE</button>
+    <div style="overflow:hidden;" id="category_modal" class="content_pop">
     </div>
 
-    <div id="style_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <button>SAVE</button>
+    <div style="overflow:hidden;" id="style_modal" class="content_pop">
     </div>
 
-    <div id="material_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <button>SAVE</button>
+    <div style="overflow:hidden;" id="material_modal" class="content_pop">
     </div>
 
-    <div id="brand_modal" class="content_pop">
-      <button style="float: left; width: 10%; margin: 0;">+</button>
-      <input style="float: left; width: 90%; margin: 0;" value="" placeholder="Title" name="title" id="title">
-      <button>SAVE</button>
+    <div style="overflow:hidden;" id="brand_modal" class="content_pop">
     </div>
 
   </div>
@@ -323,16 +311,25 @@
         if (colors) {
             colors = colors.colors;
             colors.forEach(function (color) {
+
+                function checked() {
+                    if (color.preferred) {
+                        return 'checked';
+                    } else {
+                        return '';
+                    }
+                }
+
                 var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
                     '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
-                    '      <input type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Title" name="title" id="title">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                    '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                     '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                    '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                    '      <input style="width: 12%; float:left; margin: 0;" value="' + color.main_picture + '" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
                     '</div>';
                 html = html + rr_data
             });
@@ -343,7 +340,7 @@
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
-                '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                 '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
                 '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
@@ -360,7 +357,7 @@
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
-            '      <input type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+            '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
             '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
             '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
@@ -389,7 +386,7 @@
                     price: $(rows[i]).find('input[id="price"]').val(),
                     color: $(rows[i]).find('input[id="code_hex"]').val(),
                     stock: $(rows[i]).find('input[id="stock_level"]').val(),
-                    preferred: $(rows[i]).find('input[id="main"]').is(":checked"),
+                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
                     files: $(rows[i]).find('input[id="file"]')[0].files,
                     main_picture: $(rows[i]).find('input[id="main_image"]').val()
                 });
@@ -402,13 +399,185 @@
                     price: $(rows[i]).find('input[id="price"]').val(),
                     color: $(rows[i]).find('input[id="code_hex"]').val(),
                     stock: $(rows[i]).find('input[id="stock_level"]').val(),
-                    preferred: $(rows[i]).find('input[id="main"]').val(),
+                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
                     file: item.files,
                     main_picture: $(rows[i]).find('input[id="main_image"]').val()
                 });
             }
         }
         console.log(colors_g[id]);
+    }
+
+    function complete_category(id) {
+
+        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>';
+        var categories = categories_g[id];
+        if (categories) {
+            categories.forEach(function (category) {
+                html = html + '<div class="category_row" style="overflow: hidden">' +
+                    '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + category.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="category_row" style="overflow: hidden">' +
+                '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_category_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_category_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="category_row" style="overflow: hidden">' +
+            '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_category_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_category_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_categories(id) {
+        var rows = $(modal).find('.category_row');
+        categories_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            categories_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_style(id) {
+
+        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>';
+        var styles = styles_g[id];
+        if (styles) {
+            styles.forEach(function (style) {
+                html = html + '<div class="style_row" style="overflow: hidden">' +
+                    '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + style.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="style_row" style="overflow: hidden">' +
+                '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_style_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_style_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="style_row" style="overflow: hidden">' +
+            '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_style_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_style_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_styles(id) {
+        var rows = $(modal).find('.style_row');
+        styles_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            styles_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_material(id) {
+
+        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>';
+        var materials = materials_g[id];
+        if (materials) {
+            materials.forEach(function (material) {
+                html = html + '<div class="material_row" style="overflow: hidden">' +
+                    '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + material.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="material_row" style="overflow: hidden">' +
+                '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_material_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_material_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="material_row" style="overflow: hidden">' +
+            '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_material_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_material_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_materials(id) {
+        var rows = $(modal).find('.material_row');
+        materials_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            materials_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_brand(id) {
+
+        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>';
+        var brands = brands_g[id];
+        if (brands) {
+            brands.forEach(function (brand) {
+                html = html + '<div class="brand_row" style="overflow: hidden">' +
+                    '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + brand.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="brand_row" style="overflow: hidden">' +
+                '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_brand_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_brand_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="brand_row" style="overflow: hidden">' +
+            '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_brand_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_brand_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_brands(id) {
+        var rows = $(modal).find('.brand_row');
+        brands_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            brands_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
     }
 
     function edit_modal(type, id) {
@@ -429,16 +598,16 @@
                 modal.innerHTML = complete_color(id);
                 break;
             case 'category_modal':
-                //complete_category(id);
+                modal.innerHTML = complete_category(id);
                 break;
             case 'style_modal':
-                //complete_style(id);
+                modal.innerHTML = complete_style(id);
                 break;
             case 'material_modal':
-                //complete_material(id);
+                modal.innerHTML = complete_material(id);
                 break;
             case 'brand_modal':
-                //complete_brand(id);
+                modal.innerHTML = complete_brand(id);
                 break;
         }
 
