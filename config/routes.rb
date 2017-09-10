@@ -65,6 +65,9 @@ Rails.application.routes.draw do
 
   post '/product/reload_table' => 'product#table_products'
   post '/product/new/product' => 'product#new_product'
+  post '/product/new/logo' => 'product#new_logo'
+  post '/product/new/color' => 'product#new_color'
+  post '/product/new/image' => 'product#new_image'
 
   put '/product/edit/product' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170905171753) do
+ActiveRecord::Schema.define(version: 20170910125929) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "email", default: "", null: false, collation: "utf8_general_ci"
@@ -78,6 +78,9 @@ ActiveRecord::Schema.define(version: 20170905171753) do
     t.string "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "main", default: false
+    t.boolean "preferred"
+    t.integer "main_picture"
   end
 
   create_table "emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -122,10 +125,14 @@ ActiveRecord::Schema.define(version: 20170905171753) do
 
   create_table "logos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.float "price", limit: 24
-    t.string "url"
+    t.string "picture"
     t.string "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "picture_file_name"
+    t.string "picture_content_type"
+    t.integer "picture_file_size"
+    t.datetime "picture_updated_at"
   end
 
   create_table "materials", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -190,6 +197,11 @@ ActiveRecord::Schema.define(version: 20170905171753) do
     t.string "color_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "main_picture", default: false
+    t.string "picture_file_name"
+    t.string "picture_content_type"
+    t.integer "picture_file_size"
+    t.datetime "picture_updated_at"
   end
 
   create_table "products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

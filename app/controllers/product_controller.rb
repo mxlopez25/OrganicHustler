@@ -1,12 +1,13 @@
 require 'rest_client'
 require 'RMagick'
 require 'tempfile'
+require 'json'
 
 class ProductController < ApplicationController
   include Magick
   layout 'customs_bl'
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   def table_products
 
@@ -65,9 +66,23 @@ class ProductController < ApplicationController
     logo_params.permit!(:price, :image_url)
   end
 
+  def new_logo
+    logo = Logo.create! price: params['price'], picture: params['file']
+    render :json => logo.to_json, :status => 200
+  end
+
+  def new_color
+    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred']
+    render :json => color.to_json, :status => 200
+  end
+
+  def new_image
+    image = ProductImage.create! color: ApplicationRecord::Color.find(params['parent_id']), picture: params['file']
+    render :json => image.to_json, :status => 200
+  end
 
   def new_product
-
+=begin
     product = Product.new
     product.title = params['title']
     product.price = params['price']
@@ -81,7 +96,7 @@ class ProductController < ApplicationController
     end
 
     params['logos'].each do |logo|
-      product.logos << Logo.new(logo_params logo)
+      product.logos << Logo.find(logo)
     end
 
     params['colors'].each do |color|
@@ -126,6 +141,8 @@ class ProductController < ApplicationController
     product.save!
 
     render :json => product.to_json, :status => 200
+=end
+
   end
 
   def upload_image
