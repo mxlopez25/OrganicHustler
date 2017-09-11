@@ -59,11 +59,11 @@ class ProductController < ApplicationController
   end
 
   def size_params(size_params)
-    size_params.permit!(:title, :price)
+    size_params.permit(:title, :price)
   end
 
   def logo_params(logo_params)
-    logo_params.permit!(:price, :image_url)
+    logo_params.permit(:price, :image_url)
   end
 
   def new_logo
@@ -82,7 +82,6 @@ class ProductController < ApplicationController
   end
 
   def new_product
-=begin
     product = Product.new
     product.title = params['title']
     product.price = params['price']
@@ -92,48 +91,26 @@ class ProductController < ApplicationController
     product.description = params['description']
 
     params['sizes'].each do |size|
-      product.sizes << Size.new(size_params size)
+      product.sizes << Size.new(size_params (params['sizes'][size]))
     end
 
-    params['logos'].each do |logo|
-      product.logos << Logo.find(logo)
-    end
-
-    params['colors'].each do |color|
-      color_c = Color.new
-      color_c.title = color['title']
-      color_c.price = color['price']
-      color_c.code_hex = color['code_hex']
-      color_c.stock = color['stock_level']
-      color_c.main = color['main_color']
-      color_c.save!
-
-      color['images'].each do |image|
-        image_c = ProductImage.create(
-            picture: image['file'],
-            image_url: 'none',
-            color_id: color_c.id,
-            main_picture: image['main']
-        )
-
-        color_c.product_images << image_c
-      end
-    end
+    product.logos << Logo.find(params['logos'])
+    product.colors << ApplicationRecord::Color.find(params['colors'])
 
     params['categories'].each do |category|
-      product.categories << Category.find_or_create_by!(title: category)
+      product.categories << Category.find_or_create_by!(title: params['categories'][category]['title'])
     end
 
     params['styles'].each do |style|
-      product.styles << Style.find_or_create_by!(title: style)
+      product.styles << Style.find_or_create_by!(title: params['styles'][style]['title'])
     end
 
     params['materials'].each do |material|
-      product.materials << Material.find_or_create_by!(title: material)
+      product.materials << Material.find_or_create_by!(title: params['materials'][material]['title'])
     end
 
     params['brands'].each do |brand|
-      product.brands << Brand.find_or_create_by!(title: brand)
+      product.brands << Brand.find_or_create_by!(title: params['brands'][brand]['title'])
     end
 
     product.tax_band = TaxBand.find(params['tax_band_id'])
@@ -141,8 +118,6 @@ class ProductController < ApplicationController
     product.save!
 
     render :json => product.to_json, :status => 200
-=end
-
   end
 
   def upload_image
