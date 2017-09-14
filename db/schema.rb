@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170910125929) do
+ActiveRecord::Schema.define(version: 20170914174436) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "email", default: "", null: false, collation: "utf8_general_ci"
@@ -33,6 +33,11 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "brands_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "brand_id"
+    t.string "product_id"
   end
 
   create_table "cart_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -70,6 +75,11 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "categories_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "category_id"
+    t.string "product_id"
+  end
+
   create_table "colors", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "title"
     t.float "price", limit: 24
@@ -78,8 +88,7 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.string "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "main", default: false
-    t.boolean "preferred"
+    t.boolean "preferred", default: false
     t.integer "main_picture"
   end
 
@@ -141,6 +150,11 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "materials_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "material_id"
+    t.string "product_id"
+  end
+
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "state", collation: "utf8_general_ci"
     t.text "description", limit: 65535, collation: "utf8_general_ci"
@@ -197,7 +211,6 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.string "color_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "main_picture", default: false
     t.string "picture_file_name"
     t.string "picture_content_type"
     t.integer "picture_file_size"
@@ -216,6 +229,11 @@ ActiveRecord::Schema.define(version: 20170910125929) do
     t.string "moltin_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "products_styles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "product_id"
+    t.string "style_id"
   end
 
   create_table "promotion_codes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

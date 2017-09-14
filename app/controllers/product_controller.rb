@@ -113,7 +113,7 @@ class ProductController < ApplicationController
       product.brands << Brand.find_or_create_by!(title: params['brands'][brand]['title'])
     end
 
-    product.tax_band = TaxBand.find(params['tax_band_id'])
+    product.tax_band_id = params['tax_band']
     product.moltin_id = '000000000'
     product.save!
 
