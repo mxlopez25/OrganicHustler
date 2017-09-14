@@ -125,7 +125,7 @@ class ProductController < ApplicationController
     square_p = 300
 
     image.resize_to_fit!(square_p, square_p)
-    new_img = ::Magick::Image.new(square_p, square_p)
+    new_img = Magick::Image.new(square_p, square_p)
     filled = new_img.matte_floodfill(1, 1)
     filled.composite!(image, Magick::CenterGravity, ::Magick::OverCompositeOp)
     file = Tempfile.new(['rmagicFile', '.png'])
