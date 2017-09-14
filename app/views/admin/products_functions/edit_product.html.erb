@@ -41,7 +41,7 @@
 
   <div class="head-bread-crumbs card">
     <h4><a class="breadcrumb" href="/admin/products">Products</a> /
-      <a class="breadcrumb" href="/admin/product/<%= product_i['id'] %>"><%= product_i['id'] %></a> / Edit</h4>
+      <a class="breadcrumb" href="/admin/product/<%= product_i.id %>"><%= product_i.id %></a> / Edit</h4>
   </div>
 
   <div class="card modal-g">
@@ -49,13 +49,13 @@
     <!--Title edit field-->
     <div class="form-group">
       <label for="title_edit">Title</label>
-      <input class="form-control" type="text" value="<%= product_i['title'] %>" id="title_edit" name="title">
+      <input class="form-control" type="text" value="<%= product_i.title %>" id="title_edit" name="title">
     </div>
 
     <!--SKU edit field-->
     <div class="form-group">
       <label for="sku_edit">SKU</label>
-      <input class="form-control" type="text" value="<%= product_i['sku'] %>" id="sku_edit" name="sku">
+      <input class="form-control" type="text" value="<%= product_i.sku %>" id="sku_edit" name="sku">
     </div>
 
     <!--Status edit field-->
@@ -63,12 +63,12 @@
       <label style="float: left; width: 10%">Status</label>
       <label class="radio-inline" style="width: 40%; float: left">
         <input type="radio" name="statusI" id="status_r1" value="0"
-               <% if product_i['status']['data']['key'].eql?('0') %>checked="checked"
+               <% if product_i.status == 0 %>checked="checked"
                <% end %>> Draft
       </label>
       <label class="radio-inline" style="width: 40%; float: left">
         <input type="radio" name="statusI" id="status_r2" value="1"
-               <% if product_i['status']['data']['key'].eql?('1') %>checked="checked"
+               <% if product_i.status == 1 %>checked="checked"
                <% end %>> Live
       </label>
     </div>

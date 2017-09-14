@@ -86,7 +86,7 @@ class ProductController < ApplicationController
     product.title = params['title']
     product.price = params['price']
     product.status = params['status']
-    product.stock = params['stock_level']
+    product.stock = params['stock']
     product.sku = params['sku']
     product.description = params['description']
 

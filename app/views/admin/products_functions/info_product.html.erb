@@ -34,7 +34,7 @@
 
   <% product = @product %>
   <div class="head-bread-crumbs card">
-    <h4><a class="breadcrumb" href="/admin/products">Products</a> / <%= product['id'] %></h4>
+    <h4><a class="breadcrumb" href="/admin/products">Products</a> / <%= product.id %></h4>
   </div>
 
   <div class="card modal-g">
@@ -49,9 +49,9 @@
     <div>
       <h5>
         Product status
-        <% if product['status']['data']['key'].eql?('1') %><span class="label label-success">Live</span>
+        <% if product.status == 1 %><span class="label label-success">Live</span>
         <% end %>
-        <% if product['status']['data']['key'].eql?('0') %><span class="label label-danger">Draft</span>
+        <% if product.status == 0 %><span class="label label-danger">Draft</span>
         <% end %>
       </h5>
     </div>
@@ -59,21 +59,18 @@
     <!--Product id/sku-->
     <div style="overflow: hidden;">
       <h6 style="display: inline; width: 50%; float: left">ID:
-        <span style="font-size: x-small"><%= product['id'] %></span></h6>
-      <h6 style="width: 50%; float: left">SKU: <span style="font-size: x-small"><%= product['sku'] %></span></h6>
+        <span style="font-size: x-small"><%= product.id %></span></h6>
+      <h6 style="width: 50%; float: left">SKU: <span style="font-size: x-small"><%= product.sku %></span></h6>
     </div>
 
     <!--Created at/Updated at info-->
     <div style="overflow: hidden">
       <h6 style="display: inline; width: 50%; float: left">Created At:
-        <span style="font-size: small"><%= product['created_at'] %></span></h6>
-      <h6 style="width: 50%; float: left">Updated at: <span style="font-size: small"><%= product['updated_at'] %></span>
+        <span style="font-size: small"><%= product.created_at %></span></h6>
+      <h6 style="width: 50%; float: left">Updated at: <span style="font-size: small"><%= product.updated_at %></span>
       </h6>
     </div>
 
-  </div>
-
-  <div class="card modal-h">
   </div>
 
   <div class="card modal-g">
@@ -81,42 +78,36 @@
     <h3 style="width: 100%; text-align: center; margin-left: auto; margin-right: auto; border-bottom: solid thin #707070">General
       info</h3>
     <!--Brand/Category info-->
-    <h6>Category: <span style="font-size: small"><%= product['category']['value'] %></span></h6>
-    <h6>Brand: <span style="font-size: small"><%= product['brand']['value'] %></span></h6>
+    <h6>Category: <span style="font-size: small"><%= product.categories.map {|f| f.title}.join ',' %></span></h6>
+    <h6>Brand: <span style="font-size: small"><%= product.brands.map {|f| f.title}.join ',' %></span></h6>
 
     <!--Price-->
     <div style="overflow: hidden">
       <h6 style="display: inline; width: 50%; float: left">Price+taxes:
-        <span style="font-size: small; color: #b12704"><%= product['price']['value'] %></span></h6>
+        <span style="font-size: small; color: #b12704"><%= product.price %></span></h6>
       <h6 style="width: 50%; float: left">Sale price:
-        <span style="font-size: small; color: #b12704">$<%= product['sale_price'] %></span></h6>
+        <span style="font-size: small; color: #b12704">$<%= product.price + (product.price * product.taxes.amount) %></span>
+      </h6>
     </div>
 
-    <h6>Stock: <span style="font-size: small"><%= product['stock_level'] %></span></h6>
-    <h6>Stock Status:
-      <span class="label label-info" style="font-size: small"><%= product['stock_status']['value'] %></span></h6>
+    <h6>Stock: <span style="font-size: small"><%= product.stock %></span></h6>
 
     <div style="padding: 10px; border: solid thin lightgray; border-radius: 10px">
       <h6><span class="label label-primary">Description</span></h6>
       <p style="text-align: justify; font-size: small">
-        <%= product['description'] %>
+        <%= product.description %>
       </p>
     </div>
 
     <div style="margin-top: 10px; padding: 10px; border: solid thin lightgray; border-radius: 10px; background: #ffffff; overflow: hidden">
       <h6><span class="label label-primary">Images</span></h6>
-      <% product['images'].each do |image| %>
-          <img src="https://<%= image['segments']['domain'] %>fit/w100/h100/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
+      <% product.colors.each do |color| %>
+          <% color.product_images.each do |image| %>
+              <img width="100" src="<%= image.picture %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 5px;">
+          <% end %>
       <% end %>
     </div>
 
-    <!--Tags-->
-    <div class="well" style="margin-top: 10px; min-width: 30px; border-radius: 10px; padding: 10px; background: #ffffff; border: thin solid lightgray">
-      <h6><span class="label label-primary">Tags</span></h6>
-      <% product['slug'].split(' ').each do |word| %>
-          <span class="label label-info"><%= word %></span>
-      <% end %>
-    </div>
   </div>
 
 

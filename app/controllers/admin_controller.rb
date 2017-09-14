@@ -9,6 +9,7 @@ class AdminController < ApplicationController
   end
 
   def products
+    @amount = params[:limit] || 10
   end
 
   def logo
@@ -45,12 +46,12 @@ class AdminController < ApplicationController
   end
 
   def info_product
-    @product = AdminHelper.get_product_by_id(params[:id])
+    @product = Product.find(params[:id])
     render 'admin/products_functions/info_product'
   end
 
   def edit_product
-    @product = AdminHelper.get_product_by_id(params[:id])
+    @product = Product.find(params[:id])
     render 'admin/products_functions/edit_product'
   end
 
