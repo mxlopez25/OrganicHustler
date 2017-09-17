@@ -18,13 +18,10 @@ Rails.application.routes.draw do
   post '/' => 'home#subscribe'
 
   get '/catalog' => 'home#catalog'
-  get '/cart' => 'home#get_cart_items'
   get '/catalog/item/:id' => 'home#catalog_item'
-  get '/catalog/get_image' => 'home#get_image_by_id'
-  get '/catalog/logos/:id' => 'home#get_logos_by_id'
-  get '/catalog/product/colored/:pr_id/:mod/:act_obj' => 'home#colored_image'
-  get '/catalog/product/emblems/:pr_id' => 'home#emblems'
-  get '/catalog/product/emblem/:position_id' => 'home#get_emblem'
+  get '/catalog/items' => 'home#get_items'
+  get '/catalog/product/images' => 'home#get_images_product'
+  get '/catalog/product/sizes' => 'home#get_sizes_product'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'

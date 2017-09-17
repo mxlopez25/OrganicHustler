@@ -72,12 +72,20 @@ class ProductController < ApplicationController
   end
 
   def new_color
-    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred']
+    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred'], main_picture: params['main_picture']
     render :json => color.to_json, :status => 200
   end
 
   def new_image
-    image = ProductImage.create! color: ApplicationRecord::Color.find(params['parent_id']), picture: params['file']
+
+    file = re_center_upload(params['file'])
+
+    p (params['file'].original_filename.eql?(params['main_name']))
+    image = ProductImage.create! color: ApplicationRecord::Color.find(params['parent_id']), picture: file, main: (params['file'].original_filename.eql?(params['main_name']))
+
+    file.close
+    file.unlink
+
     render :json => image.to_json, :status => 200
   end
 
@@ -96,6 +104,11 @@ class ProductController < ApplicationController
 
     product.logos << Logo.find(params['logos'])
     product.colors << ApplicationRecord::Color.find(params['colors'])
+
+    #assigning main image
+    image = product.colors[0].product_images[0]
+
+    product.product_image_id = image.picture
 
     params['categories'].each do |category|
       product.categories << Category.find_or_create_by!(title: params['categories'][category]['title'])
@@ -116,6 +129,15 @@ class ProductController < ApplicationController
     product.tax_band_id = params['tax_band']
     product.moltin_id = '000000000'
     product.save!
+
+    product.colors.each do |color|
+      if color.preferred
+        image = color.product_images.find_by(main: true)
+        product.product_image_id = image.picture
+        product.save!
+      end
+    end
+
 
     render :json => product.to_json, :status => 200
   end
@@ -140,8 +162,8 @@ class ProductController < ApplicationController
     render :nothing => true, :status => 200
   end
 
-  def re_center_upload(dir, id)
-    image = Magick::Image::from_blob(dir.read).first
+  def re_center_upload(file)
+    image = Magick::Image::from_blob(file.read).first
     square_p = 300
 
     image.resize_to_fit!(square_p, square_p)
@@ -152,17 +174,7 @@ class ProductController < ApplicationController
     p file.path
     filled.write(file.path)
 
-    AdminHelper.set_image(file.path, id)
-
-    file.close
-    file.unlink
-
-  end
-
-  def upload_m_image
-    p params['products'].split(',').map(&:to_i)
-    params['products'].split(',').map(&:to_i).each {|product_var| re_center_upload(params['file'], product_var)}
-    render :nothing => true, :status => 200
+    file
   end
 
   def delete_image

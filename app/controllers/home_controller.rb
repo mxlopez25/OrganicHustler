@@ -49,8 +49,23 @@ class HomeController < ApplicationController
     render json: js_object.to_json
   end
 
+  def get_items
+    products = (Category.find_by_title params[:category]).products
+    render json: products.to_json
+  end
+
+  def get_images_product
+    images = Product.get_all_images params['product_id']
+    render json: images.to_json
+  end
+
+  def get_sizes_product
+    sizes = Product.get_all_sizes params['product_id']
+    render json: sizes.to_json
+  end
+
   def catalog_item
-    al = HomeHelper.get_product_by_id(params['id']).as_json
+    al = Product.find(params['id']).as_json
     al['variation_pp'] = false
     al['source_p'] = params['id']
     al['product_id_e'] = params['id']

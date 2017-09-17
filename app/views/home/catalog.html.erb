@@ -1,4 +1,3 @@
-
 <div id="items-container" style="overflow: hidden; margin-bottom: 30px">
 
   <div id="filters">
@@ -43,224 +42,44 @@
 
     <hr class="desktopnot" style="float: left; width: 100%; margin: 0 auto">
 
-    <% objects = get_products_f_catalog(params) %>
-    <div class="filter-element mobilenot"><h5 style="font-weight: bold"><%= objects.length %> products found</h5></div>
+    <div class="filter-element mobilenot"><h5 id="product_counter" style="font-weight: bold">0 products found</h5></div>
   </div>
 
-  <% styles = [] %>
-  <% colors = [] %>
-  <% materials = [] %>
-
   <div id="items" style="min-height: 370px">
-    <% objects.each do |pr| %>
-        <div onclick="open_quick_1('<%= "#{pr['id']}" %>')" class="catalog-item" id="item<%= pr['id'] %>">
-          <img class="img-con-item" style="margin-bottom: 10px" src="<%= pr['images'].first['url']['https'] %>">
-          <h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px"><%= pr['title'] %></h5>
-          <h5 style="font-size: 16px; color: #ba97a6; font-family: 'Source Sans Pro', sans-serif; font-weight: 600"> <%= pr['price']['value'] %></h5>
-          <button onclick="open_quick_1('<%= pr['id'] %>')" class="btn btn-sp btn-bottom_fixed" style="width: 100%; font-family: 'Source Sans Pro', sans-serif; font-weight: 600">Quick
-            Shop
-          </button>
-        </div>
 
-        <% pr['modifiers'].each do |mod| %>
-            <% if mod[1]['title'].eql?('Style')
-                 unless styles.include?(mod)
-                   styles.push(mod)
-                 end
-               elsif mod[1]['title'].eql?('Color')
-                 unless colors.include?(mod)
-                   colors.push(mod)
-                 end
-               elsif mod[1]['title'].eql?('Material')
-                 unless materials.include?(mod)
-                   materials.push(mod)
-                 end
-               end %>
-        <% end %>
-    <% end %>
   </div>
 
 </div>
 
 <script>
 
-    var received_obj = <%= objects.to_json.html_safe %>;
-    var id_s = get_id_s(received_obj);
-
-    function get_id_s(obj_s) {
-        id_s = [];
-        for (var obj in obj_s) {
-            id_s.push(obj_s[obj]['id']);
-        }
-        return id_s;
-    }
-
-    var styles_json = <%= styles.to_json.html_safe %>;
-    var colors_json = <%= colors.to_json.html_safe %>;
-    var materials_json = <%= materials.to_json.html_safe %>;
-
-    var styles_html = '';
-    var colors_html = '';
-    var materials_html = '';
-
-    var relations_s = {};
-    var relations_c = {};
-    var relations_m = {};
-
-    for (var style in styles_json) {
-        var style_n = styles_json[style][1];
-        var product_id = style_n['product'];
-        var variations = style_n['variations'];
-        for (var variation in variations) {
-
-            var title = variations[variation]['title'];
-            var relation = {};
-
-            if (!(title in relations_s)) {
-                relations_s[title] = relation;
-            }
-            relations_s[title][product_id] = 0;
-        }
-    }
-    for (var color in colors_json) {
-        var color_n = colors_json[color][1];
-        var product_id = color_n['product'];
-        var variations = color_n['variations'];
-        for (var variation in variations) {
-
-            var title = JSON.parse(variations[variation]['title'])['title'];
-            var relation = {};
-
-            if (!(title in relations_c)) {
-                relations_c[title] = relation;
-            }
-            relations_c[title][product_id] = 0;
-        }
-    }
-    for (var material in materials_json) {
-        var material_n = materials_json[material][1];
-        var product_id = material_n['product'];
-        var variations = material_n['variations'];
-        for (var variation in variations) {
-
-            var title = variations[variation]['title'];
-            var relation = {};
-
-            if (!(title in relations_m)) {
-                relations_m[title] = relation;
-            }
-            relations_m[title][product_id] = 0;
-        }
-    }
-
-    var selector_style = document.getElementById('style-list-filter');
-    var selector_color = document.getElementById('color-list-filter');
-    var selector_material = document.getElementById('material-list-filter');
-
-    for (var s in relations_s) {
-        styles_html = styles_html + '<li><a onclick="filter_s(\'' + s + '\')"><h5>' + s + '</h5></a></li>'
-    }
-    selector_style.innerHTML = styles_html;
-
-    for (var c in relations_c) {
-        colors_html = colors_html + '<li><a onclick="filter_c(\'' + c + '\')"><h5>' + c + '</h5></a></li>'
-    }
-    selector_color.innerHTML = colors_html;
-
-    for (var m in relations_m) {
-        materials_html = materials_html + '<li><a onclick="filter_m(\'' + m + '\')"><h5>' + m + '</h5></a></li>'
-    }
-    selector_material.innerHTML = materials_html;
-
-    console.log(relations_s, relations_c, relations_m);
-
-    var filtered_obj_s = id_s;
-    function filter_s(rela) {
-        var button_drop = selector_style.previousElementSibling;
-        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
-        filtered_obj_s = [];
-        for (var s in relations_s) {
-            console.log(s, rela);
-            if (rela === s) {
-                for (var id in relations_s[s]) {
-                    filtered_obj_s.push(id);
+    function load_items() {
+        $.ajax({
+            url: '/catalog/items?category=' + '<%= @parameters['view'] %>',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+                var html_items = '';
+                for (var id in data) {
+                    var item = data[id];
+                    html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick_1(\'' + item.id + '\')">'
+                        + '<img class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
+                        + '<h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px">' + item.title + '</h5>'
+                        + '<h5 style="font-size: 16px; color: #ba97a6; font-family: \'Source Sans Pro\', sans-serif; font-weight: 600">$' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'
+                        + '<button onclick="open_quick_1(\'' + item.id + '\')" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
+                        + '</div>';
+                    document.getElementById('items').innerHTML = html_items;
                 }
+            },
+            error: function (data) {
+                console.log(data);
             }
-        }
-        limit_search();
+        });
     }
 
-    var filtered_obj_c = id_s;
-    function filter_c(rela) {
-        var button_drop = selector_color.previousElementSibling;
-        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
-        filtered_obj_c = [];
-        for (var c in relations_c) {
-            console.log(c, rela);
-            if (rela === c) {
-                for (var id in relations_c[c]) {
-                    filtered_obj_c.push(id);
-                }
-            }
-        }
-        limit_search()
-    }
-
-    var filtered_obj_m = id_s;
-    function filter_m(rela) {
-        var button_drop = selector_material.previousElementSibling;
-        button_drop.innerHTML = rela + '<span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>';
-        filtered_obj_m = [];
-        for (var m in relations_m) {
-            console.log(m, rela);
-            if (rela === m) {
-                for (var id in relations_m[m]) {
-                    filtered_obj_m.push(id);
-                }
-            }
-        }
-        limit_search()
-
-    }
-
-    Array.prototype.contains = function (element) {
-        return this.indexOf(element) > -1;
-    };
-
-    function limit_search() {
-
-        var selected_ids = [];
-        for (var id in id_s) {
-            console.log(id, id_s[id], filtered_obj_s);
-
-            if (filtered_obj_s.contains(id_s[id])) {
-                console.log('true');
-                if (filtered_obj_c.contains(id_s[id])) {
-                    console.log('true');
-                    if (filtered_obj_m.contains(id_s[id])) {
-                        console.log('true');
-                        selected_ids.push(id_s[id])
-                    }
-                }
-            }
-        }
-
-        var html_items = '';
-
-        for (var obj in received_obj) {
-            var desired_obj = received_obj[obj];
-            if (selected_ids.contains(desired_obj['id'])) {
-                html_items = html_items + '<div class="catalog-item" id="item' + desired_obj['id'] + '">'
-                    + '<img class="img-con-item" style="margin-bottom: 10px" src="' + desired_obj['images'][0]['url']['https'] + '">'
-                    + '<h5 class="text-uppercase" style="margin-bottom: 10px">' + desired_obj['title'] + '</h5>'
-                    + '<h5 style="color: #b692a2">' + desired_obj['price']['value'] + '</h5>'
-                    + '<button onclick="open_quick_1(\'' + desired_obj['id'] + '\')" class="btn btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
-                    + '</div>';
-            }
-        }
-
-        document.getElementById('items').innerHTML = html_items;
-    }
+    load_items();
 
 </script>
 
@@ -270,7 +89,96 @@
   <!-- Modal content -->
   <div id="modal-content-center" class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
     <div id="general_p_content" class="g-wrapper" style="position: relative">
+      <span onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
+      <div id="product_display" class="wrapper-side">
+        <div class="image-container-quick" id="image-container">
+        </div>
+        <div style="min-height: 80px" class="images-container-quick" id="images-holder">
+          <div style="position: absolute; width: 100%" id="preview_image_cr" class="jcarousel-wrapper">
 
+            <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+              <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <div style="float: left; width: 80%" id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">
+              <ul id="preview_image_container" style="left: 0; top: 0;">
+
+              </ul>
+            </div>
+            <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+      <div id="layers" class="wrapper-side">
+
+        <div id="view_1">
+          <div class="wrap">
+            <h5 id="product_title" class="text-uppercase text_light_20"></h5>
+            <h5 id="product_price" class="text_light_pink"></h5>
+            <div id="product_description" class="wrap light-paragraph" style="padding-top: 10px">
+              <span id="first_30"></span><span id="dots">...</span><span class="complete"></span>
+              <div style="text-align: end">
+                <span id="more-toggle" class="text_light_pink">Read more</span>
+              </div>
+            </div>
+            <hr style="margin-bottom: 0">
+            <div style="margin-bottom: 10px">
+              <div id="icon-show" class="hidden">
+                <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h5></div>
+              <div id="icon-hide"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h5>
+              </div>
+            </div>
+
+            <div style="height: 40px" id="icon_loader" class="jcarousel-wrapper">
+              <button id="controller-jcarousel-preview-l" style="top: 0; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%" id="myCarousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-sizes" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 0; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <hr style="margin-bottom: 0">
+            <div style="margin-bottom: 10px">
+              <div id="icon-show-logo" class="hidden">
+                <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h5></div>
+              <div id="icon-hide-logo">
+                <h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h5></div>
+            </div>
+
+            <div style="height: 80px" id="icon_loader_logo" class="jcarousel-wrapper">
+              <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">
+                <ul id="container-logo-2" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div>
+              <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="open_quick_2()">CUSTOMIZE IT
+              </button>
+              <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="view_2"></div>
+
+        <div id="view_3"></div>
+
+      </div>
     </div>
   </div>
 
@@ -286,23 +194,34 @@
       </button>
     </div>
 
-    <script>
-        function add_emblem(val) {
-            if (val) {
-                load_p1(product, true);
-                remove_modal_m()
-            } else {
-                load_p1(product, false);
-                remove_modal_m();
-            }
-        }
-    </script>
-
   </div>
 
 </div>
 
 <script>
+
+    //reload jcarousel
+    (function (window, $, undefined) {
+        var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
+        for (var i = 0; i < plugins.length; i++) {
+            var plugin = plugins[i];
+            var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
+            $.fn[reload_plugin] = (function (plugin) {
+                return function () {
+                    return this.each(function () {
+                        if (!$(this).data(plugin)) {
+                            console.log('Element is not an instance of ' + plugin);
+                            return false;
+                        }
+                        var _options = $(this).data(plugin)._options;
+                        $(this).data(plugin, {}).off()[plugin](_options);
+                    });
+                };
+            })(plugin);
+        }
+    })(this, jQuery);
+
+    var default_modal = document.getElementById('modal-content-center').cloneNode(true);
 
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
@@ -315,8 +234,8 @@
             emblem.remove();
             modal_quick.style.display = "none";
             $("body").removeClass("modal-open");
-            $('body').css('overflow','auto');
-            $('body').css('position','relative');
+            $('body').css('overflow', 'auto');
+            $('body').css('position', 'relative');
         }
 
         if (event.target === modal) {
@@ -324,18 +243,14 @@
         }
     };
 
-    function close_modal(){
+    function close_modal() {
         product.remove();
         logo.remove();
         emblem.remove();
         modal_quick.style.display = "none";
         $("body").removeClass("modal-open");
-        $('body').css('overflow','auto');
-        $('body').css('position','relative');
-    }
-    
-    function back_p1() {
-        load_p1(product, false);
+        $('body').css('overflow', 'auto');
+        $('body').css('position', 'relative');
     }
 
     var elements = [];
@@ -406,22 +321,20 @@
     var STAGE = null;
 
     function fitStageIntoParentContainer() {
-        var container = document.querySelector('#wrapper-img-1');
+        var container = document.querySelector('#image-container');
         // now we need to fit stage into parent
         var containerWidth = container.offsetWidth;
-        // to do this we need to scale the stage
-        var scale = containerWidth / 500;
-        if (500 * scale < 375) {
-            STAGE.width(500 * scale);
-            STAGE.height(500 * scale);
-            STAGE.scale({x: scale, y: scale});
-            STAGE.draw();
-        } else {
-            STAGE.width(375);
-            STAGE.height(375);
-            STAGE.scale({x: (375 / 500), y: (375 / 500)});
-            STAGE.draw();
+        var containerHeight = container.offsetHeight;
+        var cur = containerHeight;
+        if (containerWidth < containerHeight) {
+            cur = containerWidth;
         }
+        // to do this we need to scale the stage
+        var scale = cur / 500;
+        STAGE.width(500 * scale);
+        STAGE.height(500 * scale);
+        STAGE.scale({x: scale, y: scale});
+        STAGE.draw();
     }
 
     function load_p1(product, view) {
@@ -461,40 +374,40 @@
                 '</div>';
 
         } else {
-            p1_ch = '<div class="wrap">' +
-                '<h5 class="text-uppercase text_light_20">' + product.data['title'] + '</h5>' +
-                '<h5 class="text_light_pink">' + product.data['price']['value'] + '</h5>' +
+            p1_ch = '' +
+                '' +
+                '' +
                 '</div>' +
-                '<div class="wrap light-paragraph" style="padding-top: 10px">' +
-                '<span>' + product.data['description'].substr(0, 30) + '</span><span id="dots">...</span><span class="complete">' + product.data['description'].substr(30) + '</span>' +
-                '<div style="text-align: end">' +
-                '<span id="more-toggle" class="text_light_pink">Read more</span>' +
+                '' +
+                '' +
+                '' +
+                '' +
                 '</div>' +
                 '</div>' +
-                '<hr style="margin-bottom: 0">' +
-                '<div style="margin-bottom: 10px">' +
-                '<div id="icon-show" class="hidden"><h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h5></div>' +
-                '<div id="icon-hide"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h5></div>' +
+                '' +
+                '' +
+                '' +
+                '' +
                 '</div>' +
                 get_variation_size(variations) +
-                '<hr style="margin-bottom: 0">' +
-                '<div style="margin-bottom: 10px">' +
-                '<div id="icon-show-logo" class="hidden"><h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h5></div>' +
-                '<div id="icon-hide-logo"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h5></div>' +
+                '' +
+                '' +
+                '' +
+                '' +
                 '</div>' +
                 get_variation_customized(variations) +
                 '<div>' +
-                '<button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="open_quick_2(\'' + product.product_id + '\')">CUSTOMIZE IT</button>' +
-                '<button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART</button>' +
+                '' +
+                '' +
                 '</div>';
         }
 
         document.getElementById('general_p_content').innerHTML =
-            '<span onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>'+
-            '<div style="margin-top: auto; margin-left: auto;" id="wrapper-img-1" class="wrapper-img">' +
-            '<div style="float: left; height: 3.06vw; width: 100%"></div>' +
+            '' +
+            '<div style="margin-top: auto; margin-left: auto;" id="wrapper-side-1" class="wrapper-side">' +
+            '' +
             '<div>' +
-            '<div class="image-container-quick center-inner-divs" id="image-container-quick-1" style="padding: 0">' +
+            '' +
             '</div>' +
             '</div>' +
             get_image_option(images) +
@@ -504,24 +417,7 @@
             '</div>';
 
         //Creates the image in case it is a variation
-        var container = $('#image-container-quick-1');
-
-        var stageWidth = 500;
-        var stageHeight = 500;
-
-        STAGE = new Konva.Stage({
-            container: 'image-container-quick-1',
-            width: stageWidth,
-            height: stageHeight
-        });
-        LAYER = new Konva.Layer();
-        STAGE.add(LAYER);
-
-        var baseImg = new Konva.Image({
-            width: STAGE.width(),
-            height: STAGE.height(),
-            draggable: false
-        });
+        var container = $('#image-container');
 
         var logoImg = new Konva.Image({
             width: STAGE.width() * logo.width / logo.r_x,
@@ -573,21 +469,6 @@
 
         fitStageIntoParentContainer();
         window.addEventListener('resize', fitStageIntoParentContainer);
-
-        //More text for description toggle
-        var state = true;
-        $("#more-toggle").on('click', function () {
-            if (state) {
-                $(this).text("Read less");
-                $(".complete").show();
-                $("#dots").hide();
-            } else {
-                $(this).text("Read more");
-                $(".complete").hide();
-                $("#dots").show();
-            }
-            state = !state;
-        });
 
         var container_height = {};
 
@@ -700,16 +581,14 @@
 
                 for (var i = 0; i < images.length; i++) {
 
-                    console.log(i);
-                    console.log(images);
                     images_txt = images_txt + '<li>' +
-                        '<img onmouseout="remove_element()" onmouseover="change_element(\'' + images[i]['url']['https'] + '\')" id="' + images[i]['id'] + '" src="' + images[i]['url']['https'] + '" height="70px" ' +
+                        '' +
                         '</li>';
                 }
 
-                var response = '<div style="position: absolute; bottom: 20px;" id="preview_image_cr" class="jcarousel-wrapper">' +
-                    '<div id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">' +
-                    '<ul id="preview_image_container" style="left: 0; top: 0;">' +
+                var response = '' +
+                    '' +
+                    '' +
                     'Nothing available' +
                     '</ul>' +
                     '</div>' +
@@ -722,10 +601,10 @@
                         images_txt +
                         '</ul>' +
                         '</div>' +
-                        '<button style="top: 25px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
-                        '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-                        '<button style="top: 25px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
-                        '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
+                        '' +
+                        '' +
+                        '' +
+                        '' +
                         '</div>'
                 }
 
@@ -880,7 +759,7 @@
     var stage = null;
 
     function fitStageIntoParentContainer_edit() {
-        var container = document.querySelector('#wrapper-img-2');
+        var container = document.querySelector('#wrapper-side-2');
         // now we need to fit stage into parent
         var containerWidth = container.offsetWidth;
         // to do this we need to scale the stage
@@ -926,7 +805,7 @@
 
         document.getElementById('general_p_content').innerHTML =
             '<i onclick="back_p1()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px" class="fa fa-chevron-left" aria-hidden="true"></i>'
-            + '<div id="wrapper-img-2" class="wrapper-img">'
+            + '<div id="wrapper-side-2" class="wrapper-side">'
             + '<div class="image-container-quick" id="image-container-quick-2" style="padding: 0;">'
             + '</div>'
             + '</div>'
@@ -1252,24 +1131,184 @@
             success: function (data) {
 
                 console.log(data);
+                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
 
-                product.product_id = data['id'];
-                if (!data['is_variation']) {
-                    product.product_base_id = data['id'];
-                }
-                product.data = data;
+                //product.product_id = data['id'];
+                //product.data = data;
+                //load_p1(product, false);
 
-                load_p1(product, false);
+                load_viewer(data);
+                load_image_carousel(data);
+                load_view_1(data);
+
                 return false
             },
             error: function (data) {
                 return false
             }
         });
-        $("body").addClass("modal-open");
-        $('body').css('overflow','hidden');
+        var body = $("body");
+        body.addClass("modal-open");
+        body.css('overflow', 'hidden');
         modal_quick.style.display = "block";
     }
+
+    function load_viewer(product) {
+        var stageWidth = 500;
+        var stageHeight = 500;
+
+        STAGE = new Konva.Stage({
+            container: 'image-container',
+            width: stageWidth,
+            height: stageHeight
+        });
+        LAYER = new Konva.Layer();
+        STAGE.add(LAYER);
+
+        var baseImg = new Konva.Image({
+            width: STAGE.width(),
+            height: STAGE.height(),
+            draggable: false
+        });
+
+        LAYER.add(baseImg);
+
+        var imageBase = new Image();
+        imageBase.onload = function () {
+            baseImg.image(imageBase);
+            LAYER.draw();
+        };
+        imageBase.src = product.product_image_id;
+
+        fitStageIntoParentContainer();
+        window.addEventListener('resize', fitStageIntoParentContainer);
+    }
+
+    function load_image_carousel(product) {
+        $.ajax({
+            url: '/catalog/product/images?product_id=' + product.id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var html_images = '';
+                var carousel_jq = $('ul#preview_image_container');
+
+                for (var i = 0; i < data.length; i++) {
+                    carousel_jq.append('<li><img onmouseout="" onmouseover="" id="" src="' + data[i][0] + '" height="70px"></li>');
+                }
+
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_image_cr_carousel').jcarousel('reload');
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function load_view_1(product) {
+        document.getElementById('product_title').innerHTML = product.title;
+        document.getElementById('product_price').innerHTML = '$' + product.price;
+        var description = document.getElementById('product_description').getElementsByTagName('span');
+        description[0].innerHTML = product.description.substr(0, 30);
+        description[2].innerHTML = product.description.substr(30);
+
+        //More text for description toggle
+        var state = true;
+        $("#more-toggle").on('click', function () {
+            if (state) {
+                $(this).text("Read less");
+                $(".complete").show();
+                $("#dots").hide();
+            } else {
+                $(this).text("Read more");
+                $(".complete").hide();
+                $("#dots").show();
+            }
+            state = !state;
+        });
+
+        $.ajax({
+            url: '/catalog/product/sizes?product_id=' + product.id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var html_images = '';
+                var carousel_jq = $('ul#container-sizes');
+
+                for (var i = 0; i < data.length; i++) {
+                    carousel_jq.append('<li><span style="font-size: 15px" id="" onclick="changeSize()" class="badge badge-size text_light">' + data[i].title + '</span></li>');
+                }
+
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_image_cr_carousel').jcarousel('reload');
+            },
+            error: function (data) {
+
+            }
+        });
+
+        var iconShow = $("#icon-show");
+        var iconHide = $("#icon-hide");
+        var loader = $("#icon_loader");
+
+        iconShow.click(function () {
+            loader.animate({
+                height: 40
+            }, 400, function () {
+                loader.css({
+                    overflow: 'visible'
+                });
+            });
+            iconShow.addClass(" hidden");
+            iconHide.removeClass(" hidden");
+        });
+
+        iconHide.click(function () {
+            loader.animate({
+                height: 0
+            }, 400, function () {
+                loader.css({
+                    overflow: 'hidden'
+                });
+            });
+            iconHide.addClass(" hidden");
+            iconShow.removeClass(" hidden");
+        });
+
+        var logoShow = $("#icon-show-logo");
+        var logoHide = $("#icon-hide-logo");
+        var loaderlogo = $("#icon_loader_logo");
+    }
+
 
     function open_quick_2(pr) {
         $.ajax({
@@ -1293,7 +1332,7 @@
             }
         });
         $("body").addClass("modal-open");
-        $('body').css('overflow','hidden');
+        $('body').css('overflow', 'hidden');
         modal_quick.style.display = "block";
     }
 
@@ -1310,8 +1349,8 @@
                 success: function (data, status, xhr) {
                     modal_quick.style.display = "none";
                     $("body").removeClass("modal-open");
-                    $('body').css('overflow','auto');
-                    $('body').css('position','relative');
+                    $('body').css('overflow', 'auto');
+                    $('body').css('position', 'relative');
                     location.reload();
                 },
                 dataType: 'json'
@@ -1633,90 +1672,6 @@
             }
         });
 
-    }
-
-    function get_variation_size(variations) {
-        if (variations.length > 0) {
-
-            var sizes = '';
-
-            for (var attr in variations[1]['variations']) {
-                //missing check of attr
-                sizes = sizes + '<li>' +
-                    '<span style="font-size: 15px" id="' + variations[1]['variations'][attr]['id'].toString() + '" onclick="changeSize(\'' + variations[1]['variations'][attr]['id'].toString() + '\')" class="badge badge-size text_light">' + variations[1]['variations'][attr]['title'] + '</span>' +
-                    '</li>';
-
-                product.available_sizes.push(variations[1]['variations'][attr]['id'].toString());
-            }
-
-            var response = '<div id="icon_loader" class="jcarousel-wrapper">' +
-                '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
-                '<ul id="container-logo" style="left: 0; top: 0;">' +
-                'Nothing available' +
-                '</ul>' +
-                '</div>' +
-                '</div>';
-
-            if (sizes.length){
-                response = '<div id="icon_loader" class="jcarousel-wrapper">' +
-                    '<div id="myCarousel" class="jcarousel" data-jcarousel="true">' +
-                    '<ul id="container-logo" style="left: 0; top: 0;">' +
-                    sizes +
-                    '</ul>' +
-                    '</div>' +
-                    '<button style="top: 0; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
-                    '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-                    '<button style="top: 0; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
-                    '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
-                    '</div>'
-            }
-
-            return response
-        }
-    }
-
-    function get_variation_customized(variations) {
-        if (variations.length > 0) {
-
-            var customs = '';
-
-            for (var attr in variations[0]['variations']) {
-                //missing check of attr
-                if (variations[0]['variations'][attr]['title'] !== 'null') {
-                    var changes = JSON.parse(variations[0]['variations'][attr]['title']);
-                    render_custom.push(variations[0]['variations'][attr]);
-                    customs = customs + '<li>' +
-                        '<div id="' + changes['image_id'] + variations[0]['variations'][attr]['id'] + '" style="width: 100px; height: 100px">' +
-                        '</div>' +
-                        '</li>'
-                }
-
-            }
-
-            response = '<div id="icon_loader_logo" class="jcarousel-wrapper">' +
-                '<div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">' +
-                '<ul id="container-logo-2" style="left: 0; top: 0;">' +
-                'Nothing available' +
-                '</ul>' +
-                '</div>' +
-                '</div>';
-
-            if (customs.length) {
-                response = '<div id="icon_loader_logo" class="jcarousel-wrapper">' +
-                    '<div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">' +
-                    '<ul id="container-logo-2" style="left: 0; top: 0;">' +
-                    customs +
-                    '</ul>' +
-                    '</div>' +
-                    '<button style="top: 30px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">' +
-                    '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>' +
-                    '<button style="top: 30px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">' +
-                    '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>' +
-                    '</div>'
-            }
-
-            return response
-        }
     }
 
     function createShape(id, variation, width, height, x, y, s_w, s_h) {

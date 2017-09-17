@@ -295,6 +295,8 @@
         }
     }
 
+    var counter = 0;
+
     function complete_color(id) {
         var html = '<button onclick="save_colors(' + id + ')">SAVE</button>';
         var colors = colors_g[id];
@@ -332,9 +334,12 @@
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                 '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
-                '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                '      <datalist id="pictures' + counter + '"></datalist>' +
+                '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
                 '</div>';
+
+            counter = counter + 1;
         }
         html = html + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
         return html;
@@ -349,9 +354,27 @@
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
             '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
-            '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-            '      <input style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+            '      <datalist id="pictures' + counter + '"></datalist>' +
+            '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+            '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
             '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+
+        counter = counter + 1;
+    }
+
+    function update_list(element, id) {
+        var parent = element.parentNode;
+        var files = $(parent).find('input[id="file"]')[0].files;
+        var data_list = $(parent).find('#pictures' + id)[0];
+        console.log(data_list);
+
+        var html = '';
+
+        for (var id_s = 0; id_s < files.length - 2; id_s++) {
+            html = html + '<option value="' + files[id_s].name + '">';
+            console.log(html);
+        }
+        data_list.innerHTML = html;
     }
 
     function remove_color_row(btn) {
@@ -732,7 +755,8 @@
                         price: colors[id].price,
                         color: colors[id].color,
                         stock: colors[id].stock,
-                        preferred: colors[id].preferred
+                        preferred: colors[id].preferred,
+                        main_picture: colors[id].main_picture
                     },
                     dataType: 'json',
                     success: function (data) {
@@ -740,7 +764,7 @@
                         colors_arr.push(data.id);
                         colors_cur = colors_cur + 1;
                         if (colors[id].files) {
-                            send_2_5(data.id, colors[id].files);
+                            send_2_5(data.id, colors[id].files, id);
                         } else {
                             send_3();
                         }
@@ -748,7 +772,7 @@
                 });
             }
 
-            function send_2_5(id, files) {
+            function send_2_5(id, files, id_c) {
                 var files_length = files.length;
                 var files_cur = 0;
 
@@ -758,6 +782,7 @@
                     file_info = new FormData();
                     file_info.append('file', files[files_cur]);
                     file_info.append('parent_id', id);
+                    file_info.append('main_name', colors[id_c].main_picture);
                     $.ajax({
                         url: "/product/new/image",
                         type: "POST",
