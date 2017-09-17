@@ -493,30 +493,6 @@
         var placementShow = $("#placement-show");
         var placementHide = $("#placement-hide");
 
-        logoShow.click(function () {
-            loader_logo.animate({
-                height: container_height.height_cust_size
-            }, (400 * container_height.height_cust_size / 100), function () {
-                loader_logo.css({
-                    overflow: 'visible'
-                });
-            });
-            logoShow.addClass(" hidden");
-            logoHide.removeClass(" hidden");
-        });
-
-        logoHide.click(function () {
-            loader_logo.animate({
-                height: 0
-            }, (400 * container_height.height_cust_size / 100), function () {
-                loader_logo.css({
-                    overflow: 'hidden'
-                });
-            });
-            logoHide.addClass(" hidden");
-            logoShow.removeClass(" hidden");
-        });
-
         iconShow.click(function () {
             loader.animate({
                 height: container_height.height_icon_size
@@ -1283,7 +1259,7 @@
         iconShow.click(function () {
             loader.animate({
                 height: 40
-            }, 400, function () {
+            }, 100, function () {
                 loader.css({
                     overflow: 'visible'
                 });
@@ -1295,7 +1271,7 @@
         iconHide.click(function () {
             loader.animate({
                 height: 0
-            }, 400, function () {
+            }, 100, function () {
                 loader.css({
                     overflow: 'hidden'
                 });
@@ -1306,7 +1282,31 @@
 
         var logoShow = $("#icon-show-logo");
         var logoHide = $("#icon-hide-logo");
-        var loaderlogo = $("#icon_loader_logo");
+        var loader_logo = $("#icon_loader_logo");
+
+        logoShow.click(function () {
+            loader_logo.animate({
+                height: 80
+            }, 200, function () {
+                loader_logo.css({
+                    overflow: 'visible'
+                });
+            });
+            logoShow.addClass(" hidden");
+            logoHide.removeClass(" hidden");
+        });
+
+        logoHide.click(function () {
+            loader_logo.animate({
+                height: 0
+            }, 200, function () {
+                loader_logo.css({
+                    overflow: 'hidden'
+                });
+            });
+            logoHide.addClass(" hidden");
+            logoShow.removeClass(" hidden");
+        });
     }
 
 
