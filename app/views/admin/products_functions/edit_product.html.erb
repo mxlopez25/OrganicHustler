@@ -532,6 +532,11 @@
   </div>
 
   <div class="card modal-g">
+
+    <div id="preset-preview-<%= 3 %>" onload="load_konva_preview('<%= 3 %>');">
+
+    </div>
+
     <% product_i.presets.each do |preset| %>
         <div id="preset-row" style="overflow: auto">
           <button style="width: 10%; float: left" class="btn btn-danger">-</button>
@@ -540,13 +545,16 @@
           </div>
         </div>
     <% end %>
-    <button class="btn btn-success">ADD PRESET</button>
+    <button style="width:100%;" onclick="edit_modal('preset_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+      PRESET
+    </button>
 
     <script>
 
         function load_konva_preview(id) {
-          
+            console.log(id);
         }
+
 
     </script>
 
