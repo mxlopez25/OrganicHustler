@@ -66,7 +66,25 @@ Rails.application.routes.draw do
   post '/product/new/color' => 'product#new_color'
   post '/product/new/image' => 'product#new_image'
 
-  put '/product/edit/product' => 'product#save_product'
+  post '/product/remove/size' => 'product#remove_size'
+  post '/product/add/size' => 'product#add_size'
+
+  post '/product/remove/logo' => 'product#remove_logo'
+  post '/product/add/logo' => 'product#add_logo'
+
+  post '/product/remove/category' => 'product#remove_category'
+  post '/product/add/category' => 'product#add_category'
+
+  post '/product/remove/style' => 'product#remove_style'
+  post '/product/add/style' => 'product#add_style'
+
+  post '/product/remove/material' => 'product#remove_material'
+  post '/product/add/material' => 'product#add_material'
+
+  post '/product/remove/brand' => 'product#remove_brand'
+  post '/product/add/brand' => 'product#add_brand'
+
+  put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'
 

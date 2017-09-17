@@ -53,17 +53,79 @@ class ProductController < ApplicationController
     @product = AdminHelper.get_product_by_id(id)
   end
 
-  def save_product
-    AdminHelper.edit_product(params)
-    render :nothing => true, :status => 200
-  end
-
   def size_params(size_params)
     size_params.permit(:title, :price)
   end
 
   def logo_params(logo_params)
-    logo_params.permit(:price, :image_url)
+    logo_params.permit(:price, :picture)
+  end
+
+  def basic_product_params(pr_params)
+    pr_params.permit(:title, :sku, :status, :price, :tax_band, :stock, :description)
+  end
+
+  def title_params(params_s)
+    params_s.permit(:title)
+  end
+
+  def save_product
+    (Product.find params[:id]).update (basic_product_params params[:attr])
+    render :nothing => true, :status => 200
+  end
+
+  def add_size
+    Product.find(params['pr_id']).sizes << Size.new(size_params (params['size']))
+  end
+
+  def add_logo
+    Product.find(params['pr_id']).logos << Logo.new(logo_params (params))
+  end
+
+  def add_category
+    Product.find(params['pr_id']).categories << Category.new(title_params (params))
+  end
+
+  def add_style
+    Product.find(params['pr_id']).styles << Style.new(title_params (params))
+  end
+
+  def add_material
+    Product.find(params['pr_id']).materials << Material.new(title_params (params))
+  end
+
+  def add_brand
+    Product.find(params['pr_id']).brands << Brand.new(title_params (params))
+  end
+
+  def remove_size
+    Size.find(params[:id]).destroy!
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_logo
+    Logo.find(params[:id]).destroy!
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_category
+    Product.find(params[:pr_id]).categories.delete Category.find(params[:id])
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_style
+    Product.find(params[:pr_id]).styles.delete Style.find(params[:id])
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_material
+    Product.find(params[:pr_id]).materials.delete Material.find(params[:id])
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_brand
+    Product.find(params[:pr_id]).brands.delete Brand.find(params[:id])
+    render :json => {message: 'destroyed'}.to_json, :status => 200
   end
 
   def new_logo

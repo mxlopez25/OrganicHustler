@@ -60,40 +60,10 @@
 
     <!--Status edit field-->
     <div class="form-group">
-      <label style="float: left; width: 10%">Status</label>
-      <label class="radio-inline" style="width: 40%; float: left">
-        <input type="radio" name="statusI" id="status_r1" value="0"
-               <% if product_i.status == 0 %>checked="checked"
-               <% end %>> Draft
-      </label>
-      <label class="radio-inline" style="width: 40%; float: left">
-        <input type="radio" name="statusI" id="status_r2" value="1"
-               <% if product_i.status == 1 %>checked="checked"
-               <% end %>> Live
-      </label>
-    </div>
-
-    <!--Category edit field-->
-    <div class="form-group">
-      <label for="category">Category</label>
-      <select class="form-control" id="category" name="category_edit">
-        <% AdminHelper.get_categories.each do |category| %>
-            <option
-            <% if product_i['category']['value'].eql?(category['title']) %>selected="selected"
-            <% end %> value="<%= category['id'] %>"><%= category['title'] %></option>
-        <% end %>
-      </select>
-    </div>
-
-    <!--Brand edit field-->
-    <div class="form-group">
-      <label for="brand">Brand</label>
-      <select class="form-control" id="category" name="brand_edit">
-        <% AdminHelper.get_brands.each do |brand| %>
-            <option
-            <% if product_i['brand']['value'].eql?(brand['title']) %>selected="selected"
-            <% end %> value="<%= brand['id'] %>"><%= brand['title'] %></option>
-        <% end %>
+      <label for="status_edit" style="float: left; width: 100%">Status</label>
+      <select style="width: 100%" id="status_edit" name="status">
+        <option value="0">Draft</option>
+        <option value="1">Live</option>
       </select>
     </div>
 
@@ -102,29 +72,18 @@
       <label for="price">Price</label>
       <div class="input-group">
         <span class="input-group-addon" id="basic-addon2">$</span>
-        <input class="form-control" type="number" step="any" value="<%= product_i['price']['data']['raw']['without_tax'] %>" id="price_edit" name="price">
+        <input class="form-control" type="number" step="any" value="<%= product_i.price %>" id="price_edit" name="price">
       </div>
     </div>
 
     <!--Tax edit field-->
     <div class="form-group">
-      <label for="tax">Tax band</label>
-      <select class="form-control" id="tax" name="tax_edit">
-        <% AdminHelper.get_taxes.each do |tax| %>
-            <option
-            <% if product_i['tax_band']['value'].eql?(tax['title']) %>selected="selected"
-            <% end %> value="<%= tax['id'] %>"><%= tax['title'] %></option>
+      <label for="tax" style="width: 100%">Tax band</label>
+      <select style="width: 100%" id="tax_edit" name="tax_edit">
+        <% TaxBand.all.each do |tx| %>
+            <option value="<%= tx.id %>"><%= tx.titulo %></option>
         <% end %>
       </select>
-    </div>
-
-    <!--Sale price edit field-->
-    <div class="form-group">
-      <label for="sale_price">Sale price</label>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon2">$</span>
-        <input class="form-control" name="sale_price" type="number" step="any" value="<%= product_i['sale_price'] %>" id="sale_price_edit">
-      </div>
     </div>
 
     <!--Stock level edit field-->
@@ -132,623 +91,494 @@
       <label for="stock_level">Stock level</label>
       <div class="input-group">
         <span class="input-group-addon" id="basic-addon2">#</span>
-        <input class="form-control" type="number" name="stock_level" value="<%= product_i['stock_level'] %>" id="stock_level_edit">
+        <input class="form-control" type="number" name="stock_level" value="<%= product_i.stock %>" id="stock_level_edit">
       </div>
     </div>
-
-    <!--Stock status edit field-->
-    <div class="form-group row">
-      <label for="stock_status" class="col-sm-3 col-label">Stock status</label>
-      <div class="col-sm-9">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio1" value="0"
-                   <% if product_i['stock_status']['data']['key'].eql?('0') %>checked="checked"
-                   <% end %>> Unlimited
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio2" value="1"
-                   <% if product_i['stock_status']['data']['key'].eql?('1') %>checked="checked"
-                   <% end %>> In Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio3" value="2"
-                   <% if product_i['stock_status']['data']['key'].eql?('2') %>checked="checked"
-                   <% end %>> Low Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="3"
-                   <% if product_i['stock_status']['data']['key'].eql?('3') %>checked="checked"
-                   <% end %>> Out Of Stock
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="4"
-                   <% if product_i['stock_status']['data']['key'].eql?('4') %>checked="checked"
-                   <% end %>> More Stock Ordered
-          </label>
-        </div>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="stock_status_edit" id="inlineRadio4" value="5"
-                   <% if product_i['stock_status']['data']['key'].eql?('5') %>checked="checked"
-                   <% end %>> Discontinued
-          </label>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="card modal-h">
-
-
-    <h5><span class="label label-primary">Available logos</span></h5>
-
-    <div id="logo-drop" class="container-menu">
-      <% if get_gallery(product_i['id']).nil? %>
-          <% create_gallery(product_i['id']) %>
-      <% else %>
-          <% get_gallery(product_i['id']).pictures.all.each do |logo| %>
-              <% p logo %>
-              <div class="items-logo-container">
-                <img src="<%= logo.image.url(:thumb) %>" alt="" height="30px">
-              </div>
-          <% end %>
-      <% end %>
-    </div>
-
-    <h5><span class="label label-primary">Available emblems</span></h5>
-
-    <div id="emblems-drop" class="container-menu">
-      <% Emblem.where(id_moltin: @product['id']).each do |logo| %>
-          <% p logo %>
-          <div class="items-emblems-container">
-            <img src="<%= logo.picture.url(:thumb) %>" alt="" height="30px">
-          </div>
-      <% end %>
-    </div>
-
-    <button id="btn_w" onclick="window.location.href = '/support_controllers/add/emblems/<%= product_i['id'] %>'" class="btn btn-success menu-buttons" type="button">Add
-      emblems
-    </button>
-
-    <% unless product_i['is_variation'] %>
-
-        <% variations = ['', '', ''] %>
-        <% product_i['modifiers'].each do |modifiers| %>
-
-            <% if modifiers[1]['title'].eql?('Color')
-                 variations[2] = modifiers
-               elsif modifiers[1]['title'].eql?('Size')
-                 variations[1] = modifiers
-               elsif modifiers[1]['title'].eql?('Logo preset')
-                 variations[0] = modifiers
-               end %>
-
-        <% end %>
-
-        <% unless variations.blank? %>
-            <% unless variations[2].blank? %>
-            <h5><span class="label label-primary">Available colors</span></h5>
-            <div class="container-menu">
-
-              <% unless variations[2][1]['variations'].blank? %>
-                  <% variations[2][1]['variations'].each do |var| %>
-                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" style="background: <%= getJson(var[1]['title'])['code'] %>" type="button"></button>
-                  <% end %>
-              <% end %>
-
-            </div>
-            <% end %>
-
-            <% unless variations[1].blank? %>
-            <h5><span class="label label-primary">Available sizes</span></h5>
-            <div class="container-menu">
-              <% unless variations[1][1]['variations'].blank? %>
-                  <% variations[1][1]['variations'].each do |var| %>
-                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default types-button" type="button"><%= var[1]['title'] %></button>
-                  <% end %>
-              <% end %>
-
-            </div>
-            <% end %>
-
-            <% unless variations[0].blank? %>
-            <h5><span class="label label-primary">Pre created products with logos</span></h5>
-            <div class="container-menu">
-              <% unless variations[0][1]['variations'].blank? %>
-                  <% variations[0][1]['variations'].each do |var| %>
-                      <button onclick="window.location.href = '/admin/edit_variation/<%= product_i['id'] %>/<%= var[0] %>';" class="btn btn-default" type="button">
-                        <% if var[1]['title'].eql?('null') %>
-                            <img src="https://www.cgegifts.co.uk/image/cache/data/logos/no-logo-200x200.jpg" width="40" height="40">
-                        <% else %>
-                            <img src="<%= get_thumb_g_id(getJson(var[1]['title'])['image_id'], :thumb) %>">
-                        <% end %>
-                      </button>
-                  <% end %>
-              <% end %>
-
-            </div>
-        <% end %>
-        <% end %>
-
-
-        <button id="btn_w" onclick="window.location.href = '/admin/add_variation/<%= product_i['id'] %>'" class="btn btn-success menu-buttons" type="button">Add
-          variations
-        </button>
-    <% end %>
-
-    <button id="btn_w" onclick="save(['<%= product_i['id'] %>'])" class="btn btn-success menu-buttons" type="button">Save</button>
-  </div>
-
-  <script id="drop_load">
-
-      function loadLogoDrop() {
-          document.getElementById("logo-drop").className += ' dropzone';
-          var myDropzone = new Dropzone("div#logo-drop", {
-              url: 'add/gallery/logo',
-              autoProcessQueue: true,
-              uploadMultiple: true,
-              parallelUploads: 100,
-              maxFiles: 100,
-              headers: {
-                  'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-              },
-              method: 'put',
-              remote: true,
-
-              // The setting up of the dropzone
-              init: function () {
-                  var myDropzone = this;
-
-                  this.on("sending", function (file, xhr, formData) {
-                      formData.append("id", '<%= product_i['id'] %>');
-                      formData.append("name", 'product..img..set');
-                      formData.append("color", '#ffffff');
-                  });
-                  this.on("success", function (file, xhr) {
-                      this.removeAllFiles();
-                  });
-
-                  // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                  // of the sending event because uploadMultiple is set to true.
-                  this.on("sendingmultiple", function () {
-                      // Gets triggered when the form is actually being sent.
-                      // Hide the success button or the complete form.
-                  });
-                  this.on("successmultiple", function (files, response) {
-                      // Gets triggered when the files have successfully been sent.
-                      // Redirect user or notify of success.
-                  });
-                  this.on("errormultiple", function (files, response) {
-                      // Gets triggered when there was an error sending the files.
-                      // Maybe show form again, and notify user of error
-                  });
-              }
-          });
-      }
-      loadLogoDrop();
-
-  </script>
-
-  <div class="card modal-g">
 
     <div class="form-group">
       <label for="description">Description</label>
-      <textarea rows="3" class="form-control" name="description" id="description_edit"><%= product_i['description'] %></textarea>
+      <textarea rows="3" class="form-control" name="description" id="description_edit"><%= product_i.description %></textarea>
     </div>
+
+    <button onclick="save_1('<%= product_i.id %>')" style="width: 100%" class="btn btn-success">SAVE</button>
+
+    <script>
+        function save_1(id) {
+            $.ajax({
+                url: '/product/edit',
+                type: 'PUT',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    attr: {
+                        title: $('input#title_edit').val(),
+                        sku: $('input#sku_edit').val(),
+                        status: $('input#status_edit').val(),
+                        price: $('input#price_edit').val(),
+                        tax_band: $('input#tax_edit').val(),
+                        stock: $('input#stock_level_edit').val(),
+                        description: $('textarea#description_edit').val()
+                    }
+                },
+                success: function () {
+                    window.location.reload(true);
+                },
+                error: function () {
+                    window.location.reload(true);
+                }
+            });
+        }
+    </script>
+  </div>
+
+  <div class="card modal-h">
+    <h4 class="light-paragraph">Sizes</h4>
+    <div id="sizes_rows">
+      <% product_i.sizes.each do |size| %>
+          <div class="size_row" style="overflow: hidden">
+            <button onclick="remove_size_row(this, <%= size.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <input disabled style="float: left; width: 50%; margin: 0;" value="<%= size.title %>" name="title" id="title">
+            <input disabled step="any" style="float: left; width: 39%; margin: 0;" type="number" value="<%= size.price %>" placeholder="Price" name="price" id="price">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('size_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      SIZE
+    </button>
+
+    <hr>
+
+    <h4 class="light-paragraph">Logos</h4>
+    <div id="logos_rows">
+      <% product_i.logos.each do |logo| %>
+          <div class="logo_row" style="overflow: hidden">
+            <button onclick="remove_logo_row(this, <%= logo.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <img style="float: left; width: 15%; margin: 0;" src="<%= logo.picture(:thumb) %>" name="logo">
+            <input disabled step="any" style="float: left; width: 74%; margin: 0;" type="number" value="<%= logo.price %>" placeholder="Price" name="price" id="price">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('logo_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      LOGO
+    </button>
+
+    <hr>
+
+    <h4 class="light-paragraph">Colors</h4>
+    Work in progress...
+
+    <hr>
+
+    <h4 class="light-paragraph">Categories</h4>
+    <div id="categories_rows">
+      <% product_i.categories.each do |category| %>
+          <div class="categories_row" style="overflow: hidden">
+            <button onclick="remove_category_row(this, <%= category.id %>, <%= product_i.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <input disabled style="float: left; width: 89%; margin: 0;" value="<%= category.title %>" name="title" id="title">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('category_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      CATEGORY
+    </button>
+
+    <hr>
+
+    <h4 class="light-paragraph">Styles</h4>
+    <div id="styles_rows">
+      <% product_i.styles.each do |style| %>
+          <div class="styles_row" style="overflow: hidden">
+            <button onclick="remove_style_row(this, <%= style.id %>, <%= product_i.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <input disabled style="float: left; width: 89%; margin: 0;" value="<%= style.title %>" name="title" id="title">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('style_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      STYLE
+    </button>
+
+    <hr>
+
+    <h4 class="light-paragraph">Materials</h4>
+    <div id="materials_rows">
+      <% product_i.materials.each do |material| %>
+          <div class="materials_row" style="overflow: hidden">
+            <button onclick="remove_material_row(this, <%= material.id %>, <%= product_i.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <input disabled style="float: left; width: 89%; margin: 0;" value="<%= material.title %>" name="title" id="title">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('material_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      MATERIAL
+    </button>
+
+    <hr>
+
+    <h4 class="light-paragraph">Brands</h4>
+    <div id="brands_rows">
+      <% product_i.brands.each do |brand| %>
+          <div class="brands_row" style="overflow: hidden">
+            <button onclick="remove_brand_row(this, <%= brand.id %>, <%= product_i.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
+            <input disabled style="float: left; width: 89%; margin: 0;" value="<%= brand.title %>" name="title" id="title">
+          </div>
+      <% end %>
+    </div>
+    <button onclick="edit_modal('brand_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+      BRAND
+    </button>
+
+    <script>
+
+        function complete_size(id) {
+            return '<div class="size_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">\n' +
+                '               <input step="any" style="float: left; width: 39%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '               <button onclick="save_size_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function complete_logo(id) {
+            return '<div class="logo_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 50%; margin: 0;" type="file" name="file" id="file">\n' +
+                '               <input step="any" style="float: left; width: 39%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '               <button onclick="save_logo_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function complete_category(id) {
+            return '<div class="category_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 89%; margin: 0;" value="" name="title" id="title">\n' +
+                '               <button onclick="save_category_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function complete_style(id) {
+            return '<div class="style_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 89%; margin: 0;" value="" name="title" id="title">\n' +
+                '               <button onclick="save_style_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function complete_material(id) {
+            return '<div class="material_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 89%; margin: 0;" value="" name="title" id="title">\n' +
+                '               <button onclick="save_material_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function complete_brand(id) {
+            return '<div class="brand_row" style="overflow: hidden">\n' +
+                '               <input style="float: left; width: 89%; margin: 0;" value="" name="title" id="title">\n' +
+                '               <button onclick="save_brand_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '   </div>';
+        }
+
+        function remove_size_row(btn, id) {
+            $.ajax({
+                url: '/product/remove/size',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_logo_row(btn, id) {
+            $.ajax({
+                url: '/product/remove/logo',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_category_row(btn, id, pr_id) {
+            $.ajax({
+                url: '/product/remove/category',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    pr_id: pr_id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_style_row(btn, id, pr_id) {
+            $.ajax({
+                url: '/product/remove/style',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    pr_id: pr_id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_material_row(btn, id, pr_id) {
+            $.ajax({
+                url: '/product/remove/material',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    pr_id: pr_id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_brand_row(btn, id, pr_id) {
+            $.ajax({
+                url: '/product/remove/brand',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    pr_id: pr_id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function save_size_row(id, parent) {
+            $.ajax({
+                url: '/product/add/size',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    size: {
+                        title: $(parent).find('#title').val(),
+                        price: $(parent).find('#price').val()
+                    }
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function save_logo_row(id, parent) {
+            var formData = new FormData();
+            formData.append('picture', $(parent).find('#file')[0].files[0]);
+            formData.append('price', $(parent).find('#price').val());
+            formData.append('pr_id', id);
+
+            $.ajax({
+                url: '/product/add/logo',
+                type: 'POST',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function save_category_row(id, parent) {
+            $.ajax({
+                url: '/product/add/category',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    title: $(parent).find('#title').val()
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function save_style_row(id, parent) {
+            $.ajax({
+                url: '/product/add/style',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    title: $(parent).find('#title').val()
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function save_material_row(id, parent) {
+            $.ajax({
+                url: '/product/add/material',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    title: $(parent).find('#title').val()
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function save_brand_row(id, parent) {
+            $.ajax({
+                url: '/product/add/brand',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    title: $(parent).find('#title').val()
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function edit_modal(type, id) {
+            modal = document.getElementById(type);
+            modal.style.display = "block";
+            dim_back.style.display = "block";
+            actual_row_id = id;
+            console.log(type);
+
+            switch (type) {
+                case 'size_modal':
+                    modal.innerHTML = complete_size(id);
+                    break;
+                case 'logo_modal':
+                    modal.innerHTML = complete_logo(id);
+                    break;
+                case 'color_modal':
+                    modal.innerHTML = complete_color(id);
+                    break;
+                case 'category_modal':
+                    modal.innerHTML = complete_category(id);
+                    break;
+                case 'style_modal':
+                    modal.innerHTML = complete_style(id);
+                    break;
+                case 'material_modal':
+                    modal.innerHTML = complete_material(id);
+                    break;
+                case 'brand_modal':
+                    modal.innerHTML = complete_brand(id);
+                    break;
+            }
+
+            window.onclick = function (event) {
+                if (event.target === dim_back) {
+                    modal.style.display = "none";
+                    dim_back.style.display = "none";
+                }
+            };
+        }
+
+    </script>
 
   </div>
 
   <div class="card modal-g">
+    <% product_i.presets.each do |preset| %>
+        <div id="preset-row" style="overflow: auto">
+          <button style="width: 10%; float: left" class="btn btn-danger">-</button>
+          <div id="preset-preview-<%= preset.id %>" onload="load_konva_preview(<%= preset.id %>)">
 
-    <div class="form-group">
-      <label>Images</label>
-      <div id="dropping" style="margin-top: 10px; padding: 10px; border: solid thin lightgray; border-radius: 10px; background: #ffffff; overflow: hidden">
-        <h5><span class="label label-primary">Images</span></h5>
-        <% product_i['images'].each do |image| %>
-            <div style="display: inline-block; position: relative;">
-              <% margins = get_regions(image['id'].to_s) %>
-              <img class="image-blur-ef" onclick="editRegions('<%= image['id'].to_s %>','<%= get_image(image['id'].to_s) %>', <%= margins.left_margin %>, <%= margins.top_margin %>, <%= margins.right_margin %>, <%= margins.bottom_margin %>)" src="https://<%= image['segments']['domain'] %>fit/w120/h120/<%= image['segments']['suffix'] %>" alt="product-image" class="img-thumbnail" style="float: left; margin: 3px;">
-              <button type="button" onclick="delete_s(['<%= product_i['id'].to_s %>', '<%= image['id'].to_s %>'])" style="position: absolute; left: 10px; top: 10px; background: url(https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_delete_48px-128.png); background-size: contain; background-repeat: no-repeat; width: 30px; height: 30px; border: none"></button>
-            </div>
-        <% end %>
-      </div>
+          </div>
+        </div>
+    <% end %>
+    <button class="btn btn-success">ADD PRESET</button>
 
-    </div>
+    <script>
 
-    <div id="container">
+        function load_konva_preview(id) {
+          
+        }
 
-    </div>
+    </script>
 
   </div>
 
-  <div class="card modal-g">
+  <div id="dim_back" class="dim_back">
 
-    <div class="form-group row">
-      <label for="tags" class="col-sm-3 col-label">Tags</label>
-      <div class="input-group col-sm-9">
-        <input class="form-control" data-role="tagsinput" id="tags_edit"
-               name="tags" type="text" value="
-      <% product_i['slug'].split(' ').each do |word| %><%= word %>,
-      <% end %>">
-      </div>
+    <div style="overflow:hidden;" id="size_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="logo_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="color_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="category_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="style_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="material_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="brand_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="preset_modal" class="content_pop">
     </div>
 
   </div>
-
-  <script id="margin">
-
-      function saveVariation(type, variation, id) {
-          $.ajax({
-              url: "/product/save_variation",
-              type: "PUT",
-              data: {
-                  id: id,
-                  type: type,
-                  variation: variation
-              },
-              dataType: "html"
-
-          });
-      }
-
-      function addBaseMargins(group, id, region_left, region_top, region_right, region_bottom, x, y) {
-
-          region_left = (region_left / 100) * x;
-          region_right = (region_right / 100) * x;
-          region_top = (region_top / 100) * y;
-          region_bottom = (region_bottom / 100) * y;
-
-
-          var layer = group.getLayer();
-
-          //left margin
-          var margin_left = new Konva.Rect({
-              width: region_left,
-              height: y,
-              name: 'margin_left',
-              x: 0,
-              y: 0,
-              fill: 'rgba(230,230,230,0.3)'
-          });
-
-          var margin_left_b = new Konva.Line({
-              points: [region_left, 0, region_left, y],
-              stroke: 'grey',
-              strokeWidth: 3,
-              lineJoin: 'round',
-              dash: [20, 10],
-              draggable: true
-          });
-
-          margin_left_b.dragBoundFunc(function (pos) {
-              return {
-                  x: pos.x,
-                  y: this.getAbsolutePosition().y
-              };
-          });
-
-          margin_left_b.on('mouseover', function () {
-              document.body.style.cursor = 'col-resize';
-          });
-
-          margin_left_b.on('mouseout', function () {
-              document.body.style.cursor = 'default';
-          });
-
-          margin_left_b.on('dragmove', function () {
-              margin_left.width(margin_left_b.x() + region_left);
-              layer.draw();
-              console.log(margin_left_b.x())
-          });
-
-          //top margin
-          var margin_top = new Konva.Rect({
-              width: x,
-              height: region_top,
-              name: 'margin_top',
-              x: 0,
-              y: 0,
-              fill: 'rgba(230,230,230,0.3)'
-          });
-
-          var margin_top_b = new Konva.Line({
-              points: [0, region_top, x, region_top],
-              stroke: 'grey',
-              strokeWidth: 3,
-              lineJoin: 'round',
-              dash: [20, 10],
-              draggable: true
-          });
-
-          margin_top_b.dragBoundFunc(function (pos) {
-              return {
-                  x: this.getAbsolutePosition().x,
-                  y: pos.y
-              };
-          });
-
-          margin_top_b.on('mouseover', function () {
-              document.body.style.cursor = 'row-resize';
-          });
-
-          margin_top_b.on('mouseout', function () {
-              document.body.style.cursor = 'default';
-          });
-
-          margin_top_b.on('dragmove', function () {
-              margin_top.height(margin_top_b.y() + region_top);
-              layer.draw();
-              console.log(margin_top_b.y())
-          });
-
-          //margin right
-          var margin_right = new Konva.Rect({
-              width: region_right,
-              height: y,
-              name: 'margin_right',
-              fill: 'rgba(230,230,230,0.3)',
-              offset: {
-                  x: region_right,
-                  y: 0
-              },
-              x: x,
-              y: 0,
-
-          });
-
-          var margin_right_b = new Konva.Line({
-              points: [x - region_right, 0, x - region_right, y],
-              stroke: 'grey',
-              strokeWidth: 3,
-              lineJoin: 'round',
-              dash: [20, 10],
-              draggable: true,
-              zIndex: 99999
-          });
-
-          margin_right_b.dragBoundFunc(function (pos) {
-              return {
-                  x: pos.x,
-                  y: this.getAbsolutePosition().y
-              };
-          });
-
-          margin_right_b.on('mouseover', function () {
-              document.body.style.cursor = 'col-resize';
-          });
-
-          margin_right_b.on('mouseout', function () {
-              document.body.style.cursor = 'default';
-          });
-
-          margin_right_b.on('dragmove', function () {
-              margin_right.width(x + region_right - margin_right.x());
-              margin_right.x(x + margin_right_b.x());
-              layer.draw();
-              console.log(margin_right_b.x())
-          });
-
-          //margin bottom
-          var margin_bottom = new Konva.Rect({
-              width: x,
-              height: region_bottom,
-              name: 'margin_bottom',
-              fill: 'rgba(230,230,230,0.3)',
-              offset: {
-                  x: 0,
-                  y: region_bottom
-              },
-              x: 0,
-              y: y
-          });
-
-          var margin_bottom_b = new Konva.Line({
-              points: [0, y - region_bottom, x, y - region_bottom],
-              stroke: 'grey',
-              strokeWidth: 3,
-              lineJoin: 'round',
-              dash: [20, 10],
-              draggable: true,
-              zIndex: 99999
-          });
-
-          margin_bottom_b.dragBoundFunc(function (pos) {
-              return {
-                  x: this.getAbsolutePosition().x,
-                  y: pos.y
-              };
-          });
-
-          margin_bottom_b.on('mouseover', function () {
-              document.body.style.cursor = 'row-resize';
-          });
-
-          margin_bottom_b.on('mouseout', function () {
-              document.body.style.cursor = 'default';
-          });
-
-          margin_bottom_b.on('dragmove', function () {
-              margin_bottom.height(y + region_bottom - margin_bottom.y());
-              margin_bottom.y(y + margin_bottom_b.y());
-              console.log(margin_bottom_b.y());
-              layer.draw();
-          });
-
-          //Save changes in margins
-          margin_left_b.on('dragend', function () {
-              saveVariation(0, 100 * ((region_left + margin_left_b.x()) / x), id)
-          });
-          margin_top_b.on('dragend', function () {
-              saveVariation(1, 100 * ((region_top + margin_top_b.y()) / y), id)
-          });
-          margin_right_b.on('dragend', function () {
-              saveVariation(2, 100 * ((region_right - margin_right_b.x()) / x), id)
-          });
-          margin_bottom_b.on('dragend', function () {
-              saveVariation(3, 100 * ((region_bottom - margin_bottom_b.y()) / y), id)
-          });
-
-          group.add(margin_left);
-          group.add(margin_left_b);
-          group.add(margin_top);
-          group.add(margin_top_b);
-          group.add(margin_right);
-          group.add(margin_right_b);
-          group.add(margin_bottom);
-          group.add(margin_bottom_b);
-
-      }
-
-      function editRegions(id, img, region_left, region_top, region_right, region_bottom) {
-
-          //container width
-          var width_c = $('#container').width();
-
-          //Creates de canvas with the same width and height
-          const stage = new Konva.Stage({
-              container: 'container',
-              width: width_c,
-              height: width_c + 0,
-              preventDefault: false
-          });
-
-          //Creates de layer where the administrator sets the margins
-          const layer = new Konva.Layer();
-          stage.add(layer);
-
-          //Product image
-          var baseImg = new Konva.Image({
-              width: stage.width(),
-              height: stage.height,
-              preventDefault: false
-          });
-
-          //Holds the product image
-          var baseIGroup = new Konva.Group({
-              x: 0,
-              y: 0,
-              preventDefault: false
-          });
-
-          layer.add(baseIGroup);
-          baseIGroup.add(baseImg);
-
-          //Loads the image
-          var imageBgPro = new Image();
-          imageBgPro.onload = function () {
-              baseImg.image(imageBgPro);
-              baseImg.width(stage.width());
-              baseImg.height(stage.width());
-              layer.draw();
-          };
-
-          imageBgPro.src = img;
-          addBaseMargins(baseIGroup, id, region_left, region_top, region_right, region_bottom, stage.width(), stage.width())
-          layer.draw();
-      }
-
-  </script>
-
-  <script id="load_drop">
-
-
-      function loadDrop() {
-          document.getElementById("dropping").className = 'dropzone';
-          var myDropzone = new Dropzone("div#dropping", {
-              url: '/product/upload_image?imageO=true&id='.concat('<%= product_i['id'] %>'),
-              autoProcessQueue: true,
-              uploadMultiple: false,
-              parallelUploads: 100,
-              maxFiles: 100,
-              headers: {
-                  'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-              },
-              method: 'put',
-              remote: true,
-
-              // The setting up of the dropzone
-              init: function () {
-                  var myDropzone = this;
-
-                  // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-                  // of the sending event because uploadMultiple is set to true.
-                  this.on("sendingmultiple", function () {
-                      // Gets triggered when the form is actually being sent.
-                      // Hide the success button or the complete form.
-                  });
-                  this.on("successmultiple", function (files, response) {
-                      // Gets triggered when the files have successfully been sent.
-                      // Redirect user or notify of success.
-                  });
-                  this.on("errormultiple", function (files, response) {
-                      // Gets triggered when there was an error sending the files.
-                      // Maybe show form again, and notify user of error
-                  });
-              }
-          });
-      }
-
-      function save(id) {
-
-          $.ajax({
-              url: "/product/edit/product",
-              type: "PUT",
-              data: {
-                  id: id[0],
-                  title: $("#title_edit").val(),
-                  sku: $("#sku_edit").val(),
-                  status: $('input:radio[name="statusI"]:checked').val(),
-                  category: $('select[name="category_edit"]').val(),
-                  brand: $('select[name="brand_edit"]').val(),
-                  price: $("#price_edit").val(),
-                  tax_band: $('select[name="tax_edit"]').val(),
-                  sale_price: $("#sale_price_edit").val(),
-                  stock_level: $("#stock_level_edit").val(),
-                  stock_status: $('input:radio[name="stock_status_edit"]:checked').val(),
-                  description: $("#description_edit").val(),
-                  slug: $('#tags_edit').val()
-              },
-              dataType: "html",
-              success: function (data) {
-                  window.location.href = '/admin/product/' + id;
-              }
-          });
-          $("#edit_product").modal('hide');
-      }
-
-      function delete_s(product) {
-
-          $.ajax({
-              url: "/custom/delete_image_control",
-              type: "GET",
-              data: {
-                  pro_id: '<%= product_i['id'].to_s %>',
-                  pro_image_id: product[1]
-              },
-              dataType: "html",
-              success: function (data) {
-                  console.log(data);
-                  $("#dropping").html(data);
-                  loadDrop();
-              }
-          });
-      }
-
-      loadDrop();
-
-
-  </script>
-
 
 </div>
 </body>

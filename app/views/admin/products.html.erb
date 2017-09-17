@@ -104,7 +104,7 @@
             </td>
             <td>
               <% unless product.colors[0].blank? %>
-                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="<%= product.colors[0].product_images[0].picture %>"></span>
+                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="<%= product.product_image_id %>"></span>
               <% end %>
             </td>
             <td><%= product.title %></td>
