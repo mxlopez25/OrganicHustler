@@ -68,6 +68,16 @@ class HomeController < ApplicationController
     render json: presets.to_json
   end
 
+  def get_colors_product
+    colors = (Product.find params['product_id']).colors
+    render json: colors.to_json
+  end
+
+  def get_logos_product
+    logos = (Product.find params['product_id']).logos
+    render json: logos.to_json
+  end
+
   def get_color_images_main
     picture = (Color.find params['color_id']).product_images.where(main: true).first
     render json: ({data: picture, picture: picture.picture}).to_json

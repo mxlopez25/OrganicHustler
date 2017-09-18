@@ -64,11 +64,11 @@
                 var html_items = '';
                 for (var id in data) {
                     var item = data[id];
-                    html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick_1(\'' + item.id + '\')">'
+                    html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick(\'' + item.id + '\', 1)">'
                         + '<img class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
                         + '<h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px">' + item.title + '</h5>'
                         + '<h5 style="font-size: 16px; color: #ba97a6; font-family: \'Source Sans Pro\', sans-serif; font-weight: 600">$' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'
-                        + '<button onclick="open_quick_1(\'' + item.id + '\')" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
+                        + '<button onclick="open_quick(\'' + item.id + '\', 1)" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
                         + '</div>';
                     document.getElementById('items').innerHTML = html_items;
                 }
@@ -89,7 +89,7 @@
   <!-- Modal content -->
   <div id="modal-content-center" class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
     <div id="general_p_content" class="g-wrapper" style="position: relative">
-      <span onclick="close_modal()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
+      <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
       <div id="product_display" class="wrapper-side">
         <div class="image-container-quick" id="image-container">
         </div>
@@ -113,7 +113,7 @@
       </div>
       <div id="layers" class="wrapper-side">
 
-        <div id="view_1">
+        <div style="display: none" id="view_1">
           <div class="wrap">
             <h5 id="product_title" class="text-uppercase text_light_20"></h5>
             <h5 id="product_price" class="text_light_pink"></h5>
@@ -166,7 +166,8 @@
             </div>
 
             <div>
-              <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="open_quick_2()">CUSTOMIZE IT
+              <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_view_2(product.data)">CUSTOMIZE
+                IT
               </button>
               <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART
               </button>
@@ -174,9 +175,67 @@
           </div>
         </div>
 
-        <div id="view_2"></div>
+        <div style="display: none" id="view_2">
+          <div class="wrap">
+            <h6 style="font-weight: bold">Select color(s):</h6>
+            <div id="checkboxes-color">
+            </div>
+            <div id="controllers" style="float: left; width: 100%">
+              <div style="margin-left: auto; margin-right: auto; text-align: center">
+                <button id="minus-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-minus"></div>
+                </button>
+                <button id="plus-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-plus"></div>
+                </button>
+                <button id="left-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-left"></div>
+                </button>
+                <button id="right-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-right"></div>
+                </button>
+                <button id="down-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-down"></div>
+                </button>
+                <button id="up-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-up"></div>
+                </button>
+              </div>
+            </div>
+            <div style="width: 100%; text-align: center">
+              <button id="share" class="styling_btn btn">SHARE
+              </button>
+            </div>
+            <hr class="pro">
+            <div id="icon-show-logos" class="hidden">
+              <h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
+            <div id="icon-hide-logos"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
 
-        <div id="view_3"></div>
+            <div id="icon_loader-logos" class="jcarousel-wrapper row">
+              <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%; height: 70px" id="preview_preset_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-logos" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div id="selection-btn-s">
+              <button onclick="start_over()" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
+                <span class="cell-btn">START OVER</span></button>
+              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
+                DONE
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="display: none" id="view_3"></div>
 
       </div>
     </div>
@@ -222,6 +281,9 @@
     })(this, jQuery);
 
     var default_modal = document.getElementById('modal-content-center').cloneNode(true);
+    var view_1 = document.getElementById('view_1').cloneNode(true);
+    var view_2 = document.getElementById('view_2').cloneNode(true);
+    var view_3 = document.getElementById('view_3').cloneNode(true);
 
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
@@ -251,21 +313,23 @@
 
     //Main product
     var product = {
+        data: null,
         product_id: null,
         color_id: null,
         logo_id: null,
         logo_x: null,
         logo_y: null,
-        multiplexer: null,
+        multiplexer: 1,
         emblem_id: null,
         size_id: null,
         remove: function () {
+            this.data = null;
             this.product_id = null;
             this.color_id = null;
             this.logo_id = null;
             this.logo_x = null;
             this.logo_y = null;
-            this.multiplexer = null;
+            this.multiplexer = 1;
             this.emblem_id = null;
             this.size_id = null;
         }
@@ -698,54 +762,6 @@
             }
         }
 
-        document.getElementById('general_p_content').innerHTML =
-            '<i onclick="back_p1()" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; top: 10px; left: 10px" class="fa fa-chevron-left" aria-hidden="true"></i>'
-            + '<div id="wrapper-side-2" class="wrapper-side">'
-            + '<div class="image-container-quick" id="image-container-quick-2" style="padding: 0;">'
-            + '</div>'
-            + '</div>'
-            + '<div class="content-part" style="padding: 0">'
-            + '<h6 style="font-weight: bold">Select color(s):</h6>'
-            + '<input type="checkbox" id="select-all" name="cd" checked>'
-            + '<label for="select-all" style="font-family: \'Open Sans\', \'Helvetica Neue\', Arial, sans-serif; font-size: 10px;">Select all colors</label>'
-            + '<div id="checkboxes-color">'
-            + '</div>'
-            + '<div id="controllers" style="float: left; width: 100%">'
-            + '<div style="margin-left: auto; margin-right: auto; text-align: center">'
-            + '<button id="minus-btn" class="direction border-bg-sty resizable"><div class="fa fa-minus"></div></button>'
-            + '<button id="plus-btn" class="direction border-bg-sty resizable"><div class="fa fa-plus"></div></button>'
-            + '<button id="left-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-left"></div></button>'
-            + '<button id="right-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-right"></div></button>'
-            + '<button id="down-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-down"></div></button>'
-            + '<button id="up-btn" class="direction border-bg-sty resizable"><div class="fa fa-chevron-up"></div></button>'
-            + '</div>'
-            + '</div>'
-            + '<div style="width: 100%; text-align: center">'
-            + '<button id="share" class="styling_btn btn">'
-            + 'SHARE'
-            + '</button>'
-            + '</div>'
-            + '<hr class="pro">'
-            + '<div id="icon-show" class="hidden"><h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>'
-            + '<div id="icon-hide"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>'
-            + '<div id="icon_loader" class="jcarousel-wrapper row">'
-            + '<div id="myCarousel" class="jcarousel" data-jcarousel="true">'
-            + '<ul id="container-logo" style="left: 0; top: 0;">'
-            + '</ul>'
-            + '</div>'
-            + '<button style="border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">'
-            + '<i class="fa fa-chevron-left" aria-hidden="true"></i></button>'
-            + '<button style="border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">'
-            + '<i class="fa fa-chevron-right" aria-hidden="true"></i></button>'
-            + '</div>'
-            + '<div id="selection-btn-s">'
-            + '<button id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">'
-            + '<span class="cell-btn">START OVER</span></button>'
-            + '<button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">'
-            + 'DONE</button>'
-            + '</div>'
-            + '</div>';
-
         load_available_colors(variations);
         load_available_logos();
 
@@ -835,79 +851,362 @@
         layer = new Konva.Layer();
         stage.add(layer);
 
-        var anim_zoom_in = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                var image = selected.get('.image')[0];
-                var border = selected.get('.borders')[0];
 
-                selected.width(image.width() + image.width() * frame.timeDiff / 1000);
-                selected.height(image.height() + image.height() * frame.timeDiff / 1000);
+        btn_restart.on('click', function () {
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].destroy();
 
-                border.width(image.width() + image.width() * frame.timeDiff / 1000);
-                border.height(image.height() + image.height() * frame.timeDiff / 1000);
+                product.logo = null;
 
-                image.width(image.width() + image.width() * frame.timeDiff / 1000);
-                image.height(image.height() + image.height() * frame.timeDiff / 1000);
-
-                product.logo.width = image.width();
-                product.logo.height = image.height();
+                layer.draw();
             }
-        }, layer);
+        });
+
+        var baseImg = new Konva.Image({
+            width: stage.width(),
+            height: stage.height(),
+            preventDefault: false,
+            draggable: false
+        });
+
+        layer.add(baseImg);
+
+        var imageBgPro = new Image();
+        imageBgPro.onload = function () {
+
+            baseImg.image(imageBgPro);
+            layer.draw();
+        };
+        imageBgPro.src = product.data['images'][0]['url']['https'];
+
+        if (product.logo) {
+            $.ajax({
+                type: "get",
+                url: "/catalog/get_image?id=" + product.logo.logo_id,
+                data: {},
+                dataType: "html",
+                success: function (data) {
+                    addToPic(data, product.logo.logo_id);
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+        if (product.emblem) {
+            imageObj = null;
+            emblemImg = null;
+            add_emblem_item(product.emblem.data, layer);
+            LAYER.draw();
+        }
+
+        fitStageIntoParentContainer_edit();
+        window.addEventListener('resize', fitStageIntoParentContainer_edit);
+    }
+
+    function open_quick(pr, view) {
+        $.ajax({
+            type: "get",
+            url: "/catalog/item/" + pr,
+            data: {},
+            success: function (data) {
+
+                console.log(data);
+                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+
+                //product.product_id = data['id'];
+                //product.data = data;
+                //load_p1(product, false);
+
+                product.remove();
+
+                product.product_id = data.id;
+                product.color_id = data.main_color.id;
+                product.data = data;
+
+                load_viewer();
+                load_image_carousel(data);
+                switch (view) {
+                    case 1:
+                        load_view_1(data);
+                        break;
+                    case 2:
+                        load_view_2(data);
+                        break;
+                    case 3:
+                        load_view_3(data);
+                        break;
+                }
+
+                return false
+            },
+            error: function (data) {
+                return false
+            }
+        });
+        var body = $("body");
+        body.addClass("modal-open");
+        body.css('overflow', 'hidden');
+        modal_quick.style.display = "block";
+    }
+
+    function load_data_preset(color_id, logo_id, x, y, multiplexer) {
+
+        var id = product.product_id;
+        var size = product.size_id;
+        var data = product.data;
+
+        product.remove();
+
+        product.product_id = id;
+        product.size_id = size;
+        product.data = data;
+
+        product.color_id = color_id;
+        product.logo_id = logo_id;
+        product.logo_x = parseFloat(x);
+        product.logo_y = parseFloat(y);
+        product.multiplexer = parseFloat(multiplexer);
+        load_viewer();
+
+    }
+
+    function load_viewer() {
+        var stageWidth = 500;
+        var stageHeight = 500;
+
+        STAGE = new Konva.Stage({
+            container: 'image-container',
+            width: stageWidth,
+            height: stageHeight
+        });
+        LAYER = new Konva.Layer();
+        STAGE.add(LAYER);
+
+        var baseImg = new Konva.Image({
+            width: STAGE.width(),
+            height: STAGE.height(),
+            draggable: false
+        });
+        LAYER.add(baseImg);
+
+        var imageBase = new Image();
+        imageBase.onload = function () {
+            baseImg.image(imageBase);
+            LAYER.draw();
+        };
+
+        $.ajax({
+            url: '/catalog/product/color/main_image?color_id=' + product.color_id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                imageBase.src = data.picture;
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+        if (product.logo_id) {
+
+            ACTUAL_LOGO = new Konva.Image({
+                x: product.logo_x,
+                y: product.logo_y,
+                draggable: true
+            });
+            LAYER.add(ACTUAL_LOGO);
+
+            var imageLogo = new Image();
+            imageLogo.onload = function () {
+                ACTUAL_LOGO.image(imageLogo);
+                ACTUAL_LOGO.setWidth(this.width);
+                ACTUAL_LOGO.setHeight(this.height);
+                ACTUAL_LOGO.scale({
+                    x: product.multiplexer,
+                    y: product.multiplexer
+                });
+                LAYER.draw()
+            };
+
+            $.ajax({
+                url: '/catalog/product/logo?logo_id=' + product.logo_id,
+                type: 'GET',
+                dataType: 'text',
+                data: {},
+                success: function (data) {
+                    imageLogo.src = data
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        }
+
+        fitStageIntoParentContainer();
+        window.addEventListener('resize', fitStageIntoParentContainer);
+    }
+
+    function load_view_3(product) {
+
+        document.getElementById('view_3').outerHTML = view_3.outerHTML;
+
+        document.getElementById('view_1').style.display = 'none';
+        document.getElementById('view_2').style.display = 'none';
+        document.getElementById('view_3').style.display = 'block';
+    }
+
+    var ACTUAL_LOGO = null;
+
+    function load_view_2(product_) {
+
+        document.getElementById('view_2').outerHTML = view_2.outerHTML;
+
+        document.getElementById('view_1').style.display = 'none';
+        document.getElementById('view_3').style.display = 'none';
+        document.getElementById('view_2').style.display = 'block';
+
+
+        var actor = document.getElementById('actor');
+        var new_element = actor.cloneNode(true);
+        new_element.addEventListener("click", function () {
+            load_view_1(product_)
+        });
+        new_element.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
+        actor.parentNode.replaceChild(new_element, actor);
+
+        load_colors(product_.id);
+
+        $.ajax({
+            url: '/catalog/product/logos?product_id=' + product.product_id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var carousel_jq = $('ul#container-logos');
+
+                for (var i = 0; i < data.length; i++) {
+                    carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\')"></li>');
+                }
+
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_size_cr_carousel').jcarousel('reload');
+            },
+            error: function (data) {
+
+            }
+        });
+
+        var iconShow = $("#icon-show-logos");
+        var iconHide = $("#icon-hide-logos");
+        var loader = $("#icon_loader-logos");
+
+        iconShow.click(function () {
+            loader.animate({
+                height: 70
+            }, 100, function () {
+                loader.css({
+                    overflow: 'visible'
+                });
+            });
+            iconShow.addClass(" hidden");
+            iconHide.removeClass(" hidden");
+        });
+
+        iconHide.click(function () {
+            loader.animate({
+                height: 0
+            }, 100, function () {
+                loader.css({
+                    overflow: 'hidden'
+                });
+            });
+            iconHide.addClass(" hidden");
+            iconShow.removeClass(" hidden");
+        });
+
+        var anim_zoom_in = new Konva.Animation(function (frame) {
+            if (ACTUAL_LOGO !== null) {
+                ACTUAL_LOGO.scale({
+                    x: product.multiplexer + 0.0005 * frame.timeDiff,
+                    y: product.multiplexer + 0.0005 * frame.timeDiff
+                });
+                LAYER.draw();
+
+                console.log(product.multiplexer)
+                product.multiplexer = product.multiplexer + 0.0005 * frame.timeDiff;
+            }
+        }, LAYER);
 
         var anim_zoom_out = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                var image = selected.get('.image')[0];
-                var border = selected.get('.borders')[0];
+            if (ACTUAL_LOGO !== null) {
 
-                selected.width(image.width() - image.width() * frame.timeDiff / 1000);
-                selected.height(image.height() - image.height() * frame.timeDiff / 1000);
+                ACTUAL_LOGO.scale({
+                    x: product.multiplexer - 0.0005 * frame.timeDiff,
+                    y: product.multiplexer - 0.0005 * frame.timeDiff
+                });
+                LAYER.draw();
 
-                border.width(image.width() - image.width() * frame.timeDiff / 1000);
-                border.height(image.height() - image.height() * frame.timeDiff / 1000);
-
-                image.width(image.width() - image.width() * frame.timeDiff / 1000);
-                image.height(image.height() - image.height() * frame.timeDiff / 1000);
-
-                product.logo.width = image.width();
-                product.logo.height = image.height();
+                product.multiplexer = product.multiplexer - 0.0005 * frame.timeDiff;
             }
-        }, layer);
+        }, LAYER);
 
         var anim_right = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                selected.x(selected.x() + (65 * frame.timeDiff / 1000));
+            console.log(ACTUAL_LOGO);
+            if (ACTUAL_LOGO !== null) {
+                ACTUAL_LOGO.x(ACTUAL_LOGO.x() + (65 * frame.timeDiff / 1000));
+                LAYER.draw();
 
-                product.logo.x = selected.x();
-                product.logo.y = selected.y();
+                console.log(ACTUAL_LOGO.x());
+                product.logo_x = ACTUAL_LOGO.x();
+                product.logo_y = ACTUAL_LOGO.y();
             }
-        }, layer);
+        }, LAYER);
 
         var anim_left = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                selected.x(selected.x() - (65 * frame.timeDiff / 1000));
+            if (ACTUAL_LOGO !== null) {
+                ACTUAL_LOGO.x(ACTUAL_LOGO.x() - (65 * frame.timeDiff / 1000));
+                LAYER.draw();
 
-                product.logo.x = selected.x();
-                product.logo.y = selected.y();
+                product.logo_x = ACTUAL_LOGO.x();
+                product.logo_y = ACTUAL_LOGO.y();
             }
-        }, layer);
+        }, LAYER);
 
         var anim_up = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                selected.y(selected.y() - (65 * frame.timeDiff / 1000));
+            if (ACTUAL_LOGO !== null) {
+                ACTUAL_LOGO.y(ACTUAL_LOGO.y() - (65 * frame.timeDiff / 1000));
+                LAYER.draw();
 
-                product.logo.x = selected.x();
-                product.logo.y = selected.y();
+                product.logo_x = ACTUAL_LOGO.x();
+                product.logo_y = ACTUAL_LOGO.y();
             }
-        }, layer);
+        }, LAYER);
 
         var anim_down = new Konva.Animation(function (frame) {
-            if (selected !== null) {
-                selected.y(selected.y() + (65 * frame.timeDiff / 1000));
+            if (ACTUAL_LOGO !== null) {
+                ACTUAL_LOGO.y(ACTUAL_LOGO.y() + (65 * frame.timeDiff / 1000));
+                LAYER.draw();
 
-                product.logo.x = selected.x();
-                product.logo.y = selected.y();
+                product.logo_x = ACTUAL_LOGO.x();
+                product.logo_y = ACTUAL_LOGO.y();
             }
-        }, layer);
+        }, LAYER);
 
         var btn_up = $("#up-btn");
         var btn_down = $("#down-btn");
@@ -965,191 +1264,75 @@
             anim_right.stop();
         });
 
-        btn_restart.on('click', function () {
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].destroy();
-
-                logo.remove();
-                product.logo = null;
-
-                layer.draw();
-            }
-        });
-
-        var baseImg = new Konva.Image({
-            width: stage.width(),
-            height: stage.height(),
-            preventDefault: false,
-            draggable: false
-        });
-
-        layer.add(baseImg);
-
-        var imageBgPro = new Image();
-        imageBgPro.onload = function () {
-
-            baseImg.image(imageBgPro);
-            layer.draw();
-        };
-        imageBgPro.src = product.data['images'][0]['url']['https'];
-
-        if (product.logo) {
-            $.ajax({
-                type: "get",
-                url: "/catalog/get_image?id=" + product.logo.logo_id,
-                data: {},
-                dataType: "html",
-                success: function (data) {
-                    addToPic(data, product.logo.logo_id);
-                },
-                error: function (data) {
-                }
-            });
-        }
-
-        if (product.emblem) {
-            imageObj = null;
-            emblemImg = null;
-            add_emblem_item(product.emblem.data, layer);
-            LAYER.draw();
-        }
-
-        fitStageIntoParentContainer_edit();
-        window.addEventListener('resize', fitStageIntoParentContainer_edit);
     }
 
-    function open_quick_1(pr) {
+    function change_source(id) {
+        product.color_id = id;
+        load_viewer();
+        load_colors(product.product_id);
+    }
+
+    function load_colors(id) {
         $.ajax({
-            type: "get",
-            url: "/catalog/item/" + pr,
-            data: {},
-            success: function (data) {
-
-                console.log(data);
-                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
-
-                //product.product_id = data['id'];
-                //product.data = data;
-                //load_p1(product, false);
-
-                product.remove();
-
-                product.product_id = data.id
-                product.color_id = data.main_color.id
-
-                load_viewer();
-                load_image_carousel(data);
-                load_view_1(data);
-
-                return false
-            },
-            error: function (data) {
-                return false
-            }
-        });
-        var body = $("body");
-        body.addClass("modal-open");
-        body.css('overflow', 'hidden');
-        modal_quick.style.display = "block";
-    }
-
-    function load_data_preset(color_id, logo_id, x, y, multiplexer) {
-
-        var id = product.product_id;
-        var size = product.size_id;
-
-        product.remove();
-
-        product.product_id = id;
-        product.size_id = size;
-
-        product.color_id = color_id;
-        product.logo_id = logo_id;
-        product.logo_x = x;
-        product.logo_y = y;
-        product.multiplexer = multiplexer;
-        load_viewer()
-
-    }
-
-    function load_viewer() {
-        var stageWidth = 500;
-        var stageHeight = 500;
-
-        STAGE = new Konva.Stage({
-            container: 'image-container',
-            width: stageWidth,
-            height: stageHeight
-        });
-        LAYER = new Konva.Layer();
-        STAGE.add(LAYER);
-
-        var baseImg = new Konva.Image({
-            width: STAGE.width(),
-            height: STAGE.height(),
-            draggable: false
-        });
-        LAYER.add(baseImg);
-
-        var imageBase = new Image();
-        imageBase.onload = function () {
-            baseImg.image(imageBase);
-            LAYER.draw();
-        };
-
-        $.ajax({
-            url: '/catalog/product/color/main_image?color_id=' + product.color_id,
-            type: 'GET',
+            url: '/catalog/product/colors?product_id=' + id,
+            method: 'get',
             dataType: 'json',
-            data: {},
             success: function (data) {
-                imageBase.src = data.picture;
+
+                var div_color_container = $('div#checkboxes-color');
+                div_color_container.html('');
+
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].id.toString() === product.color_id.toString()) {
+                        div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                            '<div id="color-picker" class="">' +
+                            '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
+                            '</div>' +
+                            '</div>');
+                    } else {
+                        div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                            '<div id="color-picker" class="">' +
+
+                            '</div>' +
+                            '</div>');
+                    }
+                }
             },
-            error: function (data) {
-                console.log(data);
+            error: function () {
+
             }
         });
+    }
 
-        if (product.logo_id) {
+    function load_data_logos(logo_id) {
+        product.logo_id = logo_id;
+        load_viewer();
+    }
 
-            var logoImg = new Konva.Image({
-                x: product.logo_x,
-                y: product.logo_y
-            });
-            LAYER.add(logoImg);
-
-            var imageLogo = new Image();
-            imageLogo.onload = function () {
-                logoImg.image(imageLogo);
-                logoImg.setWidth(this.width);
-                logoImg.setHeight(this.height);
-                logoImg.scale({
-                    x: product.multiplexer,
-                    y: product.multiplexer
-                });
-                LAYER.draw()
-            };
-
-            $.ajax({
-                url: '/catalog/product/logo?logo_id=' + product.logo_id,
-                type: 'GET',
-                dataType: 'text',
-                data: {},
-                success: function (data) {
-                    imageLogo.src = data
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-
-        }
-
-        fitStageIntoParentContainer();
-        window.addEventListener('resize', fitStageIntoParentContainer);
+    function start_over() {
+        product.logo_id = null;
+        product.multiplexer = 1;
+        product.logo_x = null;
+        product.logo_y = null;
+        load_viewer();
     }
 
     function load_view_1(product) {
+
+        document.getElementById('view_1').outerHTML = view_1.outerHTML;
+
+        var actor = document.getElementById('actor');
+        var new_element = actor.cloneNode(true);
+        new_element.addEventListener("click", function () {
+            close_modal()
+        });
+        new_element.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+        actor.parentNode.replaceChild(new_element, actor);
+
+        document.getElementById('view_1').style.display = 'block';
+        document.getElementById('view_2').style.display = 'none';
+        document.getElementById('view_3').style.display = 'none';
+
         document.getElementById('product_title').innerHTML = product.title;
         document.getElementById('product_price').innerHTML = '$' + product.price;
         var description = document.getElementById('product_description').getElementsByTagName('span');
@@ -1179,7 +1362,6 @@
             success: function (data) {
                 console.log(data);
 
-                var html_images = '';
                 var carousel_jq = $('ul#container-sizes');
 
                 for (var i = 0; i < data.length; i++) {
@@ -1376,7 +1558,6 @@
 
     var ACTUAL_IMAGE_PREVIEW = null;
 
-
     function load_image_carousel(product) {
         $.ajax({
             url: '/catalog/product/images?product_id=' + product.id,
@@ -1413,7 +1594,6 @@
         });
     }
 
-
     function show_preview(src) {
 
         ACTUAL_IMAGE_PREVIEW = new Konva.Image({
@@ -1438,33 +1618,6 @@
     function hide_preview() {
         ACTUAL_IMAGE_PREVIEW.destroy();
         LAYER.draw()
-    }
-
-
-    function open_quick_2(pr) {
-        $.ajax({
-            type: "get",
-            url: "/catalog/item/" + pr,
-            data: {},
-            success: function (data) {
-
-                product.product_id = data['id'];
-                if (!data['is_variation']) {
-                    product.product_base_id = data['id'];
-                }
-                product.data = data;
-
-                load_p2(product);
-
-                return false
-            },
-            error: function (data) {
-                return false
-            }
-        });
-        $("body").addClass("modal-open");
-        $('body').css('overflow', 'hidden');
-        modal_quick.style.display = "block";
     }
 
     function addToCart() {
@@ -1505,77 +1658,6 @@
                 $(spans[i]).removeClass('badge_selected');
             }
         }
-    }
-
-    function load_available_colors(variations) {
-        if (variations.length > 0) {
-            var colors = '';
-            console.log(variations[2]['variations']);
-
-            $.ajax({
-                url: '/catalog/product/colored/' + product.product_base_id + '/' + variations[2]['id'] + '/' + product.product_id,
-                method: 'get',
-                dataType: 'json',
-                success: function (data) {
-                    for (var attr in variations[2]['variations']) {
-                        var changes = JSON.parse(variations[2]['variations'][attr]['title']);
-
-                        var id_var = variations[2]['variations'][attr]['id'];
-                        console.log(id_var);
-
-                        var mark = '';
-                        if (data[id_var][0] === true) {
-                            mark = '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>'
-                        }
-
-                        colors = colors
-                            + '<div onclick="change_source(\'' + data[id_var][1].toString() + '\')" style="background: ' + changes['code'] + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left">'
-                            + '<div id="color-picker" class="">'
-                            + mark
-                            + '</div>'
-                            + '</div>'
-                    }
-
-                    document.getElementById('checkboxes-color').innerHTML = colors;
-                },
-                error: function () {
-
-                }
-            });
-
-            return colors;
-        }
-    }
-
-    function change_source(values) {
-
-        product.product_id = values;
-        open_quick_2(product.product_id);
-    }
-
-    function load_available_logos() {
-
-        $.ajax({
-            type: "get",
-            url: "/catalog/logos/" + product.product_base_id,
-            data: {},
-            success: function (data) {
-
-                var logos = '';
-
-                for (var i = 0; i < data.length; i++) {
-                    logos = logos + '<li class="items-scroll-container">'
-                        + '<img onclick="addToPic(\'' + data[i]['url'][0].toString() + '\', ' + data[i]['id'] + ')" src="' + data[i]['url'][1] + '" alt="" height="30">'
-                        + '</li>'
-                }
-                document.getElementById('container-logo').innerHTML = logos;
-
-                $('.jcarousel').jcarousel('reload', {
-                    animation: 'slow'
-                });
-
-            }
-        });
     }
 
     function addToPic(imageToAdd, imageId) {
