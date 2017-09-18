@@ -29,6 +29,19 @@ class Product < ApplicationRecord
     images
   end
 
+  def self.get_all_images_colors(id)
+    colors = Color.where(product_id: id)
+    colors_array = []
+    colors.each do |color|
+      color_obj = {color: color, pictures: []}
+      color.product_images.each do |pictures|
+        color_obj[:pictures].push({data: pictures, url: [pictures.picture(:thumb), pictures.picture]})
+      end
+      colors_array.push color_obj
+    end
+    colors_array
+  end
+
   def self.get_all_sizes(id)
     sizes = (Product.find id).sizes
     sizes

@@ -45,6 +45,9 @@ Rails.application.routes.draw do
   get '/admin/edit_variation/:source_product/:variation_id' => 'admin#modify_variation'
   get '/admin/add_variation/:source_product' => 'admin#add_variation'
 
+  get '/admin/products/color_images' => 'admin#get_images_colors'
+  get '/admin/products/logos' => 'admin#get_logos'
+
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
   post '/admin/product/new' => 'admin#new_product'
   post '/admin/mailer' => 'admin#mailer_send'
@@ -83,6 +86,9 @@ Rails.application.routes.draw do
 
   post '/product/remove/brand' => 'product#remove_brand'
   post '/product/add/brand' => 'product#add_brand'
+
+  post '/product/add/preset' => 'product#add_preset'
+  post '/product/remove/preset' => 'product#remove_preset'
 
   put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'

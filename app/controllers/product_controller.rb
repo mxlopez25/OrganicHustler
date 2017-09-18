@@ -69,6 +69,10 @@ class ProductController < ApplicationController
     params_s.permit(:title)
   end
 
+  def preset_params(preset_params)
+    preset_params.permit(:x, :y, :multiplexer, :logo_id, :color_id)
+  end
+
   def save_product
     (Product.find params[:id]).update (basic_product_params params[:attr])
     render :nothing => true, :status => 200
@@ -98,6 +102,10 @@ class ProductController < ApplicationController
     Product.find(params['pr_id']).brands << Brand.new(title_params (params))
   end
 
+  def add_preset
+    Product.find(params['pr_id']).presets << Preset.new(preset_params params)
+  end
+
   def remove_size
     Size.find(params[:id]).destroy!
     render :json => {message: 'destroyed'}.to_json, :status => 200
@@ -125,6 +133,11 @@ class ProductController < ApplicationController
 
   def remove_brand
     Product.find(params[:pr_id]).brands.delete Brand.find(params[:id])
+    render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_preset
+    Preset.find(params[:id]).destroy!
     render :json => {message: 'destroyed'}.to_json, :status => 200
   end
 

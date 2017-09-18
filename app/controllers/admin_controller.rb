@@ -55,6 +55,15 @@ class AdminController < ApplicationController
     render 'admin/products_functions/edit_product'
   end
 
+  def get_images_colors
+    images = Product.get_all_images_colors params['product_id']
+    render json: images.to_json
+  end
+
+  def get_logos
+    render json: (Product.find params['product_id']).logos.to_json
+  end
+
   def modify_variation
     @id = params['variation_id']
     @product = params['source_product']
