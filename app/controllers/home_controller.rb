@@ -23,7 +23,6 @@ class HomeController < ApplicationController
     end
 
     render json: variations_obj.to_json
-
   end
 
   def emblems
@@ -64,32 +63,26 @@ class HomeController < ApplicationController
     render json: sizes.to_json
   end
 
+  def get_presets_product
+    presets = (Product.find params['product_id']).presets
+    render json: presets.to_json
+  end
+
+  def get_color_images_main
+    picture = (Color.find params['color_id']).product_images.where(main: true).first
+    render json: ({data: picture, picture: picture.picture}).to_json
+  end
+
+  def get_preset_logo
+    picture = (Logo.find params['logo_id']).picture
+    render text: picture.to_s.html_safe
+  end
+
   def catalog_item
-    al = Product.find(params['id']).as_json
-    al['variation_pp'] = false
-    al['source_p'] = params['id']
-    al['product_id_e'] = params['id']
-    if al['is_variation']
-      al['source_p'] = al['modifiers'].first[1]['product']
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-      al['modifiers'] = JSON.parse(response.body)['result']['modifiers']
-    end
-    if params['variation_ma'].eql?('false')
-      al['variation_pp'] = true
-      al['image_id'] = params['logo_id']
-      al['width_u'] = params['width']
-      al['height_u'] = params['height']
-      al['x_u'] = params['dim_x']
-      al['y_u'] = params['dim_y']
-      al['s_w'] = params['relation_x']
-      al['s_h'] = params['relation_y']
-      al['has_image'] = params['has_logo']
-      al['has_emblem'] = params['has_emblem']
-      al['emblem_id'] = params['emblem_id']
-      al['position_id'] = params['position_id']
-    end
-    p al
-    render :json => al.to_json
+    al = Product.find(params['id'])
+    color = al.colors.where(preferred: true).first
+    al.attributes.merge(main_color: color)
+    render :json => JSON::parse(al.to_json).merge({main_color: color}).to_json
   end
 
   def catalog

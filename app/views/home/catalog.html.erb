@@ -135,7 +135,7 @@
               <button id="controller-jcarousel-preview-l" style="top: 0; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
               </button>
-              <div style="float: left; width: 80%" id="myCarousel" class="jcarousel" data-jcarousel="true">
+              <div style="float: left; width: 80%" id="preview_size_cr_carousel" class="jcarousel" data-jcarousel="true">
                 <ul id="container-sizes" style="left: 0; top: 0;">
                 </ul>
               </div>
@@ -156,8 +156,8 @@
               <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
               </button>
-              <div id="myCarousel-logo" class="jcarousel" data-jcarousel="true">
-                <ul id="container-logo-2" style="left: 0; top: 0;">
+              <div style="float: left; width: 80%" id="preview_preset_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-presets" style="left: 0; top: 0;">
                 </ul>
               </div>
               <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
@@ -230,8 +230,6 @@
     window.onclick = function (event) {
         if (event.target === modal_quick) {
             product.remove();
-            logo.remove();
-            emblem.remove();
             modal_quick.style.display = "none";
             $("body").removeClass("modal-open");
             $('body').css('overflow', 'auto');
@@ -245,72 +243,31 @@
 
     function close_modal() {
         product.remove();
-        logo.remove();
-        emblem.remove();
         modal_quick.style.display = "none";
         $("body").removeClass("modal-open");
         $('body').css('overflow', 'auto');
         $('body').css('position', 'relative');
     }
 
-    var elements = [];
-    var elementsBorders = [];
-
-    //Logo variation
-    var logo = {
-        logo_id: null,
-        x: null,
-        y: null,
-        width: null,
-        height: null,
-        r_x: null,
-        r_y: null,
-        remove: function () {
-            product.logo = null;
-            this.logo_id = null;
-            this.x = null;
-            this.y = null;
-            this.width = null;
-            this.height = null;
-            this.r_x = null;
-            this.r_y = null;
-        }
-    };
-
-    //Emblem variation
-    var emblem = {
-        emblem_id: null,
-        position: null,
-        data: null,
-        remove: function () {
-            product.emblem = null;
-            this.emblem_id = null;
-            this.position = null;
-            this.data = null;
-        }
-    };
-
     //Main product
     var product = {
         product_id: null,
-        product_base_id: null,
-        image_id: null,
-        data: null,
-        logo: null,
-        emblem: null,
-        size: null,
-        available_sizes: [],
-        selected_size: null,
+        color_id: null,
+        logo_id: null,
+        logo_x: null,
+        logo_y: null,
+        multiplexer: null,
+        emblem_id: null,
+        size_id: null,
         remove: function () {
             this.product_id = null;
-            this.product_base_id = null;
-            this.image_id = null;
-            this.data = null;
-            this.logo = null;
-            this.emblem = null;
-            this.size = null;
-            this.available_sizes = [];
-            this.selected_size = null;
+            this.color_id = null;
+            this.logo_id = null;
+            this.logo_x = null;
+            this.logo_y = null;
+            this.multiplexer = null;
+            this.emblem_id = null;
+            this.size_id = null;
         }
     };
 
@@ -548,44 +505,6 @@
             console.log(object_json);
 
             createShape(object_json['image_id'], object_json_main['id'], parseFloat(object_json['width']), parseFloat(object_json['height']), parseFloat(object_json['x']), parseFloat(object_json['y']), parseFloat(object_json['s_w']), parseFloat(object_json['s_h']));
-        }
-
-        function get_image_option(images) {
-            if (images.length > 0) {
-
-                var images_txt = '';
-
-                for (var i = 0; i < images.length; i++) {
-
-                    images_txt = images_txt + '<li>' +
-                        '' +
-                        '</li>';
-                }
-
-                var response = '' +
-                    '' +
-                    '' +
-                    'Nothing available' +
-                    '</ul>' +
-                    '</div>' +
-                    '</div>';
-
-                if (images_txt.length) {
-                    response = '<div id="preview_image_cr" class="jcarousel-wrapper">' +
-                        '<div id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">' +
-                        '<ul id="preview_image_container" style="left: 0; top: 0;">' +
-                        images_txt +
-                        '</ul>' +
-                        '</div>' +
-                        '' +
-                        '' +
-                        '' +
-                        '' +
-                        '</div>'
-                }
-
-                return response
-            }
         }
 
         //Photo slider
@@ -1113,7 +1032,12 @@
                 //product.data = data;
                 //load_p1(product, false);
 
-                load_viewer(data);
+                product.remove();
+
+                product.product_id = data.id
+                product.color_id = data.main_color.id
+
+                load_viewer();
                 load_image_carousel(data);
                 load_view_1(data);
 
@@ -1129,7 +1053,26 @@
         modal_quick.style.display = "block";
     }
 
-    function load_viewer(product) {
+    function load_data_preset(color_id, logo_id, x, y, multiplexer) {
+
+        var id = product.product_id;
+        var size = product.size_id;
+
+        product.remove();
+
+        product.product_id = id;
+        product.size_id = size;
+
+        product.color_id = color_id;
+        product.logo_id = logo_id;
+        product.logo_x = x;
+        product.logo_y = y;
+        product.multiplexer = multiplexer;
+        load_viewer()
+
+    }
+
+    function load_viewer() {
         var stageWidth = 500;
         var stageHeight = 500;
 
@@ -1146,7 +1089,6 @@
             height: STAGE.height(),
             draggable: false
         });
-
         LAYER.add(baseImg);
 
         var imageBase = new Image();
@@ -1154,46 +1096,57 @@
             baseImg.image(imageBase);
             LAYER.draw();
         };
-        imageBase.src = product.product_image_id;
 
-        fitStageIntoParentContainer();
-        window.addEventListener('resize', fitStageIntoParentContainer);
-    }
-
-    function load_image_carousel(product) {
         $.ajax({
-            url: '/catalog/product/images?product_id=' + product.id,
+            url: '/catalog/product/color/main_image?color_id=' + product.color_id,
             type: 'GET',
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
-
-                var html_images = '';
-                var carousel_jq = $('ul#preview_image_container');
-
-                for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><img onmouseout="" onmouseover="" id="" src="' + data[i][0] + '" height="70px"></li>');
-                }
-
-                var jcarouselSelector = '.jcarousel';
-
-                $(jcarouselSelector).reloadJcarousel();
-
-                $('.jcarousel-control-prev').jcarouselControl({
-                    // Options go here
-                    target: '-=1'
-                });
-                $('.jcarousel-control-next').jcarouselControl({
-                    // Options go here
-                    target: '+=1'
-                });
-                $('div#preview_image_cr_carousel').jcarousel('reload');
+                imageBase.src = data.picture;
             },
             error: function (data) {
-
+                console.log(data);
             }
         });
+
+        if (product.logo_id) {
+
+            var logoImg = new Konva.Image({
+                x: product.logo_x,
+                y: product.logo_y
+            });
+            LAYER.add(logoImg);
+
+            var imageLogo = new Image();
+            imageLogo.onload = function () {
+                logoImg.image(imageLogo);
+                logoImg.setWidth(this.width);
+                logoImg.setHeight(this.height);
+                logoImg.scale({
+                    x: product.multiplexer,
+                    y: product.multiplexer
+                });
+                LAYER.draw()
+            };
+
+            $.ajax({
+                url: '/catalog/product/logo?logo_id=' + product.logo_id,
+                type: 'GET',
+                dataType: 'text',
+                data: {},
+                success: function (data) {
+                    imageLogo.src = data
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        }
+
+        fitStageIntoParentContainer();
+        window.addEventListener('resize', fitStageIntoParentContainer);
     }
 
     function load_view_1(product) {
@@ -1230,7 +1183,7 @@
                 var carousel_jq = $('ul#container-sizes');
 
                 for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><span style="font-size: 15px" id="" onclick="changeSize()" class="badge badge-size text_light">' + data[i].title + '</span></li>');
+                    carousel_jq.append('<li><span style="font-size: 15px" id="' + data[i].id + '" onclick="changeSize(\'' + data[i].id + '\')" class="badge badge-size text_light">' + data[i].title + '</span></li>');
                 }
 
                 var jcarouselSelector = '.jcarousel';
@@ -1245,12 +1198,124 @@
                     // Options go here
                     target: '+=1'
                 });
-                $('div#preview_image_cr_carousel').jcarousel('reload');
+                $('div#preview_size_cr_carousel').jcarousel('reload');
             },
             error: function (data) {
 
             }
         });
+
+        $.ajax({
+            url: '/catalog/product/presets?product_id=' + product.id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var html_images = '';
+                var carousel_jq = $('ul#container-presets');
+
+                for (var i = 0; i < data.length; i++) {
+                    carousel_jq.append('<li><div onclick="load_data_preset(\'' + data[i].color_id + '\', \'' + data[i].logo_id + '\', \'' + data[i].x + '\', \'' + data[i].y + '\', \'' + data[i].multiplexer + '\');" style="width: 70px; height: 70px" id="div_preview_' + data[i].id + '"></div></li>');
+                }
+
+                for (var t = 0; t < data.length; t++) {
+                    create_preview(data[t]);
+                }
+
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_preset_cr_carousel').jcarousel('reload');
+            },
+            error: function (data) {
+
+            }
+        });
+
+        function create_preview(preview) {
+            var selector = 'div_preview_' + preview.id;
+            var container = document.getElementById(selector);
+            console.log(container);
+
+            var stage = new Konva.Stage({
+                container: selector,
+                width: 70,
+                height: 70,
+                preventDefaut: false
+            });
+
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var baseImg = new Konva.Image({
+                x: 0,
+                y: 0,
+                width: 70,
+                height: 70
+            });
+            layer.add(baseImg);
+
+            var logoImg = new Konva.Image({
+                x: (70 * preview.x) / 500,
+                y: (70 * preview.y) / 500
+            });
+            layer.add(logoImg);
+
+            var imageBase = new Image();
+            imageBase.onload = function () {
+                baseImg.image(imageBase);
+                layer.draw();
+            };
+
+            var imageLogo = new Image();
+            imageLogo.onload = function () {
+                logoImg.image(imageLogo);
+                logoImg.setWidth(this.width);
+                logoImg.setHeight(this.height);
+                logoImg.scale({
+                    x: (70 * preview.multiplexer) / 500,
+                    y: (70 * preview.multiplexer) / 500
+                });
+                layer.draw()
+            };
+
+            $.ajax({
+                url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    imageBase.src = data.picture
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+            $.ajax({
+                url: '/catalog/product/logo?logo_id=' + preview.logo_id,
+                type: 'GET',
+                dataType: 'text',
+                data: {},
+                success: function (data) {
+                    imageLogo.src = data
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
 
         var iconShow = $("#icon-show");
         var iconHide = $("#icon-hide");
@@ -1309,6 +1374,72 @@
         });
     }
 
+    var ACTUAL_IMAGE_PREVIEW = null;
+
+
+    function load_image_carousel(product) {
+        $.ajax({
+            url: '/catalog/product/images?product_id=' + product.id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var html_images = '';
+                var carousel_jq = $('ul#preview_image_container');
+
+                for (var i = 0; i < data.length; i++) {
+                    carousel_jq.append('<li><img onmouseout="hide_preview()" onmouseover="show_preview(\'' + data[i][1] + '\')" id="" src="' + data[i][0] + '" height="70px"></li>');
+                }
+
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_image_cr_carousel').jcarousel('reload');
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+
+    function show_preview(src) {
+
+        ACTUAL_IMAGE_PREVIEW = new Konva.Image({
+            x: 250,
+            y: 250,
+            offsetX: 200,
+            offsetY: 200,
+            width: 400,
+            height: 400
+        });
+
+        LAYER.add(ACTUAL_IMAGE_PREVIEW);
+        var imagePreview = new Image();
+        imagePreview.onload = function () {
+            ACTUAL_IMAGE_PREVIEW.image(imagePreview);
+            LAYER.draw();
+        };
+        imagePreview.src = src;
+
+    }
+
+    function hide_preview() {
+        ACTUAL_IMAGE_PREVIEW.destroy();
+        LAYER.draw()
+    }
+
 
     function open_quick_2(pr) {
         $.ajax({
@@ -1361,15 +1492,17 @@
     }
 
     function changeSize(id) {
-        for (var i = 0; i < product.available_sizes.length; i++) {
 
-            product.size = product.available_sizes[i];
+        var spans = document.getElementById('container-sizes').getElementsByTagName('span');
+        product.size_id = id;
 
-            if (product.size === id) {
-                $('#' + product.size).addClass('badge_selected');
-                product.selected_size = id
+        for (var i = 0; i < spans.length; i++) {
+            console.log(spans[i].id);
+            console.log(id);
+            if (spans[i].id === id) {
+                $(spans[i]).addClass('badge_selected');
             } else {
-                $('#' + product.size).removeClass('badge_selected');
+                $(spans[i]).removeClass('badge_selected');
             }
         }
     }
