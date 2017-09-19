@@ -127,7 +127,7 @@ class HomeController < ApplicationController
 
     if request.get?
 
-      tuc = TempUserControl.find_by_ip_address(request.env['REMOTE_ADDR'])
+      tuc = TempUserControl.where(ip_address: request.env['REMOTE_ADDR']).last
       if tuc
         p tuc.to_json, session['temp_token']
         @user = nil
@@ -284,10 +284,11 @@ class HomeController < ApplicationController
       product = cart_a.cart_products.find(id_product_cart)
       cart_a.n_products = user.cart.n_products - 1
       cart_a.save!
-      product.destroy
+      product.state = 'Cancelled'
+      product.save!
     end
 
-    redirect_to '/account'
+    redirect_to '/temporary/user/orders'
 
   end
 

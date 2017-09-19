@@ -64,6 +64,27 @@
 
         <script>
 
+            //reload jcarousel
+            (function (window, $, undefined) {
+                var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
+                for (var i = 0; i < plugins.length; i++) {
+                    var plugin = plugins[i];
+                    var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
+                    $.fn[reload_plugin] = (function (plugin) {
+                        return function () {
+                            return this.each(function () {
+                                if (!$(this).data(plugin)) {
+                                    console.log('Element is not an instance of ' + plugin);
+                                    return false;
+                                }
+                                var _options = $(this).data(plugin)._options;
+                                $(this).data(plugin, {}).off()[plugin](_options);
+                            });
+                        };
+                    })(plugin);
+                }
+            })(this, jQuery);
+
             var btn_i = null;
             var btn_j = null;
 
@@ -109,6 +130,18 @@
                     }
 
                     // Reload carousel
+                    var jcarouselSelector = '.jcarousel';
+
+                    $(jcarouselSelector).reloadJcarousel();
+
+                    $('.jcarousel-control-prev').jcarouselControl({
+                        // Options go here
+                        target: '-=1'
+                    });
+                    $('.jcarousel-control-next').jcarouselControl({
+                        // Options go here
+                        target: '+=1'
+                    });
                     $('.jcarousel').jcarousel('reload');
 
                 },
@@ -124,6 +157,14 @@
                 span = document.getElementsByClassName("close")[0];
                 // Get the modal
                 modal = document.getElementById('myModal');
+
+                modal.addEventListener('click', close_modal);
+
+                function close_modal() {
+                    document.getElementsByTagName('body')[0].classList.remove('modal-open');
+                    modal.style.display = "none";
+                }
+
                 triangle = document.getElementById('triangle');
                 modal_c = document.getElementById('modal_c');
                 bagModal = document.getElementById('bag_modal');
@@ -142,7 +183,7 @@
                     cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
 
                     bagModal.style.top = cart_bottom + 'px';
-                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
 
                     var carousel_p = document.getElementById('product-loader-carousel');
                     $('.element_product').each(function () {
@@ -164,7 +205,7 @@
                     bagModal.style.height = '100%';
                     modal_c.style.height = '100%';
 
-                    if ($(window).width() > 468){
+                    if ($(window).width() > 468) {
 
                         cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
 
@@ -192,8 +233,8 @@
                 };
 
                 var width = $(window).width();
-                $(window).on('resize', function(){
-                    if($(this).width() !== width){
+                $(window).on('resize', function () {
+                    if ($(this).width() !== width) {
                         width = $(this).width();
 
                         triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
@@ -204,11 +245,11 @@
                             cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
                             cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
                             bagModal.style.top = cart_bottom + 'px';
-                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
                             bagModal.style.width = 'auto';
                             bagModal.style.left = 'auto';
                             bagModal.style.margin = 'auto';
-                        }else if (width > 468){
+                        } else if (width > 468) {
                             cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
                             bagModal.style.top = cart_bottom + 'px';
                             modal_c.style.height = 'auto';
@@ -217,7 +258,7 @@
                             bagModal.style.right = 0;
                             bagModal.style.bottom = 'auto';
                             bagModal.style.margin = 'auto';
-                        }else {
+                        } else {
                             bagModal.style.top = 0;
                             bagModal.style.right = 0;
                             bagModal.style.left = 0;
@@ -298,64 +339,28 @@
                     }
                 });
 
-                $.ajax({
-                    url: '/catalog/product/logo?logo_id=' + preview.logo_id,
-                    type: 'GET',
-                    dataType: 'text',
-                    data: {},
-                    success: function (data) {
-                        imageLogo.src = data
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
+                if (preview.logo_id !== null) {
+                    $.ajax({
+                        url: '/catalog/product/logo?logo_id=' + preview.logo_id,
+                        type: 'GET',
+                        dataType: 'text',
+                        data: {},
+                        success: function (data) {
+                            imageLogo.src = data
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
             }
-
-            //Photo slider
-            (function ($) {
-                $(function () {
-                    $('.jcarousel').jcarousel();
-
-                    $('.jcarousel-control-prev')
-                        .on('jcarouselcontrol:active', function () {
-                            $(this).removeClass('inactive');
-                        })
-                        .on('jcarouselcontrol:inactive', function () {
-                            $(this).addClass('inactive');
-                        })
-                        .jcarouselControl({
-                            target: '-=1'
-                        });
-
-                    $('.jcarousel-control-next')
-                        .on('jcarouselcontrol:active', function () {
-                            $(this).removeClass('inactive');
-                        })
-                        .on('jcarouselcontrol:inactive', function () {
-                            $(this).addClass('inactive');
-                        })
-                        .jcarouselControl({
-                            target: '+=1'
-                        });
-
-                    $('.jcarousel-pagination')
-                        .on('jcarouselpagination:active', 'a', function () {
-                            $(this).addClass('active');
-                        })
-                        .on('jcarouselpagination:inactive', 'a', function () {
-                            $(this).removeClass('active');
-                        })
-                        .jcarouselPagination();
-                });
-            })(jQuery);
         </script>
       </div>
 
       <hr class="no-spacing-bar">
       <div style="overflow: hidden" class="modal_c_part">
         <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f",get_price) %></span>
+        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f", get_price) %></span>
       </div>
       <hr class="no-spacing-bar">
       <div class="modal_c_part">
@@ -517,17 +522,6 @@
 
     </div>
   </div>
-
-  <script>
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-          if (event.target === modal) {
-              modal.style.display = "none";
-              $("body").removeClass("modal-open")
-          }
-      }
-  </script>
 
 </nav>
 

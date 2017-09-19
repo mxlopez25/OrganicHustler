@@ -7,25 +7,29 @@
 <div style="overflow: hidden; margin: 0 7%;">
   <div class="content-part field-data">
 
-  <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-      <% product_temp = get_product(product.m_id) %>
+    <script>
+        var Stage = {};
+    </script>
+
+    <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+        <% product_temp = get_product_l(product.m_id) %>
         <div class="item-checkout" style="padding-bottom: 20px; overflow: hidden; border-bottom: thin black solid">
         <div style="float: left; width: 33%; position: relative">
-          <div id="<%= product.id %>cart" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
+          <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
         </div>
-        <div style="float: left; width: 67%; position: relative">
+          <div style="float: right; width: 63%; position: relative">
           <h4 class="text_light text-uppercase"><%= product_temp['title'] %></h4>
           <% pr_price = product_price(product.id) %>
-          <h4 class="text_light_pink">$<%= pr_price[5] %></h4>
+            <h4 class="text_light_pink"><%= format("$%.2f", pr_price[5]) %></h4>
 
           <div style="float: left; width: 50%">
-            <h6 class="text_light" style="font-weight: 400">Size: <%= get_variation(product_temp, 'Size', product.size_id)['title'] %></h6> <!--FIX MISSING ATRIBUTES-->
+            <h6 class="text_light" style="font-weight: 400">Size: <%= (Size.find product.size_id).title %></h6>
             <h6 class="text_light" style="font-weight: 400">Customized:
               <% if product.has_emblem %>YES
               <% elsif product.has_logo %>YES
               <% else %>NO
               <% end %></h6>
-            <h6 class="text_light" style="font-weight: 400">Color: BROWN</h6> <!-- Attach to backend -->
+            <h6 class="text_light" style="font-weight: 400">Color: <%= (Color.find product.color_id).title %></h6>
           </div>
           <div style="float: left; width: 50%; text-align: center">
             <h3 style="margin: 10px; padding-top: 15px; padding-bottom: 15px; border: thin black solid;">Qty:
@@ -37,58 +41,101 @@
       </div>
 
       <script id="create-shape">
-          createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>')
-          function createShape(id, width, height, x, y, s_w, s_h) {
+
+          var stageWidth = 500;
+          var stageHeight = 500;
+
+          createShape('cart<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>');
+
+          function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id) {
               var container = $('#' + id);
               container.height(container.width());
 
               var stage = new Konva.Stage({
                   container: id,
-                  width: container.width(),
-                  height: container.height()
+                  width: stageWidth,
+                  height: stageHeight
               });
               var layer = new Konva.Layer();
               stage.add(layer);
 
+              Stage[id] = stage;
+
               var baseImg = new Konva.Image({
-                  width: container.width(),
-                  height: container.height(),
+                  width: stageWidth,
+                  height: stageHeight,
                   draggable: false
               });
 
               var logoImg = new Konva.Image({
-                  width: container.width() * width / s_w,
-                  height: container.height() * height / s_h
-              });
-
-              var logoGroup = new Konva.Group({
-                  x: container.width() * x / s_w,
-                  y: container.width() * y / s_h
+                  x: stageWidth * x / s_w,
+                  y: stageHeight * y / s_h
               });
 
               layer.add(baseImg);
-              layer.add(logoGroup);
-              logoGroup.add(logoImg);
+              layer.add(logoImg);
 
               var imageObj1 = new Image();
               imageObj1.onload = function () {
                   baseImg.image(imageObj1);
                   layer.draw();
               };
-              imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+
+              $.ajax({
+                  url: '/catalog/product/color/main_image?color_id=' + color_id,
+                  type: 'GET',
+                  dataType: 'json',
+                  data: {},
+                  success: function (data) {
+                      imageObj1.src = data.picture
+                  },
+                  error: function (data) {
+                      console.log(data);
+                  }
+              });
 
               var imageObj2 = new Image();
               imageObj2.onload = function () {
                   logoImg.image(imageObj2);
+                  logoImg.scale({
+                      x: stageWidth * multiplexer / s_w,
+                      y: stageHeight * multiplexer / s_h
+                  });
                   layer.draw();
-                  imageObj2.width = container.width() * width / s_w;
-                  console.log(imageObj2.width, container.width(), width, s_w);
-                  imageObj2.height = container.height() * height / s_h;
-                  console.log(imageObj2.height);
               };
-              imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+              if (logo_id !== null) {
+                  $.ajax({
+                      url: '/catalog/product/logo?logo_id=' + logo_id,
+                      type: 'GET',
+                      dataType: 'text',
+                      data: {},
+                      success: function (data) {
+                          imageObj2.src = data
+                      },
+                      error: function (data) {
+                          console.log(data);
+                      }
+                  });
+              }
               layer.draw();
           }
+
+          function fitStageIntoParentContainer_we() {
+              var container = $('#cart<%= product.id %>');
+              container.height(container.width());
+
+              // now we need to fit stage into parent
+              var containerWidth = container.width();
+              // to do this we need to scale the stage
+              var scale = containerWidth / stageWidth;
+              Stage['cart<%= product.id %>'].scale({x: scale, y: scale});
+              Stage['cart<%= product.id %>'].draw();
+          }
+
+          fitStageIntoParentContainer_we();
+          // adapt the stage on any window resize
+          window.addEventListener('resize', fitStageIntoParentContainer_we);
+
       </script>
 
   <% end %>
@@ -117,7 +164,7 @@
         <% cost_array.each do |cost| %>
             <% cost_t = cost_t + cost %>
         <% end %>
-        <h4 class="t-right text_light">Subtotal</h4><h4 class="s-left text_light">$<%= cost_t %></h4>
+        <h4 class="t-right text_light">Subtotal</h4><h4 class="s-left text_light"><%= format("$%.2f", cost_t) %></h4>
       </div>
 
       <div style="overflow: hidden; margin: 10px">
@@ -129,12 +176,13 @@
         <% tax_array.each do |tax| %>
             <% tax_t = tax_t + tax %>
         <% end %>
-        <h4 class="t-right text_light">Estimated Tax</h4><h4 class="s-left text_light">$<%= tax_t %></h4>
+        <h4 class="t-right text_light">Estimated Tax</h4>
+        <h4 class="s-left text_light"><%= format("$%.2f", tax_t) %></h4>
       </div>
 
       <div style="overflow: hidden; margin: 40px 10px 10px;">
         <h4 class="t-right text_light">Estimated total</h4>
-        <h3 class="s-left text_light">$<%= tax_t + cost_t %></h3>
+        <h3 class="s-left text_light"><%= format("$%.2f", (tax_t + cost_t)) %></h3>
       </div>
 
       <div style="text-align: center; width: 100%">
