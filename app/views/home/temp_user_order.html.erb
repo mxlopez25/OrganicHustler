@@ -1,5 +1,5 @@
 <body>
-<div id="items-container" style="text-align: center; margin-top: 100px; overflow: hidden; margin-bottom: 30px">
+<div id="items-container" style="text-align: center; margin-top: 30px; overflow: hidden; margin-bottom: 30px">
 
   <div style="position: relative" class="card content-part-5 single-element-center">
 
@@ -17,71 +17,120 @@
     <% end %>
     <h2>Orders</h2>
     <hr>
+
+
+    <script>
+        var Stage = {};
+    </script>
+
     <% if @user %>
         <% @user.orders.each do |o| %>
             <% o.cart.cart_products.where("created_at > ?", 10.days.ago).each do |product| %>
                 <div style="overflow: hidden; width: 100%; text-align: left; border-bottom: lightgrey solid 1px; padding-bottom: 10px; margin-bottom: 10px">
-                  <div id="img-container" class="content-part content-part-3">
-                    <div id="<%= product.id %>_orders" style="width: 100px; height: 100px; float: left">
+                  <div id="img-container" style="float: left; width: 24%" class="content-part content-part-3">
+                    <div id="order_<%= product.id %>" style="width: 100%; height: 100px; float: left">
 
                     </div>
                   </div>
-                  <% product_temp = get_product(product.m_id) %>
+                  <% product_temp = get_product_l(product.m_id) %>
                   <script id="create-shape">
-                      //Show the custom products
-                      createShape('<%= product.id %>_orders', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
-                      function createShape(id, width, height, x, y, s_w, s_h) {
+
+                      var stageWidth = 500;
+                      var stageHeight = 500;
+
+                      createShape('order_<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>');
+
+                      function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id) {
                           var container = $('#' + id);
+                          container.height(container.width());
 
                           var stage = new Konva.Stage({
                               container: id,
-                              width: container.width(),
-                              height: container.height()
+                              width: stageWidth,
+                              height: stageHeight
                           });
                           var layer = new Konva.Layer();
                           stage.add(layer);
 
+                          Stage[id] = stage;
+
                           var baseImg = new Konva.Image({
-                              width: container.width(),
-                              height: container.height(),
+                              width: stageWidth,
+                              height: stageHeight,
                               draggable: false
                           });
 
                           var logoImg = new Konva.Image({
-                              width: container.width() * width / s_w,
-                              height: container.height() * height / s_h
-                          });
-
-                          var logoGroup = new Konva.Group({
-                              x: container.width() * x / s_w,
-                              y: container.width() * y / s_h
+                              x: stageWidth * x / s_w,
+                              y: stageHeight * y / s_h
                           });
 
                           layer.add(baseImg);
-                          layer.add(logoGroup);
-                          logoGroup.add(logoImg);
+                          layer.add(logoImg);
 
                           var imageObj1 = new Image();
                           imageObj1.onload = function () {
                               baseImg.image(imageObj1);
                               layer.draw();
                           };
-                          imageObj1.src = 'https://<%= product_temp['images'].first['segments']['domain'] %>fill/100w/100h/<%= product_temp['images'].first['segments']['suffix'] %>';
+
+                          $.ajax({
+                              url: '/catalog/product/color/main_image?color_id=' + color_id,
+                              type: 'GET',
+                              dataType: 'json',
+                              data: {},
+                              success: function (data) {
+                                  imageObj1.src = data.picture
+                              },
+                              error: function (data) {
+                                  console.log(data);
+                              }
+                          });
 
                           var imageObj2 = new Image();
                           imageObj2.onload = function () {
                               logoImg.image(imageObj2);
+                              logoImg.scale({
+                                  x: stageWidth * multiplexer / s_w,
+                                  y: stageHeight * multiplexer / s_h
+                              });
                               layer.draw();
-                              imageObj2.width = container.width() * width / s_w;
-                              console.log(imageObj2.width, container.width(), width, s_w);
-                              imageObj2.height = container.height() * height / s_h;
-                              console.log(imageObj2.height);
                           };
-                          imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                          if (logo_id !== null) {
+                              $.ajax({
+                                  url: '/catalog/product/logo?logo_id=' + logo_id,
+                                  type: 'GET',
+                                  dataType: 'text',
+                                  data: {},
+                                  success: function (data) {
+                                      imageObj2.src = data
+                                  },
+                                  error: function (data) {
+                                      console.log(data);
+                                  }
+                              });
+                          }
                           layer.draw();
                       }
+
+                      function fitStageIntoParentContainer_we() {
+                          var container = $('#order_<%= product.id %>');
+                          container.height(container.width());
+
+                          // now we need to fit stage into parent
+                          var containerWidth = container.width();
+                          // to do this we need to scale the stage
+                          var scale = containerWidth / stageWidth;
+                          Stage['order_<%= product.id %>'].scale({x: scale, y: scale});
+                          Stage['order_<%= product.id %>'].draw();
+                      }
+
+                      fitStageIntoParentContainer_we();
+                      // adapt the stage on any window resize
+                      window.addEventListener('resize', fitStageIntoParentContainer_we);
+
                   </script>
-                  <div class="content-part content-part-7" style="float: left">
+                  <div class="content-part content-part-7" style="float: right; width: 76%">
 
 
                     <div style="float: right" class="dropdown">
@@ -99,9 +148,9 @@
 
                     <h4 class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></h4>
                     <h5>Bag id: <%= o.id %></h5>
-                    <h5>Bag status: <%= o.state %></h5>
+                    <h5>Status: <%= product.state || o.state %></h5>
                     <h5>Product id: <%= product_temp['id'] %></h5>
-                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= product_price(product.id).last %></h4>
+                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= format("$%.2f", product_price(product.id).last) %></h4>
                   </div>
                 </div>
             <% end %>

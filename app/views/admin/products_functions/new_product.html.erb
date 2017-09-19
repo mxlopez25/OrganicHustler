@@ -40,131 +40,640 @@
     <h4><a class="breadcrumb" href="/admin/products">Products</a> / New</h4>
   </div>
 
-  <div class="card modal-c">
-    <button onclick="save()">Save</button>
-    <table>
-      <thead>
-      <tr class="heading_table">
-        <th></th>
-        <th>Name</th>
-        <th>SKU</th>
-        <th>Status</th>
-        <th>Category</th>
-        <th>Brand</th>
-        <th>Price</th>
-        <th>Tax band</th>
-        <th>Stock lever</th>
-        <th>Stock status</th>
-        <th>Needs Shipping</th>
-        <th>Catalog Only</th>
-        <th>Description</th>
-        <th>Slug</th>
-        <th>Images</th>
-      </tr>
-      </thead>
-      <tbody id="tt_body">
-      <tr id="mm_row" class="product_row_new">
-        <td>
-          <button onclick="delete_row(this)">Remove</button>
-        </td>
-        <td>
-          <input class="form-control" type="text" value="" id="title_edit" name="title">
-        </td>
-        <td>
-          <input class="form-control" type="text" value="" id="sku_edit" name="sku">
-        </td>
-        <td>
-          <select id="status_edit" name="status_edit">
-            <option value="0">Draft</option>
-            <option value="1">Live</option>
-          </select>
-        </td>
-        <td>
-          <select id="category_edit" name="category_edit">
-            <% AdminHelper.get_categories.each do |category| %>
-                <option value="<%= category['id'] %>"><%= category['title'] %></option>
-            <% end %>
-          </select>
-        </td>
-        <td>
-          <select id="brand_edit" name="brand_edit">
-            <% AdminHelper.get_brands.each do |brand| %>
-                <option value="<%= brand['id'] %>"><%= brand['title'] %></option>
-            <% end %>
-          </select>
-        </td>
-        <td>
-          <input class="form-control" type="number" step="any" value="" id="price_edit" name="price">
-        </td>
-        <td>
-          <select id="tax_edit" name="tax_edit">
-            <% AdminHelper.get_taxes.each do |tax| %>
-                <option value="<%= tax['id'] %>"><%= tax['title'] %></option>
-            <% end %>
-          </select>
-        </td>
-        <td>
-          <input class="form-control" type="number" name="stock_level" value="" id="stock_level_edit">
-        </td>
-        <td>
-          <select id="stock_status_edit" name="stock_status_edit">
-            <option value="0">Unlimited</option>
-            <option value="1">Unlimited</option>
-            <option value="2">Unlimited</option>
-            <option value="3">Unlimited</option>
-            <option value="4">Unlimited</option>
-            <option value="5">Unlimited</option>
-            <option value="6">Unlimited</option>
-            <option value="7">Unlimited</option>
-            <option value="8">Unlimited</option>
-            <option value="9">Unlimited</option>
-          </select>
-        </td>
-        <td>
-          <select id="requires_shipping_edit" name="requires_shipping_edit">
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-          </select>
-        </td>
-        <td>
-          <select id="catalog_only_edit" name="catalog_only_edit">
-            <option value="0">YES</option>
-            <option value="1">NO</option>
-          </select>
-        </td>
-        <td>
-          <textarea rows="1" class="form-control" name="description" id="description_edit"></textarea>
-        </td>
-        <td>
-          <input class="form-control" style="width: 100%" id="tags_edit" name="tags" type="text" value="">
-        </td>
-        <td>
-          <input type="file" name="img" id="img_edit" multiple>
-        </td>
-      </tr>
-      <tr id="replace_with">
-        <td>
-          <button onclick="add_row()">Add row</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div style="width: 100%; height: 100%; position: relative; overflow-x: scroll">
+    <div class="card modal-c">
+      <button onclick="save()">Save</button>
+      <table>
+        <thead>
+        <tr class="heading_table">
+          <th></th>
+
+          <th>Name</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Stock</th>
+          <th>SKU</th>
+          <th>Description</th>
+
+          <th>Size</th>
+          <th>Logo</th>
+          <th>Color</th>
+
+          <th>Category</th>
+          <th>Style</th>
+          <th>Material</th>
+          <th>Brand</th>
+
+          <th>Tax Band</th>
+        </tr>
+        </thead>
+        <tbody id="tt_body">
+        <tr data-id-row="1" id="mm_row" class="product_row_new">
+          <td>
+            <button onclick="delete_row(this)">Remove</button>
+          </td>
+          <td>
+            <input class="form-control" value="" id="title" name="title">
+          </td>
+          <td>
+            <input class="form-control" type="number" step="any" value="" id="price" name="price">
+          </td>
+          <td>
+            <select id="status" name="status">
+              <option value="0">Draft</option>
+              <option value="1">Live</option>
+            </select>
+          </td>
+          <td>
+            <input class="form-control" type="number" name="stock" value="" id="stock">
+          </td>
+          <td>
+            <input class="form-control" value="" id="sku" name="sku">
+          </td>
+          <td>
+            <textarea rows="1" class="form-control" name="description" id="description"></textarea>
+          </td>
+          <td>
+            <button onclick="edit_modal('size_modal', this.parentNode.parentNode.dataset.idRow)">Edit sizes</button>
+          </td>
+          <td>
+            <button onclick="edit_modal('logo_modal', this.parentNode.parentNode.dataset.idRow)">Edit logos</button>
+          </td>
+          <td>
+            <button onclick="edit_modal('color_modal', this.parentNode.parentNode.dataset.idRow)">Edit colors</button>
+          </td>
+          <td>
+            <button onclick="edit_modal('category_modal', this.parentNode.parentNode.dataset.idRow)">Edit categories
+            </button>
+          </td>
+          <td>
+            <button onclick="edit_modal('style_modal', this.parentNode.parentNode.dataset.idRow)">Edit styles</button>
+          </td>
+          <td>
+            <button onclick="edit_modal('material_modal', this.parentNode.parentNode.dataset.idRow)">Edit materials
+            </button>
+          </td>
+          <td>
+            <button onclick="edit_modal('brand_modal', this.parentNode.parentNode.dataset.idRow)">Edit brands</button>
+          </td>
+          <td>
+            <select id="tax" name="tax">
+              <% TaxBand.all.each do |tax| %>
+                  <option value="<%= tax.id %>"><%= tax.titulo %></option>
+              <% end %>
+            </select>
+          </td>
+
+        </tr>
+        <tr id="replace_with">
+          <td>
+            <button onclick="add_row()">Add row</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="dim_back" class="dim_back">
+
+    <div style="overflow:hidden;" id="size_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="logo_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="color_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="category_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="style_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="material_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="brand_modal" class="content_pop">
+    </div>
+
   </div>
 
 </div>
 </body>
-<link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
-<script>
 
-    var mm_row = document.getElementById('mm_row').outerHTML + document.getElementById('replace_with').outerHTML;
+<script>
+    //<link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
+    var sizes_g = {};
+    var logos_g = {};
+    var colors_g = {};
+    var categories_g = {};
+    var styles_g = {};
+    var materials_g = {};
+    var brands_g = {};
+
+    var row_count = 1;
+    var actual_row_id = null;
+
+    var modal = null;
+    var dim_back = document.getElementById('dim_back');
+
+    function complete_size(id) {
+
+        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>';
+        var sizes = sizes_g[id];
+        if (sizes) {
+            sizes.forEach(function (size) {
+                html = html + '<div class="size_row" style="overflow: hidden">' +
+                    '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 50%; margin: 0;" value="' + size.title + '" name="title" id="title">' +
+                    '<input style="float: left; width: 40%; margin: 0;" type="number" value="' + size.price + '" placeholder="Price" name="price" step="any" id="price">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="size_row" style="overflow: hidden">' +
+                '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
+                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_size_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="size_row" style="overflow: hidden">' +
+            '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
+            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '</div>' + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_size_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_sizes(id) {
+        var rows = $(modal).find('.size_row');
+        sizes_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            sizes_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+                price: $(rows[i]).find('input[id="price"]').val()
+            })
+        }
+    }
+
+    function complete_logo(id) {
+
+        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>';
+        var logos = logos_g[id];
+        if (logos) {
+            logos = logos.logos;
+            logos.forEach(function (logo) {
+                var rr_data = '<div class="logo_row" data-id-use="' + logo.id + '" data-ocupaid-use="true" style="overflow: hidden">' +
+                    '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<p style="text-align: center; float: left; width: 25%; margin: 0;">' + logo.file.name + '</p>' +
+                    '<input style="float: left; width: 40%; margin: 0;" type="file" value="" name="file" id="file">' +
+                    '<input style="float: left; width: 25%; margin: 0;" type="number" value="' + logo.price + '" placeholder="Price" name="price" id="price">' +
+                    '</div>';
+                console.log(logo.file);
+                html = html + rr_data
+            });
+        } else {
+            html = html + '<div data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
+                '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
+                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_logo_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div  data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
+            '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
+            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '</div>' + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_logo_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_logos(id) {
+        var rows = $(modal).find('.logo_row');
+        var holder = null;
+        var logos_tt = logos_g[id];
+        if (logos_tt) {
+            holder = logos_tt.logos;
+        }
+        logos_g[id] = {cur_id: 0, logos: []};
+
+        for (var i = 0; i < rows.length; i++) {
+            console.log(rows[i].dataset.ocupaidUse);
+            if (rows[i].dataset.ocupaidUse === 'false') {
+                logos_g[id].logos.push({
+                    id: logos_g[id].cur_id,
+                    file: $(rows[i]).find('input[id="file"]')[0].files[0],
+                    price: $(rows[i]).find('input[id="price"]').val()
+                });
+
+                logos_g[id].cur_id = logos_g[id].cur_id + 1;
+            } else {
+                var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
+                logos_g[id].logos.push({
+                    id: item.id,
+                    file: item.file,
+                    price: $(rows[i]).find('input[id="price"]').val()
+                });
+            }
+        }
+    }
+
+    var counter = 0;
+
+    function complete_color(id) {
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button>';
+        var colors = colors_g[id];
+        if (colors) {
+            colors = colors.colors;
+            colors.forEach(function (color) {
+
+                function checked() {
+                    if (color.preferred) {
+                        return 'checked';
+                    } else {
+                        return '';
+                    }
+                }
+
+                var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
+                    '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Title" name="title" id="title">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                    '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                    '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                    '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                    '      <input style="width: 12%; float:left; margin: 0;" value="' + color.main_picture + '" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                    '</div>';
+                html = html + rr_data
+            });
+        } else {
+            html = html + '<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+                '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                '      <datalist id="pictures' + counter + '"></datalist>' +
+                '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                '</div>';
+
+            counter = counter + 1;
+        }
+        html = html + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_color_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+            '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+            '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+            '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+            '      <datalist id="pictures' + counter + '"></datalist>' +
+            '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+            '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+            '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+
+        counter = counter + 1;
+    }
+
+    function update_list(element, id) {
+        var parent = element.parentNode;
+        var files = $(parent).find('input[id="file"]')[0].files;
+        var data_list = $(parent).find('#pictures' + id)[0];
+        console.log(data_list);
+
+        var html = '';
+
+        for (var id_s = 0; id_s < files.length - 2; id_s++) {
+            html = html + '<option value="' + files[id_s].name + '">';
+            console.log(html);
+        }
+        data_list.innerHTML = html;
+    }
+
+    function remove_color_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_colors(id) {
+        var rows = $(modal).find('.color_row');
+        var holder = null;
+        var colors_tt = colors_g[id];
+        if (colors_tt) {
+            holder = colors_tt.colors;
+        }
+        colors_g[id] = {cur_id: 0, colors: []};
+        for (var i = 0; i < rows.length; i++) {
+            console.log(rows[i].dataset.ocupaidUse);
+            if (rows[i].dataset.ocupaidUse === 'false') {
+                colors_g[id].colors.push({
+                    id: colors_g[id].cur_id,
+                    title: $(rows[i]).find('input[id="title"]').val(),
+                    price: $(rows[i]).find('input[id="price"]').val(),
+                    color: $(rows[i]).find('input[id="code_hex"]').val(),
+                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                    files: $(rows[i]).find('input[id="file"]')[0].files,
+                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
+                });
+                colors_g[id].cur_id = colors_g[id].cur_id + 1;
+            } else {
+                var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
+                colors_g[id].colors.push({
+                    id: item.id,
+                    title: $(rows[i]).find('input[id="title"]').val(),
+                    price: $(rows[i]).find('input[id="price"]').val(),
+                    color: $(rows[i]).find('input[id="code_hex"]').val(),
+                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                    file: item.files,
+                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
+                });
+            }
+        }
+        console.log(colors_g[id]);
+    }
+
+    function complete_category(id) {
+
+        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>';
+        var categories = categories_g[id];
+        if (categories) {
+            categories.forEach(function (category) {
+                html = html + '<div class="category_row" style="overflow: hidden">' +
+                    '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + category.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="category_row" style="overflow: hidden">' +
+                '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_category_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_category_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="category_row" style="overflow: hidden">' +
+            '<button onclick="remove_category_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_category_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_category_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_categories(id) {
+        var rows = $(modal).find('.category_row');
+        categories_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            categories_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_style(id) {
+
+        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>';
+        var styles = styles_g[id];
+        if (styles) {
+            styles.forEach(function (style) {
+                html = html + '<div class="style_row" style="overflow: hidden">' +
+                    '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + style.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="style_row" style="overflow: hidden">' +
+                '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_style_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_style_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="style_row" style="overflow: hidden">' +
+            '<button onclick="remove_style_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_style_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_style_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_styles(id) {
+        var rows = $(modal).find('.style_row');
+        styles_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            styles_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_material(id) {
+
+        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>';
+        var materials = materials_g[id];
+        if (materials) {
+            materials.forEach(function (material) {
+                html = html + '<div class="material_row" style="overflow: hidden">' +
+                    '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + material.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="material_row" style="overflow: hidden">' +
+                '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_material_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_material_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="material_row" style="overflow: hidden">' +
+            '<button onclick="remove_material_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_material_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_material_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_materials(id) {
+        var rows = $(modal).find('.material_row');
+        materials_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            materials_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function complete_brand(id) {
+
+        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>';
+        var brands = brands_g[id];
+        if (brands) {
+            brands.forEach(function (brand) {
+                html = html + '<div class="brand_row" style="overflow: hidden">' +
+                    '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                    '<input style="float: left; width: 90%; margin: 0;" value="' + brand.title + '" name="title" id="title">' +
+                    '</div>';
+            });
+        } else {
+            html = html + '<div class="brand_row" style="overflow: hidden">' +
+                '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+                '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+                '</div>';
+        }
+        html = html + '<button id="bonnie" onclick="new_brand_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
+        return html;
+    }
+
+    function new_brand_row(id) {
+        $(modal).find('#bonnie').replaceWith('<div class="brand_row" style="overflow: hidden">' +
+            '<button onclick="remove_brand_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
+            '<input style="float: left; width: 90%; margin: 0;" value="" name="title" id="title">' +
+            '</div>' + '<button id="bonnie" onclick="new_brand_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+    }
+
+    function remove_brand_row(btn) {
+        btn.parentNode.outerHTML = '';
+    }
+
+    function save_brands(id) {
+        var rows = $(modal).find('.brand_row');
+        brands_g[id] = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            brands_g[id].push({
+                title: $(rows[i]).find('input[id="title"]').val(),
+            })
+        }
+    }
+
+    function get_correct(holder, id) {
+        var selected = null;
+        holder.forEach(function (obj) {
+            if (obj.id === (id)) {
+                selected = obj;
+            }
+        });
+        return selected;
+    }
+
+    function edit_modal(type, id) {
+        modal = document.getElementById(type);
+        modal.style.display = "block";
+        dim_back.style.display = "block";
+        actual_row_id = id;
+        console.log(type);
+
+        switch (type) {
+            case 'size_modal':
+                modal.innerHTML = complete_size(id);
+                break;
+            case 'logo_modal':
+                modal.innerHTML = complete_logo(id);
+                break;
+            case 'color_modal':
+                modal.innerHTML = complete_color(id);
+                break;
+            case 'category_modal':
+                modal.innerHTML = complete_category(id);
+                break;
+            case 'style_modal':
+                modal.innerHTML = complete_style(id);
+                break;
+            case 'material_modal':
+                modal.innerHTML = complete_material(id);
+                break;
+            case 'brand_modal':
+                modal.innerHTML = complete_brand(id);
+                break;
+        }
+
+        window.onclick = function (event) {
+            if (event.target === dim_back) {
+                modal.style.display = "none";
+                dim_back.style.display = "none";
+            }
+        };
+    }
+
+    var mm_row = document.getElementById('mm_row').cloneNode(true);
+    var mm_btn = document.getElementById('replace_with').outerHTML;
+
     function add_row() {
-        document.getElementById('replace_with').outerHTML = mm_row;
+        row_count = row_count + 1;
+        mm_row.dataset.idRow = row_count;
+        document.getElementById('replace_with').outerHTML = (mm_row.outerHTML + mm_btn);
+
+        console.log(sizes_g);
+        console.log(logos_g);
+        console.log(colors_g);
+        console.log(categories_g);
+        console.log(styles_g);
+        console.log(materials_g);
+        console.log(brands_g);
+
     }
 
     function delete_row(element_row) {
+
         var row = element_row.parentNode.parentNode;
+        var remove_id = row.dataset.idRow;
         var overall_parent = row.parentNode;
         overall_parent.removeChild(row);
+
+        sizes_g[remove_id] = null;
+        logos_g[remove_id] = null;
+        colors_g[remove_id] = null;
+        categories_g[remove_id] = null;
+        styles_g[remove_id] = null;
+        materials_g[remove_id] = null;
+        brands_g[remove_id] = null;
+
     }
 
     function save() {
@@ -174,84 +683,188 @@
         });
         var limit_n = rows.length;
         var current_n = 0;
-        var current = 0;
 
-        request(rows[0]);
+        request(rows[current_n]);
 
         function request(row) {
-            $.ajax({
-                url: "/product/new/product",
-                type: "POST",
-                data: {
-                    title: row.find('#title_edit').val(),
-                    sku: row.find('#sku_edit').val(),
-                    status: row.find('select[name="status_edit"]').val(),
-                    category: row.find('select[name="category_edit"]').val(),
-                    brand: row.find('select[name="brand_edit"]').val(),
-                    price: row.find('#price_edit').val(),
-                    tax_band: row.find('select[name="tax_edit"]').val(),
-                    sale_price: row.find('#price_edit').val(),
-                    stock_level: row.find('#stock_level_edit').val(),
-                    stock_status: row.find('select[name="stock_status_edit"]').val(),
-                    description: row.find('#description_edit').val(),
-                    slug: row.find('#tags_edit').val(),
-                    requires_shipping: row.find('select[name="requires_shipping_edit"]').val(),
-                    catalog_only: row.find('select[name="catalog_only_edit"]').val()
-                },
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                    upload(row, data)
-                },
-                error: function (data) {
-                    console.log(data)
-                }
-            });
-        }
 
-        function upload(row, data) {
-            var files = row.find('#img_edit')[0].files;
-            current = 0;
+            var id_row = $(row).data('idRow');
 
-            function send(i) {
-                var reader = new FileReader();
-                reader.onloadend = function (e) {
-                    var blob = new Blob([this.result], {type: "image/jpeg"});
-                    console.log(blob);
-                    sendRecToPost(blob, '/product/upload_image?imageO=true&id='.concat(data['id']), files.length);
-                };
-                reader.readAsArrayBuffer(files[i]);
-            }
+            var logos_arr = [];
+            var colors_arr = [];
 
-            send(current);
+            var logos = logos_g[id_row];
+            var logos_length;
+            var logos_cur = 0;
 
-            function sendRecToPost(blob, url, limit) {
+            var colors = colors_g[id_row];
+            var colors_length;
+            var colors_cur = 0;
 
-                var data = new FormData();
-                data.append("file", blob);
+            var logo_info;
 
-                var oReq = new XMLHttpRequest();
-                oReq.open("put", url);
-                oReq.send(data);
+            function send_1(id) {
+                logo_info = new FormData();
+                logo_info.append('price', logos[id].price);
+                logo_info.append('file', logos[id].file);
 
-                oReq.onload = function (oEvent) {
-                    if (oReq.status === 200) {
-                        console.log("Uploaded");
-                        current = current + 1;
-                        if (current === limit && current_n < (limit_n - 1)) {
-                            current_n = current_n + 1;
-                            request(rows[current_n]);
-                        } else if (current < limit) {
-                            send(current);
-                        } else if (current_n === (limit_n - 1)) {
-                            window.location.href = '/admin/products'
+                $.ajax({
+                    url: "/product/new/logo",
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: logo_info,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        logos_arr.push(data['id']);
+                        logos_cur = logos_cur + 1;
+                        console.log(logos_arr);
+                        if (logos_cur < logos_length) {
+                            send_1(logos_cur);
+                        } else if (logos_cur === logos_length) {
+
+                            if (colors) {
+                                colors = colors.colors;
+                                colors_length = colors.length;
+
+                                if (colors_cur < colors_length) {
+                                    send_2(colors_cur);
+                                }
+                            } else {
+                                send_3();
+                            }
+
                         }
-                    } else {
-                        console.log("Error " + oReq.status + " occurred uploading your file.");
+
+                    },
+                    error: function (data) {
+                        console.log(data)
                     }
-                };
+
+                });
+
             }
 
+            function send_2(id) {
+                $.ajax({
+                    url: "/product/new/color",
+                    type: "POST",
+                    data: {
+                        title: colors[id].title,
+                        price: colors[id].price,
+                        color: colors[id].color,
+                        stock: colors[id].stock,
+                        preferred: colors[id].preferred,
+                        main_picture: colors[id].main_picture
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(colors_arr);
+                        colors_arr.push(data.id);
+                        colors_cur = colors_cur + 1;
+                        if (colors[id].files) {
+                            send_2_5(data.id, colors[id].files, id);
+                        } else {
+                            send_3();
+                        }
+                    }
+                });
+            }
+
+            function send_2_5(id, files, id_c) {
+                var files_length = files.length;
+                var files_cur = 0;
+
+                var file_info;
+
+                function sending() {
+                    file_info = new FormData();
+                    file_info.append('file', files[files_cur]);
+                    file_info.append('parent_id', id);
+                    file_info.append('main_name', colors[id_c].main_picture);
+                    $.ajax({
+                        url: "/product/new/image",
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: file_info,
+                        dataType: "json",
+                        success: function (data) {
+                            files_cur = files_cur + 1;
+                            if (files_cur < files_length) {
+                                sending();
+                            } else if (colors_cur < colors_length) {
+                                send_2(colors_cur);
+                            } else {
+                                send_3();
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data)
+                        }
+
+                    })
+
+                }
+
+                sending();
+
+            }
+
+            if (logos) {
+
+                logos = logos.logos;
+                logos_length = logos.length;
+
+                if (logos_cur < logos_length) {
+                    send_1(logos_cur);
+                }
+            } else if (colors) {
+
+                colors = colors.colors;
+                colors_length = colors.length;
+
+                if (colors_cur < colors_length) {
+                    send_2(colors_cur);
+                }
+            } else {
+                send_3();
+            }
+
+            function send_3() {
+                $.ajax({
+                    url: "/product/new/product",
+                    type: "POST",
+                    data: {
+                        title: row.find('#title').val(),
+                        price: row.find('#price').val(),
+                        status: row.find('select[name="status"]').val(),
+                        stock: row.find('#stock').val(),
+                        sku: row.find('#sku').val(),
+                        description: row.find('#description').val(),
+                        sizes: sizes_g[id_row],
+                        logos: logos_arr,
+                        colors: colors_arr,
+                        categories: categories_g[id_row],
+                        styles: styles_g[id_row],
+                        materials: materials_g[id_row],
+                        brands: brands_g[id_row],
+                        tax_band: row.find('select[name="tax"]').val()
+
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        current_n = current_n + 1;
+                        if (current_n < limit_n) {
+                            request(rows[current_n]);
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            }
         }
     }
 

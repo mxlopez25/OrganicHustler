@@ -96,22 +96,23 @@
       </tr>
       </thead>
       <tbody id="list-to-m">
-      <% AdminHelper.get_products(40).each do |product| %>
+      <% Product.last(@amount).each do |product| %>
 
           <tr id="product-row">
             <td>
               <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, '<%= product['id'] %>')">
             </td>
             <td>
-              <% unless product['images'][0].blank? %>
-                  <span id="img-thumb" class="thumbnail"><img src="https://<%= product['images'][0]['segments']['domain'] %>fit/w50/h50/<%= product['images'][0]['segments']['suffix'] %>"></span>
+              <% unless product.colors[0].blank? %>
+                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="<%= product.product_image_id %>"></span>
               <% end %>
             </td>
-            <td><%= product['title'] %></td>
-            <td><%= product['stock_level'] %></td>
-            <td><%= product['category']['value'] %></td>
-            <td class="price" style="text-align: right"><%= product['sale_price'] %></td>
+            <td><%= product.title %></td>
+            <td><%= product.stock %></td>
+            <td><%= product.categories.map {|f| f.title}.join ',' %></td>
+            <td class="price" style="text-align: right"><%= product.price %></td>
           </tr>
+
       <% end %>
 
       </tbody>

@@ -128,24 +128,29 @@
 
         <div style="padding: 10px">
 
+
+          <script>
+              var Stage = {};
+          </script>
+
         <h4><span><%= get_item_count %></span> Items</h4>
         <hr>
         <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-            <% product_temp = get_product(product.m_id) %>
+              <% product_temp = get_product_l(product.m_id) %>
             <div class="item-checkout" style="margin-bottom: 20px">
               <div style="float: left; width: 33%; position: relative">
-                <div id="<%= product.id %>cart" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
+                <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
               </div>
-              <div style="float: left; width: 67%; position: relative">
+              <div style="float: right; width: 63%; position: relative">
                 <h4><%= product_temp['title'] %></h4>
                 <div style="float: left; width: 50%">
-                  <h6>Size: <%= get_variation(product_temp, 'Size', product.size_id)['title'] %></h6> <!--FIX MISSING ATRIBUTES-->
+                  <h6>Size: <%= (Size.find product.size_id).title %></h6>
                   <h6>Customized:
                     <% if product.has_emblem %>YES
                     <% elsif product.has_logo %>YES
                     <% else %>NO
                     <% end %></h6>
-                  <h6>Color: BROWN</h6> <!-- Attach to backend -->
+                  <h6>Color: <%= (Color.find product.color_id).title %></h6>
                 </div>
                 <div style="float: left; width: 50%; text-align: center">
                   <h3>Qty: 1</h3> <!-- Attach to backend -->
@@ -157,81 +162,103 @@
               </div>
             </div>
 
-            <script id="create-shape">
-                createShape('<%= product.id %>cart', '<%= product.width %>', '<%= product.height %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>');
-                function createShape(id, width, height, x, y, s_w, s_h) {
-                    var container = $('#' + id);
-                    container.height(container.width());
+              <script id="create-shape">
 
-                    var stage = new Konva.Stage({
-                        container: id,
-                        width: container.width(),
-                        height: container.height()
-                    });
-                    var layer = new Konva.Layer();
-                    stage.add(layer);
+                  var stageWidth = 500;
+                  var stageHeight = 500;
 
-                    var baseImg = new Konva.Image({
-                        width: container.width(),
-                        height: container.height(),
-                        draggable: false
-                    });
+                  createShape('cart<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>');
 
-                    var logoImg = new Konva.Image({
-                        width: container.width() * width / s_w,
-                        height: container.height() * height / s_h
-                    });
+                  function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id) {
+                      var container = $('#' + id);
+                      container.height(container.width());
 
-                    var logoGroup = new Konva.Group({
-                        x: container.width() * x / s_w,
-                        y: container.height() * y / s_h
-                    });
+                      var stage = new Konva.Stage({
+                          container: id,
+                          width: stageWidth,
+                          height: stageHeight
+                      });
+                      var layer = new Konva.Layer();
+                      stage.add(layer);
 
+                      Stage[id] = stage;
 
-                    layer.add(baseImg);
-                    layer.add(logoGroup);
-                    logoGroup.add(logoImg);
+                      var baseImg = new Konva.Image({
+                          width: stageWidth,
+                          height: stageHeight,
+                          draggable: false
+                      });
 
-                    var imageObj1 = new Image();
-                    imageObj1.onload = function () {
-                        baseImg.image(imageObj1);
-                        layer.draw();
-                    };
-                    imageObj1.src = '<%= product_temp['images'].first['url']['https'] %>';
+                      var logoImg = new Konva.Image({
+                          x: stageWidth * x / s_w,
+                          y: stageHeight * y / s_h
+                      });
 
-                    var imageObj2 = new Image();
-                    imageObj2.onload = function () {
-                        logoImg.image(imageObj2);
-                        layer.draw();
-                        imageObj2.width = container.width() * width / s_w;
-                        imageObj2.height = container.height() * height / s_h;
-                    };
-                    imageObj2.src = '<%= get_thumb_g_id(product.logo_id, :thumb) %>';
+                      layer.add(baseImg);
+                      layer.add(logoImg);
 
-                    var position = '<%= get_position_emblem(product.position_id) %>';
-                    var emblem_url = '<%= get_emblem_image(product.emblem_id) %>';
+                      var imageObj1 = new Image();
+                      imageObj1.onload = function () {
+                          baseImg.image(imageObj1);
+                          layer.draw();
+                      };
 
-                    if (position !== '') {
-                        position = JSON.parse(position);
-                        var emblemImg = new Konva.Image({
-                            width: container.width() * parseFloat(position['width']) / parseFloat(position['rel_x']),
-                            height: container.height() * parseFloat(position['height']) / parseFloat(position['rel_y']),
-                            x: container.width() * parseFloat(position['x']) / parseFloat(position['rel_x']),
-                            y: container.height() * parseFloat(position['y']) / parseFloat(position['rel_y'])
-                        });
+                      $.ajax({
+                          url: '/catalog/product/color/main_image?color_id=' + color_id,
+                          type: 'GET',
+                          dataType: 'json',
+                          data: {},
+                          success: function (data) {
+                              imageObj1.src = data.picture
+                          },
+                          error: function (data) {
+                              console.log(data);
+                          }
+                      });
 
-                        layer.add(emblemImg);
+                      var imageObj2 = new Image();
+                      imageObj2.onload = function () {
+                          logoImg.image(imageObj2);
+                          logoImg.scale({
+                              x: stageWidth * multiplexer / s_w,
+                              y: stageHeight * multiplexer / s_h
+                          });
+                          layer.draw();
+                      };
+                      if (logo_id !== null) {
+                          $.ajax({
+                              url: '/catalog/product/logo?logo_id=' + logo_id,
+                              type: 'GET',
+                              dataType: 'text',
+                              data: {},
+                              success: function (data) {
+                                  imageObj2.src = data
+                              },
+                              error: function (data) {
+                                  console.log(data);
+                              }
+                          });
+                      }
+                      layer.draw();
+                  }
 
-                        var imageObj3 = new Image();
-                        imageObj3.onload = function () {
-                            emblemImg.image(imageObj3);
-                            layer.draw();
-                        };
-                        imageObj3.src = emblem_url;
-                    }
-                    layer.draw();
-                }
-            </script>
+                  function fitStageIntoParentContainer_we() {
+                      var container = $('#cart<%= product.id %>');
+                      container.height(container.width());
+
+                      // now we need to fit stage into parent
+                      var containerWidth = container.width();
+                      // to do this we need to scale the stage
+                      var scale = containerWidth / stageWidth;
+                      Stage['cart<%= product.id %>'].scale({x: scale, y: scale});
+                      Stage['cart<%= product.id %>'].draw();
+                  }
+
+                  fitStageIntoParentContainer_we();
+                  // adapt the stage on any window resize
+                  window.addEventListener('resize', fitStageIntoParentContainer_we);
+
+              </script>
 
         <% end %>
 
