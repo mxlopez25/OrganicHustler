@@ -293,7 +293,7 @@ class ProductController < ApplicationController
   end
 
   def delete_product
-    AdminHelper.delete_product(params['pro_id'])
+    (Product.find(params['pro_id'])).destroy!
   end
 
 end
