@@ -23,7 +23,6 @@ class HomeController < ApplicationController
     end
 
     render json: variations_obj.to_json
-
   end
 
   def emblems
@@ -49,32 +48,51 @@ class HomeController < ApplicationController
     render json: js_object.to_json
   end
 
+  def get_items
+    products = (Category.find_by_title params[:category]).products
+    render json: products.to_json
+  end
+
+  def get_images_product
+    images = Product.get_all_images params['product_id']
+    render json: images.to_json
+  end
+
+  def get_sizes_product
+    sizes = Product.get_all_sizes params['product_id']
+    render json: sizes.to_json
+  end
+
+  def get_presets_product
+    presets = (Product.find params['product_id']).presets
+    render json: presets.to_json
+  end
+
+  def get_colors_product
+    colors = (Product.find params['product_id']).colors
+    render json: colors.to_json
+  end
+
+  def get_logos_product
+    logos = (Product.find params['product_id']).logos
+    render json: logos.to_json
+  end
+
+  def get_color_images_main
+    picture = (Color.find params['color_id']).product_images.where(main: true).first
+    render json: ({data: picture, picture: picture.picture}).to_json
+  end
+
+  def get_preset_logo
+    picture = (Logo.find params['logo_id']).picture
+    render text: picture.to_s.html_safe
+  end
+
   def catalog_item
-    al = HomeHelper.get_product_by_id(params['id']).as_json
-    al['variation_pp'] = false
-    al['source_p'] = params['id']
-    al['product_id_e'] = params['id']
-    if al['is_variation']
-      al['source_p'] = al['modifiers'].first[1]['product']
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{al['source_p']}", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-      al['modifiers'] = JSON.parse(response.body)['result']['modifiers']
-    end
-    if params['variation_ma'].eql?('false')
-      al['variation_pp'] = true
-      al['image_id'] = params['logo_id']
-      al['width_u'] = params['width']
-      al['height_u'] = params['height']
-      al['x_u'] = params['dim_x']
-      al['y_u'] = params['dim_y']
-      al['s_w'] = params['relation_x']
-      al['s_h'] = params['relation_y']
-      al['has_image'] = params['has_logo']
-      al['has_emblem'] = params['has_emblem']
-      al['emblem_id'] = params['emblem_id']
-      al['position_id'] = params['position_id']
-    end
-    p al
-    render :json => al.to_json
+    al = Product.find(params['id'])
+    color = al.colors.where(preferred: true).first
+    al.attributes.merge(main_color: color)
+    render :json => JSON::parse(al.to_json).merge({main_color: color}).to_json
   end
 
   def catalog
@@ -109,7 +127,7 @@ class HomeController < ApplicationController
 
     if request.get?
 
-      tuc = TempUserControl.find_by_ip_address(request.env['REMOTE_ADDR'])
+      tuc = TempUserControl.where(ip_address: request.env['REMOTE_ADDR']).last
       if tuc
         p tuc.to_json, session['temp_token']
         @user = nil
@@ -187,24 +205,23 @@ class HomeController < ApplicationController
     product = CartProduct.create do |u|
 
       u.m_id = params[:product][:product_id]
-      u.size_id = params[:product][:size]
+      u.size_id = params[:product][:size_id]
+      u.color_id = params[:product][:color_id]
 
       u.has_logo = false
-      unless params[:product][:logo].blank?
-        u.logo_id = params[:product][:logo][:logo_id]
-        u.dim_x = HomeController.to_decimal(params[:product][:logo][:x])
-        u.dim_y = HomeController.to_decimal(params[:product][:logo][:y])
-        u.relation_x = HomeController.to_decimal(params[:product][:logo][:r_x])
-        u.relation_y = HomeController.to_decimal(params[:product][:logo][:r_y])
-        u.width = HomeController.to_decimal(params[:product][:logo][:width])
-        u.height = HomeController.to_decimal(params[:product][:logo][:height])
+      unless params[:product][:logo_id].blank?
+        u.logo_id = params[:product][:logo_id]
+        u.dim_x = HomeController.to_decimal(params[:product][:logo_x])
+        u.dim_y = HomeController.to_decimal(params[:product][:logo_y])
+        u.relation_x = 500
+        u.relation_y = 500
+        u.multiplexer = HomeController.to_decimal(params[:product][:multiplexer])
         u.has_logo = true
       end
 
       u.has_emblem = false
       unless params[:product][:emblem].blank?
         u.emblem_id = params[:product][:emblem][:emblem_id]
-        u.position_id = params[:product][:emblem][:position]
         u.has_emblem = true
       end
 
@@ -220,7 +237,7 @@ class HomeController < ApplicationController
     obj = CartProduct.where(cart_id: get_cart_id)
     json_obj = JSON.parse(obj.to_json)
     json_obj.each {|json_data|
-      json_data['product_data'] = get_product(json_data['m_id'])
+      json_data['product_data'] = Product.find(json_data['m_id'])
       json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
       json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
       json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)
@@ -267,10 +284,11 @@ class HomeController < ApplicationController
       product = cart_a.cart_products.find(id_product_cart)
       cart_a.n_products = user.cart.n_products - 1
       cart_a.save!
-      product.destroy
+      product.state = 'Cancelled'
+      product.save!
     end
 
-    redirect_to '/account'
+    redirect_to '/temporary/user/orders'
 
   end
 

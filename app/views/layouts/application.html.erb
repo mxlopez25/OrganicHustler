@@ -64,6 +64,27 @@
 
         <script>
 
+            //reload jcarousel
+            (function (window, $, undefined) {
+                var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
+                for (var i = 0; i < plugins.length; i++) {
+                    var plugin = plugins[i];
+                    var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
+                    $.fn[reload_plugin] = (function (plugin) {
+                        return function () {
+                            return this.each(function () {
+                                if (!$(this).data(plugin)) {
+                                    console.log('Element is not an instance of ' + plugin);
+                                    return false;
+                                }
+                                var _options = $(this).data(plugin)._options;
+                                $(this).data(plugin, {}).off()[plugin](_options);
+                            });
+                        };
+                    })(plugin);
+                }
+            })(this, jQuery);
+
             var btn_i = null;
             var btn_j = null;
 
@@ -104,84 +125,30 @@
 
                     for (var image in data) {
                         if (data.hasOwnProperty(image)) {
-
-                            var id = data[image]['id'];
-                            var x = data[image]['dim_x'];
-                            var y = data[image]['dim_y'];
-                            var width = data[image]['width'];
-                            var height = data[image]['height'];
-                            var r_x = data[image]['relation_x'];
-                            var r_y = data[image]['relation_y'];
-
-                            var img_container = $('#' + id + '-catalog-cart');
-                            img_container.height(img_container.width);
-
-                            var stage = new Konva.Stage({
-                                container: id + '-catalog-cart',
-                                width: img_container.width(),
-                                height: img_container.height()
-                            });
-
-                            var layer = new Konva.Layer();
-                            stage.add(layer);
-
-                            var baseImg = new Konva.Image({
-                                width: img_container.width(),
-                                height: img_container.height(),
-                                draggable: false
-                            });
-
-                            var logoImg = new Konva.Image({
-                                x: img_container.width() * x / r_x,
-                                y: img_container.height() * y / r_y,
-                                width: img_container.width() * width / r_x,
-                                height: img_container.height() * height / r_y
-                            });
-
-                            layer.add(baseImg);
-                            layer.add(logoImg);
-
-                            var imageObj1 = new Image();
-                            imageObj1.src = data[image]['product_data']['images'][0]['url']['https'];
-                            baseImg.image(imageObj1);
-
-                            var imageObj2 = new Image();
-                            imageObj2.src = data[image]['logo_url'];
-                            logoImg.image(imageObj2);
-
-                            if (data[image]['emblem_position_data']) {
-                                var emblem_x = data[image]['emblem_position_data']['x'];
-                                var emblem_y = data[image]['emblem_position_data']['y'];
-                                var emblem_width = data[image]['emblem_position_data']['width'];
-                                var emblem_height = data[image]['emblem_position_data']['height'];
-                                var emblem_r_x = data[image]['emblem_position_data']['rel_x'];
-                                var emblem_r_y = data[image]['emblem_position_data']['rel_y'];
-
-                                var emblemImg = new Konva.Image({
-                                    x: img_container.width() * emblem_x / emblem_r_x,
-                                    y: img_container.width() * emblem_y / emblem_r_y,
-                                    width: img_container.width() * emblem_width / emblem_r_x,
-                                    height: img_container.height() * emblem_height / emblem_r_y
-                                });
-
-                                layer.add(emblemImg);
-
-                                var imageObj3 = new Image();
-                                imageObj3.src = data[image]['emblem_url'];
-                                emblemImg.image(imageObj3);
-                            }
-
-                            layer.draw();
+                            create_preview(data[image]);
                         }
                     }
 
                     // Reload carousel
+                    var jcarouselSelector = '.jcarousel';
+
+                    $(jcarouselSelector).reloadJcarousel();
+
+                    $('.jcarousel-control-prev').jcarouselControl({
+                        // Options go here
+                        target: '-=1'
+                    });
+                    $('.jcarousel-control-next').jcarouselControl({
+                        // Options go here
+                        target: '+=1'
+                    });
                     $('.jcarousel').jcarousel('reload');
 
                 },
                 error: function (data) {
 
                 }
+
             }).done(function () {
                 btn_j = $('#cart_ic_2');
                 btn_i = $('#cart_ic_1');
@@ -190,6 +157,14 @@
                 span = document.getElementsByClassName("close")[0];
                 // Get the modal
                 modal = document.getElementById('myModal');
+
+                modal.addEventListener('click', close_modal);
+
+                function close_modal() {
+                    document.getElementsByTagName('body')[0].classList.remove('modal-open');
+                    modal.style.display = "none";
+                }
+
                 triangle = document.getElementById('triangle');
                 modal_c = document.getElementById('modal_c');
                 bagModal = document.getElementById('bag_modal');
@@ -208,7 +183,7 @@
                     cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
 
                     bagModal.style.top = cart_bottom + 'px';
-                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
 
                     var carousel_p = document.getElementById('product-loader-carousel');
                     $('.element_product').each(function () {
@@ -230,7 +205,7 @@
                     bagModal.style.height = '100%';
                     modal_c.style.height = '100%';
 
-                    if ($(window).width() > 468){
+                    if ($(window).width() > 468) {
 
                         cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
 
@@ -258,8 +233,8 @@
                 };
 
                 var width = $(window).width();
-                $(window).on('resize', function(){
-                    if($(this).width() !== width){
+                $(window).on('resize', function () {
+                    if ($(this).width() !== width) {
                         width = $(this).width();
 
                         triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
@@ -270,11 +245,11 @@
                             cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
                             cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
                             bagModal.style.top = cart_bottom + 'px';
-                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width/2) - (cart_width/2) + 'px';
+                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
                             bagModal.style.width = 'auto';
                             bagModal.style.left = 'auto';
                             bagModal.style.margin = 'auto';
-                        }else if (width > 468){
+                        } else if (width > 468) {
                             cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
                             bagModal.style.top = cart_bottom + 'px';
                             modal_c.style.height = 'auto';
@@ -283,7 +258,7 @@
                             bagModal.style.right = 0;
                             bagModal.style.bottom = 'auto';
                             bagModal.style.margin = 'auto';
-                        }else {
+                        } else {
                             bagModal.style.top = 0;
                             bagModal.style.right = 0;
                             bagModal.style.left = 0;
@@ -302,50 +277,90 @@
                 });
             });
 
-            //Photo slider
-            (function ($) {
-                $(function () {
-                    $('.jcarousel').jcarousel();
+            function create_preview(preview) {
+                console.log(preview);
+                var selector = preview.id + '-catalog-cart';
+                var container = $('#' + selector);
+                console.log(container.width);
 
-                    $('.jcarousel-control-prev')
-                        .on('jcarouselcontrol:active', function () {
-                            $(this).removeClass('inactive');
-                        })
-                        .on('jcarouselcontrol:inactive', function () {
-                            $(this).addClass('inactive');
-                        })
-                        .jcarouselControl({
-                            target: '-=1'
-                        });
 
-                    $('.jcarousel-control-next')
-                        .on('jcarouselcontrol:active', function () {
-                            $(this).removeClass('inactive');
-                        })
-                        .on('jcarouselcontrol:inactive', function () {
-                            $(this).addClass('inactive');
-                        })
-                        .jcarouselControl({
-                            target: '+=1'
-                        });
-
-                    $('.jcarousel-pagination')
-                        .on('jcarouselpagination:active', 'a', function () {
-                            $(this).addClass('active');
-                        })
-                        .on('jcarouselpagination:inactive', 'a', function () {
-                            $(this).removeClass('active');
-                        })
-                        .jcarouselPagination();
+                var stage = new Konva.Stage({
+                    container: selector,
+                    width: container.width(),
+                    height: container.height()
                 });
-            })(jQuery);
+
+                var layer = new Konva.Layer();
+                stage.add(layer);
+
+                var baseImg = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    width: container.width(),
+                    height: container.height(),
+                    draggable: false
+                });
+                layer.add(baseImg);
+
+                var logoImg = new Konva.Image({
+                    x: (container.width() * preview.dim_x) / 500,
+                    y: (container.height() * preview.dim_y) / 500
+                });
+                layer.add(logoImg);
+
+                var imageBase = new Image();
+                imageBase.onload = function () {
+                    baseImg.image(imageBase);
+                    layer.draw();
+                };
+
+                var imageLogo = new Image();
+                imageLogo.onload = function () {
+                    logoImg.image(imageLogo);
+                    logoImg.setWidth(this.width);
+                    logoImg.setHeight(this.height);
+                    logoImg.scale({
+                        x: (container.width() * preview.multiplexer) / 500,
+                        y: (container.height() * preview.multiplexer) / 500
+                    });
+                    layer.draw()
+                };
+
+                $.ajax({
+                    url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {},
+                    success: function (data) {
+                        imageBase.src = data.picture
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                if (preview.logo_id !== null) {
+                    $.ajax({
+                        url: '/catalog/product/logo?logo_id=' + preview.logo_id,
+                        type: 'GET',
+                        dataType: 'text',
+                        data: {},
+                        success: function (data) {
+                            imageLogo.src = data
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+            }
         </script>
       </div>
 
       <hr class="no-spacing-bar">
       <div style="overflow: hidden" class="modal_c_part">
         <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f",get_price) %></span>
+        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f", get_price) %></span>
       </div>
       <hr class="no-spacing-bar">
       <div class="modal_c_part">
@@ -507,17 +522,6 @@
 
     </div>
   </div>
-
-  <script>
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-          if (event.target === modal) {
-              modal.style.display = "none";
-              $("body").removeClass("modal-open")
-          }
-      }
-  </script>
 
 </nav>
 

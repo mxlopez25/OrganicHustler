@@ -9,6 +9,7 @@ class AdminController < ApplicationController
   end
 
   def products
+    @amount = params[:limit] || 10
   end
 
   def logo
@@ -45,13 +46,22 @@ class AdminController < ApplicationController
   end
 
   def info_product
-    @product = AdminHelper.get_product_by_id(params[:id])
+    @product = Product.find(params[:id])
     render 'admin/products_functions/info_product'
   end
 
   def edit_product
-    @product = AdminHelper.get_product_by_id(params[:id])
+    @product = Product.find(params[:id])
     render 'admin/products_functions/edit_product'
+  end
+
+  def get_images_colors
+    images = Product.get_all_images_colors params['product_id']
+    render json: images.to_json
+  end
+
+  def get_logos
+    render json: (Product.find params['product_id']).logos.to_json
   end
 
   def modify_variation

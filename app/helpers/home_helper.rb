@@ -160,45 +160,26 @@ module HomeHelper
     user.cart.n_products
   end
 
-  def get_products_f_catalog(parameters)
-    available_params = ''
-    parameters.each do |t|
-      unless params[t].blank?
-        if t != 'looks' && t != 'hats' && t != 'men' && t != 'women' && t != 'brand' && t != 'controller' && t != 'action'
-          available_params = "#{available_params}?#{t}=#{params[t]}"
-        end
+  def get_products_catalog(parameters)
 
-      end
-    end
+    cat = params['view']
 
-    id_cat = ''
-    AdminHelper.get_categories.each do |category|
-      if category['slug'].eql?(params['view'])
-        id_cat = category['id']
-      end
-    end
-
-    response = ''
-    if parameters['search'].blank?
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?category=#{id_cat}&limit=40", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-    else
-      response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/search/?title=#{parameters['search']}&limit=40", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-    end
+    products = Product.find_by_category cat
 
     JSON.parse(response.body)['result']
   end
 
   def product_price(p_cart_id)
     product = CartProduct.find(p_cart_id)
-    product_main = HomeHelper.get_product_by_id(product.m_id)
+    product_main = Product.find(product.m_id)
 
-    product_price = HomeController.to_decimal(product_main['price']['data']['raw']['without_tax'])
-    base_product_tax = HomeController.to_decimal(product_main['price']['data']['raw']['tax'])
+    product_price = HomeController.to_decimal(product_main.price)
+    base_product_tax = HomeController.to_decimal(product_main.taxes.amount)
     price_logo = 0
     price_emblem = 0
 
     unless product.logo_id.blank?
-      logo = Picture.find(product.logo_id)
+      logo = Logo.find(product.logo_id)
       price_logo = logo.price || 0
     end
 
@@ -207,7 +188,7 @@ module HomeHelper
       price_emblem = emblem.cost || 0
     end
 
-    size_price = HomeController.to_decimal(get_variation(product_main, 'Size', product.size_id)['mod_price'])
+    size_price = HomeController.to_decimal((Size.find product.size_id).price)
 
     total_m = (product_price + size_price + price_logo + price_emblem)
     real_product_tax = total_m * base_product_tax/product_price

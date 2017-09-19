@@ -106,6 +106,10 @@ module AdminHelper
     JSON.parse(response.body)['result']
   end
 
+  def get_product_l(id)
+    Product.find id
+  end
+
   def get_product_variations(id)
     response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{id}/variations", {:Authorization => "Bearer #{AdminHelper.generate_token}"})
     JSON.parse(response.body)['result']

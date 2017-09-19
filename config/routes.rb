@@ -20,11 +20,15 @@ Rails.application.routes.draw do
   get '/catalog' => 'home#catalog'
   get '/cart' => 'home#get_cart_items'
   get '/catalog/item/:id' => 'home#catalog_item'
-  get '/catalog/get_image' => 'home#get_image_by_id'
-  get '/catalog/logos/:id' => 'home#get_logos_by_id'
-  get '/catalog/product/colored/:pr_id/:mod/:act_obj' => 'home#colored_image'
-  get '/catalog/product/emblems/:pr_id' => 'home#emblems'
-  get '/catalog/product/emblem/:position_id' => 'home#get_emblem'
+  get '/catalog/items' => 'home#get_items'
+  get '/catalog/product/images' => 'home#get_images_product'
+  get '/catalog/product/sizes' => 'home#get_sizes_product'
+  get '/catalog/product/presets' => 'home#get_presets_product'
+  get '/catalog/product/colors' => 'home#get_colors_product'
+  get '/catalog/product/logos' => 'home#get_logos_product'
+
+  get '/catalog/product/color/main_image' => 'home#get_color_images_main'
+  get '/catalog/product/logo' => 'home#get_preset_logo'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
@@ -48,6 +52,9 @@ Rails.application.routes.draw do
   get '/admin/edit_variation/:source_product/:variation_id' => 'admin#modify_variation'
   get '/admin/add_variation/:source_product' => 'admin#add_variation'
 
+  get '/admin/products/color_images' => 'admin#get_images_colors'
+  get '/admin/products/logos' => 'admin#get_logos'
+
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
   post '/admin/product/new' => 'admin#new_product'
   post '/admin/mailer' => 'admin#mailer_send'
@@ -65,8 +72,32 @@ Rails.application.routes.draw do
 
   post '/product/reload_table' => 'product#table_products'
   post '/product/new/product' => 'product#new_product'
+  post '/product/new/logo' => 'product#new_logo'
+  post '/product/new/color' => 'product#new_color'
+  post '/product/new/image' => 'product#new_image'
 
-  put '/product/edit/product' => 'product#save_product'
+  post '/product/remove/size' => 'product#remove_size'
+  post '/product/add/size' => 'product#add_size'
+
+  post '/product/remove/logo' => 'product#remove_logo'
+  post '/product/add/logo' => 'product#add_logo'
+
+  post '/product/remove/category' => 'product#remove_category'
+  post '/product/add/category' => 'product#add_category'
+
+  post '/product/remove/style' => 'product#remove_style'
+  post '/product/add/style' => 'product#add_style'
+
+  post '/product/remove/material' => 'product#remove_material'
+  post '/product/add/material' => 'product#add_material'
+
+  post '/product/remove/brand' => 'product#remove_brand'
+  post '/product/add/brand' => 'product#add_brand'
+
+  post '/product/add/preset' => 'product#add_preset'
+  post '/product/remove/preset' => 'product#remove_preset'
+
+  put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'
 

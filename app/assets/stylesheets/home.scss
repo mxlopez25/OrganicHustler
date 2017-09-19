@@ -16,23 +16,27 @@
   margin-bottom: 6px;
 }
 
-#image-container {
-  width: 60%;
-  text-align: center;
-  padding: 10px;
-  margin: 0 auto;
-}
-
 .image-container-quick {
-  width: 100%;
+  width: 95%;
   text-align: center;
-  padding: 10px;
-  margin: 0 auto;
+  margin: 0 auto auto auto;
   z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: relative;
 }
 
-#image-container img, div canvas, canvas {
-  width: 100%;
+.images-container-quick {
+  width: 95%;
+  position: relative;
+  margin: 0 auto;
+
+}
+
+#image-container img, div canvas, canvas, div {
+  margin: auto;
 }
 
 .complete {
@@ -504,13 +508,14 @@ div.blur {
   }
 }
 
-.wrapper-img {
+.wrapper-side {
   margin-left: auto;
   margin-right: auto;
   width: 75%;
   max-height: 440px;
-  margin-top: -10px;
   float: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .g-wrapper {
@@ -532,7 +537,7 @@ button.btn-cust:hover {
 
 .content-part {
   float: left;
-  width: 90%;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -577,6 +582,19 @@ button:active {
 
 @media screen and (min-width: 768px) {
 
+  .image-container-quick {
+    position: absolute;
+    height: 67%;
+  }
+
+  .images-container-quick {
+    position: absolute;
+    height: 15%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+
   .modal-content-quick-m {
     width: 17%;
     min-height: 185px;
@@ -603,12 +621,11 @@ button:active {
     border: none
   }
 
-  .wrapper-img {
+  .wrapper-side {
+    height: 450px;
     width: 50%;
-    max-height: 440px;
+    max-height: 450px;
     float: left;
-    margin-top: -10px;
-    margin-left: -10px
   }
 
   .img-con-item {
