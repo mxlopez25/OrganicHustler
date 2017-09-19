@@ -205,24 +205,23 @@ class HomeController < ApplicationController
     product = CartProduct.create do |u|
 
       u.m_id = params[:product][:product_id]
-      u.size_id = params[:product][:size]
+      u.size_id = params[:product][:size_id]
+      u.color_id = params[:product][:color_id]
 
       u.has_logo = false
-      unless params[:product][:logo].blank?
-        u.logo_id = params[:product][:logo][:logo_id]
-        u.dim_x = HomeController.to_decimal(params[:product][:logo][:x])
-        u.dim_y = HomeController.to_decimal(params[:product][:logo][:y])
-        u.relation_x = HomeController.to_decimal(params[:product][:logo][:r_x])
-        u.relation_y = HomeController.to_decimal(params[:product][:logo][:r_y])
-        u.width = HomeController.to_decimal(params[:product][:logo][:width])
-        u.height = HomeController.to_decimal(params[:product][:logo][:height])
+      unless params[:product][:logo_id].blank?
+        u.logo_id = params[:product][:logo_id]
+        u.dim_x = HomeController.to_decimal(params[:product][:logo_x])
+        u.dim_y = HomeController.to_decimal(params[:product][:logo_y])
+        u.relation_x = 500
+        u.relation_y = 500
+        u.multiplexer = HomeController.to_decimal(params[:product][:multiplexer])
         u.has_logo = true
       end
 
       u.has_emblem = false
       unless params[:product][:emblem].blank?
         u.emblem_id = params[:product][:emblem][:emblem_id]
-        u.position_id = params[:product][:emblem][:position]
         u.has_emblem = true
       end
 
@@ -238,7 +237,7 @@ class HomeController < ApplicationController
     obj = CartProduct.where(cart_id: get_cart_id)
     json_obj = JSON.parse(obj.to_json)
     json_obj.each {|json_data|
-      json_data['product_data'] = get_product(json_data['m_id'])
+      json_data['product_data'] = Product.find(json_data['m_id'])
       json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
       json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
       json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)

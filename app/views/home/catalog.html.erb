@@ -248,7 +248,7 @@
       <label for="product-id-p1"></label><input type="text" class="hidden" id="product-id-p1" value="">
 
       <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="add_emblem(true)" class="styling_btn btn">EDIT</button>
-      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="add_emblem(false)" class="styling_btn btn">ADD
+      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="load_view_1(product.data)" class="styling_btn btn">ADD
         TO CART
       </button>
     </div>
@@ -1013,8 +1013,7 @@
 
             ACTUAL_LOGO = new Konva.Image({
                 x: product.logo_x,
-                y: product.logo_y,
-                draggable: true
+                y: product.logo_y
             });
             LAYER.add(ACTUAL_LOGO);
 
@@ -1395,7 +1394,6 @@
             success: function (data) {
                 console.log(data);
 
-                var html_images = '';
                 var carousel_jq = $('ul#container-presets');
 
                 for (var i = 0; i < data.length; i++) {
@@ -1428,7 +1426,6 @@
         function create_preview(preview) {
             var selector = 'div_preview_' + preview.id;
             var container = document.getElementById(selector);
-            console.log(container);
 
             var stage = new Konva.Stage({
                 container: selector,
@@ -1622,7 +1619,7 @@
 
     function addToCart() {
 
-        if (product.selected_size !== null) {
+        if (product.size_id !== null) {
 
             $.ajax({
                 type: "POST",
@@ -1658,105 +1655,6 @@
                 $(spans[i]).removeClass('badge_selected');
             }
         }
-    }
-
-    function addToPic(imageToAdd, imageId) {
-
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].destroy();
-            layer.draw();
-        }
-
-        logo.logo_id = imageId;
-        logo.x = logo.x || 0;
-        logo.y = logo.y || 0;
-        logo.r_x = logo.r_x || 500;
-        logo.r_y = logo.r_y || 500;
-
-        var logo_image = new Konva.Image({
-            name: 'image',
-            preventDefault: false
-        });
-
-        var logo_group = new Konva.Group({
-            x: 500 * logo.x / logo.r_x,
-            y: 500 * logo.y / logo.r_y,
-            name: 'group',
-            draggable: true
-        });
-
-        layer.add(logo_group);
-        logo_group.add(logo_image);
-
-        var border;
-
-        var imageLogo = new Image();
-        imageLogo.onload = function () {
-            logo.width = (500 * logo.width / logo.r_x) || imageLogo.width * 0.2;
-            logo.height = (500 * logo.height / logo.r_y) || imageLogo.height * 0.2;
-
-            logo_image.image(imageLogo);
-
-            logo_image.width(logo.width);
-            logo_image.height(logo.height);
-
-            border = addBorders(logo_group, 0, 0, "borders", logo.height, logo.width);
-            elementsBorders.push(border);
-
-            layer.draw();
-        };
-
-        hideAll();
-        selected = logo_group;
-        elements.push(selected);
-
-        logo_group.on('click tap', function () {
-            if (border.visible() === false) {
-                hideAll();
-                border.show();
-                selected = logo_group;
-                layer.draw();
-            } else {
-                hideAll();
-                selected = null;
-                layer.draw();
-            }
-        });
-
-        logo_group.on('dragend', function () {
-            logo.x = logo_group.x();
-            logo.y = logo_group.y();
-
-        });
-
-        imageLogo.src = imageToAdd;
-        product.logo = logo;
-    }
-
-    function hideAll() {
-        for (var i = 0; i < elementsBorders.length; i++) {
-            elementsBorders[i].hide();
-        }
-    }
-
-    function addBorders(group, x, y, name, h, w) {
-        var layer = group.getLayer();
-        var anchor = new Konva.Rect({
-            x: x,
-            y: y,
-            width: w,
-            height: h,
-            stroke: '#A9A9A9',
-            strokeWidth: 3,
-            name: name,
-            draggable: false,
-            dragOnTop: false,
-            preventDefault: false
-        });
-
-        group.add(anchor);
-        layer.draw();
-        return anchor;
     }
 
     var tempData_array = [];
@@ -1889,111 +1787,13 @@
 
     }
 
-    function createShape(id, variation, width, height, x, y, s_w, s_h) {
-        var container = $('#' + id + variation);
-        container.height(container.width());
-
-        var stage = new Konva.Stage({
-            container: id + variation,
-            width: container.width(),
-            height: container.height()
-        });
-        var layer = new Konva.Layer();
-        stage.add(layer);
-
-        container.on('touchend', function () {
-
-            logo.remove();
-            emblem.remove();
-
-            logo.logo_id = id;
-            logo.x = 500 * x / s_w;
-            logo.y = 500 * y / s_h;
-            logo.width = 500 * width / s_w;
-            logo.height = 500 * height / s_h;
-            logo.r_x = 500;
-            logo.r_y = 500;
-            product.logo = logo;
-
-            load_p1(product, false);
-        });
-
-        container.on('click', function () {
-
-            logo.remove();
-            emblem.remove();
-
-            logo.logo_id = id;
-            logo.x = 500 * x / s_w;
-            logo.y = 500 * y / s_h;
-            logo.width = 500 * width / s_w;
-            logo.height = 500 * height / s_h;
-            logo.r_x = 500;
-            logo.r_y = 500;
-            product.logo = logo;
-
-            load_p1(product, false);
-        });
-
-
-        var baseImg = new Konva.Image({
-            width: container.width(),
-            height: container.height(),
-            draggable: false
-        });
-
-        var logoImg = new Konva.Image({
-            width: container.width() * width / s_w,
-            height: container.height() * height / s_h
-        });
-
-        var logoGroup = new Konva.Group({
-            x: container.width() * x / s_w,
-            y: container.width() * y / s_h
-        });
-
-        layer.add(baseImg);
-        layer.add(logoGroup);
-        logoGroup.add(logoImg);
-
-        var imageObj1 = new Image();
-        imageObj1.onload = function () {
-            baseImg.image(imageObj1);
-            layer.draw();
-        };
-        imageObj1.src = product.data['images'][0]['url']['https'];
-
-        var imageObj2 = new Image();
-        imageObj2.onload = function () {
-            logoImg.image(imageObj2);
-            layer.draw();
-            imageObj2.width = container.width() * width / s_w;
-            imageObj2.height = container.height() * height / s_h;
-        };
-
-        $.ajax({
-            type: "get",
-            url: "/catalog/get_image?id=" + id + "&style=thumb",
-            data: {},
-            dataType: "html",
-            success: function (data) {
-                imageObj2.src = data;
-                layer.draw();
-            },
-            error: function (data) {
-            }
-        });
-
-
-    }
-
     var item_s = '<%= params['id'] %>';
     var item_v = '<%= params['view'] %>';
     if (item_s !== '') {
         if (item_v === '2') {
-            open_quick_2(item_s);
+            open_quick(item_s, 2);
         } else {
-            open_quick_1(item_s);
+            open_quick(item_s, 1);
         }
     }
 

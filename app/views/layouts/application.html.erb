@@ -104,74 +104,7 @@
 
                     for (var image in data) {
                         if (data.hasOwnProperty(image)) {
-
-                            var id = data[image]['id'];
-                            var x = data[image]['dim_x'];
-                            var y = data[image]['dim_y'];
-                            var width = data[image]['width'];
-                            var height = data[image]['height'];
-                            var r_x = data[image]['relation_x'];
-                            var r_y = data[image]['relation_y'];
-
-                            var img_container = $('#' + id + '-catalog-cart');
-                            img_container.height(img_container.width);
-
-                            var stage = new Konva.Stage({
-                                container: id + '-catalog-cart',
-                                width: img_container.width(),
-                                height: img_container.height()
-                            });
-
-                            var layer = new Konva.Layer();
-                            stage.add(layer);
-
-                            var baseImg = new Konva.Image({
-                                width: img_container.width(),
-                                height: img_container.height(),
-                                draggable: false
-                            });
-
-                            var logoImg = new Konva.Image({
-                                x: img_container.width() * x / r_x,
-                                y: img_container.height() * y / r_y,
-                                width: img_container.width() * width / r_x,
-                                height: img_container.height() * height / r_y
-                            });
-
-                            layer.add(baseImg);
-                            layer.add(logoImg);
-
-                            var imageObj1 = new Image();
-                            imageObj1.src = data[image]['product_data']['images'][0]['url']['https'];
-                            baseImg.image(imageObj1);
-
-                            var imageObj2 = new Image();
-                            imageObj2.src = data[image]['logo_url'];
-                            logoImg.image(imageObj2);
-
-                            if (data[image]['emblem_position_data']) {
-                                var emblem_x = data[image]['emblem_position_data']['x'];
-                                var emblem_y = data[image]['emblem_position_data']['y'];
-                                var emblem_width = data[image]['emblem_position_data']['width'];
-                                var emblem_height = data[image]['emblem_position_data']['height'];
-                                var emblem_r_x = data[image]['emblem_position_data']['rel_x'];
-                                var emblem_r_y = data[image]['emblem_position_data']['rel_y'];
-
-                                var emblemImg = new Konva.Image({
-                                    x: img_container.width() * emblem_x / emblem_r_x,
-                                    y: img_container.width() * emblem_y / emblem_r_y,
-                                    width: img_container.width() * emblem_width / emblem_r_x,
-                                    height: img_container.height() * emblem_height / emblem_r_y
-                                });
-
-                                layer.add(emblemImg);
-
-                                var imageObj3 = new Image();
-                                imageObj3.src = data[image]['emblem_url'];
-                                emblemImg.image(imageObj3);
-                            }
-
-                            layer.draw();
+                            create_preview(data[image]);
                         }
                     }
 
@@ -182,6 +115,7 @@
                 error: function (data) {
 
                 }
+
             }).done(function () {
                 btn_j = $('#cart_ic_2');
                 btn_i = $('#cart_ic_1');
@@ -301,6 +235,82 @@
                     }
                 });
             });
+
+            function create_preview(preview) {
+                console.log(preview);
+                var selector = preview.id + '-catalog-cart';
+                var container = $('#' + selector);
+                console.log(container.width);
+
+
+                var stage = new Konva.Stage({
+                    container: selector,
+                    width: container.width(),
+                    height: container.height()
+                });
+
+                var layer = new Konva.Layer();
+                stage.add(layer);
+
+                var baseImg = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    width: container.width(),
+                    height: container.height(),
+                    draggable: false
+                });
+                layer.add(baseImg);
+
+                var logoImg = new Konva.Image({
+                    x: (container.width() * preview.dim_x) / 500,
+                    y: (container.height() * preview.dim_y) / 500
+                });
+                layer.add(logoImg);
+
+                var imageBase = new Image();
+                imageBase.onload = function () {
+                    baseImg.image(imageBase);
+                    layer.draw();
+                };
+
+                var imageLogo = new Image();
+                imageLogo.onload = function () {
+                    logoImg.image(imageLogo);
+                    logoImg.setWidth(this.width);
+                    logoImg.setHeight(this.height);
+                    logoImg.scale({
+                        x: (container.width() * preview.multiplexer) / 500,
+                        y: (container.height() * preview.multiplexer) / 500
+                    });
+                    layer.draw()
+                };
+
+                $.ajax({
+                    url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {},
+                    success: function (data) {
+                        imageBase.src = data.picture
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '/catalog/product/logo?logo_id=' + preview.logo_id,
+                    type: 'GET',
+                    dataType: 'text',
+                    data: {},
+                    success: function (data) {
+                        imageLogo.src = data
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
 
             //Photo slider
             (function ($) {
