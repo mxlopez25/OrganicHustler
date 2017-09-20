@@ -55,7 +55,7 @@
 
     function load_items() {
         $.ajax({
-            url: '/catalog/items?category=' + '<%= @parameters['view'] %>',
+            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=<%= @parameters['style'] %>',
             type: 'GET',
             dataType: 'json',
             data: {},
