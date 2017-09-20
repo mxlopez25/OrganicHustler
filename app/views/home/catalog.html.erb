@@ -62,6 +62,7 @@
             success: function (data) {
                 console.log(data);
                 var html_items = '';
+                document.getElementById('product_counter').innerHTML = data.length + ' products found';
                 for (var id in data) {
                     var item = data[id];
                     html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick(\'' + item.id + '\', 1)">'
