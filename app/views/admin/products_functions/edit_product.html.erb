@@ -302,9 +302,22 @@
             return '<div id="general_frame">' +
                 '       <label for="file_emblem">Emblem</label>' +
                 '       <input style="width:100%;" type="file" id="file_emblem">' +
-                '       <label>Price</label>' +
-                '       <input id="file_price" step="any" >' +
-                '       <label>Title</label>' +
+                '       <label for="file_price">Price</label>' +
+                '       <input type="number" id="file_price" step="any" >' +
+                '       <label for="file-title">Title</label>' +
+                '       <input id="file-title">' +
+                '       <div id="color_holder">' +
+                '           <label for="colors_list">Color</label>' +
+                '           <select style="width: 100%" id="colors_list" onchange="change_base_emblem(this)">' +
+                '           ' +
+                '           </select>' +
+                '       </div>' +
+                '       <div style="width: 500px; height: 500px; margin: 0 auto" id="preview_holder">' +
+                '           ' +
+                '       </div>' +
+                '       <button onclick="zoom_in()">+</button>' +
+                '       <button onclick="zoom_out()">-</button>' +
+                '       <input id="grow_rate" value="' + ZOOM_COUNT + '">' +
                 '       <button class="btn btn-success" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
                 '   </div>';
         }
