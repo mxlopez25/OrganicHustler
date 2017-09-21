@@ -301,7 +301,24 @@
         function complete_emblem(id) {
             return '<div id="general_frame">' +
                 '       <label for="file_emblem">Emblem</label>' +
-                '       <input type="file" id="file_emblem">' +
+                '       <input style="width:100%;" type="file" id="file_emblem">' +
+                '       <label for="file_price">Price</label>' +
+                '       <input type="number" id="file_price" step="any" >' +
+                '       <label for="file-title">Title</label>' +
+                '       <input id="file-title">' +
+                '       <div id="color_holder">' +
+                '           <label for="colors_list">Color</label>' +
+                '           <select style="width: 100%" id="colors_list" onchange="change_base_emblem(this)">' +
+                '           ' +
+                '           </select>' +
+                '       </div>' +
+                '       <div style="width: 500px; height: 500px; margin: 0 auto" id="preview_holder_emblem">' +
+                '           ' +
+                '       </div>' +
+                '       <button onclick="zoom_in_emblem()">+</button>' +
+                '       <button onclick="zoom_out_emblem()">-</button>' +
+                '       <input id="grow_rate" value="' + ZOOM_COUNT + '">' +
+                '       <button class="btn btn-success" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
                 '   </div>';
         }
 
@@ -547,6 +564,10 @@
         var COLORS_PICTURES = null;
         var BASE_IMAGE = null;
 
+        var ACTUAL_EMBLEM = null;
+        var ACTUAL_COLOR_EMBLEM = null;
+        var EMBLEM_IMAGE = null;
+        var EMBLEM_IMAGE_H = null;
 
         function zoom_in() {
 
@@ -567,6 +588,32 @@
             ACTUAL_ZOOM = ACTUAL_ZOOM - ZOOM_COUNT;
 
             LOGO_IMAGE.scale({
+                x: ACTUAL_ZOOM,
+                y: ACTUAL_ZOOM
+            });
+
+            LAYER.draw();
+        }
+
+        function zoom_in_emble() {
+
+            ZOOM_COUNT = parseFloat(document.getElementById('grow_rate').value);
+            ACTUAL_ZOOM = ACTUAL_ZOOM + ZOOM_COUNT;
+
+            EMBLEM_IMAGE.scale({
+                x: ACTUAL_ZOOM,
+                y: ACTUAL_ZOOM
+            });
+
+            LAYER.draw();
+        }
+
+        function zoom_out_emblem() {
+
+            ZOOM_COUNT = parseFloat(document.getElementById('grow_rate').value);
+            ACTUAL_ZOOM = ACTUAL_ZOOM - ZOOM_COUNT;
+
+            EMBLEM_IMAGE.scale({
                 x: ACTUAL_ZOOM,
                 y: ACTUAL_ZOOM
             });
@@ -604,7 +651,7 @@
             formData.append('price', $(parent).find('#price').val());
             formData.append('x', EMBLEM_IMAGE.getX());
             formData.append('y', EMBLEM_IMAGE.getY());
-            formData.append('color_id', ACTUAL_COLOR);
+            formData.append('color_id', ACTUAL_COLOR_EMBLEM);
             formData.append('multiplexer', ACTUAL_ZOOM);
             formData.append('pr_id', id);
 
