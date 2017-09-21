@@ -870,6 +870,7 @@
   </div>
 
   <div class="card modal-g">
+    Presets
     <% product_i.presets.each do |preset| %>
         <div id="preset-row" style="overflow: auto">
           <button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
@@ -889,6 +890,10 @@
     <button style="width:100%;" onclick="edit_modal('preset_modal', <%= product_i.id %>)" class="btn btn-success">ADD
       PRESET
     </button>
+  </div>
+
+  <div class="card modal-g">
+    Emblems
   </div>
 
   <div id="dim_back" class="dim_back">
