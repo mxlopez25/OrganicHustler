@@ -301,7 +301,11 @@
         function complete_emblem(id) {
             return '<div id="general_frame">' +
                 '       <label for="file_emblem">Emblem</label>' +
-                '       <input type="file" id="file_emblem">' +
+                '       <input style="width:100%;" type="file" id="file_emblem">' +
+                '       <label>Price</label>' +
+                '       <input id="file_price" step="any" >' +
+                '       <label>Title</label>' +
+                '       <button class="btn btn-success" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
                 '   </div>';
         }
 
