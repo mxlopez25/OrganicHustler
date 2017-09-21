@@ -173,32 +173,45 @@ class ProductController < ApplicationController
     product.sku = params['sku']
     product.description = params['description']
 
-    params['sizes'].each do |size|
-      product.sizes << Size.new(size_params (params['sizes'][size]))
+    if params['sizes']
+      params['sizes'].each do |size|
+        product.sizes << Size.new(size_params (params['sizes'][size]))
+      end
     end
 
-    product.logos << Logo.find(params['logos'])
-    product.colors << ApplicationRecord::Color.find(params['colors'])
-
-    #assigning main image
-    image = product.colors[0].product_images[0]
-
-    product.product_image_id = image.picture
-
-    params['categories'].each do |category|
-      product.categories << Category.find_or_create_by!(title: params['categories'][category]['title'])
+    if params['logos']
+      product.logos << Logo.find(params['logos'])
     end
 
-    params['styles'].each do |style|
-      product.styles << Style.find_or_create_by!(title: params['styles'][style]['title'])
+    if params['colors']
+      product.colors << ApplicationRecord::Color.find(params['colors'])
+      #assigning main image
+      image = product.colors[0].product_images[0]
+      product.product_image_id = image.picture
     end
 
-    params['materials'].each do |material|
-      product.materials << Material.find_or_create_by!(title: params['materials'][material]['title'])
+    if params['categories']
+      params['categories'].each do |category|
+        product.categories << Category.find_or_create_by!(title: params['categories'][category]['title'])
+      end
     end
 
-    params['brands'].each do |brand|
-      product.brands << Brand.find_or_create_by!(title: params['brands'][brand]['title'])
+    if params['styles']
+      params['styles'].each do |style|
+        product.styles << Style.find_or_create_by!(title: params['styles'][style]['title'])
+      end
+    end
+
+    if params['materials']
+      params['materials'].each do |material|
+        product.materials << Material.find_or_create_by!(title: params['materials'][material]['title'])
+      end
+    end
+
+    if params['brands']
+      params['brands'].each do |brand|
+        product.brands << Brand.find_or_create_by!(title: params['brands'][brand]['title'])
+      end
     end
 
     product.tax_band_id = params['tax_band']
