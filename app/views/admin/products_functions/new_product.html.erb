@@ -195,7 +195,7 @@
             html = html + '<div class="size_row" style="overflow: hidden">' +
                 '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
-                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '<input style="float: left; width: 40%; margin: 0;" type="number" step="any" value="" placeholder="Price" name="price" id="price">' +
                 '</div>';
         }
         html = html + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
@@ -206,7 +206,7 @@
         $(modal).find('#bonnie').replaceWith('<div class="size_row" style="overflow: hidden">' +
             '<button onclick="remove_size_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '<input style="float: left; width: 50%; margin: 0;" value="" name="title" id="title">' +
-            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '<input style="float: left; width: 40%; margin: 0;" step="any" type="number" value="" placeholder="Price" name="price" id="price">' +
             '</div>' + '<button id="bonnie" onclick="new_size_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
     }
 
@@ -237,7 +237,7 @@
                     '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '<p style="text-align: center; float: left; width: 25%; margin: 0;">' + logo.file.name + '</p>' +
                     '<input style="float: left; width: 40%; margin: 0;" type="file" value="" name="file" id="file">' +
-                    '<input style="float: left; width: 25%; margin: 0;" type="number" value="' + logo.price + '" placeholder="Price" name="price" id="price">' +
+                    '<input style="float: left; width: 25%; margin: 0;" step="any" type="number" value="' + logo.price + '" placeholder="Price" name="price" id="price">' +
                     '</div>';
                 console.log(logo.file);
                 html = html + rr_data
@@ -246,7 +246,7 @@
             html = html + '<div data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
                 '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
-                '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+                '<input style="float: left; width: 40%; margin: 0;" step="any" type="number" value="" placeholder="Price" name="price" id="price">' +
                 '</div>';
         }
         html = html + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>';
@@ -257,7 +257,7 @@
         $(modal).find('#bonnie').replaceWith('<div  data-ocupaid-use="false" class="logo_row" style="overflow: hidden">' +
             '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '<input style="float: left; width: 50%; margin: 0;" type="file" value="" name="file" id="file">' +
-            '<input style="float: left; width: 40%; margin: 0;" type="number" value="" placeholder="Price" name="price" id="price">' +
+            '<input style="float: left; width: 40%; margin: 0;" step="any" type="number" value="" placeholder="Price" name="price" id="price">' +
             '</div>' + '<button id="bonnie" onclick="new_logo_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
     }
 
@@ -315,9 +315,9 @@
                 var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
                     '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Title" name="title" id="title">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" step="any" name="price" id="price">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" step="any" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                     '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                     '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
@@ -329,9 +329,9 @@
             html = html + '<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
                 '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
-                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Price" name="price" id="price">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
-                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                 '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                 '      <datalist id="pictures' + counter + '"></datalist>' +
@@ -349,9 +349,9 @@
         $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
             '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
-            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" step="any" type="number" placeholder="Price" name="price" id="price">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
-            '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
             '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
             '      <datalist id="pictures' + counter + '"></datalist>' +
