@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   get '/catalog/product/sizes' => 'home#get_sizes_product'
   get '/catalog/product/presets' => 'home#get_presets_product'
   get '/catalog/product/colors' => 'home#get_colors_product'
+  get '/catalog/product/styles' => 'home#get_styles_product'
+  get '/catalog/product/materials' => 'home#get_materials_product'
   get '/catalog/product/logos' => 'home#get_logos_product'
 
   get '/catalog/product/color/main_image' => 'home#get_color_images_main'
