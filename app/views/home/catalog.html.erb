@@ -1,6 +1,6 @@
-<div id="items-container" style="overflow: hidden; margin-bottom: 30px">
+<div id="items-container" style="overflow: visible; margin-bottom: 30px">
 
-  <div id="filters">
+  <div style="z-index: 0;" id="filters">
 
     <hr class="desktopnot" style="float: left; width: 100%; margin: 0 auto">
     <!-- Large button group -->
@@ -10,7 +10,8 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="style-list-filter" class="dropdown-menu drop-enlarge">
-
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = ''; load_items();" class="selectable">
+          <h5>Clear selection</h5></li>
       </ul>
     </div>
 
@@ -23,7 +24,8 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="color-list-filter" class="dropdown-menu drop-enlarge">
-        <li><h5>Colors</h5></li>
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = ''; load_items();" class="selectable">
+          <h5>Clear selection</h5></li>
       </ul>
     </div>
 
@@ -36,7 +38,8 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="material-list-filter" class="dropdown-menu drop-enlarge">
-        <li><h5>Material</h5></li>
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = ''; load_items();" class="selectable">
+          <h5>Clear selection</h5></li>
       </ul>
     </div>
 
@@ -53,9 +56,98 @@
 
 <script>
 
+    var first_style = document.getElementById('style-list-filter').cloneNode(true);
+    var first_material = document.getElementById('material-list-filter').cloneNode(true);
+    var first_color = document.getElementById('color-list-filter').cloneNode(true);
+
+    var contains = function (needle) {
+        // Per spec, the way to identify NaN is that it is not equal to itself
+        var findNaN = needle !== needle;
+        var indexOf;
+
+        if (!findNaN && typeof Array.prototype.indexOf === 'function') {
+            indexOf = Array.prototype.indexOf;
+        } else {
+            indexOf = function (needle) {
+                var i = -1, index = -1;
+
+                for (i = 0; i < this.length; i++) {
+                    var item = this[i];
+
+                    if ((findNaN && item !== item) || item === needle) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                return index;
+            };
+        }
+
+        return indexOf.call(this, needle) > -1;
+    };
+
+    var filters = {
+        style: '',
+        color: '',
+        material: ''
+    };
+
+    var filters_arr = {
+        style: [],
+        color: [],
+        material: [],
+        remove: function () {
+            this.style = [];
+            this.color = [];
+            this.material = [];
+        }
+    };
+
+    function add_filter(value, title, type) {
+        switch (type) {
+            case 0:
+                if (!contains.call(filters_arr.style, value)) {
+                    if (filters.style === value.toString()) {
+                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                    } else {
+                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                    }
+                    filters_arr.style.push(value);
+                }
+                break;
+            case 1:
+                if (!contains.call(filters_arr.color, value)) {
+                    if (filters.color === value.toString()) {
+                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                    } else {
+                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                    }
+                    filters_arr.color.push(value);
+                }
+                break;
+            case 2:
+                if (!contains.call(filters_arr.material, value)) {
+                    if (filters.material === value.toString()) {
+                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                    } else {
+                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                    }
+                    filters_arr.material.push(value);
+                }
+                break;
+        }
+    }
+
     function load_items() {
+
+        document.getElementById('style-list-filter').outerHTML = first_style.outerHTML;
+        document.getElementById('material-list-filter').outerHTML = first_material.outerHTML;
+        document.getElementById('color-list-filter').outerHTML = first_color.outerHTML;
+        filters_arr.remove();
+
         $.ajax({
-            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=<%= @parameters['style'] %>&color=<%= @parameters['color'] %>&material=<%= @parameters['material'] %>',
+            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=' + filters.style + '&color=' + filters.color + '&material=' + filters.material,
             type: 'GET',
             dataType: 'json',
             data: {},
@@ -72,6 +164,41 @@
                         + '<button onclick="open_quick(\'' + item.id + '\', 1)" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
                         + '</div>';
                     document.getElementById('items').innerHTML = html_items;
+
+                    $.ajax({
+                        url: '/catalog/product/colors?product_id=' + data[id].id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                add_filter(data[i].title, data[i].title, 1);
+                            }
+                        }
+                    });
+                    $.ajax({
+                        url: '/catalog/product/styles?id=' + data[id].id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                add_filter(data[i].id, data[i].title, 0);
+                            }
+                        }
+                    });
+                    $.ajax({
+                        url: '/catalog/product/materials?id=' + data[id].id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                add_filter(data[i].id, data[i].title, 2);
+                            }
+                        }
+                    });
+
                 }
             },
             error: function (data) {

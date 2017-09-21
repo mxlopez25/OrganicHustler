@@ -70,6 +70,14 @@ class HomeController < ApplicationController
     render json: products.to_json
   end
 
+  def get_styles_product
+    render json: (Product.find params[:id]).styles.to_json
+  end
+
+  def get_materials_product
+    render json: (Product.find params[:id]).materials.to_json
+  end
+
   def get_images_product
     images = Product.get_all_images params['product_id']
     render json: images.to_json

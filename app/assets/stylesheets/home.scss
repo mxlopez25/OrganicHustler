@@ -115,6 +115,14 @@ div.wrap {
   color: white;
 }
 
+.selectable {
+  cursor: pointer;
+}
+
+.selected0f {
+  background: #efefef;
+}
+
 /* The Modal (background) */
 .modal_base {
   display: none; /* Hidden by default */
