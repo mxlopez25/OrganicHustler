@@ -299,7 +299,10 @@
         }
 
         function complete_emblem(id) {
-            return '';
+            return '<div id="general_frame">' +
+                '       <label for="file_emblem">Emblem</label>' +
+                '       <input type="file" id="file_emblem">' +
+                '   </div>';
         }
 
         function remove_size_row(btn, id) {
@@ -959,6 +962,9 @@
     </div>
 
     <div style="overflow:hidden;" id="preset_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="emblem_modal" class="content_pop">
     </div>
 
   </div>
