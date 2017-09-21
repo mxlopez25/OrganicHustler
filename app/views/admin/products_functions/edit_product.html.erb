@@ -298,6 +298,10 @@
                 '   </div>';
         }
 
+        function complete_emblem(id) {
+            return '';
+        }
+
         function remove_size_row(btn, id) {
             $.ajax({
                 url: '/product/remove/size',
@@ -586,7 +590,35 @@
                 error: function (data) {
                     console.log(data)
                 }
-            })
+            });
+        }
+
+        function save_emblem(id) {
+
+            var formData = new FormData();
+            formData.append('picture', $(document).find('#file_emblem')[0].files[0]);
+            formData.append('title', $(document).find('#title_emblem').val());
+            formData.append('price', $(parent).find('#price').val());
+            formData.append('x', EMBLEM_IMAGE.getX());
+            formData.append('y', EMBLEM_IMAGE.getY());
+            formData.append('color_id', ACTUAL_COLOR);
+            formData.append('multiplexer', ACTUAL_ZOOM);
+            formData.append('pr_id', id);
+
+            $.ajax({
+                url: '/product/add/emblem',
+                type: 'POST',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         }
 
         function change_base(select) {
@@ -770,6 +802,10 @@
                     });
 
                     break;
+
+                case 'emblem_modal':
+                    modal.innerHTML = complete_emblem(id);
+                    break;
             }
 
             window.onclick = function (event) {
@@ -894,6 +930,9 @@
 
   <div class="card modal-g">
     Emblems
+    <button style="width:100%;" onclick="edit_modal('emblem_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+      EMBLEM
+    </button>
   </div>
 
   <div id="dim_back" class="dim_back">
