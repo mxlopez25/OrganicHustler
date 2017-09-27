@@ -9,6 +9,7 @@ class Product < ApplicationRecord
   has_and_belongs_to_many :materials
   has_and_belongs_to_many :brands
   has_one :product_image
+  has_many :position_emblem_admins
 
   def taxes
     TaxBand.find self.tax_band_id

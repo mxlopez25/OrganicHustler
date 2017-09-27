@@ -99,6 +99,9 @@ Rails.application.routes.draw do
   post '/product/add/preset' => 'product#add_preset'
   post '/product/remove/preset' => 'product#remove_preset'
 
+  post '/product/add/emblem' => 'product#add_emblem'
+  post '/product/remove/emblem' => 'product#remove_emblem'
+
   put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'

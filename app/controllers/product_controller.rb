@@ -73,6 +73,10 @@ class ProductController < ApplicationController
     preset_params.permit(:x, :y, :multiplexer, :logo_id, :color_id)
   end
 
+  def position_emblem_admin_params(pea_params)
+    pea_params.permit(:picture, :title, :price, :x, :y, :color_id, :multiplexer)
+  end
+
   def save_product
     (Product.find params[:id]).update (basic_product_params params[:attr])
     render :nothing => true, :status => 200
@@ -104,6 +108,10 @@ class ProductController < ApplicationController
 
   def add_preset
     Product.find(params['pr_id']).presets << Preset.new(preset_params params)
+  end
+
+  def add_emblem
+    Product.find(params['pr_id']).position_emblem_admins << PositionEmblemAdmin.new(position_emblem_admin_params params)
   end
 
   def remove_size
@@ -139,6 +147,10 @@ class ProductController < ApplicationController
   def remove_preset
     Preset.find(params[:id]).destroy!
     render :json => {message: 'destroyed'}.to_json, :status => 200
+  end
+
+  def remove_emblem
+
   end
 
   def new_logo
