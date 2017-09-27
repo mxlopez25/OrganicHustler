@@ -160,6 +160,7 @@
 
                 window.onclick = function (event) {
                     if (event.target === modal) {
+                        document.getElementsByTagName('body')[0].classList.remove('modal-open');
                         modal.style.display = "none";
                     }
                 };

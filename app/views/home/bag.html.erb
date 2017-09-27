@@ -45,9 +45,9 @@
           var stageWidth = 500;
           var stageHeight = 500;
 
-          createShape('cart<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>');
+          createShape('cart<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>', '<%= product.emblem_id %>');
 
-          function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id) {
+          function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id, emblem_id) {
               var container = $('#' + id);
               container.height(container.width());
 
@@ -103,6 +103,7 @@
                   });
                   layer.draw();
               };
+
               if (logo_id !== null) {
                   $.ajax({
                       url: '/catalog/product/logo?logo_id=' + logo_id,
@@ -117,6 +118,45 @@
                       }
                   });
               }
+
+              var emblem = new Konva.Image({
+                  x: 0,
+                  y: 0
+              });
+              layer.add(emblem);
+
+              var imageEmblem = new Image();
+              imageEmblem.onload = function () {
+                  emblem.image(imageEmblem);
+                  emblem.setWidth(this.width);
+                  emblem.setHeight(this.height);
+                  layer.draw();
+              };
+
+              if (emblem_id !== null) {
+
+
+                  $.ajax({
+                      url: '/catalog/product/emblem?emblem_id=' + emblem_id,
+                      type: 'GET',
+                      dataType: 'json',
+                      data: {},
+                      success: function (data) {
+                          emblem.setX(stageWidth * data.x / 500);
+                          emblem.setY(stageWidth * data.y / 500);
+                          emblem.scale({
+                              x: stageWidth * data.multiplexer / 500,
+                              y: stageWidth * data.multiplexer / 500
+                          });
+                          imageEmblem.src = data.src;
+
+                      },
+                      error: function (data) {
+                          console.log(data);
+                      }
+                  });
+              }
+
               layer.draw();
           }
 
