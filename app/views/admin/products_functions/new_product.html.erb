@@ -179,6 +179,13 @@
     var modal = null;
     var dim_back = document.getElementById('dim_back');
 
+    function close_modal() {
+        if (modal) {
+            modal.style.display = "none";
+            dim_back.style.display = "none";
+        }
+    }
+
     function complete_size(id) {
 
         var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>';
@@ -224,6 +231,8 @@
                 price: $(rows[i]).find('input[id="price"]').val()
             })
         }
+
+        close_modal();
     }
 
     function complete_logo(id) {
@@ -293,6 +302,8 @@
                 });
             }
         }
+
+        close_modal();
     }
 
     var counter = 0;
@@ -418,6 +429,7 @@
             }
         }
         console.log(colors_g[id]);
+        close_modal();
     }
 
     function complete_category(id) {
@@ -461,6 +473,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_style(id) {
@@ -504,6 +518,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_material(id) {
@@ -547,6 +563,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_brand(id) {
@@ -590,6 +608,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function get_correct(holder, id) {

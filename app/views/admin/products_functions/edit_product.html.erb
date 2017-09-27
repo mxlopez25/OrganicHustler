@@ -302,10 +302,10 @@
             return '<div id="general_frame">' +
                 '       <label for="file_emblem">Emblem</label>' +
                 '       <input style="width:100%;" type="file" id="file_emblem" onchange="readURL(this)">' +
-                '       <label for="file_price">Price</label>' +
-                '       <input type="number" id="file_price" step="any" >' +
-                '       <label for="file-title">Title</label>' +
-                '       <input id="file-title">' +
+                '       <label for="price_emblem">Price</label>' +
+                '       <input type="number" id="price_emblem" step="any" >' +
+                '       <label for="title_emblem">Title</label>' +
+                '       <input id="title_emblem">' +
                 '       <div id="color_holder">' +
                 '           <label for="colors_list">Color</label>' +
                 '           <select style="width: 100%" id="colors_list" onchange="change_base_emblem(this)">' +
@@ -438,7 +438,7 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id,
+                    id: id
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -661,7 +661,7 @@
             var formData = new FormData();
             formData.append('picture', $(document).find('#file_emblem')[0].files[0]);
             formData.append('title', $(document).find('#title_emblem').val());
-            formData.append('price', $(parent).find('#price').val());
+            formData.append('price', $(parent).find('#price_emblem').val());
             formData.append('x', EMBLEM_IMAGE.getX());
             formData.append('y', EMBLEM_IMAGE.getY());
             formData.append('color_id', ACTUAL_COLOR_EMBLEM);
@@ -731,7 +731,7 @@
             }
 
             BASE_IMAGE_EMBLEM.src = default_picture.url[1];
-            ACTUAL_COLOR = preferred_color.color.id;
+            ACTUAL_COLOR_EMBLEM = preferred_color.color.id;
         }
 
         function set_logo(id) {
@@ -918,7 +918,7 @@
                                 var color = data[i].color;
                                 if (color.preferred) {
                                     preferred_color = data[i];
-                                    select.value = ACTUAL_COLOR = preferred_color.color.id;
+                                    select.value = ACTUAL_COLOR_EMBLEM = preferred_color.color.id;
                                     break;
                                 }
                             }
