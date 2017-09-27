@@ -448,6 +448,22 @@
             })
         }
 
+        function remove_emblem_row(btn, id) {
+            $.ajax({
+                url: '/product/remove/emblem',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
         function save_size_row(id, parent) {
             $.ajax({
                 url: '/product/add/size',
