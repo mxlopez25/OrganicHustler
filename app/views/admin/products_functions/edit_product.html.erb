@@ -661,7 +661,7 @@
             var formData = new FormData();
             formData.append('picture', $(document).find('#file_emblem')[0].files[0]);
             formData.append('title', $(document).find('#title_emblem').val());
-            formData.append('price', $(parent).find('#price_emblem').val());
+            formData.append('price', $(document).find('#price_emblem').val());
             formData.append('x', EMBLEM_IMAGE.getX());
             formData.append('y', EMBLEM_IMAGE.getY());
             formData.append('color_id', ACTUAL_COLOR_EMBLEM);
@@ -1001,7 +1001,7 @@
   <div class="card modal-g">
     Presets
     <% product_i.presets.each do |preset| %>
-        <div id="preset-row" style="overflow: auto">
+        <div id="preset-row" style="overflow: auto; text-align: center">
           <button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
           <h3 style="float:left; margin: 0 0 0 20px">Logo:</h3>
           <img style="width: 50px; float: left;" src="<%= preset.logo.picture %>">
@@ -1023,6 +1023,29 @@
 
   <div class="card modal-g">
     Emblems
+
+    <% product_i.position_emblem_admins.each do |emblems| %>
+
+        <div id="emblem-row" style="overflow: auto; text-align: center">
+          <button onclick="remove_emblem_row(this, '<%= emblems.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
+          <h3 style="float:left; margin: 0 0 0 20px">Emblem:</h3>
+          <img style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>">
+          <h3 style="float:left; margin: 0 0 0 20px">Image:</h3>
+          <img style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>">
+          <h3 style="float:left; margin: 0 0 0 20px">Title:</h3>
+          <h5 style="float: left"><%= emblems.title %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Price:</h3>
+          <h5 style="float: left"><%= emblems.price %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Multiplexer:</h3>
+          <h5 style="float: left"><%= emblems.multiplexer %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">X:</h3>
+          <h5 style="float: left"><%= emblems.x %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Y:</h3>
+          <h5 style="float: left"><%= emblems.y %></h5>
+        </div>
+
+    <% end %>
+
     <button style="width:100%;" onclick="edit_modal('emblem_modal', <%= product_i.id %>)" class="btn btn-success">ADD
       EMBLEM
     </button>
