@@ -381,7 +381,7 @@
             <div id="selection-btn-s">
               <button onclick="start_over()" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
                 <span class="cell-btn">START OVER</span></button>
-              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
+              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data)">
                 DONE
               </button>
             </div>
@@ -786,7 +786,42 @@
                     console.log(data);
                 }
             });
+        }
 
+        if (product.emblem_id) {
+            var emblem = new Konva.Image({
+                x: 0,
+                y: 0
+            });
+            LAYER.add(emblem);
+
+            var imageEmblem = new Image();
+            imageEmblem.onload = function () {
+                emblem.image(imageEmblem);
+                emblem.setWidth(this.width);
+                emblem.setHeight(this.height);
+                LAYER.draw();
+            };
+
+            $.ajax({
+                url: '/catalog/product/emblem?emblem_id=' + product.emblem_id,
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    emblem.setX(data.x);
+                    emblem.setY(data.y);
+                    emblem.scale({
+                        x: data.multiplexer,
+                        y: data.multiplexer
+                    });
+                    imageEmblem.src = data.src;
+
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         }
 
         fitStageIntoParentContainer();
@@ -803,7 +838,7 @@
         close_emblem_modal();
 
         $.ajax({
-            url: '/catalog/product/emblems?product_id=' + product.product_id,
+            url: '/catalog/product/emblems?product_id=' + product.product_id + '&color_id=' + product.color_id,
             type: 'GET',
             dataType: 'json',
             data: {},
@@ -814,7 +849,7 @@
 
                 for (var i = 0; i < data.length; i++) {
                     carousel_jq.append('<li>' +
-                        '<div onclick="" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div onclick="load_data_emblems(' + data[i].id + ')" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
                         '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i].url + '">' +
                         '<div><h5 style="width: 100%; font-weight: bold;">' + data[i].title + '</h5></div>' +
@@ -1120,6 +1155,11 @@
 
     function load_data_logos(logo_id) {
         product.logo_id = logo_id;
+        load_viewer();
+    }
+
+    function load_data_emblems(emblem_id) {
+        product.emblem_id = emblem_id;
         load_viewer();
     }
 

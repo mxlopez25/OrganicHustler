@@ -28,7 +28,7 @@ class HomeController < ApplicationController
   def get_emblems_product
     emblems = []
 
-    (Product.find params['product_id']).position_emblem_admins.each do |emblem|
+    (Product.find params['product_id']).position_emblem_admins.where(color_id: params['color_id']).each do |emblem|
       emblem_js = JSON.parse(emblem.to_json)
       emblem_js[:url] = emblem.picture(:thumb)
       emblems.push emblem_js
@@ -38,12 +38,12 @@ class HomeController < ApplicationController
   end
 
   def get_emblem
-    emblem_pos = PositionEmblemAdmin.find(params[:position_id])
 
-    js_object = JSON.parse(emblem_pos.to_json)
-    js_object[:url] = emblem_pos.emblem.picture.url
+    hash_emblem = PositionEmblemAdmin.find params['emblem_id']
+    emblem = JSON.parse hash_emblem.to_json
+    emblem[:src] = hash_emblem.picture
 
-    render json: js_object.to_json
+    render json: emblem
   end
 
   def get_items
