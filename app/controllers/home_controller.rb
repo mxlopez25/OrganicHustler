@@ -25,18 +25,16 @@ class HomeController < ApplicationController
     render json: variations_obj.to_json
   end
 
-  def emblems
-    positions = []
+  def get_emblems_product
+    emblems = []
 
-    Emblem.where(:id_moltin => params['pr_id']).each do |emblem|
-      emblem.position_emblem_admins.each do |position|
-        js_position = JSON.parse(position.to_json)
-        js_position[:url] = emblem.picture.url
-        positions.push js_position
-      end
+    (Product.find params['product_id']).position_emblem_admins.each do |emblem|
+      emblem_js = JSON.parse(emblem.to_json)
+      emblem_js[:url] = emblem.picture(:thumb)
+      emblems.push emblem_js
     end
 
-    render json: positions.to_json
+    render json: emblems.to_json
   end
 
   def get_emblem
