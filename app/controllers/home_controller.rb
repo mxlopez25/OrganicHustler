@@ -243,8 +243,8 @@ class HomeController < ApplicationController
       end
 
       u.has_emblem = false
-      unless params[:product][:emblem].blank?
-        u.emblem_id = params[:product][:emblem][:emblem_id]
+      unless params[:product][:emblem_id].blank?
+        u.emblem_id = params[:product][:emblem_id]
         u.has_emblem = true
       end
 

@@ -184,8 +184,8 @@ module HomeHelper
     end
 
     unless product.emblem_id.blank?
-      emblem = PositionEmblemAdmin.find(product.position_id)
-      price_emblem = emblem.cost || 0
+      emblem = PositionEmblemAdmin.find(product.emblem_id)
+      price_emblem = emblem.price || 0
     end
 
     size_price = HomeController.to_decimal((Size.find product.size_id).price)
