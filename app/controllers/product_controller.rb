@@ -150,7 +150,8 @@ class ProductController < ApplicationController
   end
 
   def remove_emblem
-
+    PositionEmblemAdmin.find(params[:id]).destroy!
+    render :json => {message: 'destroyed'}.to_json, :status => 200
   end
 
   def new_logo

@@ -28,9 +28,11 @@ Rails.application.routes.draw do
   get '/catalog/product/styles' => 'home#get_styles_product'
   get '/catalog/product/materials' => 'home#get_materials_product'
   get '/catalog/product/logos' => 'home#get_logos_product'
+  get '/catalog/product/emblems' => 'home#get_emblems_product'
 
   get '/catalog/product/color/main_image' => 'home#get_color_images_main'
   get '/catalog/product/logo' => 'home#get_preset_logo'
+  get '/catalog/product/emblem' => 'home#get_emblem'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'

@@ -158,7 +158,12 @@
                 // Get the modal
                 modal = document.getElementById('myModal');
 
-                modal.addEventListener('click', close_modal);
+                window.onclick = function (event) {
+                    if (event.target === modal) {
+                        document.getElementsByTagName('body')[0].classList.remove('modal-open');
+                        modal.style.display = "none";
+                    }
+                };
 
                 function close_modal() {
                     document.getElementsByTagName('body')[0].classList.remove('modal-open');
@@ -326,6 +331,20 @@
                     layer.draw()
                 };
 
+                var emblem = new Konva.Image({
+                    x: 0,
+                    y: 0
+                });
+                layer.add(emblem);
+
+                var imageEmblem = new Image();
+                imageEmblem.onload = function () {
+                    emblem.image(imageEmblem);
+                    emblem.setWidth(this.width);
+                    emblem.setHeight(this.height);
+                    layer.draw();
+                };
+
                 $.ajax({
                     url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
                     type: 'GET',
@@ -339,7 +358,7 @@
                     }
                 });
 
-                if (preview.logo_id !== null) {
+                if (preview.has_logo) {
                     $.ajax({
                         url: '/catalog/product/logo?logo_id=' + preview.logo_id,
                         type: 'GET',
@@ -347,6 +366,30 @@
                         data: {},
                         success: function (data) {
                             imageLogo.src = data
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+
+                if (preview.has_emblem) {
+
+
+                    $.ajax({
+                        url: '/catalog/product/emblem?emblem_id=' + preview.emblem_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            emblem.setX(container.width() * data.x / 500);
+                            emblem.setY(container.width() * data.y / 500);
+                            emblem.scale({
+                                x: container.width() * data.multiplexer / 500,
+                                y: container.width() * data.multiplexer / 500
+                            });
+                            imageEmblem.src = data.src;
+
                         },
                         error: function (data) {
                             console.log(data);
