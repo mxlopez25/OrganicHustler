@@ -298,6 +298,30 @@
                 '   </div>';
         }
 
+        function complete_emblem(id) {
+            return '<div id="general_frame">' +
+                '       <label for="file_emblem">Emblem</label>' +
+                '       <input style="width:100%;" type="file" id="file_emblem" onchange="readURL(this)">' +
+                '       <label for="price_emblem">Price</label>' +
+                '       <input type="number" id="price_emblem" step="any" >' +
+                '       <label for="title_emblem">Title</label>' +
+                '       <input id="title_emblem">' +
+                '       <div id="color_holder">' +
+                '           <label for="colors_list">Color</label>' +
+                '           <select style="width: 100%" id="colors_list" onchange="change_base_emblem(this)">' +
+                '           ' +
+                '           </select>' +
+                '       </div>' +
+                '       <div style="width: 500px; height: 500px; margin: 0 auto" id="preview_holder_emblem">' +
+                '           ' +
+                '       </div>' +
+                '       <button onclick="zoom_in_emblem()">+</button>' +
+                '       <button onclick="zoom_out_emblem()">-</button>' +
+                '       <input id="grow_rate" value="' + ZOOM_COUNT + '">' +
+                '       <button class="btn btn-success" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
+                '   </div>';
+        }
+
         function remove_size_row(btn, id) {
             $.ajax({
                 url: '/product/remove/size',
@@ -381,6 +405,16 @@
             })
         }
 
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    EMBLEM_IMAGE_H.src = e.target.result
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function remove_brand_row(btn, id, pr_id) {
             $.ajax({
                 url: '/product/remove/brand',
@@ -395,7 +429,7 @@
                     var sub_parent = btn.parentNode;
                     parent.removeChild(sub_parent);
                 }
-            })
+            });
         }
 
         function remove_preset_row(btn, id) {
@@ -404,7 +438,23 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id,
+                    id: id
+                },
+                success: function (data) {
+                    var parent = btn.parentNode.parentNode;
+                    var sub_parent = btn.parentNode;
+                    parent.removeChild(sub_parent);
+                }
+            })
+        }
+
+        function remove_emblem_row(btn, id) {
+            $.ajax({
+                url: '/product/remove/emblem',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -540,6 +590,13 @@
         var COLORS_PICTURES = null;
         var BASE_IMAGE = null;
 
+        var ACTUAL_COLOR_EMBLEM = null;
+        var EMBLEM_IMAGE = null;
+        var EMBLEM_IMAGE_H = null;
+        var BASE_IMAGE_EMBLEM = null;
+
+        var width = 500;
+        var height = 500;
 
         function zoom_in() {
 
@@ -567,6 +624,32 @@
             LAYER.draw();
         }
 
+        function zoom_in_emblem() {
+
+            ZOOM_COUNT = parseFloat(document.getElementById('grow_rate').value);
+            ACTUAL_ZOOM = ACTUAL_ZOOM + ZOOM_COUNT;
+
+            EMBLEM_IMAGE.scale({
+                x: ACTUAL_ZOOM,
+                y: ACTUAL_ZOOM
+            });
+
+            LAYER.draw();
+        }
+
+        function zoom_out_emblem() {
+
+            ZOOM_COUNT = parseFloat(document.getElementById('grow_rate').value);
+            ACTUAL_ZOOM = ACTUAL_ZOOM - ZOOM_COUNT;
+
+            EMBLEM_IMAGE.scale({
+                x: ACTUAL_ZOOM,
+                y: ACTUAL_ZOOM
+            });
+
+            LAYER.draw();
+        }
+
         function save_preset(id) {
             $.ajax({
                 url: '/product/add/preset',
@@ -586,11 +669,38 @@
                 error: function (data) {
                     console.log(data)
                 }
-            })
+            });
+        }
+
+        function save_emblem(id) {
+
+            var formData = new FormData();
+            formData.append('picture', $(document).find('#file_emblem')[0].files[0]);
+            formData.append('title', $(document).find('#title_emblem').val());
+            formData.append('price', $(document).find('#price_emblem').val());
+            formData.append('x', EMBLEM_IMAGE.getX());
+            formData.append('y', EMBLEM_IMAGE.getY());
+            formData.append('color_id', ACTUAL_COLOR_EMBLEM);
+            formData.append('multiplexer', ACTUAL_ZOOM);
+            formData.append('pr_id', id);
+
+            $.ajax({
+                url: '/product/add/emblem',
+                type: 'POST',
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         }
 
         function change_base(select) {
-            console.log(select.value);
 
             var preferred_color;
             for (var i = 0; i < COLORS_PICTURES.length; i++) {
@@ -615,6 +725,31 @@
             ACTUAL_COLOR = preferred_color.color.id;
         }
 
+        function change_base_emblem(select) {
+
+            var preferred_color;
+            for (var i = 0; i < COLORS_PICTURES.length; i++) {
+                var color = COLORS_PICTURES[i].color;
+                console.log(color.id);
+                if (color.id === parseInt(select.value)) {
+                    preferred_color = COLORS_PICTURES[i];
+                    break;
+                }
+            }
+
+            var default_picture;
+            for (var j = 0; j < preferred_color.pictures.length; j++) {
+                var picture = preferred_color.pictures[j];
+                if (picture.data.main) {
+                    default_picture = picture;
+                    break;
+                }
+            }
+
+            BASE_IMAGE_EMBLEM.src = default_picture.url[1];
+            ACTUAL_COLOR_EMBLEM = preferred_color.color.id;
+        }
+
         function set_logo(id) {
             var desire_logo = null;
             for (var g = 0; g < LOGOS.length; g++) {
@@ -627,7 +762,6 @@
             LOGO_IMAGE_H.src = desire_logo.picture;
             ACTUAL_LOGO = id
         }
-
 
         function edit_modal(type, id) {
             modal = document.getElementById(type);
@@ -770,6 +904,97 @@
                     });
 
                     break;
+
+                case 'emblem_modal':
+                    modal.innerHTML = complete_emblem(id);
+
+                    $.ajax({
+                        url: '/admin/products/color_images',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            product_id: id
+                        },
+                        success: function (data) {
+
+                            COLORS_PICTURES = data;
+
+                            var select = document.getElementById('colors_list');
+
+                            var html_color_list = '';
+                            for (var k = 0; k < data.length; k++) {
+                                var opt = document.createElement('option');
+                                opt.value = data[k].color.id;
+                                opt.innerHTML = data[k].color.title;
+                                select.appendChild(opt);
+                            }
+
+                            var preferred_color;
+                            for (var i = 0; i < data.length; i++) {
+                                var color = data[i].color;
+                                if (color.preferred) {
+                                    preferred_color = data[i];
+                                    select.value = ACTUAL_COLOR_EMBLEM = preferred_color.color.id;
+                                    break;
+                                }
+                            }
+
+                            var default_picture;
+                            for (var j = 0; j < preferred_color.pictures.length; j++) {
+                                var picture = preferred_color.pictures[j];
+                                if (picture.data.main) {
+                                    default_picture = picture;
+                                    break;
+                                }
+                            }
+
+                            STAGE = new Konva.Stage({
+                                container: 'preview_holder_emblem',
+                                width: width,
+                                height: height
+                            });
+
+                            LAYER = new Konva.Layer();
+                            STAGE.add(LAYER);
+
+                            var baseImg = new Konva.Image({
+                                width: width,
+                                height: height
+                            });
+
+                            EMBLEM_IMAGE = new Konva.Image({
+                                width: 100,
+                                height: 100,
+                                draggable: true
+                            });
+
+                            LAYER.add(baseImg);
+                            LAYER.add(EMBLEM_IMAGE);
+
+                            BASE_IMAGE_EMBLEM = new Image();
+                            BASE_IMAGE_EMBLEM.onload = function () {
+                                baseImg.image(BASE_IMAGE_EMBLEM);
+                                LAYER.draw();
+                            };
+                            BASE_IMAGE_EMBLEM.src = default_picture.url[1];
+
+                            EMBLEM_IMAGE_H = new Image();
+                            EMBLEM_IMAGE_H.onload = function () {
+                                EMBLEM_IMAGE.image(EMBLEM_IMAGE_H);
+                                EMBLEM_IMAGE.setWidth(this.width);
+                                EMBLEM_IMAGE.setHeight(this.height);
+                                LAYER.draw();
+                            };
+                            EMBLEM_IMAGE_H.src = '';
+                            LAYER.draw();
+
+                            console.log(data);
+                        }, error: function (data) {
+                            console.log(data);
+                        }
+                    });
+
+                    break;
             }
 
             window.onclick = function (event) {
@@ -783,95 +1008,16 @@
     </script>
 
     <script>
-        var width = 500;
-        var height = 500;
 
-        function update(activeAnchor) {
-            var group = activeAnchor.getParent();
-            var topLeft = group.get('.topLeft')[0];
-            var topRight = group.get('.topRight')[0];
-            var bottomRight = group.get('.bottomRight')[0];
-            var bottomLeft = group.get('.bottomLeft')[0];
-            var image = group.get('Image')[0];
-            var anchorX = activeAnchor.getX();
-            var anchorY = activeAnchor.getY();
-            // update anchor positions
-            switch (activeAnchor.getName()) {
-                case 'topLeft':
-                    topRight.setY(anchorY);
-                    bottomLeft.setX(anchorX);
-                    break;
-                case 'topRight':
-                    topLeft.setY(anchorY);
-                    bottomRight.setX(anchorX);
-                    break;
-                case 'bottomRight':
-                    bottomLeft.setY(anchorY);
-                    topRight.setX(anchorX);
-                    break;
-                case 'bottomLeft':
-                    bottomRight.setY(anchorY);
-                    topLeft.setX(anchorX);
-                    break;
-            }
-            image.position(topLeft.position());
-            var width = topRight.getX() - topLeft.getX();
-            var height = bottomLeft.getY() - topLeft.getY();
-            if (width && height) {
-                image.width(width);
-                image.height(height);
-            }
-        }
 
-        function addAnchor(group, x, y, name) {
-            var stage = group.getStage();
-            var layer = group.getLayer();
-            var anchor = new Konva.Circle({
-                x: x,
-                y: y,
-                stroke: '#666',
-                fill: '#ddd',
-                strokeWidth: 2,
-                radius: 8,
-                name: name,
-                draggable: true,
-                dragOnTop: false
-            });
-            anchor.on('dragmove', function () {
-                update(this);
-                layer.draw();
-            });
-            anchor.on('mousedown touchstart', function () {
-                group.setDraggable(false);
-                this.moveToTop();
-            });
-            anchor.on('dragend', function () {
-                group.setDraggable(true);
-                layer.draw();
-            });
-            // add hover styling
-            anchor.on('mouseover', function () {
-                var layer = this.getLayer();
-                document.body.style.cursor = 'pointer';
-                this.setStrokeWidth(4);
-                layer.draw();
-            });
-            anchor.on('mouseout', function () {
-                var layer = this.getLayer();
-                document.body.style.cursor = 'default';
-                this.setStrokeWidth(2);
-                layer.draw();
-            });
-            group.add(anchor);
-            return anchor;
-        }
     </script>
 
   </div>
 
   <div class="card modal-g">
+    Presets
     <% product_i.presets.each do |preset| %>
-        <div id="preset-row" style="overflow: auto">
+        <div id="preset-row" style="overflow: auto; text-align: center">
           <button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
           <h3 style="float:left; margin: 0 0 0 20px">Logo:</h3>
           <img style="width: 50px; float: left;" src="<%= preset.logo.picture %>">
@@ -883,11 +1029,41 @@
           <h5 style="float: left"><%= preset.x %></h5>
           <h3 style="float:left; margin: 0 0 0 20px">Y:</h3>
           <h5 style="float: left"><%= preset.y %></h5>
-          <hr style="width: 100%">
         </div>
+        <hr>
     <% end %>
     <button style="width:100%;" onclick="edit_modal('preset_modal', <%= product_i.id %>)" class="btn btn-success">ADD
       PRESET
+    </button>
+  </div>
+
+  <div class="card modal-g">
+    Emblems
+
+    <% product_i.position_emblem_admins.each do |emblems| %>
+
+        <div id="emblem-row" style="overflow: auto; text-align: center">
+          <button onclick="remove_emblem_row(this, '<%= emblems.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
+          <h3 style="float:left; margin: 0 0 0 20px">Emblem:</h3>
+          <img style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>">
+          <h3 style="float:left; margin: 0 0 0 20px">Image:</h3>
+          <img style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>">
+          <h3 style="float:left; margin: 0 0 0 20px">Title:</h3>
+          <h5 style="float: left"><%= emblems.title %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Price:</h3>
+          <h5 style="float: left"><%= emblems.price %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Multiplexer:</h3>
+          <h5 style="float: left"><%= emblems.multiplexer %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">X:</h3>
+          <h5 style="float: left"><%= emblems.x %></h5>
+          <h3 style="float:left; margin: 0 0 0 20px">Y:</h3>
+          <h5 style="float: left"><%= emblems.y %></h5>
+        </div>
+
+    <% end %>
+
+    <button style="width:100%;" onclick="edit_modal('emblem_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+      EMBLEM
     </button>
   </div>
 
@@ -915,6 +1091,9 @@
     </div>
 
     <div style="overflow:hidden;" id="preset_modal" class="content_pop">
+    </div>
+
+    <div style="overflow:hidden;" id="emblem_modal" class="content_pop">
     </div>
 
   </div>

@@ -6,7 +6,6 @@
 #selection-btn-s {
   margin-top: 45px;
   width: 100%;
-  height: 90px;
   text-align: center;
   overflow: hidden;
 }
@@ -113,6 +112,14 @@ div.wrap {
 .badge_selected {
   background: slategray;
   color: white;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.selected0f {
+  background: #efefef;
 }
 
 /* The Modal (background) */

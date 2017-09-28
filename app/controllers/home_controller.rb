@@ -25,32 +25,55 @@ class HomeController < ApplicationController
     render json: variations_obj.to_json
   end
 
-  def emblems
-    positions = []
+  def get_emblems_product
+    emblems = []
 
-    Emblem.where(:id_moltin => params['pr_id']).each do |emblem|
-      emblem.position_emblem_admins.each do |position|
-        js_position = JSON.parse(position.to_json)
-        js_position[:url] = emblem.picture.url
-        positions.push js_position
-      end
+    (Product.find params['product_id']).position_emblem_admins.where(color_id: params['color_id']).each do |emblem|
+      emblem_js = JSON.parse(emblem.to_json)
+      emblem_js[:url] = emblem.picture(:thumb)
+      emblems.push emblem_js
     end
 
-    render json: positions.to_json
+    render json: emblems.to_json
   end
 
   def get_emblem
-    emblem_pos = PositionEmblemAdmin.find(params[:position_id])
 
-    js_object = JSON.parse(emblem_pos.to_json)
-    js_object[:url] = emblem_pos.emblem.picture.url
+    hash_emblem = PositionEmblemAdmin.find params['emblem_id']
+    emblem = JSON.parse hash_emblem.to_json
+    emblem[:src] = hash_emblem.picture
 
-    render json: js_object.to_json
+    render json: emblem
   end
 
   def get_items
-    products = (Category.find_by_title params[:category]).products
+    products_cat = Category.find_by_title params[:category]
+    products_sty = Style.find_by_id params[:style]
+    products_col = params[:color].blank? ? nil : params[:color]
+    products_mat = Material.find_by_id params[:material]
+    sql = "SELECT products.* FROM products
+          INNER JOIN categories_products ON products.id = categories_products.product_id
+          #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
+    #{products_col ? 'INNER JOIN colors ON products.id = colors.product_id' : ''}
+    #{products_mat ? 'INNER JOIN materials_products ON products.id = materials_products.product_id' : ''}
+          WHERE category_id = '#{products_cat.id}' #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
+
+
+    results = ActiveRecord::Base.connection.execute(sql)
+    products = []
+    results.each(:as => :hash) do |row|
+      products << row.with_indifferent_access
+    end
+
     render json: products.to_json
+  end
+
+  def get_styles_product
+    render json: (Product.find params[:id]).styles.to_json
+  end
+
+  def get_materials_product
+    render json: (Product.find params[:id]).materials.to_json
   end
 
   def get_images_product
@@ -220,8 +243,8 @@ class HomeController < ApplicationController
       end
 
       u.has_emblem = false
-      unless params[:product][:emblem].blank?
-        u.emblem_id = params[:product][:emblem][:emblem_id]
+      unless params[:product][:emblem_id].blank?
+        u.emblem_id = params[:product][:emblem_id]
         u.has_emblem = true
       end
 

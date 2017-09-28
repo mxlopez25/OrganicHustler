@@ -25,10 +25,14 @@ Rails.application.routes.draw do
   get '/catalog/product/sizes' => 'home#get_sizes_product'
   get '/catalog/product/presets' => 'home#get_presets_product'
   get '/catalog/product/colors' => 'home#get_colors_product'
+  get '/catalog/product/styles' => 'home#get_styles_product'
+  get '/catalog/product/materials' => 'home#get_materials_product'
   get '/catalog/product/logos' => 'home#get_logos_product'
+  get '/catalog/product/emblems' => 'home#get_emblems_product'
 
   get '/catalog/product/color/main_image' => 'home#get_color_images_main'
   get '/catalog/product/logo' => 'home#get_preset_logo'
+  get '/catalog/product/emblem' => 'home#get_emblem'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
@@ -96,6 +100,9 @@ Rails.application.routes.draw do
 
   post '/product/add/preset' => 'product#add_preset'
   post '/product/remove/preset' => 'product#remove_preset'
+
+  post '/product/add/emblem' => 'product#add_emblem'
+  post '/product/remove/emblem' => 'product#remove_emblem'
 
   put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'
