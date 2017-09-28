@@ -40,98 +40,84 @@
     <h4><a class="breadcrumb" href="/admin/products">Products</a> / New</h4>
   </div>
 
-  <div style="width: 100%; height: 100%; position: relative; overflow-x: scroll">
+  <div style="height: 100%; position: relative;">
     <div class="card modal-c">
-      <button onclick="save()">Save</button>
-      <table>
-        <thead>
-        <tr class="heading_table">
-          <th></th>
+      <button class="btn btn-success" onclick="save()">Save</button>
+      <hr>
+      <div style="padding: 20px;" data-id-row="1" id="mm_row" class="product_row_new">
 
-          <th>Name</th>
-          <th>Price</th>
-          <th>Status</th>
-          <th>Stock</th>
-          <th>SKU</th>
-          <th>Description</th>
+        <button class="btn btn-danger" onclick="delete_row(this)">Remove</button>
 
-          <th>Size</th>
-          <th>Logo</th>
-          <th>Color</th>
+        <div>
+          <label for="title">Name</label>
+          <input class="form-control" value="" id="title" name="title">
 
-          <th>Category</th>
-          <th>Style</th>
-          <th>Material</th>
-          <th>Brand</th>
+          <label for="price">Price</label>
+          <input class="form-control" type="number" step="any" value="" id="price" name="price">
 
-          <th>Tax Band</th>
-        </tr>
-        </thead>
-        <tbody id="tt_body">
-        <tr data-id-row="1" id="mm_row" class="product_row_new">
-          <td>
-            <button onclick="delete_row(this)">Remove</button>
-          </td>
-          <td>
-            <input class="form-control" value="" id="title" name="title">
-          </td>
-          <td>
-            <input class="form-control" type="number" step="any" value="" id="price" name="price">
-          </td>
-          <td>
-            <select id="status" name="status">
-              <option value="0">Draft</option>
-              <option value="1">Live</option>
-            </select>
-          </td>
-          <td>
-            <input class="form-control" type="number" name="stock" value="" id="stock">
-          </td>
-          <td>
-            <input class="form-control" value="" id="sku" name="sku">
-          </td>
-          <td>
-            <textarea rows="1" class="form-control" name="description" id="description"></textarea>
-          </td>
-          <td>
-            <button onclick="edit_modal('size_modal', this.parentNode.parentNode.dataset.idRow)">Edit sizes</button>
-          </td>
-          <td>
-            <button onclick="edit_modal('logo_modal', this.parentNode.parentNode.dataset.idRow)">Edit logos</button>
-          </td>
-          <td>
-            <button onclick="edit_modal('color_modal', this.parentNode.parentNode.dataset.idRow)">Edit colors</button>
-          </td>
-          <td>
-            <button onclick="edit_modal('category_modal', this.parentNode.parentNode.dataset.idRow)">Edit categories
+          <label for="status">Status</label>
+          <select style="width: 100%" id="status" name="status">
+            <option value="0">Draft</option>
+            <option value="1">Live</option>
+          </select>
+
+          <label for="stock">Stock</label>
+          <input class="form-control" type="number" name="stock" value="" id="stock">
+
+          <label for="sku">SKU</label>
+          <input class="form-control" value="" id="sku" name="sku">
+
+          <label for="description">Description</label>
+          <textarea rows="1" class="form-control" name="description" id="description"></textarea>
+
+          <label>Media and clasifiers</label>
+          <div>
+            <button onclick="edit_modal('size_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit sizes
             </button>
-          </td>
-          <td>
-            <button onclick="edit_modal('style_modal', this.parentNode.parentNode.dataset.idRow)">Edit styles</button>
-          </td>
-          <td>
-            <button onclick="edit_modal('material_modal', this.parentNode.parentNode.dataset.idRow)">Edit materials
-            </button>
-          </td>
-          <td>
-            <button onclick="edit_modal('brand_modal', this.parentNode.parentNode.dataset.idRow)">Edit brands</button>
-          </td>
-          <td>
-            <select id="tax" name="tax">
-              <% TaxBand.all.each do |tax| %>
-                  <option value="<%= tax.id %>"><%= tax.titulo %></option>
-              <% end %>
-            </select>
-          </td>
 
-        </tr>
-        <tr id="replace_with">
-          <td>
-            <button onclick="add_row()">Add row</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+            <button onclick="edit_modal('logo_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit logos
+            </button>
+
+
+            <button onclick="edit_modal('color_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+              photos
+            </button>
+
+
+            <button onclick="edit_modal('category_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+              categories
+            </button>
+
+
+            <button onclick="edit_modal('style_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+              styles
+            </button>
+
+
+            <button onclick="edit_modal('material_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+              materials
+            </button>
+
+
+            <button onclick="edit_modal('brand_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+              brands
+            </button>
+          </div>
+
+          <label for="tax">Tax</label>
+          <select style="width: 100%" id="tax" name="tax">
+            <% TaxBand.all.each do |tax| %>
+                <option value="<%= tax.id %>"><%= tax.titulo %></option>
+            <% end %>
+          </select>
+          <hr>
+        </div>
+
+      </div>
+      <div id="replace_with">
+        <button onclick="add_row()">Add row</button>
+      </div>
     </div>
   </div>
 
@@ -179,6 +165,13 @@
     var modal = null;
     var dim_back = document.getElementById('dim_back');
 
+    function close_modal() {
+        if (modal) {
+            modal.style.display = "none";
+            dim_back.style.display = "none";
+        }
+    }
+
     function complete_size(id) {
 
         var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>';
@@ -224,6 +217,7 @@
                 price: $(rows[i]).find('input[id="price"]').val()
             })
         }
+        close_modal();
     }
 
     function complete_logo(id) {
@@ -293,6 +287,8 @@
                 });
             }
         }
+
+        close_modal();
     }
 
     var counter = 0;
@@ -315,7 +311,7 @@
                 var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
                     '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Title" name="title" id="title">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" step="any" name="price" id="price">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                     '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
@@ -418,6 +414,8 @@
             }
         }
         console.log(colors_g[id]);
+
+        close_modal();
     }
 
     function complete_category(id) {
@@ -461,6 +459,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_style(id) {
@@ -504,6 +504,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_material(id) {
@@ -547,6 +549,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function complete_brand(id) {
@@ -590,6 +594,8 @@
                 title: $(rows[i]).find('input[id="title"]').val(),
             })
         }
+
+        close_modal();
     }
 
     function get_correct(holder, id) {
@@ -661,7 +667,7 @@
 
     function delete_row(element_row) {
 
-        var row = element_row.parentNode.parentNode;
+        var row = element_row.parentNode;
         var remove_id = row.dataset.idRow;
         var overall_parent = row.parentNode;
         overall_parent.removeChild(row);
@@ -678,7 +684,7 @@
 
     function save() {
         var rows = [];
-        $("tr.product_row_new").each(function () {
+        $("div.product_row_new").each(function () {
             rows.push($(this))
         });
         var limit_n = rows.length;
@@ -707,6 +713,7 @@
                 logo_info = new FormData();
                 logo_info.append('price', logos[id].price);
                 logo_info.append('file', logos[id].file);
+                $(row).css('background-color', '#fffae0');
 
                 $.ajax({
                     url: "/product/new/logo",
@@ -739,7 +746,12 @@
 
                     },
                     error: function (data) {
-                        console.log(data)
+                        console.log(data);
+                        current_n = current_n + 1;
+                        if (current_n < limit_n) {
+                            request(rows[current_n]);
+                        }
+                        $(row).css('background-color', '#ff8787');
                     }
 
                 });
@@ -747,6 +759,7 @@
             }
 
             function send_2(id) {
+                $(row).css('background-color', '#ffe5e0');
                 $.ajax({
                     url: "/product/new/color",
                     type: "POST",
@@ -768,11 +781,20 @@
                         } else {
                             send_3();
                         }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        current_n = current_n + 1;
+                        if (current_n < limit_n) {
+                            request(rows[current_n]);
+                        }
+                        $(row).css('background-color', '#ff8787');
                     }
                 });
             }
 
             function send_2_5(id, files, id_c) {
+                $(row).css('background-color', '#e0fcff');
                 var files_length = files.length;
                 var files_cur = 0;
 
@@ -801,7 +823,12 @@
                             }
                         },
                         error: function (data) {
-                            console.log(data)
+                            console.log(data);
+                            current_n = current_n + 1;
+                            if (current_n < limit_n) {
+                                request(rows[current_n]);
+                            }
+                            $(row).css('background-color', '#ff8787');
                         }
 
                     })
@@ -833,6 +860,7 @@
             }
 
             function send_3() {
+                $(row).css('background-color', '#ffe0fe');
                 $.ajax({
                     url: "/product/new/product",
                     type: "POST",
@@ -859,9 +887,15 @@
                         if (current_n < limit_n) {
                             request(rows[current_n]);
                         }
+                        $(row).css('background-color', '#eeffe0');
                     },
                     error: function (data) {
-                        console.log(data)
+                        console.log(data);
+                        current_n = current_n + 1;
+                        if (current_n < limit_n) {
+                            request(rows[current_n]);
+                        }
+                        $(row).css('background-color', '#ff8787');
                     }
                 });
             }

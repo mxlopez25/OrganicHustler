@@ -254,10 +254,12 @@ div.modal-g {
 }
 
 div.modal-c {
+  margin: 0 auto;
+  right: 0;
+  left: 0;
+  width: 80%;
   text-align: inherit;
   padding: 16px;
-  min-width: 1500px;
-  float: left;
 }
 
 .dim_back {
