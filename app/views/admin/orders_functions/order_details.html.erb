@@ -35,7 +35,9 @@
 <body style="background-color: #dedede">
 <div class="main">
   <%= form_for @order, url: orders_path do |f| %>
-      <div class="content-part-7 card">
+      <div style="margin: 0 auto; float: none" class="content-part-7 card">
+
+        <input style="display: none" value="<%= @order.id %>" name="order_id" id="order_id">
 
         <div class="input-group">
           <span class="input-group-addon">Status</span>

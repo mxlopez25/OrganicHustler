@@ -5,8 +5,12 @@ class OrdersController < ApplicationController
   layout 'admin'
   before_action :authenticate_admin!
 
-  def update
+  def order_params(order_params)
+    order_params.permit(:state, :description)
+  end
 
+  def update
+    (Order.find params['order_id']).update!(order_params(params['order']))
   end
 
   def get_tag
