@@ -316,8 +316,9 @@
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" step="any" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                     '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
-                    '      <input multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                    '      <input style="width: 12%; float:left; margin: 0;" value="' + color.main_picture + '" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                    '      <input onchange="update_list(this, ' + color.id + ')"  multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                    '      <select name="main_image_' + color.id + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + color.id + '">' +
+                    '      </select>' +
                     '</div>';
                 html = html + rr_data
             });
@@ -332,7 +333,8 @@
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                 '      <datalist id="pictures' + counter + '"></datalist>' +
                 '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+                '      <select name="main_image_' + counter + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
+                '      </select>' +
                 '</div>';
 
             counter = counter + 1;
@@ -344,7 +346,7 @@
     function new_color_row(id) {
         $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
             '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
-            '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Title" name="title" id="title">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" step="any" type="number" placeholder="Price" name="price" id="price">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
@@ -352,7 +354,7 @@
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
             '      <datalist id="pictures' + counter + '"></datalist>' +
             '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-            '      <input list="pictures' + counter + '" style="width: 12%; float:left; margin: 0;" value="" type="text" placeholder="Name of primary image" name="main_image" id="main_image">' +
+            '      <select name="main_image_' + counter + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
             '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
 
         counter = counter + 1;
@@ -361,13 +363,13 @@
     function update_list(element, id) {
         var parent = element.parentNode;
         var files = $(parent).find('input[id="file"]')[0].files;
-        var data_list = $(parent).find('#pictures' + id)[0];
+        var data_list = $(parent).find('#main_image_' + id)[0];
         console.log(data_list);
 
         var html = '';
 
         for (var id_s = 0; id_s < files.length; id_s++) {
-            html = html + '<option value="' + files[id_s].name + '">';
+            html = html + '<option value="' + files[id_s].name + '">' + files[id_s].name + '</option>';
             console.log(html);
         }
         data_list.innerHTML = html;
