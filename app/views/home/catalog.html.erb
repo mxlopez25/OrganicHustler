@@ -1,4 +1,4 @@
-<div id="items-container" style="overflow: visible; margin-bottom: 30px">
+<div id="items-container" style="overflow: hidden; margin-bottom: 30px">
 
   <div style="z-index: 0;" id="filters">
 
@@ -439,6 +439,12 @@
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
     var modal_emblem = document.getElementById('modal-content-quick-m');
+
+    $('#quick_view').on('click', function (e) {
+        if (e.target === this)
+            close_modal();
+
+    });
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
