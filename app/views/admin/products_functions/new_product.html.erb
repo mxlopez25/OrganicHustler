@@ -308,7 +308,7 @@
                     }
                 }
 
-                var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" style="overflow: hidden; width: 100%; float: left;">\n' +
+                var rr_data = '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" data-changed="false" style="overflow: hidden; width: 100%; float: left;">\n' +
                     '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Color title" name="title" id="title">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" step="any" name="price" id="price">\n' +
@@ -317,13 +317,13 @@
                     '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                     '      <input onchange="update_list(this, ' + color.id + ')"  multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                    '      <select name="main_image_' + color.id + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + color.id + '">' +
+                    '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + color.id + '">' +
                     '      </select>' +
                     '</div>';
                 html = html + rr_data
             });
         } else {
-            html = html + '<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+            html = html + '<div class="color_row" data-ocupaid-use="false" data-changed="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
                 '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Price" name="price" id="price">\n' +
@@ -333,7 +333,7 @@
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                 '      <datalist id="pictures' + counter + '"></datalist>' +
                 '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-                '      <select name="main_image_' + counter + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
+                '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
                 '      </select>' +
                 '</div>';
 
@@ -344,7 +344,7 @@
     }
 
     function new_color_row(id) {
-        $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+        $(modal).find('#bonnie').replaceWith('<div class="color_row" data-ocupaid-use="false" data-changed="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
             '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" step="any" type="number" placeholder="Price" name="price" id="price">\n' +
@@ -354,7 +354,7 @@
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
             '      <datalist id="pictures' + counter + '"></datalist>' +
             '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
-            '      <select name="main_image_' + counter + '" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
+            '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
             '      </select>' +
             '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
 
@@ -366,6 +366,7 @@
         var files = $(parent).find('input[id="file"]')[0].files;
         var data_list = $(parent).find('#main_image_' + id)[0];
         console.log(data_list);
+        parent.dataset.changed = 'true';
 
         var html = '';
 
@@ -399,21 +400,38 @@
                     stock: $(rows[i]).find('input[id="stock_level"]').val(),
                     preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
                     files: $(rows[i]).find('input[id="file"]')[0].files,
-                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
+                    main_picture: $(rows[i]).find('select[name="main_image"]').val()
                 });
                 colors_g[id].cur_id = colors_g[id].cur_id + 1;
+                rows[i].dataset.changed = 'false';
             } else {
                 var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
-                colors_g[id].colors.push({
-                    id: item.id,
-                    title: $(rows[i]).find('input[id="title"]').val(),
-                    price: $(rows[i]).find('input[id="price"]').val(),
-                    color: $(rows[i]).find('input[id="code_hex"]').val(),
-                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
-                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
-                    file: item.files,
-                    main_picture: $(rows[i]).find('input[id="main_image"]').val()
-                });
+                if (rows[i].dataset.changed === 'true') {
+                    colors_g[id].colors.push({
+                        id: item.id,
+                        title: $(rows[i]).find('input[id="title"]').val(),
+                        price: $(rows[i]).find('input[id="price"]').val(),
+                        color: $(rows[i]).find('input[id="code_hex"]').val(),
+                        stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                        preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                        files: $(rows[i]).find('input[id="file"]')[0].files,
+                        main_picture: $(rows[i]).find('select[name="main_image"]').val()
+                    });
+                    rows[i].dataset.changed = 'false';
+                } else {
+                    colors_g[id].colors.push({
+                        id: item.id,
+                        title: $(rows[i]).find('input[id="title"]').val(),
+                        price: $(rows[i]).find('input[id="price"]').val(),
+                        color: $(rows[i]).find('input[id="code_hex"]').val(),
+                        stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                        preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                        file: item.files,
+                        main_picture: item.main_picture
+                    });
+                    rows[i].dataset.changed = 'false';
+                }
+                console.log(colors_g[id].colors);
             }
         }
         console.log(colors_g[id]);
