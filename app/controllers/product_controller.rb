@@ -205,7 +205,14 @@ class ProductController < ApplicationController
 
     if params['categories']
       params['categories'].each do |category|
-        product.categories << Category.find_or_create_by!(title: params['categories'][category]['title'])
+        text = params['categories'][category]['title'].downcase
+        cat = Category.find_by(title: text)
+        p cat
+        if cat
+          product.categories << cat
+        else
+          product.categories << Category.new(title: text)
+        end
       end
     end
 
