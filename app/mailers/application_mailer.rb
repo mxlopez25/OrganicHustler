@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'organichustler-9bb916@inbox.mailtrap.io'
+  default from: 'support@organichustler.tk'
   layout 'mailer'
 end
