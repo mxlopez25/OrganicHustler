@@ -67,12 +67,13 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      :user_name => 'ecfd9d84a9b30c',
-      :password => '85a5788153802f',
-      :address => 'smtp.mailtrap.io',
-      :domain => 'smtp.mailtrap.io',
-      :port => '2525',
-      :authentication => :cram_md5
+      :address => 'email-smtp.us-west-2.amazonaws.com',
+      :domain => 'email-smtp.us-west-2.amazonaws.com',
+      :port => '25',
+      :user_name => ENV.fetch('SES_SMTP_USERNAME'), #Your SMTP user
+      :password => ENV.fetch('SES_SMTP_PASSWORD'), #Your SMTP password
+      :authentication => :login,
+      :enable_starttls_auto => true
   }
 
 end
