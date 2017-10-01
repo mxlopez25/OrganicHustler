@@ -147,7 +147,7 @@
         filters_arr.remove();
 
         $.ajax({
-            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=' + filters.style + '&color=' + filters.color + '&material=' + filters.material,
+            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=' + filters.style + '&color=' + filters.color + '&material=' + filters.material + '&search=<%= @parameters['search'] %>',
             type: 'GET',
             dataType: 'json',
             data: {},
