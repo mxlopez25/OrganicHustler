@@ -303,9 +303,19 @@
     }
 
     var counter = 0;
+    var TEMP_REPLACEMENT = null;
+
+    function only_photos() {
+        TEMP_REPLACEMENT = modal.innerHTML;
+        $('#only_photo').prop('checked', true);
+    }
+
+    function photos_color() {
+        $('#only_photo').prop('checked', false);
+    }
 
     function complete_color(id) {
-        var html = '<button onclick="save_colors(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="console.log(\'Photos, no color\')"> <h6 style="float: right">No color, Only photos available</h6>';
         var colors = colors_g[id];
         if (colors) {
             colors = colors.colors;
