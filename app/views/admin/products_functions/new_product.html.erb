@@ -1,3 +1,13 @@
+<head>
+  <!--Color picker-->
+  <%= stylesheet_link_tag 'spectrum.css' %>
+  <%= javascript_include_tag 'spectrum.js' %>
+
+  <!--Display tags as bootstrap pills-->
+  <%= javascript_include_tag 'bootstrap-tagsinput' %>
+  <%= stylesheet_link_tag 'bootstrap-tagsinput' %>
+</head>
+
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -30,11 +40,9 @@
   </div>
 </nav>
 <body style="background-color: #dedede">
+
 <div class="main">
 
-  <!--Display tags as bootstrap pills -->
-  <%= javascript_include_tag 'bootstrap-tagsinput' %>
-  <%= stylesheet_link_tag 'bootstrap-tagsinput' %>
 
   <div class="head-bread-crumbs card">
     <h4><a class="breadcrumb" href="/admin/products">Products</a> / New</h4>
@@ -149,6 +157,9 @@
 </div>
 </body>
 
+<link rel='stylesheet' href='spectrum.css'/>
+<script src='spectrum.js'></script>
+
 <script>
     //<link href="https://wzrd.in/standalone/blob-util@latest" rel="script">
     var sizes_g = {};
@@ -230,7 +241,6 @@
                 var rr_data = '<div class="logo_row" data-id-use="' + logo.id + '" data-ocupaid-use="true" style="overflow: hidden">' +
                     '<button onclick="remove_logo_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '<p style="text-align: center; float: left; width: 25%; margin: 0;">' + logo.file.name + '</p>' +
-                    '<input style="float: left; width: 40%; margin: 0;" type="file" value="" name="file" id="file">' +
                     '<input style="float: left; width: 25%; margin: 0;" step="any" type="number" value="' + logo.price + '" placeholder="Price" name="price" id="price">' +
                     '</div>';
                 console.log(logo.file);
@@ -263,20 +273,21 @@
         var rows = $(modal).find('.logo_row');
         var holder = null;
         var logos_tt = logos_g[id];
-        if (logos_tt) {
-            holder = logos_tt.logos;
-        }
+
         logos_g[id] = {cur_id: 0, logos: []};
 
+        if (logos_tt) {
+            holder = logos_tt.logos;
+            logos_g[id] = {cur_id: logos_tt.cur_id, logos: []};
+        }
+
         for (var i = 0; i < rows.length; i++) {
-            console.log(rows[i].dataset.ocupaidUse);
             if (rows[i].dataset.ocupaidUse === 'false') {
                 logos_g[id].logos.push({
                     id: logos_g[id].cur_id,
                     file: $(rows[i]).find('input[id="file"]')[0].files[0],
                     price: $(rows[i]).find('input[id="price"]').val()
                 });
-
                 logos_g[id].cur_id = logos_g[id].cur_id + 1;
             } else {
                 var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
@@ -312,7 +323,7 @@
                     '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.title + '" placeholder="Color title" name="title" id="title">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.price + '" type="number" placeholder="Price" step="any" name="price" id="price">\n' +
-                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="' + color.color + '" type="text" name="code_hex" id="code_hex" class="basic-picker">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="' + color.stock + '" step="any" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                     '      <input ' + checked() + ' type="checkbox" id="main" name="main" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                     '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
@@ -327,7 +338,7 @@
                 '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Price" name="price" id="price">\n' +
-                '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="text" name="code_hex" id="code_hex" class="basic-picker">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
                 '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
                 '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
@@ -348,7 +359,7 @@
             '      <button onclick="remove_color_row(this)" style="float: left; width: 10%; margin: 0;">-</button>' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" value="" step="any" type="number" placeholder="Price" name="price" id="price">\n' +
-            '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" placeholder="Color" name="code_hex" id="code_hex">\n' +
+            '      <input style="float: left; width: 12%; margin: 0;" value="" type="text" name="code_hex" id="code_hex" class="basic-picker">\n' +
             '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
             '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
             '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
@@ -357,6 +368,10 @@
             '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
             '      </select>' +
             '</div>' + '<button id="bonnie" onclick="new_color_row(' + id + ')" style="float: left; width: 10%; margin: 0;">+</button>');
+
+        $(".basic-picker").spectrum({
+            preferredFormat: "hex"
+        });
 
         counter = counter + 1;
     }
@@ -385,12 +400,14 @@
         var rows = $(modal).find('.color_row');
         var holder = null;
         var colors_tt = colors_g[id];
+        colors_g[id] = {cur_id: 0, colors: []};
+
         if (colors_tt) {
             holder = colors_tt.colors;
+            colors_g[id] = {cur_id: colors_tt.cur_id, colors: []};
         }
-        colors_g[id] = {cur_id: 0, colors: []};
+
         for (var i = 0; i < rows.length; i++) {
-            console.log(rows[i].dataset.ocupaidUse);
             if (rows[i].dataset.ocupaidUse === 'false') {
                 colors_g[id].colors.push({
                     id: colors_g[id].cur_id,
@@ -426,12 +443,11 @@
                         color: $(rows[i]).find('input[id="code_hex"]').val(),
                         stock: $(rows[i]).find('input[id="stock_level"]').val(),
                         preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
-                        file: item.files,
+                        files: item.files,
                         main_picture: item.main_picture
                     });
                     rows[i].dataset.changed = 'false';
                 }
-                console.log(colors_g[id].colors);
             }
         }
         console.log(colors_g[id]);
@@ -645,6 +661,9 @@
                 break;
             case 'color_modal':
                 modal.innerHTML = complete_color(id);
+                $(".basic-picker").spectrum({
+                    preferredFormat: "hex"
+                });
                 break;
             case 'category_modal':
                 modal.innerHTML = complete_category(id);
