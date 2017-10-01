@@ -56,7 +56,7 @@ class HomeController < ApplicationController
           #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
     #{products_col ? 'INNER JOIN colors ON products.id = colors.product_id' : ''}
     #{products_mat ? 'INNER JOIN materials_products ON products.id = materials_products.product_id' : ''}
-          WHERE #{products_cat ? ' category_id = '+ products_cat.id.to_s : ' products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
+          WHERE #{products_cat ? ' category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : ' products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
 
     p sql
 
