@@ -164,11 +164,6 @@
 
     <hr>
 
-    <h4 class="light-paragraph">Colors</h4>
-    Work in progress...
-
-    <hr>
-
     <h4 class="light-paragraph">Categories</h4>
     <div id="categories_rows">
       <% product_i.categories.each do |category| %>
@@ -1007,11 +1002,27 @@
 
     </script>
 
-    <script>
+  </div>
 
+  <div class="card modal-g">
+    Photos
 
-    </script>
+    <% product_i.colors.each do |color| %>
 
+        <div id="color-row" style="overflow: auto; text-align: center">
+          <button onclick="remove_colo_row(this, '<%= color.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button><!--FINISH-->
+          <h4 style="float:left;"><%= color.title %></h4>
+          <div class="dropzone" id="color_drop_pictures_<%= color.id %>" style="width: 100%; min-height: 170px; float: left">
+
+          </div>
+        </div>
+        <hr>
+
+    <% end %>
+
+    <button style="width:100%;" onclick="edit_modal('color_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+      COLOR
+    </button>
   </div>
 
   <div class="card modal-g">
@@ -1066,6 +1077,14 @@
       EMBLEM
     </button>
   </div>
+
+  <script>
+      Dropzone.options.myDropzone = {
+          init: function () {
+              thisDropzone = this;
+          }
+      };
+  </script>
 
   <div id="dim_back" class="dim_back">
 
