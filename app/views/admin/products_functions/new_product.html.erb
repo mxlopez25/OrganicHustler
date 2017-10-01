@@ -303,24 +303,101 @@
     }
 
     var counter = 0;
-    var TEMP_REPLACEMENT = null;
 
-    function only_photos() {
-        TEMP_REPLACEMENT = modal.innerHTML;
-        $('#only_photo').prop('checked', true);
-    }
+    function only_photos(id, remove) {
 
-    function photos_color() {
-        $('#only_photo').prop('checked', false);
-    }
+        if (remove && colors_g[id]) {
+            colors_g[id].colors = null;
+            colors_g[id].cur_id = 0;
+        }
 
-    function complete_color(id) {
-        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="console.log(\'Photos, no color\')"> <h6 style="float: right">No color, Only photos available</h6>';
         var colors = colors_g[id];
-        if (colors) {
-            colors = colors.colors;
-            colors.forEach(function (color) {
+        var dd = null;
 
+        if (colors) {
+            dd = colors.colors;
+        }
+
+        if (colors && dd) {
+            colors = dd;
+            colors.forEach(function (color) {
+                modal.innerHTML = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
+                    '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" data-changed="false"  style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="No color" disabled placeholder="Color title" name="title" id="title">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" step="any" value="0.00" disabled type="number" placeholder="Price" name="price" id="price">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="#dedede" disabled type="text" name="code_hex" id="code_hex" class="basic-picker">\n' +
+                    '      <input style="float: left; width: 12%; margin: 0;" value="0" disabled type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                    '      <input checked disabled id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                    '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                    '      <h6 style="width: 10%; float: left" title="' + get_files_names(color.files) + '">' + color.files.length + ' Pictures selected</h6>' +
+                    '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                    '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
+                    '      </select>' +
+                    '</div>';
+            });
+        } else {
+
+            modal.innerHTML = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
+                '<div class="color_row" data-ocupaid-use="false" data-changed="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="No color" disabled placeholder="Color title" name="title" id="title">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" step="any" value="0.00" disabled type="number" placeholder="Price" name="price" id="price">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="#dedede" disabled type="text" name="code_hex" id="code_hex" class="basic-picker">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="0" disabled type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                '      <input checked disabled id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                '      <datalist id="pictures' + counter + '"></datalist>' +
+                '      <input onchange="update_list(this, ' + counter + ')" multiple style="float: left; width: 17%; margin: 0;" type="file" value="" name="file" id="file">\n' +
+                '      <select name="main_image" style="width: 12%; float:left; margin: 0;" id="main_image_' + counter + '">' +
+                '      </select>' +
+                '</div>';
+
+        }
+
+        $(".basic-picker").spectrum({
+            preferredFormat: "hex"
+        });
+        counter = counter + 1;
+    }
+
+    function get_files_names(files) {
+        var text = '';
+
+        for (var i = 0; i < files.length; i++) {
+            text += files[i].name + '\n'
+        }
+
+        return text;
+    }
+
+    function photos_color(id) {
+        modal.innerHTML = complete_color(id, true);
+
+        $(".basic-picker").spectrum({
+            preferredFormat: "hex"
+        });
+    }
+
+    function complete_color(id, remove) {
+
+        console.log(remove);
+        console.log(colors_g[id]);
+
+        if (remove && colors_g[id]) {
+            colors_g[id].colors = null;
+            colors_g[id].cur_id = 0;
+        }
+
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="only_photos(\'' + id + '\', true)"> <h6 style="float: right">No color, Only photos available</h6>';
+        var colors = colors_g[id];
+        var dd = null;
+
+        if (colors) {
+            dd = colors.colors;
+        }
+
+        if (colors && (dd !== null)) {
+            colors = dd;
+            colors.forEach(function (color) {
                 function checked() {
                     if (color.preferred) {
                         return 'checked';
@@ -410,11 +487,11 @@
         var rows = $(modal).find('.color_row');
         var holder = null;
         var colors_tt = colors_g[id];
-        colors_g[id] = {cur_id: 0, colors: []};
+        colors_g[id] = {cur_id: 0, colors: [], single: $('#only_photo').is(':checked')};
 
         if (colors_tt) {
             holder = colors_tt.colors;
-            colors_g[id] = {cur_id: colors_tt.cur_id, colors: []};
+            colors_g[id] = {cur_id: colors_tt.cur_id, colors: [], single: $('#only_photo').is(':checked')};
         }
 
         for (var i = 0; i < rows.length; i++) {
@@ -670,10 +747,22 @@
                 modal.innerHTML = complete_logo(id);
                 break;
             case 'color_modal':
-                modal.innerHTML = complete_color(id);
-                $(".basic-picker").spectrum({
-                    preferredFormat: "hex"
-                });
+                var col = colors_g[id];
+                var boolean = false;
+                if (col) {
+                    if (col.single) {
+                        boolean = true;
+                    }
+                }
+
+                if (boolean) {
+                    only_photos(id, false);
+                } else {
+                    modal.innerHTML = complete_color(id, false);
+                    $(".basic-picker").spectrum({
+                        preferredFormat: "hex"
+                    });
+                }
                 break;
             case 'category_modal':
                 modal.innerHTML = complete_category(id);
