@@ -9,7 +9,7 @@ class AdminController < ApplicationController
   end
 
   def products
-    @amount = params[:limit] || 10
+    @amount = params[:limit] || 40
   end
 
   def logo
@@ -19,6 +19,28 @@ class AdminController < ApplicationController
   end
 
   def mailer
+  end
+
+  def change_main_picture
+    (Color.find params[:color_id]).change_main_photo(params[:photo_id])
+  end
+
+  def delete_picture
+    color = Color.find params[:color_id]
+    photos = color.product_images.where(picture_file_name: params[:file_name]).first
+    change = false
+    p photos.main
+    if photos.main
+      change = true;
+    end
+
+    photos.destroy!
+
+    if change
+      temp_col = color.product_images.all.first
+      temp_col.main = true
+      temp_col.save!
+    end
   end
 
   def order_search
