@@ -253,6 +253,36 @@ div.modal-g {
   float: left;
 }
 
+#loading {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.31);
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  align-self: center;
+  border: 16px solid rgba(86, 85, 93, 0.39); /* Light grey */
+  border-top: 16px solid #458aef; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  z-index: 999;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 div.modal-c {
   margin: 0 auto;
   right: 0;

@@ -107,6 +107,10 @@ class HomeController < ApplicationController
     render json: ({data: picture, picture: picture.picture}).to_json
   end
 
+  def get_main_image
+    render json: ({src: (Product.find params[:pr_id]).colors.where(preferred: true).first.product_images.where(main: true).first.picture, id: params[:pr_id]}).to_json
+  end
+
   def get_preset_logo
     picture = (Logo.find params['logo_id']).picture
     render text: picture.to_s.html_safe

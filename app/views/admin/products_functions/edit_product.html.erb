@@ -164,11 +164,6 @@
 
     <hr>
 
-    <h4 class="light-paragraph">Colors</h4>
-    Work in progress...
-
-    <hr>
-
     <h4 class="light-paragraph">Categories</h4>
     <div id="categories_rows">
       <% product_i.categories.each do |category| %>
@@ -1005,13 +1000,124 @@
             };
         }
 
+        function change_main(id_color) {
+
+            document.getElementById('loading').classList.remove('hidden');
+
+            $.ajax({
+                url: '/admin/products/change_main_picture',
+                type: 'PATCH',
+                dataType: 'json',
+                data: {
+                    color_id: id_color,
+                    photo_id: $('#main_image_' + id_color).val()
+                },
+                success: function (data) {
+                    document.getElementById('loading').classList.add('hidden');
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
     </script>
 
-    <script>
+  </div>
 
+  <div class="card modal-g">
+    Photos
 
-    </script>
+    <% product_i.colors.each do |color| %>
 
+        <div id="color-row" style="overflow: auto; text-align: center; position: relative">
+
+          <div id="loading" class="hidden">
+
+            <div class="loader">
+
+            </div>
+
+          </div>
+
+          <button onclick="remove_colo_row(this, '<%= color.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button><!--FINISH-->
+          <h4 style="float:left;"><%= color.title %></h4>
+          <select onchange="change_main(<%= color.id %>)" style="float: right; width: 20%" id="main_image_<%= color.id %>"></select>
+          <h4 style="float: right">Main image: </h4>
+          <div class="dropzone" id="drop<%= color.id %>" style="width: 100%; min-height: 170px; float: left; position: relative">
+
+          </div>
+        </div>
+        <hr>
+
+        <script>
+            Dropzone.autoDiscover = false;
+            var myDropzone = new Dropzone("#drop<%= color.id %>", {
+                url: "/product/new/image?parent_id=<%= color.id %>",
+                maxFileSize: 50,
+                addRemoveLinks: true,
+                init: function () {
+                    this.on("removedfile", function (file) {
+                        document.getElementById('loading').classList.remove('hidden');
+                        $.ajax({
+                            url: '/admin/product/photo',
+                            type: 'DELETE',
+                            dataType: 'json',
+                            data: {
+                                file_name: file.name,
+                                color_id: <%= color.id %>
+                            },
+                            success: function (data) {
+                                window.location.reload(true);
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+                    });
+                }
+            });
+
+            //Add existing files into dropzone
+            var existingFiles<%= color.id %> = [];
+            var select<%= color.id %> = $('#main_image_<%= color.id %>');
+            <% filelist = '' %>
+            var main_picture = null;
+
+            <% color.product_images.each do |col| %>
+
+            <% filelist = filelist + "<option value='#{col.id}'>#{col.picture_file_name}</option>" %>
+
+            <% if col.main %>
+
+            main_picture = '<%= col.id %>';
+
+            <% end %>
+
+            var temp_v = {
+                name: '<%= col.picture_file_name %>',
+                size: <%= col.picture_file_size %>,
+                data: '<%= col.picture(:thumb) %>'
+            };
+            existingFiles<%= color.id %>.push(temp_v);
+
+            <% end %>
+
+            select<%= color.id %>.html("<%= filelist.html_safe %>");
+            select<%= color.id %>.val(main_picture).trigger("chosen:updated");
+
+            for (var i = 0; i < existingFiles<%= color.id %>.length; i++) {
+                myDropzone.emit("addedfile", existingFiles<%= color.id %>[i]);
+                myDropzone.emit("thumbnail", existingFiles<%= color.id %>[i], existingFiles<%= color.id %>[i].data);
+                myDropzone.emit("complete", existingFiles<%= color.id %>[i]);
+            }
+        </script>
+
+    <% end %>
+
+    <button style="width:100%;" onclick="edit_modal('color_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+      COLOR
+    </button>
   </div>
 
   <div class="card modal-g">

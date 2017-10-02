@@ -167,8 +167,6 @@ class ProductController < ApplicationController
   def new_image
 
     file = re_center_upload(params['file'])
-
-    p (params['file'].original_filename.eql?(params['main_name']))
     image = ProductImage.create! color: ApplicationRecord::Color.find(params['parent_id']), picture: file, main: (params['file'].original_filename.eql?(params['main_name']))
 
     file.close

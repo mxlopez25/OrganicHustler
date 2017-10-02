@@ -158,12 +158,23 @@
                 for (var id in data) {
                     var item = data[id];
                     html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick(\'' + item.id + '\', 1)">'
-                        + '<img class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
+                        + '<img id="item_img_' + item.id + '" class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
                         + '<h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px">' + item.title + '</h5>'
                         + '<h5 style="font-size: 16px; color: #ba97a6; font-family: \'Source Sans Pro\', sans-serif; font-weight: 600">$' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>'
                         + '<button onclick="open_quick(\'' + item.id + '\', 1)" class="btn btn-sp btn-bottom_fixed" style="width: 100%">Quick Shop</button>'
                         + '</div>';
                     document.getElementById('items').innerHTML = html_items;
+
+                    /*$.ajax({
+                        url: '/catalog/product/main_image?pr_id=' + data[id].id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            console.log('item_img_' + data.id);
+                            document.getElementById('item_img_' + data.id).src = data.src;
+                        }
+                    });*/
 
                     $.ajax({
                         url: '/catalog/product/colors?product_id=' + data[id].id,
