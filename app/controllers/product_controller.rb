@@ -160,7 +160,7 @@ class ProductController < ApplicationController
   end
 
   def new_color
-    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred'], main_picture: params['main_picture']
+    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred'], main_picture: params['main_picture'], product_id: params['pr_id']
     render :json => color.to_json, :status => 200
   end
 

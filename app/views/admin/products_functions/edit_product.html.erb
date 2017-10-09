@@ -1,3 +1,9 @@
+<head>
+  <!--Color picker-->
+  <%= stylesheet_link_tag 'spectrum.css' %>
+  <%= javascript_include_tag 'spectrum.js' %>
+</head>
+
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -243,6 +249,18 @@
                 '   </div>';
         }
 
+        function complete_color(id) {
+            return '<div class="color_row" style="overflow: hidden;">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" placeholder="Color title" name="title" id="title">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Price" name="price" id="price">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="text" name="code_hex" id="color" class="basic-picker">\n' +
+                '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
+                '      <input id="main" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
+                '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
+                '      <button onclick="save_color_row(' + id + ', this.parentNode)" >SAVE</button>' +
+                '</div>';
+        }
+
         function complete_category(id) {
             return '<div class="category_row" style="overflow: hidden">\n' +
                 '               <input style="float: left; width: 89%; margin: 0;" value="" name="title" id="title">\n' +
@@ -478,6 +496,30 @@
                     console.log(data);
                 }
             })
+        }
+
+        function save_color_row(id, parent) {
+            $.ajax({
+                url: '/product/new/color',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pr_id: id,
+                    title: $(parent).find('#title').val(),
+                    price: $(parent).find('#price').val(),
+                    color: $(parent).find('#color').val(),
+                    stock: 0,
+                    preferred: false,
+                    main_picture: ''
+                },
+                success: function (data) {
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+
         }
 
         function save_logo_row(id, parent) {
@@ -774,6 +816,10 @@
                     break;
                 case 'color_modal':
                     modal.innerHTML = complete_color(id);
+
+                    $(".basic-picker").spectrum({
+                        preferredFormat: "hex"
+                    });
                     break;
                 case 'category_modal':
                     modal.innerHTML = complete_category(id);
@@ -1021,26 +1067,70 @@
             })
         }
 
+        function remove_color_row(id_color) {
+            document.getElementById('loading').classList.remove('hidden');
+
+            $.ajax({
+                url: '/admin/product/color',
+                type: 'DELETE',
+                dataType: 'json',
+                data: {
+                    color_id: id_color
+                },
+                success: function (data) {
+                    document.getElementById('loading').classList.add('hidden');
+                    window.location.reload(false);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function change_main_color(id) {
+            document.getElementById('loading').classList.remove('hidden');
+            $.ajax({
+                url: '/admin/products/change_main_color',
+                type: 'PATCH',
+                dataType: 'json',
+                data: {
+                    pr_id: <%= product_i.id %>,
+                    color: id
+                },
+                success: function (data) {
+                    document.getElementById('loading').classList.add('hidden');
+                    window.location.reload(true);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
     </script>
 
   </div>
 
-  <div class="card modal-g">
+  <div style="position: relative" class="card modal-g">
+
+    <div id="loading" class="hidden">
+
+      <div class="loader">
+
+      </div>
+
+    </div>
+
     Photos
 
     <% product_i.colors.each do |color| %>
 
         <div id="color-row" style="overflow: auto; text-align: center; position: relative">
 
-          <div id="loading" class="hidden">
+          <input onchange="change_main_color('<%= color.id %>')" type="checkbox" <%= color.preferred ? 'checked disabled' : '' %> >
+          Preferred image
 
-            <div class="loader">
-
-            </div>
-
-          </div>
-
-          <button onclick="remove_colo_row(this, '<%= color.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button><!--FINISH-->
+          <button onclick="remove_color_row('<%= color.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button><!--FINISH-->
           <h4 style="float:left;"><%= color.title %></h4>
           <select onchange="change_main(<%= color.id %>)" style="float: right; width: 20%" id="main_image_<%= color.id %>"></select>
           <h4 style="float: right">Main image: </h4>
@@ -1114,10 +1204,10 @@
         </script>
 
     <% end %>
-
     <button style="width:100%;" onclick="edit_modal('color_modal', <%= product_i.id %>)" class="btn btn-success">ADD
       COLOR
     </button>
+
   </div>
 
   <div class="card modal-g">

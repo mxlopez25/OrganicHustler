@@ -48,6 +48,44 @@ class AdminController < ApplicationController
     render '/admin/orders'
   end
 
+  def remove_color
+    color = Color.find params[:color_id]
+
+    presets = Preset.where(color_id: color.id)
+    presets.each do |p|
+      p.destroy!
+    end
+
+    emblem = PositionEmblemAdmin.where(color_id: color.id)
+    emblem.each do |e|
+      e.destroy!
+    end
+
+    preferred = color.preferred
+    product = color.product
+    color.destroy!
+
+    if preferred
+      n_color = product.colors.all.first
+      if n_color
+        n_color.preferred = true
+        n_color.save!
+      end
+    end
+  end
+
+  def change_main_color
+    (Product.find params['pr_id']).colors.each do |c|
+      if c.id.to_s.eql? params['color']
+        c.preferred = true
+        c.save!
+      else
+        c.preferred = false
+        c.save!
+      end
+    end
+  end
+
   def order_details
     id_o = params['id_o']
     @order = Order.find(id_o)
