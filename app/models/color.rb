@@ -1,5 +1,5 @@
 class Color < ApplicationRecord
-  has_many :product_images
+  has_many :product_images, dependent: :destroy
   belongs_to :product, optional: true
 
   def main_photo

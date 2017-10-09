@@ -61,6 +61,12 @@ Rails.application.routes.draw do
   get '/admin/products/logos' => 'admin#get_logos'
 
   patch '/admin/products/change_main_picture' => 'admin#change_main_picture'
+  patch '/admin/products/change_main_color' => 'admin#change_main_color'
+
+  delete '/admin/product/photo' => 'admin#delete_picture'
+  delete '/admin/product/color' => 'admin#remove_color'
+
+  patch '/admin/products/change_main_picture' => 'admin#change_main_picture'
   delete '/admin/product/photo' => 'admin#delete_picture'
 
   post '/admin/add_variation/:source_product' => 'admin#add_variation'
