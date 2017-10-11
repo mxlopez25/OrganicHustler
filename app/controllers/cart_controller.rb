@@ -87,9 +87,9 @@ class CartController < ApplicationController
         tax_t = tax_t + tax
       end
 
-      token = params[:token][:id]
 
       if params['save_cr'].eql?('on')
+        token = params[:token][:id]
         customer = Stripe::Customer.create(email: user.email, source: token)
         user.c_stripe_id = customer.id
         user.save!
@@ -107,6 +107,7 @@ class CartController < ApplicationController
               :customer => user.c_stripe_id,
           )
         else
+          token = params[:token][:id]
           p ((cost_t + tax_t)*100).to_i
           charge = Stripe::Charge.create(
               :amount => ((cost_t + tax_t)*100).to_i,
