@@ -45,7 +45,7 @@
     <div style="overflow: hidden; width: 100%">
       <hr style="border-color: black; width: 30%">
     </div>
-    <table style="width: 100%">
+    <table border="1" style="width: 100%">
       <thead>
       <tr class="t-head">
         <th>Select</th>
@@ -74,7 +74,7 @@
             <td><%= o.carrier || 'not assigned' %></td>
             <td><%= o.tracking_code || 'not assigned' %></td>
             <td><%= o.overall_user.id %></td>
-            <td><%= (o.overall_user.user_address || {:city => 'none'})[:city] %></td>
+            <td><%= o.user_address.city %></td>
           </tr>
       <% end %>
       </tbody>

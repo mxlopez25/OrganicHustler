@@ -417,8 +417,7 @@
                                 location.href = '/temp_user_act'
                             }
                         } else if (data['sign']) {
-                            console.log('klk yo soy un duro');
-                            location.href = '/users/sign_in';
+                            location.href = '/users/sign_in?tu=' + data['temp_user_id'];
                             document.getElementById('loading').classList.add('hidden');
                         } else {
 

@@ -37,7 +37,7 @@ class CartController < ApplicationController
     else
       if User.find_by_email(params['cardholder-email'])
         unsigned_user = true
-        render json: {sign: 'required'}.to_json.html_safe
+        render json: {sign: 'required', temp_user_id: session[:temp_user_id]}.to_json.html_safe
       else
         user = TempUser.find_by_email(params['cardholder-email'])
 
@@ -51,22 +51,24 @@ class CartController < ApplicationController
           user.email = params['cardholder-email']
           user.save!
         end
-
-        user_address = {
-            :street_address => params['cardholder-street'],
-            :city => params['cardholder-city'],
-            :state => params['cardholder-state'],
-            :zip_code => params['cardholder-zip'],
-            :area => params['cardholder-area'],
-            :number => params['cardholder-number']
-        }
-
-        user.create_user_address(user_address)
-        user.save!
       end
     end
 
+
     unless unsigned_user
+
+      user_address = {
+          :street_address => params['cardholder-street'],
+          :city => params['cardholder-city'],
+          :state => params['cardholder-state'],
+          :zip_code => params['cardholder-zip'],
+          :area => params['cardholder-area'],
+          :number => params['cardholder-number']
+      }
+
+      user.create_user_address(user_address)
+      user.save!
+
       tax_array = []
       cost_array = []
       cart_id = user.cart.id
@@ -132,12 +134,15 @@ class CartController < ApplicationController
           user.cart = nil
           user.save!
 
+          user.user_address.order = order
+          user.user_address.save!
+
         end
 
       rescue Stripe::CardError => e
         charge = e.json_body[:error]
       end
-      render :json => charge.to_json.html_safe
+      render :json => charge.to_json.html_safe, :code => 200
     end
   end
 

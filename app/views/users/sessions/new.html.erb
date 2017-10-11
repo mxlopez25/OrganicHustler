@@ -5,6 +5,8 @@
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
+        <input class="hidden" value="<%= params['tu'] %>" name="tu">
+
         <div class="log_in field">
           <input class="serious-input" placeholder="Email" value="" name="user[email]" id="user_email" type="email">
         </div>

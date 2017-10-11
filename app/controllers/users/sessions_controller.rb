@@ -1,4 +1,4 @@
-class User::SessionsController < Devise::SessionsController
+class Users::SessionsController < Devise::SessionsController
 # before_action :configure_sign_in_params, only: [:create]
 
 # GET /resource/sign_in
@@ -7,9 +7,18 @@ class User::SessionsController < Devise::SessionsController
 # end
 
 # POST /resource/sign_in
-# def create
-#   super
-# end
+  def create
+    super
+    if params['tu']
+      tu = TempUser.find params['tu']
+      cart = tu.cart
+      tu.cart = nil
+      tu.save!
+
+      resource.cart = cart
+      resource.save!
+    end
+  end
 
 # DELETE /resource/sign_out
 # def destroy
