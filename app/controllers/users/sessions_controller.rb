@@ -9,7 +9,7 @@ class Users::SessionsController < Devise::SessionsController
 # POST /resource/sign_in
   def create
     super
-    if params['tu']
+    unless params['tu'].blank?
       tu = TempUser.find params['tu']
       cart = tu.cart
       tu.cart = nil

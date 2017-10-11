@@ -84,7 +84,7 @@
         <label>
           <span>Card</span>
         </label>
-        <div style="padding: 0 0 0 10px" id="card-element" class="field content-part content-part-10 field-data"></div>
+            <div id="card-element" style="padding: 0 0 0 10px" class="field content-part content-part-10 field-data card-element"></div>
 
             <% if user_signed_in? %>
                 <input type="checkbox" name="save_cr">Save credit-card<br>
@@ -381,7 +381,10 @@
             }
         }
     });
-    card.mount('#card-element');
+    var element_dd = $('#card-element');
+    if (element_dd.length) {
+        card.mount('#card-element');
+    }
 
     function setOutcome(result) {
 
@@ -458,10 +461,16 @@
 
     document.querySelector('form').addEventListener('submit', function (e) {
         e.preventDefault();
-        var form = document.querySelector('form');
-        var extraDetails = {
-            name: form.querySelector('input[name=cardholder-first-name]').value
-        };
-        stripe.createToken(card, extraDetails).then(setOutcome);
+        if (element_dd.length) {
+            var form = document.querySelector('form');
+            var extraDetails = {
+                name: form.querySelector('input[name=cardholder-first-name]').value
+            };
+            stripe.createToken(card, extraDetails).then(setOutcome);
+        } else {
+            var result = {};
+            result.token = 'none';
+            setOutcome(result);
+        }
     });
 </script>
