@@ -149,7 +149,12 @@ div button {
   width: 13%;
   max-width: 40px;
   height: 30px;
-  margin: 5px;
+  margin: 1%;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
 }
 
 button.border-bg-sty {

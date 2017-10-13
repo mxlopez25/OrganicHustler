@@ -74,7 +74,7 @@ class ProductController < ApplicationController
   end
 
   def position_emblem_admin_params(pea_params)
-    pea_params.permit(:picture, :title, :price, :x, :y, :color_id, :multiplexer)
+    pea_params.permit(:picture, :title, :price, :x, :y, :color_id, :multiplexer, :product_image_id)
   end
 
   def save_product

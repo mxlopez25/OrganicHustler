@@ -324,6 +324,10 @@
                 '           <select style="width: 100%" id="colors_list" onchange="change_base_emblem(this)">' +
                 '           ' +
                 '           </select>' +
+                '           <label for="photos_list">Photo</label>' +
+                '           <select style="width: 100%" id="photos_list" onchange="change_base_photo(this)">' +
+                '           ' +
+                '           </select>' +
                 '       </div>' +
                 '       <div style="width: 500px; height: 500px; margin: 0 auto" id="preview_holder_emblem">' +
                 '           ' +
@@ -628,6 +632,10 @@
         var BASE_IMAGE = null;
 
         var ACTUAL_COLOR_EMBLEM = null;
+        var ACTUAL_PHOTO_EMBLEM = null;
+
+        var emblem_photo_list = {};
+
         var EMBLEM_IMAGE = null;
         var EMBLEM_IMAGE_H = null;
         var BASE_IMAGE_EMBLEM = null;
@@ -719,6 +727,7 @@
             formData.append('y', EMBLEM_IMAGE.getY());
             formData.append('color_id', ACTUAL_COLOR_EMBLEM);
             formData.append('multiplexer', ACTUAL_ZOOM);
+            formData.append('product_image_id', ACTUAL_PHOTO_EMBLEM);
             formData.append('pr_id', id);
 
             $.ajax({
@@ -774,17 +783,28 @@
                 }
             }
 
+            var photo_list = document.getElementById('photos_list');
+            photo_list.innerHTML = '';
+
             var default_picture;
             for (var j = 0; j < preferred_color.pictures.length; j++) {
                 var picture = preferred_color.pictures[j];
                 if (picture.data.main) {
                     default_picture = picture;
-                    break;
+                    ACTUAL_PHOTO_EMBLEM = picture.data.id;
                 }
+                photo_list.innerHTML = photo_list.innerHTML + '<option value="' + picture.data.id + '">' + picture.data.picture_file_name + '</option>';
+                emblem_photo_list[picture.data.id] = picture.url[1];
+                console.log(emblem_photo_list);
             }
 
             BASE_IMAGE_EMBLEM.src = default_picture.url[1];
             ACTUAL_COLOR_EMBLEM = preferred_color.color.id;
+        }
+
+        function change_base_photo(select) {
+            BASE_IMAGE_EMBLEM.src = emblem_photo_list[select.value];
+            ACTUAL_PHOTO_EMBLEM = select.value;
         }
 
         function set_logo(id) {
@@ -980,13 +1000,18 @@
                                 }
                             }
 
+                            var photo_list = document.getElementById('photos_list');
+
                             var default_picture;
                             for (var j = 0; j < preferred_color.pictures.length; j++) {
                                 var picture = preferred_color.pictures[j];
                                 if (picture.data.main) {
                                     default_picture = picture;
-                                    break;
+                                    ACTUAL_PHOTO_EMBLEM = picture.data.id;
                                 }
+                                photo_list.innerHTML = photo_list.innerHTML + '<option value="' + picture.data.id + '">' + picture.data.picture_file_name + '</option>';
+                                emblem_photo_list[picture.data.id] = picture.url[1];
+                                console.log(emblem_photo_list);
                             }
 
                             STAGE = new Konva.Stage({
