@@ -283,6 +283,10 @@ div.modal-g {
   }
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 div.modal-c {
   margin: 0 auto;
   right: 0;
@@ -309,10 +313,13 @@ div.modal-c {
   border-radius: 10px;
   display: none;
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: 30px auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 .heading_table th {
