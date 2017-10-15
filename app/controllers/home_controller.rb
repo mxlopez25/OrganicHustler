@@ -31,6 +31,7 @@ class HomeController < ApplicationController
     (Product.find params['product_id']).position_emblem_admins.where(color_id: params['color_id']).each do |emblem|
       emblem_js = JSON.parse(emblem.to_json)
       emblem_js[:url] = emblem.picture(:thumb)
+      emblem_js[:sample] = emblem.product_image_id ? ProductImage.find(emblem.product_image_id).picture : nil
       emblems.push emblem_js
     end
 

@@ -392,7 +392,7 @@
             <div id="selection-btn-s">
               <button onclick="start_over()" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
                 <span class="cell-btn">START OVER</span></button>
-              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data)">
+              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data); load_viewer();">
                 DONE
               </button>
             </div>
@@ -494,6 +494,7 @@
         logo_y: null,
         multiplexer: 1,
         emblem_id: null,
+        emblem_id_side: null,
         size_id: null,
         remove: function () {
             this.data = null;
@@ -504,9 +505,12 @@
             this.logo_y = null;
             this.multiplexer = 1;
             this.emblem_id = null;
+            this.emblem_id_side = null;
             this.size_id = null;
         }
     };
+
+    var current_view = 1;
 
     //MAIN LAYER
     var LAYER = null;
@@ -733,7 +737,13 @@
 
     }
 
-    function load_viewer() {
+    function load_viewer(_url_base) {
+        _url_base = _url_base || null;
+
+        if (_url_base === 'null') {
+            _url_base = null;
+        }
+
         var stageWidth = 500;
         var stageHeight = 500;
 
@@ -764,7 +774,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                imageBase.src = data.picture;
+                imageBase.src = _url_base || data.picture;
             },
             error: function (data) {
                 console.log(data);
@@ -832,7 +842,12 @@
                         x: data.multiplexer,
                         y: data.multiplexer
                     });
-                    imageEmblem.src = data.src;
+
+                    if ((current_view === 1 || current_view === 2) && product.emblem_id_side === null) {
+                        imageEmblem.src = data.src;
+                    } else if (current_view === 3) {
+                        imageEmblem.src = data.src;
+                    }
 
                 },
                 error: function (data) {
@@ -845,7 +860,19 @@
         window.addEventListener('resize', fitStageIntoParentContainer);
     }
 
-    function load_view_3(product_) {
+    function load_view_3(product_, clicked) {
+
+        current_view = 3;
+        clicked = clicked || false;
+
+        var actor = document.getElementById('actor');
+        var new_element = actor.cloneNode(true);
+        new_element.addEventListener("click", function () {
+            load_view_1(product_);
+            load_viewer();
+        });
+        new_element.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
+        actor.parentNode.replaceChild(new_element, actor);
 
         document.getElementById('view_3').outerHTML = view_3.outerHTML;
 
@@ -864,9 +891,21 @@
 
                 var carousel_jq = $('ul#container-emblems');
 
+
                 for (var i = 0; i < data.length; i++) {
+
+                    var selected = '';
+                    if (product.emblem_id === data[i].id) {
+                        selected = 'selected_emblem';
+                        if (!clicked) {
+                            load_viewer(data[i].sample);
+                        }
+                    }
+
+                    console.log(data[i]);
+
                     carousel_jq.append('<li>' +
-                        '<div onclick="load_data_emblems(' + data[i].id + ')" style="cursor: pointer; margin: 4px; width: 100px; height: 150px; text-align: center">' +
+                        '<div class="' + selected + '" onclick="load_data_emblems(' + data[i].id + ', \'' + data[i].sample + '\', ' + data[i].product_image_id + ')" style="cursor: pointer; margin: 4px; width: 100px; text-align: center">' +
                         '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
                         '<img style="margin: 5px;" height="50px" src="' + data[i].url + '">' +
                         '<div><h5 style="width: 100%; font-weight: bold;">' + data[i].title + '</h5></div>' +
@@ -928,6 +967,7 @@
 
     function load_view_2(product_) {
 
+        current_view = 2;
         document.getElementById('view_2').outerHTML = view_2.outerHTML;
 
         document.getElementById('view_1').style.display = 'none';
@@ -1134,6 +1174,8 @@
 
     function change_source(id) {
         product.color_id = id;
+        product.emblem_id = null;
+        product.emblem_id_side = null;
         load_viewer();
         load_colors(product.product_id);
     }
@@ -1175,9 +1217,21 @@
         load_viewer();
     }
 
-    function load_data_emblems(emblem_id) {
-        product.emblem_id = emblem_id;
-        load_viewer();
+    function load_data_emblems(emblem_id, url, product_picture_id) {
+        if (product.emblem_id !== emblem_id) {
+            product.emblem_id = emblem_id;
+
+            if (product_picture_id === 'null') {
+                product_picture_id = null;
+            }
+
+            product.emblem_id_side = product_picture_id;
+        } else {
+            product.emblem_id = null;
+            product.emblem_id_side = null
+        }
+        load_viewer(url);
+        load_view_3(product.data, true);
     }
 
     function start_over() {
@@ -1190,6 +1244,7 @@
 
     function load_view_1(product) {
 
+        current_view = 1;
         document.getElementById('view_1').outerHTML = view_1.outerHTML;
 
         var actor = document.getElementById('actor');
@@ -1464,15 +1519,43 @@
         });
     }
 
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
+
+
+
     function show_preview(src) {
+
+        var loading_image = new Konva.Image({
+            x: 250,
+            y: 250,
+            offsetX: 100,
+            offsetY: 100,
+            width: 200,
+            height: 200
+        });
+
+        LAYER.add(loading_image);
+        var loading_img = new Image();
+        loading_img.onload = function () {
+            loading_image.image(loading_img);
+            LAYER.draw();
+        };
+        loading_img.src = '/54019.png';
 
         ACTUAL_IMAGE_PREVIEW = new Konva.Image({
             x: 250,
             y: 250,
-            offsetX: 200,
-            offsetY: 200,
-            width: 400,
-            height: 400
+            offsetX: 250,
+            offsetY: 250,
+            width: 500,
+            height: 500
         });
 
         LAYER.add(ACTUAL_IMAGE_PREVIEW);
@@ -1480,9 +1563,9 @@
         imagePreview.onload = function () {
             ACTUAL_IMAGE_PREVIEW.image(imagePreview);
             LAYER.draw();
+            loading_image.destroy();
         };
         imagePreview.src = src;
-
     }
 
     function hide_preview() {
