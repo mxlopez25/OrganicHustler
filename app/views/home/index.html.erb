@@ -33,7 +33,7 @@
         <div class="item
           <% if first %> active
           <% first = false end %>">
-          <img onclick="location.href = '/catalog?id=<%= item['id'] %>'" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>" style="height: 200px; margin: 10px auto;">
+          <img onclick="location.href = '/catalog?id=<%= item['id'] %>'" src="<%= item.product_image_id %>" style="height: 200px; margin: 10px auto;">
           <div class="carousel-cap">
             <p class="text_light"><%= item['title'] %><br>Eco-Friendly + Customizable</p>
           </div>

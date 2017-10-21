@@ -65,8 +65,7 @@ module HomeHelper
   end
 
   def get_showcase_items
-    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products?limit=5", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
-    JSON.parse(response.body)['result']
+    Product.all.order("id desc").limit 10
   end
 
   def create_temp_user
