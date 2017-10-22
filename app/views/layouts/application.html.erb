@@ -13,6 +13,8 @@
   <title>Organic Hustler</title>
 
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
   <%= javascript_include_tag 'jquery.min.js' %>
   <!-- Bootstrap Core -->
@@ -34,8 +36,6 @@
 </head>
 
 <div id="myModal" style="z-index: 100;" class="modal">
-
-  <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
 
   <div id="bag_modal" style="float: right; position: fixed;">
     <div id="triangle" class="triangle mobilenot"></div>
@@ -433,7 +433,7 @@
       </button>
 
       <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <a class="navbar-brand brand" href="/"><img width="66" src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/015/original/hey.png?1493778911"></a>
         <img id="cart_ic_1" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
         <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 37px"><%= get_item_count %></span>
         <% if user_signed_in? %>
@@ -519,7 +519,7 @@
       <% end %>
 
       <div class="menu-center">
-        <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <a style="margin-left: auto; margin-right: auto;" href="/"><img width="66" src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/015/original/hey.png?1493778911"></a>
         <ul id="ul_top_hypers" style="padding-top: 40px">
           <div class="menu-button">
             <li>

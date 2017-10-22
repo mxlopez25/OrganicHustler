@@ -18,6 +18,8 @@ Rails.application.routes.draw do
 
   post '/' => 'home#subscribe'
 
+  get '/showcase/mobile/products' => 'home#showcase_mobile_products'
+
   get '/catalog' => 'home#catalog'
   get '/cart' => 'home#get_cart_items'
   get '/catalog/item/:id' => 'home#catalog_item'
@@ -42,7 +44,6 @@ Rails.application.routes.draw do
 
   get '/shopping_bag' => 'home#bag'
 
-  # post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'
 
   get '/admin/home' => 'admin#main'
@@ -51,6 +52,9 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
+
+  get '/admin/all_products' => 'admin#get_products'
+  get '/admin/all_categories' => 'admin#get_categories'
 
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/product/edit/:id' => 'admin#edit_product'

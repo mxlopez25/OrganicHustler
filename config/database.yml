@@ -9,25 +9,33 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.7/en/old-client.html
 #
-default: &default
-  url: <%= ENV['DATABASE_URL'] %>
-  adapter: mysql2
-  encoding: utf8
-  pool: 5
-  username: <%= ENV['USERNAME_DB'] %>
-  password: <%= ENV['PASSWORD_DB'] %>
-  socket: /var/run/mysqld/mysqld.sock
 
 development:
-  <<: *default
+  port: 3306
   database: OrganicHustler_production
+  username: root
+  password: admin
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  host: 0.0.0.0
+  url: mysql2://0.0.0.0:3306
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
+  port: 3306
   database: OrganicHustler_production
+  username: root
+  password: admin
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  host: 0.0.0.0
+  url: mysql2://0.0.0.0:3306
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -49,9 +57,12 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
-  adapter: mysql2
+  port: 3306
   url: <%= ENV['DATABASE_URL'] %>
   database: OrganicHustler_production
   username: <%= ENV['USERNAME_DB'] %>
   password: <%= ENV['PASSWORD_DB'] %>
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5

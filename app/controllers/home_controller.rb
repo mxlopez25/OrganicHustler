@@ -345,4 +345,11 @@ class HomeController < ApplicationController
     redirect_to root_path
   end
 
+  #SHOWCASES
+
+  def showcase_mobile_products
+    render json: (Product.all.order("id desc").limit 10).to_json, code: 200
+  end
+
+
 end
