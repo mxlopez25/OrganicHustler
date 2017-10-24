@@ -14,28 +14,7 @@ class AdminController < ApplicationController
 
   def get_products
 
-=begin
-    products_cat = Category.find_by_title params[:category]
-    products_sty = Style.find_by_id params[:style]
-    products_col = params[:color].blank? ? nil : params[:color]
-    products_mat = Material.find_by_id params[:material]
-    sql = "SELECT DISTINCT products.* FROM products
-          INNER JOIN categories_products ON products.id = categories_products.product_id
-          #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
-    #{products_col ? 'INNER JOIN colors ON products.id = colors.product_id' : ''}
-    #{products_mat ? 'INNER JOIN materials_products ON products.id = materials_products.product_id' : ''}
-          WHERE #{products_cat ? ' category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : ' products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
-
-    p sql
-
-    results = ActiveRecord::Base.connection.execute(sql)
-    products = []
-    results.each(:as => :hash) do |row|
-      products << row.with_indifferent_access
-    end
-
-    render json: products.to_json
-=end
+    p Product.get_by_attributes params[:id], params[:sku], params[:title], params[:amount], params[:category]
 
     p_array = []
     products = Product.last(params['n'] || 40)
