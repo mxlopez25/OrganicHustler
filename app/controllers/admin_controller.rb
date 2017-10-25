@@ -14,13 +14,11 @@ class AdminController < ApplicationController
 
   def get_products
 
-    p Product.get_by_attributes params[:id], params[:sku], params[:title], params[:amount], params[:category]
-
     p_array = []
-    products = Product.last(params['n'] || 40)
+    products = Product.get_by_attributes(params[:id], params[:sku], params[:title], params[:amount], params[:category]).last(params['n'] || 40)
     for product in products
       pr = JSON.parse(product.to_json.to_s)
-      pr.merge!(categories_l: product.categories.map {|f| f.title}.join(', '))
+      pr.merge!(categories_l: Product.find(product[:id]).categories.map {|f| f.title}.join(', '))
       p_array.push pr
     end
 
