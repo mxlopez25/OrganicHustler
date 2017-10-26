@@ -51,8 +51,10 @@
                 <% elsif !sh.image_show.blank? %>
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
-                    <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product_l(sh.product_id) %>
+                    <% if item %>
+                        <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['product_image_id'] %>"></a>
+                    <% end %>
                 <% end %>
             <% end %>
 
@@ -306,7 +308,7 @@
                   + '<div id="product_f" class="hidden">'
                   + '<label for="product_f">Product id</label>'
                   + '<input style="width: 80%" type="text" name="product_id" id="product_id">'
-                  + '<p onclick="find_id()">FIND ID</p>'
+                  + '<a style="cursor: pointer" onclick="find_id()">FIND ID</a>'
                   + '</div>'
 
                   + '<input class="hidden" name="group_showcase_id" type="text" value="' + id + '">'
@@ -379,19 +381,16 @@
                 <% elsif !sh.image_show.blank? %>
                     <img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>">
                 <% elsif !sh.product_id.blank? %>
-                    <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product_l(sh.product_id) %>
+                    <% if item %>
+                        <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['product_image_id'] %>"></a>
+                    <% end %>
                 <% end %>
             <% end %>
             <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
           </div>
 
       <% end %>
-
-      <!-- The Modal -->
-      <div id="modal" class="modal">
-
-      </div>
 
       <script>
           function openModal(id) {
@@ -425,7 +424,7 @@
                   + '<div id="product_f" class="hidden">'
                   + '<label for="product_f">Product id</label>'
                   + '<input style="width: 100%" type="text" name="product_id" id="product_id">'
-                  + '<p onclick="find_id()">FIND ID</p>'
+                  + '<a style="cursor: pointer" onclick="find_id()">FIND ID</a>'
                   + '</div>'
 
                   + '<input class="hidden" name="group_showcase_id" type="text" value="' + id + '">'
@@ -497,18 +496,15 @@
                 <% elsif !sh.image_show.blank? %>
                     <a href="<%= sh.url_association %>"><img class="image_showcase_ad" src="<%= sh.image_show.image.url(:medium) %>"></a>
                 <% elsif !sh.product_id.blank? %>
-                    <% item = get_product(sh.product_id) %>
-                    <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="https://<%= item['images'][0]['segments']['domain'] %>w200/h200/<%= item['images'][0]['segments']['suffix'] %>"></a>
+                    <% item = get_product_l(sh.product_id) %>
+                    <% if item %>
+                        <a href="/admin/product/<%= sh.product_id %>"><img class="image_showcase_ad" src="<%= item['product_image_id'] %>"></a>
+                    <% end %>
                 <% end %>
             <% end %>
             <a class="showcase" onclick="openModal('<%= groupShowcase.id %>')" href="#">Add to showcase</a>
           </div>
       <% end %>
-
-      <!-- The Modal -->
-      <div id="modal" class="modal">
-
-      </div>
 
       <script>
           function openModal(id) {
@@ -542,7 +538,7 @@
                   + '<div id="product_f" class="hidden">'
                   + '<label for="product_f">Product id</label>'
                   + '<input style="width: 100%" type="text" name="product_id" id="product_id">'
-                  + '<p onclick="find_id()">FIND ID</p>'
+                  + '<a style="cursor: pointer" onclick="find_id()">FIND ID</a>'
                   + '</div>'
 
                   + '<input class="hidden" name="group_showcase_id" type="text" value="' + id + '">'

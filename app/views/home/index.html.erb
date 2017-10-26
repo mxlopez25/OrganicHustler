@@ -18,8 +18,12 @@
     <h1 class="text-center ht text_light" style="font-size: 60px">ECO<br>FRIENDLY</h1>
     <div style="text-align: center; overflow: hidden;">
       <div style="overflow: hidden; margin: 50px auto; left: 0; right: 0; width: 244px;">
-        <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn text_light button-head-phone">SHOP MEN</button>
-        <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn text_light button-head-phone">SHOP WOMEN</button>
+        <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn text_light button-head-phone">SHOP
+          MEN
+        </button>
+        <button onclick="location.href = '/catalog?women=true&view=women'" class="button button-head btn text_light button-head-phone">SHOP
+          WOMEN
+        </button>
       </div>
     </div>
   </div>
@@ -47,12 +51,12 @@
                   }
 
                   html = html + '<div class="item ' + active + ' ">\n' +
-                      '          <img onclick="location.href = \'/catalog?id=' + data[i]['id'] + '\'" src="' + data[i]['product_image_id'] + '" style="height: 200px; margin: 10px auto;">\n' +
+                      '          <img onclick="location.href = \'/catalog?id=' + data[i]['id'] + '&looks=true&view=looks\'" src="' + data[i]['product_image_id'] + '" style="height: 200px; margin: 10px auto;">\n' +
                       '          <div class="carousel-cap">\n' +
                       '            <p class="text_light">' + data[i]['title'] + '<br>Eco-Friendly + Customizable</p>\n' +
                       '          </div>\n' +
                       '          <div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">\n' +
-                      '            <button onclick="location.href = \'/catalog?id=' + data[i]['id'] + '&view=2\'" class="btn styling_btn">CUSTOMIZE</button>\n' +
+                      '            <button onclick="location.href = \'/catalog?id=' + data[i]['id'] + '&view=2&looks=true&view=looks\'" class="btn styling_btn">CUSTOMIZE</button>\n' +
                       '          </div>\n' +
                       '        </div>';
               }
@@ -63,6 +67,58 @@
               console.log(data)
           }
       });
+
+      function createShape(id, width, height, x, y, s_w, s_h) {
+          var container = $('#' + id);
+          container.height(container.width());
+
+          var stage = new Konva.Stage({
+              container: id,
+              width: container.width(),
+              height: container.height()
+          });
+          var layer = new Konva.Layer();
+          stage.add(layer);
+
+          var baseImg = new Konva.Image({
+              width: container.width(),
+              height: container.height(),
+              draggable: false
+          });
+
+          var logoImg = new Konva.Image({
+              width: container.width() * width / s_w,
+              height: container.height() * height / s_h
+          });
+
+          var logoGroup = new Konva.Group({
+              x: container.width() * x / s_w,
+              y: container.width() * y / s_h
+          });
+
+          layer.add(baseImg);
+          layer.add(logoGroup);
+          logoGroup.add(logoImg);
+
+          var imageObj1 = new Image();
+          imageObj1.onload = function () {
+              baseImg.image(imageObj1);
+              layer.draw();
+          };
+          imageObj1.src = '';
+
+          var imageObj2 = new Image();
+          imageObj2.onload = function () {
+              logoImg.image(imageObj2);
+              layer.draw();
+              imageObj2.width = container.width() * width / s_w;
+              console.log(imageObj2.width, container.width(), width, s_w);
+              imageObj2.height = container.height() * height / s_h;
+              console.log(imageObj2.height);
+          };
+          imageObj2.src = '';
+          layer.draw();
+      }
 
   </script>
 
@@ -103,92 +159,153 @@
   <div style="position: relative">
 
     <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
-
-      <% id = GroupShowcase.where(screen: 0, name_identity: 'primary_product').first.showcases.first.product_id %>
-      <% item = get_product(id) %>
-      <img src="<%= item['images'][0]['url']['https'] %>" style="height: 370px;">
-      <h4 class="text-center text_light"><%= item['title'] %></h4>
+      <img id="img_1" src="" style="height: 370px;">
+      <h4 id="title_1" class="text-center text_light"></h4>
       <h5 class="text-center text_light">Eco-Friendly+Customizable</h5>
       <article>
-        <button onclick="location.href = '/catalog?id=<%= id %>'" class="button styling_btn btn">CUSTOMIZE</button>
+        <button id="customize_1" class="button styling_btn btn">CUSTOMIZE</button>
       </article>
     </div>
 
-
-    <div class="side-list">
-
+    <div id="side-list-1" class="side-list">
       <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
-      <% item['modifiers'].select {|k| item['modifiers'][k.to_s]['title'].eql? 'Logo preset'}.first[1]['variations'].each do |var| %>
-          <% if var[1]['title'].eql?('null') %>
 
-          <% else %>
-              <% p var[1]['title'] %>
-              <% object = getJson(var[1]['title']) %>
-              <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
 
-              </div>
-
-              <script id="create-shape">
-                  createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
-                  function createShape(id, width, height, x, y, s_w, s_h) {
-                      var container = $('#' + id);
-                      container.height(container.width());
-
-                      var stage = new Konva.Stage({
-                          container: id,
-                          width: container.width(),
-                          height: container.height()
-                      });
-                      var layer = new Konva.Layer();
-                      stage.add(layer);
-
-                      var baseImg = new Konva.Image({
-                          width: container.width(),
-                          height: container.height(),
-                          draggable: false
-                      });
-
-                      var logoImg = new Konva.Image({
-                          width: container.width() * width / s_w,
-                          height: container.height() * height / s_h
-                      });
-
-                      var logoGroup = new Konva.Group({
-                          x: container.width() * x / s_w,
-                          y: container.width() * y / s_h
-                      });
-
-                      layer.add(baseImg);
-                      layer.add(logoGroup);
-                      logoGroup.add(logoImg);
-
-                      var imageObj1 = new Image();
-                      imageObj1.onload = function () {
-                          baseImg.image(imageObj1);
-                          layer.draw();
-                      };
-                      imageObj1.src = '<%= item['images'].first['url']['https'] %>';
-
-                      var imageObj2 = new Image();
-                      imageObj2.onload = function () {
-                          logoImg.image(imageObj2);
-                          layer.draw();
-                          imageObj2.width = container.width() * width / s_w;
-                          console.log(imageObj2.width, container.width(), width, s_w);
-                          imageObj2.height = container.height() * height / s_h;
-                          console.log(imageObj2.height);
-                      };
-                      imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
-                      layer.draw();
-                  }
-              </script>
-          <% end %>
-      <% end %>
-      <button onclick="location.href = '/catalog?id=<%= id %>'" class="btn-sm btn-link center-block" style="color:black;  ">
-        <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
     </div>
   </div>
 </div>
+
+<script>
+
+    load_list(0, 'primary_product', 1);
+
+    function load_side_elements(id, dd) {
+        $.ajax({
+            url: '/catalog/product/presets?product_id=' + id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+
+                var side_list = $('#side-list-' + dd);
+
+                for (var i = 0; i < data.length; i++) {
+                    side_list.append('<div onclick="location.href = \'/catalog?id=' + id + '&looks=true&view=looks&preset_id=' + data[i].id + '\'" id="div_preview_' + dd + '_' + data[i].id + '" class="img4 selectable" style="margin: 5px auto;width: 100px;">\n' +
+                        '      </div>');
+                }
+
+                side_list.append('<button onclick="location.href = \'/catalog?id=' + id + '&looks=true&view=looks\'" class="btn-sm btn-link center-block" style="color:black;  ">' +
+                    '<h4 class="text_light" style="font-style: italic"> MORE </h4>' +
+                    '</button>');
+
+                for (var t = 0; t < data.length; t++) {
+                    create_preview(data[t], dd);
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function create_preview(preview, idf) {
+        var selector = 'div_preview_' + idf + '_' + preview.id;
+        var container = document.getElementById(selector);
+
+        var stage = new Konva.Stage({
+            container: selector,
+            width: 70,
+            height: 70,
+            preventDefaut: false
+        });
+
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var baseImg = new Konva.Image({
+            x: 0,
+            y: 0,
+            width: 70,
+            height: 70
+        });
+        layer.add(baseImg);
+
+        var logoImg = new Konva.Image({
+            x: (70 * preview.x) / 500,
+            y: (70 * preview.y) / 500
+        });
+        layer.add(logoImg);
+
+        var imageBase = new Image();
+        imageBase.onload = function () {
+            baseImg.image(imageBase);
+            layer.draw();
+        };
+
+        var imageLogo = new Image();
+        imageLogo.onload = function () {
+            logoImg.image(imageLogo);
+            logoImg.setWidth(this.width);
+            logoImg.setHeight(this.height);
+            logoImg.scale({
+                x: (70 * preview.multiplexer) / 500,
+                y: (70 * preview.multiplexer) / 500
+            });
+            layer.draw()
+        };
+
+        $.ajax({
+            url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                imageBase.src = data.picture
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+        $.ajax({
+            url: '/catalog/product/logo?logo_id=' + preview.logo_id,
+            type: 'GET',
+            dataType: 'text',
+            data: {},
+            success: function (data) {
+                imageLogo.src = data
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function load_list(screen, title, id) {
+        $.ajax({
+            url: '/home/showcase/product',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                screen: screen,
+                name_entity: title
+            },
+            success: function (data) {
+                load_side_elements(data['id'], id);
+                document.getElementById('img_' + id).src = data['product_image_id'];
+                document.getElementById('title_' + id).innerHTML = data['title'];
+                document.getElementById('customize_' + id).onclick = function () {
+                    location.href = '/catalog?id=' + data['id'] + '&looks=true&view=looks'
+                }
+            },
+            error: function (data) {
+                console.log(data)
+            }
+        });
+    }
+
+</script>
 
 
 <div id="video-player-desk" class="mobilenot" style="width: 100%; margin-top: 80px; position: relative; overflow: hidden; height: 37vw">
@@ -218,84 +335,15 @@
     <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP MEN</button>
   </article>
 
-  <div class="side-list mobilenot">
-
+  <div id="side-list-2" class="side-list mobilenot">
     <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
-    <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_2').first.showcases.first.product_id %>
-    <% item = get_product(id) %>
-
-    <% item['modifiers'].select {|k| item['modifiers'][k.to_s]['title'].eql? 'Logo preset'}.first[1]['variations'].each do |var| %>
-
-        <% if var[1]['title'].eql?('null') %>
-
-        <% else %>
-            <% object = getJson(var[1]['title']) %>
-            <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
-
-            </div>
-
-            <script id="create-shape">
-                createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
-                function createShape(id, width, height, x, y, s_w, s_h) {
-                    var container = $('#' + id);
-                    container.height(container.width());
-
-                    var stage = new Konva.Stage({
-                        container: id,
-                        width: container.width(),
-                        height: container.height()
-                    });
-                    var layer = new Konva.Layer();
-                    stage.add(layer);
-
-                    var baseImg = new Konva.Image({
-                        width: container.width(),
-                        height: container.height(),
-                        draggable: false
-                    });
-
-                    var logoImg = new Konva.Image({
-                        width: container.width() * width / s_w,
-                        height: container.height() * height / s_h
-                    });
-
-                    var logoGroup = new Konva.Group({
-                        x: container.width() * x / s_w,
-                        y: container.width() * y / s_h
-                    });
-
-                    layer.add(baseImg);
-                    layer.add(logoGroup);
-                    logoGroup.add(logoImg);
-
-                    var imageObj1 = new Image();
-                    imageObj1.onload = function () {
-                        baseImg.image(imageObj1);
-                        layer.draw();
-                    };
-                    imageObj1.src = '<%= item['images'].first['url']['https'] %>';
-
-                    var imageObj2 = new Image();
-                    imageObj2.onload = function () {
-                        logoImg.image(imageObj2);
-                        layer.draw();
-                        imageObj2.width = container.width() * width / s_w;
-                        console.log(imageObj2.width, container.width(), width, s_w);
-                        imageObj2.height = container.height() * height / s_h;
-                        console.log(imageObj2.height);
-                    };
-                    imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
-                    layer.draw();
-                }
-            </script>
-        <% end %>
-    <% end %>
-    <button onclick="location.href = '/catalog?id=<%= id %>'" class="btn-sm btn-link center-block" style="color:black;  ">
-      <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
-
-
   </div>
+
+  <script>
+      load_list(3, 'product_showcase_variations_2', 2)
+  </script>
+
 </div>
 
 <hr style="width: 80%; margin: 30px auto">
@@ -309,84 +357,15 @@
     <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP WOMEN</button>
   </article>
 
-  <div class="side-list mobilenot">
-
+  <div id="side-list-3" class="side-list mobilenot">
     <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
-    <% id = GroupShowcase.where(screen: 3, name_identity: 'product_showcase_variations_3').first.showcases.first.product_id %>
-    <% item = get_product(id) %>
-
-    <% item['modifiers'].select {|k| item['modifiers'][k.to_s]['title'].eql? 'Logo preset'}.first[1]['variations'].each do |var| %>
-
-        <% if var[1]['title'].eql?('null') %>
-
-        <% else %>
-            <% object = getJson(var[1]['title']) %>
-            <div id="<%= "#{object['image_id']}#{var[1]['id']}" %>" class="img4" style="margin: 5px auto;width: 100px;">
-
-            </div>
-
-            <script id="create-shape">
-                createShape('<%= "#{object['image_id']}#{var[1]['id']}" %>', '<%= object['width'] %>', '<%= object['height'] %>', '<%= object['x'] %>', '<%= object['y'] %>', '<%= object['s_w'] %>', '<%= object['s_h'] %>');
-                function createShape(id, width, height, x, y, s_w, s_h) {
-                    var container = $('#' + id);
-                    container.height(container.width());
-
-                    var stage = new Konva.Stage({
-                        container: id,
-                        width: container.width(),
-                        height: container.height()
-                    });
-                    var layer = new Konva.Layer();
-                    stage.add(layer);
-
-                    var baseImg = new Konva.Image({
-                        width: container.width(),
-                        height: container.height(),
-                        draggable: false
-                    });
-
-                    var logoImg = new Konva.Image({
-                        width: container.width() * width / s_w,
-                        height: container.height() * height / s_h
-                    });
-
-                    var logoGroup = new Konva.Group({
-                        x: container.width() * x / s_w,
-                        y: container.width() * y / s_h
-                    });
-
-                    layer.add(baseImg);
-                    layer.add(logoGroup);
-                    logoGroup.add(logoImg);
-
-                    var imageObj1 = new Image();
-                    imageObj1.onload = function () {
-                        baseImg.image(imageObj1);
-                        layer.draw();
-                    };
-                    imageObj1.src = '<%= item['images'].first['url']['https'] %>';
-
-                    var imageObj2 = new Image();
-                    imageObj2.onload = function () {
-                        logoImg.image(imageObj2);
-                        layer.draw();
-                        imageObj2.width = container.width() * width / s_w;
-                        console.log(imageObj2.width, container.width(), width, s_w);
-                        imageObj2.height = container.height() * height / s_h;
-                        console.log(imageObj2.height);
-                    };
-                    imageObj2.src = '<%= get_thumb_g_id(object['image_id'], :thumb) %>';
-                    layer.draw();
-                }
-            </script>
-        <% end %>
-    <% end %>
-    <button onclick="location.href = '/catalog?id=<%= id %>'" class="btn-sm btn-link center-block" style="color:black;  ">
-      <h4 class="text_light" style="font-style: italic"> MORE </h4></button>
-
-
   </div>
+
+  <script>
+      load_list(3, 'product_showcase_variations_3', 3);
+  </script>
+
 </div>
 
 <hr style="width: 80%; margin: 30px auto">

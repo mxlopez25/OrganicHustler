@@ -70,6 +70,11 @@ class HomeController < ApplicationController
     render json: products.to_json
   end
 
+  def get_showcase_product
+    id = GroupShowcase.where(screen: params[:screen], name_identity: params[:name_entity]).first.showcases.first.product_id
+    render json: Product.find(id).to_json, code: 200
+  end
+
   def get_styles_product
     render json: (Product.find params[:id]).styles.to_json
   end

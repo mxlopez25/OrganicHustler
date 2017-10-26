@@ -464,9 +464,7 @@
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
         </li>
         <li>
-          <a class="selectable
-              <% unless params['hats'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog'">FULL COLLECTION</a>
+          <a class="selectable" onclick="location.href = '/catalog'">FULL COLLECTION</a>
         </li>
         <li>
           <a class="selectable ">CUSTOMIZE</a>
@@ -637,7 +635,7 @@
       <input class="foot-form" type="text" name="">
 
       <div>
-        <img src="<%= GroupShowcase.where(screen: 3, name_identity: 'icon_web_page_2').first.showcases.first.image_show.image.url %>" style="width: 30px; margin-top: 50px;">
+        <img src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/016/thumb/ico_2.png" style="width: 30px; margin-top: 50px;">
         <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
 
       </div>

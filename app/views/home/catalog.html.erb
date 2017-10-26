@@ -56,6 +56,8 @@
 
 <script>
 
+    var id_preset_temp = null;
+
     var first_style = document.getElementById('style-list-filter').cloneNode(true);
     var first_material = document.getElementById('material-list-filter').cloneNode(true);
     var first_color = document.getElementById('color-list-filter').cloneNode(true);
@@ -1326,6 +1328,10 @@
 
                 for (var i = 0; i < data.length; i++) {
                     carousel_jq.append('<li><div onclick="load_data_preset(\'' + data[i].color_id + '\', \'' + data[i].logo_id + '\', \'' + data[i].x + '\', \'' + data[i].y + '\', \'' + data[i].multiplexer + '\');" style="width: 70px; height: 70px" id="div_preview_' + data[i].id + '"></div></li>');
+                    if (data[i].id === id_preset_temp) {
+                        load_data_preset(data[i].color_id, data[i].logo_id, data[i].x, data[i].y, data[i].multiplexer);
+                        id_preset_temp = null;
+                    }
                 }
 
                 for (var t = 0; t < data.length; t++) {
@@ -1605,6 +1611,8 @@
     //Auto//
     var item_s = '<%= params['id'] %>';
     var item_v = '<%= params['view'] %>';
+    id_preset_temp =
+    <%= params['preset_id'] %>
     if (item_s !== '') {
         if (item_v === '2') {
             open_quick(item_s, 2);

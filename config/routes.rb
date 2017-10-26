@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
+  get '/home/showcase/product' => 'home#get_showcase_product'
 
-  # get '/product/:id/:step' => 'home#product'
   get '/account' => 'home#account'
   get '/cancel_order' => 'home#cancel_order'
 
