@@ -27,6 +27,11 @@
   position: relative;
 }
 
+.image-container-quick .konvajs-content {
+  position: relative;
+  margin: auto;
+}
+
 .images-container-quick {
   width: 95%;
   position: relative;
@@ -599,7 +604,16 @@ button:active {
 
   .image-container-quick {
     position: absolute;
-    height: 67%;
+    height: 100%;
+  }
+
+  .image-container-quick div.konvajs-content {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
   }
 
   .images-container-quick {

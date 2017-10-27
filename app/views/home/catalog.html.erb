@@ -56,6 +56,18 @@
 
 <script>
 
+    (function ($) {
+        $.fn.removeStyle = function (style) {
+            var search = new RegExp(style + '[^;]+;?', 'g');
+
+            return this.each(function () {
+                $(this).attr('style', function (i, style) {
+                    return style && style.replace(search, '');
+                });
+            });
+        };
+    }(jQuery));
+
     var id_preset_temp = null;
 
     var first_style = document.getElementById('style-list-filter').cloneNode(true);
@@ -233,23 +245,6 @@
       <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
       <div id="product_display" class="wrapper-side">
         <div class="image-container-quick" id="image-container">
-        </div>
-        <div style="min-height: 80px" class="images-container-quick" id="images-holder">
-          <div style="position: absolute; width: 100%" id="preview_image_cr" class="jcarousel-wrapper">
-
-            <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
-              <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            </button>
-            <div style="float: left; width: 80%" id="preview_image_cr_carousel" class="jcarousel" data-jcarousel="true">
-              <ul id="preview_image_container" style="left: 0; top: 0;">
-
-              </ul>
-            </div>
-            <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
-              <i class="fa fa-chevron-right" aria-hidden="true"></i>
-            </button>
-
-          </div>
         </div>
       </div>
       <div id="layers" class="wrapper-side">
@@ -519,6 +514,8 @@
 
     //MAIN STAGE
     var STAGE = null;
+    var stage_scale = 1;
+    var limit = 0;
 
     function fitStageIntoParentContainer() {
         var container = document.querySelector('#image-container');
@@ -530,7 +527,10 @@
             cur = containerWidth;
         }
         // to do this we need to scale the stage
+        limit = limit / stage_scale;
         var scale = cur / 500;
+        stage_scale = scale;
+        limit = limit * stage_scale;
         STAGE.width(500 * scale);
         STAGE.height(500 * scale);
         STAGE.scale({x: scale, y: scale});
@@ -559,119 +559,6 @@
         modal_quick_m.style.display = "block";
     }
 
-    var TEMP_01 = null;
-    var TEMP_02 = null;
-
-    function remove_element() {
-        if (TEMP_01 !== null) {
-            TEMP_01.destroy();
-            TEMP_02.destroy();
-            LAYER.draw();
-        }
-    }
-
-    function change_element(image) {
-        if (LAYER !== null) {
-
-            var tempImg = new Konva.Image({
-                x: 50,
-                y: 50,
-                width: STAGE.width(),
-                height: STAGE.height(),
-                draggable: false
-            });
-
-            var rect = new Konva.Rect({
-                x: 30,
-                y: 30,
-                width: STAGE.width() + 40,
-                cornerRadius: 20,
-                height: STAGE.height() + 40,
-                fill: '#f4f4f4',
-                shadowColor: 'black',
-                shadowBlur: 10,
-                shadowOffset: {x: 10, y: 10},
-                shadowOpacity: 0.5
-            });
-
-            LAYER.add(rect);
-            LAYER.add(tempImg);
-            TEMP_01 = tempImg;
-            TEMP_02 = rect;
-
-            var imageBase = new Image();
-            imageBase.onload = function () {
-                tempImg.image(imageBase);
-                LAYER.draw();
-            };
-            imageBase.src = image;
-        }
-    }
-
-    function sending(pr, emblem, n_logo) {
-
-        var data = {
-            variation_ma: false,
-            source_p: pr,
-            m_id: pr,
-            logo_id: image_id_u,
-            relation_x: 500,
-            relation_y: 500,
-            has_logo: true,
-            has_emblem: false,
-            emblem_id: emblem_id,
-            position_id: position_id
-        };
-
-        if (selected) {
-            data.dim_x = (selected || {x: 0}).x();
-            data.dim_y = (selected || {y: 0}).y();
-            data.width = selected.get('.image')[0].width();
-            data.height = selected.get('.image')[0].height();
-        }
-
-        $.ajax({
-            type: "get",
-            url: "/catalog/item/" + pr,
-            data: data,
-            success: function (data) {
-                console.log(data);
-                variation_img = true;
-                load_p1(data, data['source_p'], emblem, n_logo || true);
-            }
-        });
-    }
-
-    var stage = null;
-
-    function fitStageIntoParentContainer_edit() {
-        var container = document.querySelector('#wrapper-side-2');
-        // now we need to fit stage into parent
-        var containerWidth = container.offsetWidth;
-        // to do this we need to scale the stage
-        var scale = containerWidth / 500;
-        console.log(containerWidth);
-        if (500 * scale < 375) {
-            stage.width(500 * scale);
-            stage.height(500 * scale);
-
-            s_w_u = 500 * scale;
-            s_h_u = 500 * scale;
-
-            stage.scale({x: scale, y: scale});
-            stage.draw();
-        } else {
-            stage.width(375);
-            stage.height(375);
-
-            s_w_u = 375;
-            s_h_u = 375;
-
-            stage.scale({x: (375 / 500), y: (375 / 500)});
-            stage.draw();
-        }
-    }
-
     function open_quick(pr, view) {
         $.ajax({
             type: "get",
@@ -682,10 +569,6 @@
                 console.log(data);
                 document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
 
-                //product.product_id = data['id'];
-                //product.data = data;
-                //load_p1(product, false);
-
                 product.remove();
 
                 product.product_id = data.id;
@@ -693,7 +576,6 @@
                 product.data = data;
 
                 load_viewer();
-                load_image_carousel(data);
                 switch (view) {
                     case 1:
                         load_view_1(data);
@@ -736,7 +618,107 @@
         product.logo_y = parseFloat(y);
         product.multiplexer = parseFloat(multiplexer);
         load_viewer();
+    }
 
+    var GROUP = null;
+
+    function create_image_slider(views) {
+
+        var views_array = [];
+        var current_pointer = 0;
+
+        limit = 500 * (views.length - 1) * -1 * stage_scale;
+
+        GROUP = new Konva.Group({
+            x: 0,
+            y: 0,
+            height: 500,
+            width: 500 * views.length,
+            draggable: true,
+            dragBoundFunc: function (pos) {
+                return {
+                    x: pos.x < 0 && pos.x > limit ? pos.x : this.getAbsolutePosition().x,
+                    y: this.getAbsolutePosition().y
+                }
+            }
+        });
+        LAYER.add(GROUP);
+
+        var p1 = 0;
+        var p2 = 0;
+
+        GROUP.on('touchstart mousedown', function () {
+            p1 = STAGE.getPointerPosition();
+        });
+
+        GROUP.on('touchend mouseup', function () {
+            p2 = STAGE.getPointerPosition();
+            if ((p2.x - p1.x) / stage_scale < -20) {
+                var mover = -500 * (current_pointer + 1);
+                var once = true;
+                var lim = 500 * (views.length - 1) * -1;
+                var animation_1 = new Konva.Animation(function (frame) {
+                    var x = GROUP.getX();
+                    if (x > mover && x > lim) {
+                        if (x - (50 * frame.time / 1000) < mover) {
+                            GROUP.move({x: mover - x, y: 0});
+                        } else {
+                            GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                        }
+                        once ? current_pointer = current_pointer + 1 : null;
+                        once = false;
+                    } else {
+                        animation_1.stop();
+                    }
+                }, LAYER);
+                animation_1.start();
+            } else if ((p2.x - p1.x) / stage_scale > 20) {
+                var mover = -500 * (current_pointer - 1);
+                var once = true;
+                var animation_2 = new Konva.Animation(function (frame) {
+                    var x = GROUP.getX();
+                    if (x < mover && x < 0) {
+                        if (x + (50 * frame.time / 1000) > mover) {
+                            GROUP.move({x: mover - x, y: 0});
+                        } else {
+                            console.log(50);
+                            GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                        }
+                        once ? current_pointer = current_pointer - 1 : null;
+                        once = false;
+                    } else {
+                        animation_2.stop();
+                    }
+                }, LAYER);
+                animation_2.start();
+            }
+        });
+
+        for (var i = 0; i < views.length; i++) {
+            add_image_in_position(views[i].src, 'img' + i, 500 * i, GROUP);
+        }
+
+        LAYER.draw();
+    }
+
+    function add_image_in_position(url, id, x, group) {
+
+        var img = new Konva.Image({
+            x: x,
+            y: 0,
+            width: 500,
+            height: 500,
+            draggable: false,
+            name: id
+        });
+        group.add(img);
+
+        var image = new Image();
+        image.onload = function () {
+            img.image(image);
+            LAYER.draw();
+        };
+        image.src = url;
     }
 
     function load_viewer(_url_base) {
@@ -757,26 +739,17 @@
         LAYER = new Konva.Layer();
         STAGE.add(LAYER);
 
-        var baseImg = new Konva.Image({
-            width: STAGE.width(),
-            height: STAGE.height(),
-            draggable: false
-        });
-        LAYER.add(baseImg);
-
-        var imageBase = new Image();
-        imageBase.onload = function () {
-            baseImg.image(imageBase);
-            LAYER.draw();
-        };
-
         $.ajax({
-            url: '/catalog/product/color/main_image?color_id=' + product.color_id,
+            url: '/catalog/product/color/images',
             type: 'GET',
             dataType: 'json',
-            data: {},
+            data: {
+                color_id: product.color_id
+            },
             success: function (data) {
-                imageBase.src = _url_base || data.picture;
+                console.log(data);
+                create_image_slider(data);
+                console.log('hola');
             },
             error: function (data) {
                 console.log(data);
@@ -860,6 +833,7 @@
 
         fitStageIntoParentContainer();
         window.addEventListener('resize', fitStageIntoParentContainer);
+        $('#image-container .konvajs-content').removeStyle("position");
     }
 
     function load_view_3(product_, clicked) {
@@ -1487,87 +1461,6 @@
         });
     }
 
-    var ACTUAL_IMAGE_PREVIEW = null;
-
-    function load_image_carousel(product) {
-        $.ajax({
-            url: '/catalog/product/images?product_id=' + product.id,
-            type: 'GET',
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-                console.log(data);
-
-                var html_images = '';
-                var carousel_jq = $('ul#preview_image_container');
-
-                for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><img onmouseout="hide_preview()" onmouseover="show_preview(\'' + data[i][1] + '\')" id="" src="' + data[i][0] + '" height="70px"></li>');
-                }
-
-                var jcarouselSelector = '.jcarousel';
-
-                $(jcarouselSelector).reloadJcarousel();
-
-                $('.jcarousel-control-prev').jcarouselControl({
-                    // Options go here
-                    target: '-=1'
-                });
-                $('.jcarousel-control-next').jcarouselControl({
-                    // Options go here
-                    target: '+=1'
-                });
-                $('div#preview_image_cr_carousel').jcarousel('reload');
-            },
-            error: function (data) {
-
-            }
-        });
-    }
-
-    function show_preview(src) {
-
-        var loading_image = new Konva.Image({
-            x: 250,
-            y: 250,
-            offsetX: 100,
-            offsetY: 100,
-            width: 200,
-            height: 200
-        });
-
-        LAYER.add(loading_image);
-        var loading_img = new Image();
-        loading_img.onload = function () {
-            loading_image.image(loading_img);
-            LAYER.draw();
-        };
-        loading_img.src = '/54019.png';
-
-        ACTUAL_IMAGE_PREVIEW = new Konva.Image({
-            x: 250,
-            y: 250,
-            offsetX: 250,
-            offsetY: 250,
-            width: 500,
-            height: 500
-        });
-
-        LAYER.add(ACTUAL_IMAGE_PREVIEW);
-        var imagePreview = new Image();
-        imagePreview.onload = function () {
-            ACTUAL_IMAGE_PREVIEW.image(imagePreview);
-            LAYER.draw();
-            loading_image.destroy();
-        };
-        imagePreview.src = src;
-    }
-
-    function hide_preview() {
-        ACTUAL_IMAGE_PREVIEW.destroy();
-        LAYER.draw()
-    }
-
     function addToCart() {
 
         if (product.size_id !== null) {
@@ -1611,8 +1504,7 @@
     //Auto//
     var item_s = '<%= params['id'] %>';
     var item_v = '<%= params['view'] %>';
-    id_preset_temp =
-    <%= params['preset_id'] %>
+    id_preset_temp = <%= params['preset_id'] || -1 %>;
     if (item_s !== '') {
         if (item_v === '2') {
             open_quick(item_s, 2);

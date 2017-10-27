@@ -47,6 +47,18 @@ class HomeController < ApplicationController
     render json: emblem
   end
 
+  def color_images
+    pictures = Color.find(params[:color_id]).product_images.all
+    pictures_array = []
+    pictures.each do |picture|
+      new_picture = JSON.parse picture.to_json
+      new_picture[:src] = picture.picture
+      pictures_array << new_picture
+    end
+
+    render json: pictures_array.to_json, code: 200
+  end
+
   def get_items
     products_cat = Category.find_by_title params[:category]
     products_sty = Style.find_by_id params[:style]

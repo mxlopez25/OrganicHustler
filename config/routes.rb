@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get '/catalog/product/main_image' => 'home#get_main_image'
   get '/catalog/product/logo' => 'home#get_preset_logo'
   get '/catalog/product/emblem' => 'home#get_emblem'
+  get '/catalog/product/color/images' => 'home#color_images'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
