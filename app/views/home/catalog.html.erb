@@ -481,29 +481,54 @@
         modal_emblem.style.display = "none";
     }
 
+    var ACTUAL_VIEW = null;
+    var ACTUAL_LOGO = null;
+
+    function ModifiedView(product_id, picture_id, color_id) {
+        this.product_id = product_id;
+        this.picture_id = picture_id;
+        this.color_id = color_id;
+        this.position_emblem_id = null;
+        this.logo_id = null;
+        this.x = null;
+        this.y = null;
+        this.multiplexer = 1;
+
+        this.konva_elements = {
+            logo: null,
+            emblem: null,
+            image: null
+        };
+
+        this.remove = function () {
+            this.position_emblem_id = null;
+            this.logo_id = null;
+            this.x = null;
+            this.y = null;
+            this.multiplexer = 1;
+            this.konva_elements = {
+                logo: null,
+                emblem: null,
+                image: null
+            };
+        }
+    }
+
     //Main product
     var product = {
         data: null,
         product_id: null,
         color_id: null,
-        logo_id: null,
-        logo_x: null,
-        logo_y: null,
         multiplexer: 1,
-        emblem_id: null,
-        emblem_id_side: null,
         size_id: null,
+        views: [],
         remove: function () {
             this.data = null;
             this.product_id = null;
             this.color_id = null;
-            this.logo_id = null;
-            this.logo_x = null;
-            this.logo_y = null;
             this.multiplexer = 1;
-            this.emblem_id = null;
-            this.emblem_id_side = null;
             this.size_id = null;
+            this.views = [];
         }
     };
 
@@ -516,6 +541,9 @@
     var STAGE = null;
     var stage_scale = 1;
     var limit = 0;
+
+    var GROUP = null;
+    var current_pointer = 0;
 
     function fitStageIntoParentContainer() {
         var container = document.querySelector('#image-container');
@@ -620,12 +648,10 @@
         load_viewer();
     }
 
-    var GROUP = null;
-
     function create_image_slider(views) {
 
+        current_pointer = 0;
         var views_array = [];
-        var current_pointer = 0;
 
         limit = 500 * (views.length - 1) * -1 * stage_scale;
 
@@ -695,23 +721,36 @@
         });
 
         for (var i = 0; i < views.length; i++) {
-            add_image_in_position(views[i].src, 'img' + i, 500 * i, GROUP);
+            add_image_in_position(views[i].src, 'img' + i, 500 * i, GROUP, i);
         }
 
         LAYER.draw();
     }
 
-    function add_image_in_position(url, id, x, group) {
+    function add_image_in_position(url, id, x, group, i) {
+
+        var view = product.views[i];
+
+        var img_grp = new Konva.Group({
+            x: x,
+            y: 0,
+            width: 500,
+            height: 500,
+            draggable: false,
+            name: 'grp' + i
+        });
+        group.add(img_grp);
 
         var img = new Konva.Image({
-            x: x,
+            x: 0,
             y: 0,
             width: 500,
             height: 500,
             draggable: false,
             name: id
         });
-        group.add(img);
+        img_grp.add(img);
+        view.konva_elements.image = img;
 
         var image = new Image();
         image.onload = function () {
@@ -719,65 +758,41 @@
             LAYER.draw();
         };
         image.src = url;
-    }
 
-    function load_viewer(_url_base) {
-        _url_base = _url_base || null;
-
-        if (_url_base === 'null') {
-            _url_base = null;
-        }
-
-        var stageWidth = 500;
-        var stageHeight = 500;
-
-        STAGE = new Konva.Stage({
-            container: 'image-container',
-            width: stageWidth,
-            height: stageHeight
-        });
-        LAYER = new Konva.Layer();
-        STAGE.add(LAYER);
-
-        $.ajax({
-            url: '/catalog/product/color/images',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                color_id: product.color_id
-            },
-            success: function (data) {
-                console.log(data);
-                create_image_slider(data);
-                console.log('hola');
-            },
-            error: function (data) {
-                console.log(data);
-            }
-        });
-
-        if (product.logo_id) {
-
-            ACTUAL_LOGO = new Konva.Image({
-                x: product.logo_x,
-                y: product.logo_y
+        if (view.logo_id) {
+            var logo = new Konva.Image({
+                x: view.x,
+                y: view.y,
+                draggable: true,
+                dragBoundFunc: function (pos) {
+                    return {
+                        x: pos.x > 0 && (pos.x + logo.width()) < 500 * stage_scale ? pos.x : this.getAbsolutePosition().x,
+                        y: pos.y > 0 && (pos.y + logo.height()) < 500 * stage_scale ? pos.y : this.getAbsolutePosition().y
+                    }
+                }
             });
-            LAYER.add(ACTUAL_LOGO);
+            group.add(logo);
+            view.konva_elements.logo = logo;
+
+            logo.on('dragend', function () {
+                view.x = logo.x();
+                view.y = logo.y();
+            });
 
             var imageLogo = new Image();
             imageLogo.onload = function () {
-                ACTUAL_LOGO.image(imageLogo);
-                ACTUAL_LOGO.setWidth(this.width);
-                ACTUAL_LOGO.setHeight(this.height);
-                ACTUAL_LOGO.scale({
-                    x: product.multiplexer,
-                    y: product.multiplexer
+                logo.image(imageLogo);
+                logo.setWidth(this.width);
+                logo.setHeight(this.height);
+                logo.scale({
+                    x: view.multiplexer,
+                    y: view.multiplexer
                 });
                 LAYER.draw()
             };
 
             $.ajax({
-                url: '/catalog/product/logo?logo_id=' + product.logo_id,
+                url: '/catalog/product/logo?logo_id=' + view.logo_id,
                 type: 'GET',
                 dataType: 'text',
                 data: {},
@@ -790,12 +805,13 @@
             });
         }
 
-        if (product.emblem_id) {
+        if (view.position_emblem_id) {
             var emblem = new Konva.Image({
                 x: 0,
                 y: 0
             });
             LAYER.add(emblem);
+            view.konva_elements.emblem = emblem;
 
             var imageEmblem = new Image();
             imageEmblem.onload = function () {
@@ -806,7 +822,7 @@
             };
 
             $.ajax({
-                url: '/catalog/product/emblem?emblem_id=' + product.emblem_id,
+                url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
                 type: 'GET',
                 dataType: 'json',
                 data: {},
@@ -817,13 +833,71 @@
                         x: data.multiplexer,
                         y: data.multiplexer
                     });
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    }
 
-                    if ((current_view === 1 || current_view === 2) && product.emblem_id_side === null) {
-                        imageEmblem.src = data.src;
-                    } else if (current_view === 3) {
-                        imageEmblem.src = data.src;
+    function create_objects_array(data) {
+        for (var i = 0; i < data.length; i++) {
+            product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
+        }
+        console.log(product);
+    }
+
+    var UPDATABLE_VIEW = {
+        id: null,
+        view: null,
+        parent: null
+    };
+
+    function update_section() {
+
+        var group = UPDATABLE_VIEW.parent;
+        var view = UPDATABLE_VIEW.view;
+
+        if (view.logo_id) {
+            var logo = new Konva.Image({
+                x: view.x,
+                y: view.y,
+                draggable: true,
+                dragBoundFunc: function (pos) {
+                    return {
+                        x: pos.x > 0 && (view.x + logo.getClientRect().width) < 500 ? pos.x : this.getAbsolutePosition().x,
+                        y: pos.y > 0 && (view.y + logo.getClientRect().height) < 500 ? pos.y : this.getAbsolutePosition().y
                     }
+                }
+            });
+            group.add(logo);
+            view.konva_elements.logo = logo;
 
+            logo.on('dragmove', function () {
+                view.x = logo.x();
+                view.y = logo.y();
+            });
+
+            var imageLogo = new Image();
+            imageLogo.onload = function () {
+                logo.image(imageLogo);
+                logo.setWidth(this.width);
+                logo.setHeight(this.height);
+                logo.scale({
+                    x: view.multiplexer,
+                    y: view.multiplexer
+                });
+                LAYER.draw()
+            };
+
+            $.ajax({
+                url: '/catalog/product/logo?logo_id=' + view.logo_id,
+                type: 'GET',
+                dataType: 'text',
+                data: {},
+                success: function (data) {
+                    imageLogo.src = data
                 },
                 error: function (data) {
                     console.log(data);
@@ -831,9 +905,89 @@
             });
         }
 
-        fitStageIntoParentContainer();
-        window.addEventListener('resize', fitStageIntoParentContainer);
-        $('#image-container .konvajs-content').removeStyle("position");
+        if (view.position_emblem_id) {
+            var emblem = new Konva.Image({
+                x: 0,
+                y: 0
+            });
+            LAYER.add(emblem);
+            view.konva_elements.emblem = emblem;
+
+            var imageEmblem = new Image();
+            imageEmblem.onload = function () {
+                emblem.image(imageEmblem);
+                emblem.setWidth(this.width);
+                emblem.setHeight(this.height);
+                LAYER.draw();
+            };
+
+            $.ajax({
+                url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    emblem.setX(data.x);
+                    emblem.setY(data.y);
+                    emblem.scale({
+                        x: data.multiplexer,
+                        y: data.multiplexer
+                    });
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    }
+
+    function load_viewer(_url_base, view) {
+        _url_base = _url_base || null;
+
+        if (view !== undefined && view !== null) {
+            UPDATABLE_VIEW.id = view;
+            UPDATABLE_VIEW.view = product.views[view];
+            UPDATABLE_VIEW.parent = product.views[view].konva_elements.image.getParent();
+            update_section();
+        } else {
+            if (_url_base === 'null') {
+                _url_base = null;
+            }
+
+            var stageWidth = 500;
+            var stageHeight = 500;
+
+            STAGE = new Konva.Stage({
+                container: 'image-container',
+                width: stageWidth,
+                height: stageHeight
+            });
+            LAYER = new Konva.Layer();
+            STAGE.add(LAYER);
+
+            $.ajax({
+                url: '/catalog/product/color/images',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    color_id: product.color_id
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (product.views.length === 0) {
+                        create_objects_array(data);
+                    }
+                    create_image_slider(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+            fitStageIntoParentContainer();
+            window.addEventListener('resize', fitStageIntoParentContainer);
+            $('#image-container .konvajs-content').removeStyle("position");
+        }
     }
 
     function load_view_3(product_, clicked) {
@@ -856,6 +1010,10 @@
         document.getElementById('view_2').style.display = 'none';
         document.getElementById('view_3').style.display = 'block';
         close_emblem_modal();
+
+        if (GROUP) {
+            GROUP.draggable(false);
+        }
 
         $.ajax({
             url: '/catalog/product/emblems?product_id=' + product.product_id + '&color_id=' + product.color_id,
@@ -939,10 +1097,7 @@
         });
     }
 
-    var ACTUAL_LOGO = null;
-
     function load_view_2(product_) {
-
         current_view = 2;
         document.getElementById('view_2').outerHTML = view_2.outerHTML;
 
@@ -961,6 +1116,10 @@
 
         load_colors(product_.id);
 
+        if (GROUP) {
+            GROUP.draggable(false);
+        }
+
         $.ajax({
             url: '/catalog/product/logos?product_id=' + product.product_id,
             type: 'GET',
@@ -972,7 +1131,7 @@
                 var carousel_jq = $('ul#container-logos');
 
                 for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\')"></li>');
+                    carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\', ' + current_pointer + ')"></li>');
                 }
 
                 var jcarouselSelector = '.jcarousel';
@@ -1023,15 +1182,15 @@
         });
 
         var anim_zoom_in = new Konva.Animation(function (frame) {
+
             if (ACTUAL_LOGO !== null) {
                 ACTUAL_LOGO.scale({
-                    x: product.multiplexer + 0.0005 * frame.timeDiff,
-                    y: product.multiplexer + 0.0005 * frame.timeDiff
+                    x: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff,
+                    y: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff
                 });
                 LAYER.draw();
 
-                console.log(product.multiplexer);
-                product.multiplexer = product.multiplexer + 0.0005 * frame.timeDiff;
+                ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff;
             }
         }, LAYER);
 
@@ -1039,54 +1198,52 @@
             if (ACTUAL_LOGO !== null) {
 
                 ACTUAL_LOGO.scale({
-                    x: product.multiplexer - 0.0005 * frame.timeDiff,
-                    y: product.multiplexer - 0.0005 * frame.timeDiff
+                    x: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff,
+                    y: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff
                 });
                 LAYER.draw();
 
-                product.multiplexer = product.multiplexer - 0.0005 * frame.timeDiff;
+                ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff;
             }
         }, LAYER);
 
         var anim_right = new Konva.Animation(function (frame) {
-            console.log(ACTUAL_LOGO);
-            if (ACTUAL_LOGO !== null) {
+            if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.x + ACTUAL_LOGO.getClientRect().width) < 500) {
                 ACTUAL_LOGO.x(ACTUAL_LOGO.x() + (65 * frame.timeDiff / 1000));
                 LAYER.draw();
 
-                console.log(ACTUAL_LOGO.x());
-                product.logo_x = ACTUAL_LOGO.x();
-                product.logo_y = ACTUAL_LOGO.y();
+                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
             }
         }, LAYER);
 
         var anim_left = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null) {
+            if (ACTUAL_LOGO !== null && ACTUAL_VIEW.x > 0) {
                 ACTUAL_LOGO.x(ACTUAL_LOGO.x() - (65 * frame.timeDiff / 1000));
                 LAYER.draw();
 
-                product.logo_x = ACTUAL_LOGO.x();
-                product.logo_y = ACTUAL_LOGO.y();
+                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
             }
         }, LAYER);
 
         var anim_up = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null) {
+            if (ACTUAL_LOGO !== null && ACTUAL_VIEW.y > 0) {
                 ACTUAL_LOGO.y(ACTUAL_LOGO.y() - (65 * frame.timeDiff / 1000));
                 LAYER.draw();
 
-                product.logo_x = ACTUAL_LOGO.x();
-                product.logo_y = ACTUAL_LOGO.y();
+                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
             }
         }, LAYER);
 
         var anim_down = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null) {
+            if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.y + ACTUAL_LOGO.getClientRect().height) < 500) {
                 ACTUAL_LOGO.y(ACTUAL_LOGO.y() + (65 * frame.timeDiff / 1000));
                 LAYER.draw();
 
-                product.logo_x = ACTUAL_LOGO.x();
-                product.logo_y = ACTUAL_LOGO.y();
+                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
             }
         }, LAYER);
 
@@ -1150,8 +1307,7 @@
 
     function change_source(id) {
         product.color_id = id;
-        product.emblem_id = null;
-        product.emblem_id_side = null;
+        product.views = [];
         load_viewer();
         load_colors(product.product_id);
     }
@@ -1188,9 +1344,12 @@
         });
     }
 
-    function load_data_logos(logo_id) {
-        product.logo_id = logo_id;
-        load_viewer();
+    function load_data_logos(logo_id, view) {
+        product.views[view].logo_id = logo_id;
+        load_viewer(null, view);
+
+        ACTUAL_VIEW = product.views[view];
+        ACTUAL_LOGO = ACTUAL_VIEW.konva_elements.logo;
     }
 
     function load_data_emblems(emblem_id, url, product_picture_id) {
@@ -1241,6 +1400,18 @@
         var description = document.getElementById('product_description').getElementsByTagName('span');
         description[0].innerHTML = product.description.substr(0, 30);
         description[2].innerHTML = product.description.substr(30);
+
+
+        if (GROUP) {
+            GROUP.draggable(true);
+
+            GROUP.dragBoundFunc(function (pos) {
+                return {
+                    x: pos.x < 0 && pos.x > limit ? pos.x : this.getAbsolutePosition().x,
+                    y: this.getAbsolutePosition().y
+                }
+            });
+        }
 
         //More text for description toggle
         var state = true;
