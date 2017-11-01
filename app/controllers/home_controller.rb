@@ -47,6 +47,18 @@ class HomeController < ApplicationController
     render json: emblem
   end
 
+  def color_images
+    pictures = Color.find(params[:color_id]).product_images.all
+    pictures_array = []
+    pictures.each do |picture|
+      new_picture = JSON.parse picture.to_json
+      new_picture[:src] = picture.picture
+      pictures_array << new_picture
+    end
+
+    render json: pictures_array.to_json, code: 200
+  end
+
   def get_items
     products_cat = Category.find_by_title params[:category]
     products_sty = Style.find_by_id params[:style]
@@ -68,6 +80,11 @@ class HomeController < ApplicationController
     end
 
     render json: products.to_json
+  end
+
+  def get_showcase_product
+    id = GroupShowcase.where(screen: params[:screen], name_identity: params[:name_entity]).first.showcases.first.product_id
+    render json: Product.find(id).to_json, code: 200
   end
 
   def get_styles_product
@@ -344,5 +361,12 @@ class HomeController < ApplicationController
 
     redirect_to root_path
   end
+
+  #SHOWCASES
+
+  def showcase_mobile_products
+    render json: (Product.all.order("id desc").limit 10).to_json, code: 200
+  end
+
 
 end

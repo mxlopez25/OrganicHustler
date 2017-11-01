@@ -70,7 +70,7 @@ class ProductController < ApplicationController
   end
 
   def preset_params(preset_params)
-    preset_params.permit(:x, :y, :multiplexer, :logo_id, :color_id)
+    preset_params.permit(:x, :y, :multiplexer, :logo_id, :color_id, :picture_id)
   end
 
   def position_emblem_admin_params(pea_params)

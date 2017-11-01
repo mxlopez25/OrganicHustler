@@ -11,12 +11,14 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
+  get '/home/showcase/product' => 'home#get_showcase_product'
 
-  # get '/product/:id/:step' => 'home#product'
   get '/account' => 'home#account'
   get '/cancel_order' => 'home#cancel_order'
 
   post '/' => 'home#subscribe'
+
+  get '/showcase/mobile/products' => 'home#showcase_mobile_products'
 
   get '/catalog' => 'home#catalog'
   get '/cart' => 'home#get_cart_items'
@@ -35,6 +37,7 @@ Rails.application.routes.draw do
   get '/catalog/product/main_image' => 'home#get_main_image'
   get '/catalog/product/logo' => 'home#get_preset_logo'
   get '/catalog/product/emblem' => 'home#get_emblem'
+  get '/catalog/product/color/images' => 'home#color_images'
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
@@ -42,7 +45,6 @@ Rails.application.routes.draw do
 
   get '/shopping_bag' => 'home#bag'
 
-  # post '/product/:id/:step' => 'home#product'
   post '/add_cart' => 'home#add_to_cart'
 
   get '/admin/home' => 'admin#main'
@@ -51,6 +53,9 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
+
+  get '/admin/all_products' => 'admin#get_products'
+  get '/admin/all_categories' => 'admin#get_categories'
 
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/product/edit/:id' => 'admin#edit_product'

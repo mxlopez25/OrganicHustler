@@ -13,6 +13,8 @@
   <title>Organic Hustler</title>
 
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
   <%= javascript_include_tag 'jquery.min.js' %>
   <!-- Bootstrap Core -->
@@ -35,8 +37,6 @@
 
 <div id="myModal" style="z-index: 100;" class="modal">
 
-  <% image_icon = GroupShowcase.where(screen: 3, name_identity: 'icon_web_page').first.showcases.first %>
-
   <div id="bag_modal" style="float: right; position: fixed;">
     <div id="triangle" class="triangle mobilenot"></div>
     <!-- Modal content -->
@@ -56,7 +56,7 @@
 
             </ul>
           </div>
-          <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev inactive" data-jcarouselcontrol="true">
+          <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
             <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
           <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
             <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
@@ -433,7 +433,7 @@
       </button>
 
       <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <a class="navbar-brand brand" href="/"><img width="66" src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/015/original/hey.png?1493778911"></a>
         <img id="cart_ic_1" class="cart_ic" src="<%= image_url 'ico_3.png' %>">
         <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 37px"><%= get_item_count %></span>
         <% if user_signed_in? %>
@@ -464,9 +464,7 @@
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
         </li>
         <li>
-          <a class="selectable
-              <% unless params['hats'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog'">FULL COLLECTION</a>
+          <a class="selectable" onclick="location.href = '/catalog'">FULL COLLECTION</a>
         </li>
         <li>
           <a class="selectable ">CUSTOMIZE</a>
@@ -519,12 +517,12 @@
       <% end %>
 
       <div class="menu-center">
-        <a style="margin-left: auto; margin-right: auto;" href="<%= image_icon.url_association %>"><img width="66" src="<%= image_icon.image_show.image.url %>"></a>
+        <a style="margin-left: auto; margin-right: auto;" href="/"><img width="66" src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/015/original/hey.png?1493778911"></a>
         <ul id="ul_top_hypers" style="padding-top: 40px">
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['looks'].blank? and available %> selected
+              <% unless params['looks'].blank? and available %> selected-esp
               <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
             </li>
           </div>
@@ -532,7 +530,7 @@
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['hats'].blank? and available %> selected
+              <% unless params['hats'].blank? and available %> selected-esp
               <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
             </li>
           </div>
@@ -540,7 +538,7 @@
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['men'].blank? and available %> selected
+              <% unless params['men'].blank? and available %> selected-esp
               <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
             </li>
           </div>
@@ -548,7 +546,7 @@
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['women'].blank? and available %> selected
+              <% unless params['women'].blank? and available %> selected-esp
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
             </li>
           </div>
@@ -556,7 +554,7 @@
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['brand'].blank? and available %> selected
+              <% unless params['brand'].blank? and available %> selected-esp
               <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
             </li>
           </div>
@@ -637,7 +635,7 @@
       <input class="foot-form" type="text" name="">
 
       <div>
-        <img src="<%= GroupShowcase.where(screen: 3, name_identity: 'icon_web_page_2').first.showcases.first.image_show.image.url %>" style="width: 30px; margin-top: 50px;">
+        <img src="https://s3.amazonaws.com/store-logo-cloud/image_shows/images/000/000/016/thumb/ico_2.png" style="width: 30px; margin-top: 50px;">
         <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
 
       </div>

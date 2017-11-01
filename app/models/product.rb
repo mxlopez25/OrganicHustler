@@ -48,4 +48,33 @@ class Product < ApplicationRecord
     sizes
   end
 
+  def self.get_by_attributes(id, sku, title, amount, category)
+
+    sql = "SELECT DISTINCT products.* FROM products " +
+        "#{category.blank? ? '' : 'INNER JOIN categories_products ON products.id = categories_products.product_id'} " +
+        "#{
+        if id.blank? && sku.blank? && title.blank? && amount.blank? && category.blank?
+          ''
+        else
+          "WHERE " +
+              "#{id.blank? ? '' : 'products.id = ' + id + ' AND'} " +
+              "#{sku.blank? ? '' : 'sku = ' + sku + ' AND'} " +
+              "#{title.blank? ? '' : 'products.title LIKE \'%'+ title +'%\'' + ' AND'} " +
+              "#{category.blank? ? '' : 'category_id = ' + category + ' AND'} " +
+              "#{amount.blank? ? '' : 'price <= ' + amount + ' AND'} "
+        end
+        }"
+
+    sql = sql.reverse.sub('AND'.reverse, ''.reverse).reverse
+    p sql
+
+    results = ActiveRecord::Base.connection.execute(sql)
+    products = []
+    results.each(:as => :hash) do |row|
+      products << row.with_indifferent_access
+    end
+
+    products
+  end
+
 end

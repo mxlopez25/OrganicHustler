@@ -1,6 +1,7 @@
 <script>
     const items = [];
 </script>
+
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -66,12 +67,31 @@
       <span class="input-group-addon" id="basic-addon2">Category</span>
       <label for="category"></label>
       <select class="form-control" id="category" name="category">
-        <option value="">All categories</option>
-        <% AdminHelper.get_categories.each do |category| %>
-            <option value="<%= category['id'] %>"><%= category['title'] %></option>
-        <% end %>
+
       </select>
     </div>
+
+    <script>
+
+        $.ajax({
+            url: '/admin/all_categories',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                var category_side = document.getElementById('category');
+                var text = '<option value="">All categories</option>';
+                for (var i = 0; i < data.length; i++) {
+                    text = text + '<option value="' + data[i]['id'] + '">' + data[i]['title'] + '</option>';
+                }
+                category_side.innerHTML = text;
+            },
+            error: function (data) {
+
+            }
+        });
+
+    </script>
 
     <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
   </div>
@@ -96,28 +116,78 @@
       </tr>
       </thead>
       <tbody id="list-to-m">
-      <% Product.last(@amount).each do |product| %>
-
-          <tr id="product-row">
-            <td>
-              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, '<%= product['id'] %>')">
-            </td>
-            <td>
-              <% unless product.colors[0].blank? %>
-                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="<%= product.product_image_id %>"></span>
-              <% end %>
-            </td>
-            <td><%= product.title %></td>
-            <td><%= product.stock %></td>
-            <td><%= product.categories.map {|f| f.title}.join ',' %></td>
-            <td class="price" style="text-align: right"><%= product.price %></td>
-          </tr>
-
-      <% end %>
 
       </tbody>
     </table>
     <script>
+
+        $.ajax({
+            url: '/admin/all_products',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                var table_body = document.getElementById('list-to-m');
+                var text = '';
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i]);
+                    text = text + '<tr id="product-row">\n' +
+                        '            <td>\n' +
+                        '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
+                        '            </td>\n' +
+                        '            <td>\n' +
+                        '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
+                        '            </td>\n' +
+                        '            <td>' + data[i]['title'] + '</td>\n' +
+                        '            <td>' + data[i]['stock'] + '</td>\n' +
+                        '            <td>' + data[i]['categories_l'] + '</td>\n' +
+                        '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                        '          </tr>'
+                }
+                table_body.innerHTML = text;
+            },
+            error: function (data) {
+
+            }
+        });
+
+        function loadTable() {
+            $.ajax({
+                url: '/admin/all_products',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    id: document.getElementById('id_input').value,
+                    sku: document.getElementById('sku').value,
+                    title: document.getElementById('title').value,
+                    amount: document.getElementById('amount').value,
+                    category: document.getElementById('category').value
+                },
+                success: function (data) {
+                    var table_body = document.getElementById('list-to-m');
+                    var text = '';
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data[i]);
+                        text = text + '<tr id="product-row">\n' +
+                            '            <td>\n' +
+                            '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
+                            '            </td>\n' +
+                            '            <td>\n' +
+                            '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
+                            '            </td>\n' +
+                            '            <td>' + data[i]['title'] + '</td>\n' +
+                            '            <td>' + data[i]['stock'] + '</td>\n' +
+                            '            <td>' + data[i]['categories_l'] + '</td>\n' +
+                            '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                            '          </tr>'
+                    }
+                    table_body.innerHTML = text;
+                },
+                error: function (data) {
+
+                }
+            });
+        }
 
         function add_item(box, product) {
             if (box.checked && ($.inArray(product, items) === -1))
