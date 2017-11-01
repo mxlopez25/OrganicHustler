@@ -651,6 +651,7 @@
         var LOGOS = null;
         var ACTUAL_LOGO = null;
         var ACTUAL_COLOR = null;
+        var PREFERRED_COLOR = null;
         var LOGO_IMAGE = null;
         var LOGO_IMAGE_H = null;
         var ACTUAL_ZOOM = 1;
@@ -727,6 +728,9 @@
 
             document.getElementById('loading_a').classList.remove('hidden');
 
+            console.log('YEAH YOU ARE??>>>!!');
+            console.log(PREFERRED_COLOR);
+
             $.ajax({
                 url: '/product/add/preset',
                 type: 'POST',
@@ -737,13 +741,15 @@
                     y: LOGO_IMAGE.getY(),
                     multiplexer: ACTUAL_ZOOM,
                     logo_id: ACTUAL_LOGO,
-                    color_id: ACTUAL_COLOR
+                    color_id: ACTUAL_COLOR,
+                    picture_id: PREFERRED_COLOR.data.id,
+                    alo: 'khe'
                 },
                 success: function (data) {
                     window.location.reload();
                 },
                 error: function (data) {
-                    console.log(data)
+                    console.log(data);
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             });
@@ -802,6 +808,7 @@
                 }
             }
 
+            PREFERRED_COLOR = default_picture;
             BASE_IMAGE.src = default_picture.url[1];
             ACTUAL_COLOR = preferred_color.color.id;
         }
@@ -952,6 +959,7 @@
                                     break;
                                 }
                             }
+                            PREFERRED_COLOR = default_picture;
 
                             STAGE = new Konva.Stage({
                                 container: 'preview_holder',

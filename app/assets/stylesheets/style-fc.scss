@@ -59,13 +59,29 @@ div button {
   background: transparent;
   height: 30px;
   text-align: center;
-  color: #fff;
   text-decoration: none;
   text-shadow: 0 0 1px #000;
   font: 24px/27px Arial, sans-serif;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 30px;
+  color: white;
+  border: none;
+  outline: 0;
+}
+
+.jcarousel-control-prev:active, .jcarousel-control-next:active {
+  color: #c2a5b2;
+  border: none;
+  background-color: transparent;
+  outline: 0;
+}
+
+.jcarousel-control-prev:focus, .jcarousel-control-next:focus {
+  background-color: transparent;
+  border: none;
+  outline: 0;
+}
+
+.jcarousel-control-next:disabled, .jcarousel-control-prev:disabled {
+  color: lightgray;
 }
 
 .jcarousel-control-prev {
