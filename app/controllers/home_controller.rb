@@ -248,30 +248,38 @@ class HomeController < ApplicationController
       p user.cart
     end
 
-    product = CartProduct.create do |u|
-
-      u.m_id = params[:product][:product_id]
+    product = CartProduct.create! do |u|
+      u.product_id = params[:product][:product_id]
       u.size_id = params[:product][:size_id]
       u.color_id = params[:product][:color_id]
-
-      u.has_logo = false
-      unless params[:product][:logo_id].blank?
-        u.logo_id = params[:product][:logo_id]
-        u.dim_x = HomeController.to_decimal(params[:product][:logo_x])
-        u.dim_y = HomeController.to_decimal(params[:product][:logo_y])
-        u.relation_x = 500
-        u.relation_y = 500
-        u.multiplexer = HomeController.to_decimal(params[:product][:multiplexer])
-        u.has_logo = true
-      end
-
-      u.has_emblem = false
-      unless params[:product][:emblem_id].blank?
-        u.emblem_id = params[:product][:emblem_id]
-        u.has_emblem = true
-      end
-
     end
+
+    params[:product][:views].each do |index|
+
+      custom_view = params[:product][:views][index]
+
+      unless custom_view[:logo_id].blank?
+        product.custom_logos << CustomLogo.create! do |cl|
+          cl.product_image_id = custom_view[:picture_id]
+          cl.color_id = custom_view[:color_id]
+          cl.logo_id = custom_view[:logo_id]
+          cl.x = custom_view[:x]
+          cl.y = custom_view[:y]
+          cl.multiplexer = custom_view[:multiplexer]
+        end
+      end
+
+      unless custom_view[:position_emblem_id].blank?
+        product.custom_emblems << CustomEmblem.create! do |ce|
+          ce.product_image_id = custom_view[:picture_id]
+          ce.color_id = custom_view[:color_id]
+          ce.position_emblem_admin_id = custom_view[:logo_id]
+        end
+      end
+    end
+
+    p product.custom_logos.length, "###########"
+    p product.custom_emblems.length, "###########"
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1

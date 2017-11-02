@@ -170,13 +170,14 @@ module HomeHelper
 
   def product_price(p_cart_id)
     product = CartProduct.find(p_cart_id)
-    product_main = Product.find(product.m_id)
+    product_main = Product.find(product.product_id)
 
     product_price = HomeController.to_decimal(product_main.price)
     base_product_tax = HomeController.to_decimal(product_main.taxes.amount)
     price_logo = 0
     price_emblem = 0
 
+=begin
     unless product.logo_id.blank?
       logo = Logo.find(product.logo_id)
       price_logo = logo.price || 0
@@ -186,6 +187,7 @@ module HomeHelper
       emblem = PositionEmblemAdmin.find(product.emblem_id)
       price_emblem = emblem.price || 0
     end
+=end
 
     size_price = HomeController.to_decimal((Size.find product.size_id).price)
 

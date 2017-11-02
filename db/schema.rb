@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170927190935) do
+ActiveRecord::Schema.define(version: 20171102003611) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "email", default: "", null: false, collation: "utf8_general_ci"
@@ -41,23 +41,15 @@ ActiveRecord::Schema.define(version: 20170927190935) do
   end
 
   create_table "cart_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string "m_id", collation: "utf8_general_ci"
-    t.string "logo_id", collation: "utf8_general_ci"
-    t.decimal "dim_x", precision: 10, scale: 4
-    t.decimal "dim_y", precision: 10, scale: 4
-    t.decimal "relation_x", precision: 10, scale: 4
-    t.decimal "relation_y", precision: 10, scale: 4
+    t.string "product_id", collation: "utf8_general_ci"
     t.boolean "has_logo"
     t.boolean "has_emblem"
-    t.string "emblem_id", collation: "utf8_general_ci"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "position_id"
     t.integer "cart_id"
     t.string "size_id", collation: "utf8_general_ci"
-    t.decimal "multiplexer", precision: 10, scale: 4
-    t.string "color_id"
-    t.string "state", limit: 45
+    t.string "color_id", collation: "utf8_general_ci"
+    t.string "state", limit: 45, collation: "utf8_general_ci"
   end
 
   create_table "carts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -91,6 +83,27 @@ ActiveRecord::Schema.define(version: 20170927190935) do
     t.datetime "updated_at", null: false
     t.boolean "preferred", default: false
     t.string "main_picture"
+  end
+
+  create_table "custom_emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "cart_product_id"
+    t.string "product_image_id"
+    t.string "color_id"
+    t.string "position_emblem_admin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "custom_logos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "cart_product_id"
+    t.string "product_image_id"
+    t.string "color_id"
+    t.string "logo_id"
+    t.decimal "x", precision: 10
+    t.decimal "y", precision: 10
+    t.decimal "multiplexer", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -186,20 +199,18 @@ ActiveRecord::Schema.define(version: 20170927190935) do
   create_table "position_emblem_admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.decimal "x", precision: 10, scale: 2
     t.decimal "y", precision: 10, scale: 2
-    t.string "emblem_id", collation: "utf8_general_ci"
-    t.decimal "cost", precision: 10, scale: 2
+    t.decimal "price", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "width", precision: 10, scale: 2
-    t.decimal "height", precision: 10, scale: 2
-    t.string "name", collation: "utf8_general_ci"
+    t.string "title", collation: "utf8_general_ci"
     t.decimal "multiplexer", precision: 10, scale: 4
     t.integer "color_id"
     t.integer "product_id"
-    t.string "picture_file_name"
-    t.string "picture_content_type"
+    t.string "picture_file_name", collation: "utf8_general_ci"
+    t.string "picture_content_type", collation: "utf8_general_ci"
     t.integer "picture_file_size"
     t.datetime "picture_updated_at"
+    t.integer "product_image_id"
   end
 
   create_table "presets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -210,7 +221,8 @@ ActiveRecord::Schema.define(version: 20170927190935) do
     t.string "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "color_id"
+    t.string "color_id"
+    t.string "picture_id"
   end
 
   create_table "product_images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

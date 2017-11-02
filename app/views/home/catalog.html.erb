@@ -497,6 +497,19 @@
         this.y = null;
         this.multiplexer = 1;
 
+        this.sendable_info = function () {
+            return {
+                product_id: this.product_id,
+                picture_id: this.picture_id,
+                color_id: this.color_id,
+                position_emblem_id: this.position_emblem_id,
+                logo_id: this.logo_id,
+                x: this.x,
+                y: this.y,
+                multiplexer: this.multiplexer
+            }
+        };
+
         this.konva_elements = {
             logo: null,
             emblem: null,
@@ -555,6 +568,14 @@
         src: null
     };
 
+    function sendable_views(views) {
+        var sendable_views = [];
+        for (var t = 0; t < views.length; t++) {
+            sendable_views.push(views[t].sendable_info());
+        }
+        return sendable_views;
+    }
+
     //Main product
     var product = {
         data: null,
@@ -562,6 +583,15 @@
         color_id: null,
         size_id: null,
         views: [],
+        send_info: function () {
+            return {
+                data: this.data,
+                product_id: this.product_id,
+                color_id: this.color_id,
+                size_id: this.size_id,
+                views: sendable_views(this.views)
+            }
+        },
         remove: function () {
             this.data = null;
             this.product_id = null;
@@ -2014,7 +2044,7 @@
                 type: "POST",
                 url: "/add_cart",
                 data: {
-                    product: product
+                    product: product.send_info()
                 },
                 success: function (data, status, xhr) {
                     modal_quick.style.display = "none";
