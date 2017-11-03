@@ -273,7 +273,7 @@ class HomeController < ApplicationController
         product.custom_emblems << CustomEmblem.create! do |ce|
           ce.product_image_id = custom_view[:picture_id]
           ce.color_id = custom_view[:color_id]
-          ce.position_emblem_admin_id = custom_view[:logo_id]
+          ce.position_emblem_admin_id = custom_view[:position_emblem_id]
         end
       end
     end
@@ -291,7 +291,7 @@ class HomeController < ApplicationController
     obj = CartProduct.where(cart_id: get_cart_id)
     json_obj = JSON.parse(obj.to_json)
     json_obj.each {|json_data|
-      json_data['product_data'] = Product.find(json_data['m_id'])
+      json_data['product_data'] = Product.find(json_data['product_id'])
       json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
       json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
       json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)
@@ -299,6 +299,32 @@ class HomeController < ApplicationController
     }
 
     render json: json_obj
+  end
+
+  def product_price(p_cart_id)
+    product = CartProduct.find(p_cart_id)
+    product_main = Product.find(product.product_id)
+
+    product_price = HomeController.to_decimal(product_main.price)
+    base_product_tax = HomeController.to_decimal(product_main.taxes.amount)
+
+    price_logos = 0
+    price_emblems = 0
+
+    product.custom_logos.each do |logos|
+      price_logos += logos.logo.price || 0
+    end
+
+    product.custom_emblems.each do |emblem|
+      price_emblems += emblem.position_emblem_admin.price || 0
+    end
+
+    size_price = HomeController.to_decimal((Size.find product.size_id).price)
+
+    total_m = (product_price + size_price + price_logos + price_emblems)
+    real_product_tax = total_m * base_product_tax/product_price
+
+    [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
   end
 
   def delete_from_cart

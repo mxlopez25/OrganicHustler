@@ -136,7 +136,7 @@
         <h4><span><%= get_item_count %></span> Items</h4>
         <hr>
         <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-              <% product_temp = get_product_l(product.m_id) %>
+              <% product_temp = get_product_l(product.product_id) %>
             <div class="item-checkout" style="margin-bottom: 20px">
               <div style="float: left; width: 33%; position: relative">
                 <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
@@ -167,7 +167,7 @@
                   var stageWidth = 500;
                   var stageHeight = 500;
 
-                  createShape('cart<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>', '<%= product.emblem_id %>');
+                  createShape('cart<%= product.id %>', null, null, null, null, null, '<%= product.color_id %>');
 
                   function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id, emblem_id) {
                       var container = $('#' + id);
@@ -188,14 +188,7 @@
                           height: stageHeight,
                           draggable: false
                       });
-
-                      var logoImg = new Konva.Image({
-                          x: stageWidth * x / s_w,
-                          y: stageHeight * y / s_h
-                      });
-
                       layer.add(baseImg);
-                      layer.add(logoImg);
 
                       var imageObj1 = new Image();
                       imageObj1.onload = function () {
@@ -215,6 +208,12 @@
                               console.log(data);
                           }
                       });
+
+                      /*var logoImg = new Konva.Image({
+                          x: stageWidth * x / s_w,
+                          y: stageHeight * y / s_h
+                      });
+                      layer.add(logoImg);
 
                       var imageObj2 = new Image();
                       imageObj2.onload = function () {
@@ -277,7 +276,7 @@
                                   console.log(data);
                               }
                           });
-                      }
+                      }*/
 
                       layer.draw();
                   }

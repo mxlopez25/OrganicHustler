@@ -319,7 +319,7 @@
 
         <div style="display: none" id="view_2">
           <div class="wrap">
-            <h6 style="font-weight: bold">Select color(s):</h6>
+            <h6 id="removable-color-title" style="font-weight: bold">Select color(s):</h6>
             <div id="checkboxes-color">
             </div>
             <div id="controllers" style="float: left; width: 100%">
@@ -367,7 +367,7 @@
             </div>
 
             <div id="selection-btn-s">
-              <button onclick="start_over()" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
+              <button onclick="start_over(); load_view_2(product.data);" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
                 <span class="cell-btn">START OVER</span></button>
               <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
                 DONE
@@ -393,9 +393,9 @@
             </div>
 
             <div id="selection-btn-s">
-              <button onclick="start_over()" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
+              <button onclick="start_over(); load_view_3(product.data)" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
                 <span class="cell-btn">START OVER</span></button>
-              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data); load_viewer();">
+              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data);">
                 DONE
               </button>
             </div>
@@ -413,7 +413,7 @@
       Would you like to edit the placement of our emblem?
 
       <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="load_view_3(product.data)" class="styling_btn btn">EDIT</button>
-      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="load_view_1(product.data)" class="styling_btn btn">ADD
+      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="addToCart()" class="styling_btn btn">ADD
         TO CART
       </button>
     </div>
@@ -522,11 +522,8 @@
             this.x = null;
             this.y = null;
             this.multiplexer = 1;
-            this.konva_elements = {
-                logo: null,
-                emblem: null,
-                image: null
-            };
+            this.konva_elements.logo = null;
+            this.konva_elements.emblem = null;
         }
     }
 
@@ -641,6 +638,11 @@
                 multiplexer: null,
                 src: null
             };
+        },
+        no_custom: function () {
+            for (var t = 0; t < this.views.length; t++) {
+                this.views[t].remove();
+            }
         }
     };
 
@@ -939,38 +941,7 @@
         }
 
         if (view.position_emblem_id) {
-            var emblem = new Konva.Image({
-                x: 0,
-                y: 0
-            });
-            LAYER.add(emblem);
-            view.konva_elements.emblem = emblem;
 
-            var imageEmblem = new Image();
-            imageEmblem.onload = function () {
-                emblem.image(imageEmblem);
-                emblem.setWidth(this.width);
-                emblem.setHeight(this.height);
-                LAYER.draw();
-            };
-
-            $.ajax({
-                url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
-                type: 'GET',
-                dataType: 'json',
-                data: {},
-                success: function (data) {
-                    emblem.setX(data.x);
-                    emblem.setY(data.y);
-                    emblem.scale({
-                        x: data.multiplexer,
-                        y: data.multiplexer
-                    });
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
         }
     }
 
@@ -1101,7 +1072,7 @@
                 var lim = 500 * (product.views.length - 1) * -1;
                 var animation_1 = new Konva.Animation(function (frame) {
                     var x = GROUP.getX();
-                    if (x > mover && x > lim) {
+                    if (x > mover && x > lim && mover > lim - 500) {
                         if (x - (50 * frame.time / 1000) < mover) {
                             GROUP.move({x: mover - x, y: 0});
                             once ? current_pointer = current_pointer + 1 : null;
@@ -1123,7 +1094,7 @@
                 var once = true;
                 var animation_2 = new Konva.Animation(function (frame) {
                     var x = GROUP.getX();
-                    if (x < mover && x < 0) {
+                    if (x < mover && x < 0 && mover < 500) {
                         if (x + (50 * frame.time / 1000) > mover) {
                             GROUP.move({x: mover - x, y: 0});
                         } else {
@@ -1225,9 +1196,6 @@
                     var selected = '';
                     if (product.emblem_id === data[i].id) {
                         selected = 'selected_emblem';
-                        if (!clicked) {
-                            load_viewer(data[i].sample);
-                        }
                     }
 
                     console.log(data[i]);
@@ -1536,23 +1504,28 @@
             dataType: 'json',
             success: function (data) {
 
-                var div_color_container = $('div#checkboxes-color');
-                div_color_container.html('');
+                if (data.length > 1) {
+                    var div_color_container = $('div#checkboxes-color');
+                    div_color_container.html('');
 
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].id.toString() === product.color_id.toString()) {
-                        div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
-                            '<div id="color-picker" class="">' +
-                            '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
-                            '</div>' +
-                            '</div>');
-                    } else {
-                        div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
-                            '<div id="color-picker" class="">' +
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].id.toString() === product.color_id.toString()) {
+                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                                '<div id="color-picker" class="">' +
+                                '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
+                                '</div>' +
+                                '</div>');
+                        } else {
+                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                                '<div id="color-picker" class="">' +
 
-                            '</div>' +
-                            '</div>');
+                                '</div>' +
+                                '</div>');
+                        }
                     }
+                } else {
+                    document.getElementById('removable-color-title').outerHTML = '';
+                    document.getElementById('checkboxes-color').outerHTML = '';
                 }
             },
             error: function () {
@@ -1685,10 +1658,7 @@
     }
 
     function start_over() {
-        product.logo_id = null;
-        product.multiplexer = 1;
-        product.logo_x = null;
-        product.logo_y = null;
+        product.no_custom();
         load_viewer();
     }
 
@@ -2057,6 +2027,7 @@
             });
         } else {
             alert('Select a size');
+            load_view_1(product.data);
         }
     }
 

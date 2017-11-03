@@ -1,6 +1,6 @@
 class CustomEmblem < ApplicationRecord
-  belongs_to :cart_product
-  has_one :position_emblem_admin
-  has_one :color
-  has_one :product_image
+  belongs_to :cart_product, optional: true
+  belongs_to :position_emblem_admin
+  belongs_to :color
+  belongs_to :product_image
 end

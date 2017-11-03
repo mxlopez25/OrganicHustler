@@ -307,17 +307,17 @@
                 });
                 layer.add(baseImg);
 
-                var logoImg = new Konva.Image({
-                    x: (container.width() * preview.dim_x) / 500,
-                    y: (container.height() * preview.dim_y) / 500
-                });
-                layer.add(logoImg);
-
                 var imageBase = new Image();
                 imageBase.onload = function () {
                     baseImg.image(imageBase);
                     layer.draw();
                 };
+
+                /*var logoImg = new Konva.Image({
+                    x: (container.width() * preview.dim_x) / 500,
+                    y: (container.height() * preview.dim_y) / 500
+                });
+                layer.add(logoImg);
 
                 var imageLogo = new Image();
                 imageLogo.onload = function () {
@@ -343,7 +343,7 @@
                     emblem.setWidth(this.width);
                     emblem.setHeight(this.height);
                     layer.draw();
-                };
+                };*/
 
                 $.ajax({
                     url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
@@ -358,7 +358,7 @@
                     }
                 });
 
-                if (preview.has_logo) {
+                /*if (preview.has_logo) {
                     $.ajax({
                         url: '/catalog/product/logo?logo_id=' + preview.logo_id,
                         type: 'GET',
@@ -395,7 +395,7 @@
                             console.log(data);
                         }
                     });
-                }
+                }*/
             }
         </script>
       </div>

@@ -174,27 +174,24 @@ module HomeHelper
 
     product_price = HomeController.to_decimal(product_main.price)
     base_product_tax = HomeController.to_decimal(product_main.taxes.amount)
-    price_logo = 0
-    price_emblem = 0
 
-=begin
-    unless product.logo_id.blank?
-      logo = Logo.find(product.logo_id)
-      price_logo = logo.price || 0
+    price_logos = 0
+    price_emblems = 0
+
+    product.custom_logos.each do |logos|
+      price_logos += logos.logo.price || 0
     end
 
-    unless product.emblem_id.blank?
-      emblem = PositionEmblemAdmin.find(product.emblem_id)
-      price_emblem = emblem.price || 0
+    product.custom_emblems.each do |emblem|
+      price_emblems += emblem.position_emblem_admin.price || 0
     end
-=end
 
     size_price = HomeController.to_decimal((Size.find product.size_id).price)
 
-    total_m = (product_price + size_price + price_logo + price_emblem)
+    total_m = (product_price + size_price + price_logos + price_emblems)
     real_product_tax = total_m * base_product_tax/product_price
 
-    [product_price, real_product_tax, size_price, price_logo, price_emblem, total_m, (total_m + real_product_tax)]
+    [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
 
   end
 
