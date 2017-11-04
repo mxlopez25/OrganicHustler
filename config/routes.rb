@@ -45,7 +45,9 @@ Rails.application.routes.draw do
 
   get '/shopping_bag' => 'home#bag'
 
+  get '/get_cart_item' => 'home#get_cart_item'
   post '/add_cart' => 'home#add_to_cart'
+  delete '/remove_from_cart' => 'home#delete_from_cart'
 
   get '/admin/home' => 'admin#main'
   get '/admin/products' => 'admin#products'

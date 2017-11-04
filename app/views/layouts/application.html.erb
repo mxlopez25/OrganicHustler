@@ -250,6 +250,8 @@
     var view_2 = document.getElementById('view_2').cloneNode(true);
     var view_3 = document.getElementById('view_3').cloneNode(true);
 
+    var OVERALL_MODE = false;
+
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
     var modal_emblem = document.getElementById('modal-content-quick-m');
@@ -939,7 +941,7 @@
 
             fitStageIntoParentContainer();
             window.addEventListener('resize', fitStageIntoParentContainer);
-            $('#image-container .konvajs-content').removeStyle("position");
+            $('#image-container .konvajs-content').removeAttr("position");
         }
     }
 
@@ -1929,6 +1931,13 @@
             var cart_width = null;
             var cart_bottom = null;
 
+            function edit_catalog() {
+                document.getElementsByTagName('body')[0].classList.remove('modal-open');
+                modal.style.display = "none";
+                close_modal();
+                OVERALL_MODE = true;
+            }
+
             $.ajax({
                 url: '/cart',
                 method: 'get',
@@ -1940,7 +1949,7 @@
                     var container = document.getElementById('product-container');
                     for (var product in data) {
                         if (data.hasOwnProperty(product)) {
-                            container.innerHTML += '<li class="element_product">' +
+                            container.innerHTML += '<li onclick="edit_catalog(\'' + "dont touch me" + '\')" class="element_product">' +
                                 '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
                                 '</div>' +
                                 '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
@@ -2118,7 +2127,8 @@
                 var stage = new Konva.Stage({
                     container: selector,
                     width: container.width(),
-                    height: container.height()
+                    height: container.height(),
+                    preventDefault: false
                 });
 
                 var layer = new Konva.Layer();
@@ -2129,7 +2139,8 @@
                     y: 0,
                     width: container.width(),
                     height: container.height(),
-                    draggable: false
+                    draggable: false,
+                    preventDefault: false
                 });
                 layer.add(baseImg);
 

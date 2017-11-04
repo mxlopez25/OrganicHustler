@@ -278,12 +278,68 @@ class HomeController < ApplicationController
       end
     end
 
-    p product.custom_logos.length, "###########"
-    p product.custom_emblems.length, "###########"
+    if product.custom_logos.length > 0
+      product.has_logo = true
+    end
+
+    if product.custom_emblems.length > 0
+      product.has_emblem = true
+    end
+
+    product.save!
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
     user.cart.save!
+  end
+
+  def get_cart_item
+    cart_product = CartProduct.find(params[:product_cart_id])
+    size = Size.find(cart_product.size_id)
+    color = Color.find(cart_product.color_id)
+    product_image = color.product_images.where(main: 1).first
+
+    product = {
+        id: cart_product.id,
+        product: cart_product.product_id,
+        size: {
+            id: size.id,
+            title: size.title,
+            price: size.price
+        },
+        color: {
+            id: color.id,
+            title: color.title,
+            price: color.price,
+            code_hex: color.code_hex,
+        },
+        picture: product_image.picture,
+        logos: [],
+        emblems: [],
+        has_logo: cart_product.has_logo,
+        has_emblem: cart_product.has_emblem
+    }
+
+    cart_product.custom_logos.each do |cl|
+      product[:logos] << {
+          product_image_id: cl.product_image_id,
+          color_id: cl.color_id,
+          logo_id: cl.logo_id,
+          x: cl.x,
+          y: cl.y,
+          multiplexer: cl.multiplexer
+      }
+    end
+
+    cart_product.custom_emblems.each do |ce|
+      product[:emblems] << {
+          product_image_id: ce.product_image_id,
+          color_id: ce.color_id,
+          position_emblem_admin_id: ce.position_emblem_admin_id
+      }
+    end
+
+    render json: product, code: 200
   end
 
   def get_cart_items
@@ -339,10 +395,7 @@ class HomeController < ApplicationController
     end
 
     product = user.cart.cart_products.find(id)
-    user.cart.n_products = user.cart.n_products - 1
-    user.cart.total_m = user.cart.total_m - product.total_m - product.size_price
-    user.cart.save!
-    product.destroy
+    product.unbind_cart
   end
 
   def cancel_order
