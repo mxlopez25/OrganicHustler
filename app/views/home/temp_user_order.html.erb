@@ -27,18 +27,18 @@
         <% @user.orders.each do |o| %>
             <% o.cart.cart_products.where("created_at > ?", 10.days.ago).each do |product| %>
                 <div style="overflow: hidden; width: 100%; text-align: left; border-bottom: lightgrey solid 1px; padding-bottom: 10px; margin-bottom: 10px">
-                  <div id="img-container" style="float: left; width: 24%" class="content-part content-part-3">
+                  <div onclick="edit_catalog(<%= product.id %>)" id="img-container" style="float: left; width: 24%" class="content-part content-part-3">
                     <div id="order_<%= product.id %>" style="width: 100%; height: 100px; float: left">
 
                     </div>
                   </div>
-                  <% product_temp = get_product_l(product.m_id) %>
+                  <% product_temp = get_product_l(product.product_id) %>
                   <script id="create-shape">
 
                       var stageWidth = 500;
                       var stageHeight = 500;
 
-                      createShape('order_<%= product.id %>', '<%= product.multiplexer %>', '<%= product.dim_x %>', '<%= product.dim_y %>', '<%= product.relation_x %>', '<%= product.relation_y %>', '<%= product.color_id %>', '<%= product.logo_id %>', '<%= product.emblem_id %>');
+                      createShape('order_<%= product.id %>', null, null, null, null, null, '<%= product.color_id %>');
 
                       function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id, emblem_id) {
                           var container = $('#' + id);
@@ -47,7 +47,7 @@
                           var stage = new Konva.Stage({
                               container: id,
                               width: stageWidth,
-                              height: stageHeight
+                              height: stageHeight,
                           });
                           var layer = new Konva.Layer();
                           stage.add(layer);
@@ -60,13 +60,7 @@
                               draggable: false
                           });
 
-                          var logoImg = new Konva.Image({
-                              x: stageWidth * x / s_w,
-                              y: stageHeight * y / s_h
-                          });
-
                           layer.add(baseImg);
-                          layer.add(logoImg);
 
                           var imageObj1 = new Image();
                           imageObj1.onload = function () {
@@ -86,6 +80,12 @@
                                   console.log(data);
                               }
                           });
+
+                          /*var logoImg = new Konva.Image({
+                              x: stageWidth * x / s_w,
+                              y: stageHeight * y / s_h
+                          });
+                          layer.add(logoImg);
 
                           var imageObj2 = new Image();
                           imageObj2.onload = function () {
@@ -148,7 +148,7 @@
                                       console.log(data);
                                   }
                               });
-                          }
+                          }*/
 
                           layer.draw();
                       }

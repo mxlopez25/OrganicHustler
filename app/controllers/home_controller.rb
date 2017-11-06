@@ -248,34 +248,106 @@ class HomeController < ApplicationController
       p user.cart
     end
 
-    product = CartProduct.create do |u|
-
-      u.m_id = params[:product][:product_id]
+    product = CartProduct.create! do |u|
+      u.product_id = params[:product][:product_id]
       u.size_id = params[:product][:size_id]
       u.color_id = params[:product][:color_id]
-
-      u.has_logo = false
-      unless params[:product][:logo_id].blank?
-        u.logo_id = params[:product][:logo_id]
-        u.dim_x = HomeController.to_decimal(params[:product][:logo_x])
-        u.dim_y = HomeController.to_decimal(params[:product][:logo_y])
-        u.relation_x = 500
-        u.relation_y = 500
-        u.multiplexer = HomeController.to_decimal(params[:product][:multiplexer])
-        u.has_logo = true
-      end
-
-      u.has_emblem = false
-      unless params[:product][:emblem_id].blank?
-        u.emblem_id = params[:product][:emblem_id]
-        u.has_emblem = true
-      end
-
     end
+
+    params[:product][:views].each do |index|
+
+      custom_view = params[:product][:views][index]
+
+      unless custom_view[:logo_id].blank?
+        product.custom_logos << CustomLogo.create! do |cl|
+          cl.product_image_id = custom_view[:picture_id]
+          cl.color_id = custom_view[:color_id]
+          cl.logo_id = custom_view[:logo_id]
+          cl.x = custom_view[:x]
+          cl.y = custom_view[:y]
+          cl.multiplexer = custom_view[:multiplexer]
+        end
+      end
+
+      unless custom_view[:position_emblem_id].blank?
+        product.custom_emblems << CustomEmblem.create! do |ce|
+          ce.product_image_id = custom_view[:picture_id]
+          ce.color_id = custom_view[:color_id]
+          ce.position_emblem_admin_id = custom_view[:position_emblem_id]
+        end
+      end
+    end
+
+    if product.custom_logos.length > 0
+      product.has_logo = true
+    else
+      product.has_logo = false
+    end
+
+    if product.custom_emblems.length > 0
+      product.has_emblem = true
+    else
+      product.has_emblem = false
+    end
+
+    product.save!
 
     user.cart.cart_products << product
     user.cart.n_products = user.cart.n_products + 1
     user.cart.save!
+  end
+
+  def get_cart_item
+    cart_product = CartProduct.find(params[:product_cart_id])
+    size = Size.find(cart_product.size_id)
+    color = Color.find(cart_product.color_id)
+    product_image = color.product_images.where(main: 1).first
+
+    al = Product.find(cart_product.product_id)
+    color = al.colors.where(preferred: true).first
+    al.attributes.merge(main_color: color)
+
+    product = {
+        id: cart_product.id,
+        source_data: JSON::parse(al.to_json).merge({main_color: color}),
+        size: {
+            id: size.id,
+            title: size.title,
+            price: size.price
+        },
+        color: {
+            id: color.id,
+            title: color.title,
+            price: color.price,
+            code_hex: color.code_hex,
+        },
+        picture: product_image.picture,
+        logos: [],
+        emblems: [],
+        has_logo: cart_product.has_logo,
+        has_emblem: cart_product.has_emblem
+    }
+
+    cart_product.custom_logos.each do |cl|
+      product[:logos] << {
+          product_image_id: cl.product_image_id,
+          color_id: cl.color_id,
+          logo_id: cl.logo_id,
+          x: cl.x,
+          y: cl.y,
+          multiplexer: cl.multiplexer
+      }
+    end
+
+    cart_product.custom_emblems.each do |ce|
+      product[:emblems] << {
+          product_image_id: ce.product_image_id,
+          color_id: ce.color_id,
+          position_emblem_admin_id: ce.position_emblem_admin_id
+      }
+    end
+
+    render json: product, code: 200
   end
 
   def get_cart_items
@@ -283,7 +355,7 @@ class HomeController < ApplicationController
     obj = CartProduct.where(cart_id: get_cart_id)
     json_obj = JSON.parse(obj.to_json)
     json_obj.each {|json_data|
-      json_data['product_data'] = Product.find(json_data['m_id'])
+      json_data['product_data'] = Product.find(json_data['product_id'])
       json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
       json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
       json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)
@@ -291,6 +363,32 @@ class HomeController < ApplicationController
     }
 
     render json: json_obj
+  end
+
+  def product_price(p_cart_id)
+    product = CartProduct.find(p_cart_id)
+    product_main = Product.find(product.product_id)
+
+    product_price = HomeController.to_decimal(product_main.price)
+    base_product_tax = HomeController.to_decimal(product_main.taxes.amount)
+
+    price_logos = 0
+    price_emblems = 0
+
+    product.custom_logos.each do |logos|
+      price_logos += logos.logo.price || 0
+    end
+
+    product.custom_emblems.each do |emblem|
+      price_emblems += emblem.position_emblem_admin.price || 0
+    end
+
+    size_price = HomeController.to_decimal((Size.find product.size_id).price)
+
+    total_m = (product_price + size_price + price_logos + price_emblems)
+    real_product_tax = total_m * base_product_tax/product_price
+
+    [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
   end
 
   def delete_from_cart
@@ -305,10 +403,7 @@ class HomeController < ApplicationController
     end
 
     product = user.cart.cart_products.find(id)
-    user.cart.n_products = user.cart.n_products - 1
-    user.cart.total_m = user.cart.total_m - product.total_m - product.size_price
-    user.cart.save!
-    product.destroy
+    product.unbind_cart
   end
 
   def cancel_order
