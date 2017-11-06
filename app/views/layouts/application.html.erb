@@ -271,6 +271,7 @@
             $("body").removeClass("modal-open");
             $('body').css('overflow', 'auto');
             $('body').css('position', 'relative');
+            OVERALL_MODE = false;
         }
 
         if (event.target === modal) {
@@ -284,6 +285,7 @@
         $("body").removeClass("modal-open");
         $('body').css('overflow', 'auto');
         $('body').css('position', 'relative');
+        OVERALL_MODE = false;
     }
 
     function close_emblem_modal() {
@@ -1557,11 +1559,11 @@
                 '              </button>' +
                 '              <button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-warning btn" onclick="modify_element()">UPDATE\n' +
                 '              </button>';
-            document.getElementById('replacesable_button_edit').outerHTML = delete_modify;
-            document.getElementById('replacesable_second_button_edit').outerHTML = delete_modify;
+            var btn1 = document.getElementById('replacesable_button_edit');
+            btn1 ? (btn1.outerHTML = delete_modify) : null;
+            var btn2 = document.getElementById('replacesable_second_button_edit');
+            btn2 ? (btn2.outerHTML = delete_modify) : null;
 
-
-            OVERALL_MODE = false;
         }
 
         var actor = document.getElementById('actor');
@@ -1917,6 +1919,7 @@
                     $("body").removeClass("modal-open");
                     $('body').css('overflow', 'auto');
                     $('body').css('position', 'relative');
+                    OVERALL_MODE = false;
                     location.reload();
                 },
                 dataType: 'json'
