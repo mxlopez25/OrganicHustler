@@ -111,7 +111,8 @@
               <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_view_2(product.data)">CUSTOMIZE
                 IT
               </button>
-              <button style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD TO CART
+              <button id="replacesable_button_edit" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD
+                TO CART
               </button>
             </div>
           </div>
@@ -213,7 +214,7 @@
       Would you like to edit the placement of our emblem?
 
       <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="load_view_3(product.data)" class="styling_btn btn">EDIT</button>
-      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="addToCart()" class="styling_btn btn">ADD
+      <button id="replacesable_second_button_edit" style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="addToCart()" class="styling_btn btn">ADD
         TO CART
       </button>
     </div>
@@ -708,7 +709,7 @@
                     }
                 }
             });
-            group.add(logo);
+            img_grp.add(logo);
             view.konva_elements.logo = logo;
 
             logo.on('dragend', function () {
@@ -744,6 +745,37 @@
 
         if (view.position_emblem_id) {
 
+            $.ajax({
+                url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    var emblem = new Konva.Image({
+                        x: data.x,
+                        y: data.y
+                    });
+                    img_grp.add(emblem);
+                    view.konva_elements.emblem = emblem;
+
+                    var imageEmblem = new Image();
+                    imageEmblem.onload = function () {
+                        emblem.image(imageEmblem);
+                        emblem.setWidth(this.width);
+                        emblem.setHeight(this.height);
+                        emblem.scale({
+                            x: data.multiplexer,
+                            y: data.multiplexer
+                        });
+                        LAYER.draw();
+                    };
+
+                    imageEmblem.src = data.src;
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         }
     }
 
@@ -752,6 +784,19 @@
             product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
         }
         console.log(product);
+    }
+
+    function find_in_custom(p_id) {
+        var custom = null;
+        console.log(product.views.length);
+        for (var i = 0; i < product.views.length; i++) {
+            console.log(product.views[i].picture_id);
+            console.log(p_id);
+            if (product.views[i].picture_id.toString() === p_id.toString()) {
+                custom = product.views[i];
+            }
+        }
+        return custom;
     }
 
     function update_section() {
@@ -1465,10 +1510,59 @@
         load_viewer();
     }
 
+    function modify_element() {
+        $.ajax({
+            url: '/remove_from_cart',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                item_id: ACTUAL_CART_ITEM_EDIT
+            },
+            success: function (data) {
+                console.log(data);
+                addToCart();
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function delete_element() {
+        $.ajax({
+            url: '/remove_from_cart',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                item_id: ACTUAL_CART_ITEM_EDIT
+            },
+            success: function (data) {
+                console.log(data);
+                location.reload();
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
     function load_view_1(_product) {
 
         current_view = 1;
         document.getElementById('view_1').outerHTML = view_1.outerHTML;
+
+        if (OVERALL_MODE) {
+
+            var delete_modify = '<button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: left" class="btn-danger btn" onclick="delete_element()">DELETE\n' +
+                '              </button>' +
+                '              <button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-warning btn" onclick="modify_element()">UPDATE\n' +
+                '              </button>';
+            document.getElementById('replacesable_button_edit').outerHTML = delete_modify;
+            document.getElementById('replacesable_second_button_edit').outerHTML = delete_modify;
+
+
+            OVERALL_MODE = false;
+        }
 
         var actor = document.getElementById('actor');
         var new_element = actor.cloneNode(true);
@@ -1931,11 +2025,77 @@
             var cart_width = null;
             var cart_bottom = null;
 
-            function edit_catalog() {
+            var ACTUAL_CART_ITEM_EDIT = null;
+
+            function edit_catalog(id) {
                 document.getElementsByTagName('body')[0].classList.remove('modal-open');
                 modal.style.display = "none";
                 close_modal();
                 OVERALL_MODE = true;
+                ACTUAL_CART_ITEM_EDIT = id;
+                $.ajax({
+                    url: '/get_cart_item',
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        product_cart_id: id
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        product.data = data['source_data'];
+                        product.product_id = data['source_data']['id'];
+                        product.color_id = data['color']['id'];
+                        product.size_id = data['size']['id'];
+
+                        $.ajax({
+                            url: '/catalog/product/color/images',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                color_id: product.color_id
+                            },
+                            success: function (data_) {
+                                if (product.views.length === 0) {
+                                    create_objects_array(data_);
+                                }
+
+                                for (var i = 0; i < data['logos'].length; i++) {
+                                    var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.logo_id = data['logos'][i]['logo_id'];
+                                        modified_view.x = parseFloat(data['logos'][i]['x']);
+                                        modified_view.y = parseFloat(data['logos'][i]['y']);
+                                        modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                                    }
+                                }
+
+                                for (var j = 0; j < data['emblems'].length; j++) {
+                                    var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                                    }
+                                }
+
+                                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                                load_viewer();
+                                load_view_1(product.data);
+
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+                        console.log(product);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                var body = $("body");
+                body.addClass("modal-open");
+                body.css('overflow', 'hidden');
+                modal_quick.style.display = "block";
             }
 
             $.ajax({
@@ -1949,7 +2109,7 @@
                     var container = document.getElementById('product-container');
                     for (var product in data) {
                         if (data.hasOwnProperty(product)) {
-                            container.innerHTML += '<li onclick="edit_catalog(\'' + "dont touch me" + '\')" class="element_product">' +
+                            container.innerHTML += '<li onclick="edit_catalog(\'' + data[product]['id'] + '\')" class="element_product">' +
                                 '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
                                 '</div>' +
                                 '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
@@ -1960,7 +2120,7 @@
 
                     for (var image in data) {
                         if (data.hasOwnProperty(image)) {
-                            create_preview(data[image]);
+                            create_preview_modal(data[image]);
                         }
                     }
 
@@ -2117,7 +2277,7 @@
                 });
             });
 
-            function create_preview(preview) {
+            function create_preview_modal(preview) {
                 console.log(preview);
                 var selector = preview.id + '-catalog-cart';
                 var container = $('#' + selector);

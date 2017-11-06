@@ -280,10 +280,14 @@ class HomeController < ApplicationController
 
     if product.custom_logos.length > 0
       product.has_logo = true
+    else
+      product.has_logo = false
     end
 
     if product.custom_emblems.length > 0
       product.has_emblem = true
+    else
+      product.has_emblem = false
     end
 
     product.save!
@@ -299,9 +303,13 @@ class HomeController < ApplicationController
     color = Color.find(cart_product.color_id)
     product_image = color.product_images.where(main: 1).first
 
+    al = Product.find(cart_product.product_id)
+    color = al.colors.where(preferred: true).first
+    al.attributes.merge(main_color: color)
+
     product = {
         id: cart_product.id,
-        product: cart_product.product_id,
+        source_data: JSON::parse(al.to_json).merge({main_color: color}),
         size: {
             id: size.id,
             title: size.title,
