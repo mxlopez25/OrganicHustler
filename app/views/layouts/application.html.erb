@@ -1645,8 +1645,18 @@
                         if (x > mover && x > lim) {
                             if (x - (50 * frame.time / 1000) < mover) {
                                 GROUP.move({x: mover - x, y: 0});
+                                animation_1.stop();
                             } else {
                                 GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                            }
+                            once ? current_pointer = current_pointer + 1 : null;
+                            once = false;
+                        } else if (x < mover && x < 0) {
+                            if (x + (50 * frame.time / 1000) > mover) {
+                                GROUP.move({x: mover - x, y: 0});
+                                animation_1.stop();
+                            } else {
+                                GROUP.move({x: 50 * frame.time / 1000, y: 0});
                             }
                             once ? current_pointer = current_pointer + 1 : null;
                             once = false;
@@ -1658,13 +1668,24 @@
                 } else if ((p2.x - p1.x) / stage_scale > 50) {
                     var mover = -500 * (current_pointer - 1);
                     var once = true;
+                    var lim = 500 * (product.views.length - 1) * -1;
                     var animation_2 = new Konva.Animation(function (frame) {
                         var x = GROUP.getX();
                         if (x < mover && x < 0) {
                             if (x + (50 * frame.time / 1000) > mover) {
                                 GROUP.move({x: mover - x, y: 0});
+                                animation_2.stop();
                             } else {
                                 GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                            }
+                            once ? current_pointer = current_pointer - 1 : null;
+                            once = false;
+                        } else if (x > mover && x > lim) {
+                            if (x - (50 * frame.time / 1000) < mover) {
+                                GROUP.move({x: mover - x, y: 0});
+                                animation_2.stop();
+                            } else {
+                                GROUP.move({x: -50 * frame.time / 1000, y: 0});
                             }
                             once ? current_pointer = current_pointer - 1 : null;
                             once = false;
