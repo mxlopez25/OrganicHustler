@@ -67,6 +67,12 @@
             <option value="1">Live</option>
           </select>
 
+          <label for="customizable">Customizable</label>
+          <select style="width: 100%" id="customizable" name="customizable">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+
           <label for="stock">Stock</label>
           <input class="form-control" type="number" name="stock" value="" id="stock">
 
@@ -1012,7 +1018,8 @@
                         styles: styles_g[id_row],
                         materials: materials_g[id_row],
                         brands: brands_g[id_row],
-                        tax_band: row.find('select[name="tax"]').val()
+                        tax_band: row.find('select[name="tax"]').val(),
+                        customizable: row.find('select[name="customizable"]').val()
 
                     },
                     dataType: "json",

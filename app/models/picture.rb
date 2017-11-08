@@ -2,7 +2,7 @@ class Picture < ApplicationRecord
 
   belongs_to :gallery
 
-  has_attached_file :image, styles: { medium: "300x300", thumb: "100x100", large: "600x600"}
+  has_attached_file :image, styles: {medium: "500x500", thumb: "300x300", large: "800x800"}
 
   do_not_validate_attachment_file_type :image
 

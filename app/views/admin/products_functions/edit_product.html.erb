@@ -73,6 +73,15 @@
       </select>
     </div>
 
+    <!--Status edit field-->
+    <div class="form-group">
+      <label for="customizable_edit" style="float: left; width: 100%">Customizable</label>
+      <select style="width: 100%" id="customizable_edit" name="status">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+
     <!--Price edit field-->
     <div class="form-group">
       <label for="price">Price</label>
@@ -109,6 +118,10 @@
     <button onclick="save_1('<%= product_i.id %>')" style="width: 100%" class="btn btn-success">SAVE</button>
 
     <script>
+
+        $('select#status_edit').val('<%= product_i.status %>' === 'true' ? 1 : 0);
+        $('select#customizable_edit').val('<%= product_i.customizable %>' === 'true' ? 1 : 0);
+
         function save_1(id) {
             $.ajax({
                 url: '/product/edit',
@@ -119,11 +132,12 @@
                     attr: {
                         title: $('input#title_edit').val(),
                         sku: $('input#sku_edit').val(),
-                        status: $('input#status_edit').val(),
+                        status: $('select#status_edit').val(),
                         price: $('input#price_edit').val(),
                         tax_band: $('input#tax_edit').val(),
                         stock: $('input#stock_level_edit').val(),
-                        description: $('textarea#description_edit').val()
+                        description: $('textarea#description_edit').val(),
+                        customizable: $('select#customizable_edit').val()
                     }
                 },
                 success: function () {
