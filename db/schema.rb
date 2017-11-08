@@ -99,9 +99,9 @@ ActiveRecord::Schema.define(version: 20171102003611) do
     t.string "product_image_id"
     t.string "color_id"
     t.string "logo_id"
-    t.decimal "x", precision: 10
-    t.decimal "y", precision: 10
-    t.decimal "multiplexer", precision: 10
+    t.decimal "x", precision: 10, scale: 5
+    t.decimal "y", precision: 10, scale: 5
+    t.decimal "multiplexer", precision: 10, scale: 5
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 20171102003611) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "product_image_id"
+    t.boolean "customizable"
   end
 
   create_table "products_styles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

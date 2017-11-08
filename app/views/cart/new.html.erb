@@ -155,7 +155,7 @@
                   <h6>Color: <%= (Color.find product.color_id).title %></h6>
                 </div>
                 <div style="float: left; width: 50%; text-align: center">
-                  <h3>Qty: 1</h3> <!-- Attach to backend -->
+                  <h3 style="font-size: 20px;">Qty: 1</h3> <!-- Attach to backend -->
                   <% pr_price = product_price(product.id) %>
                   <h4><%= format('$%.2f',pr_price[5]) %></h4>
                   <% tax_array.push(pr_price[1]) %>

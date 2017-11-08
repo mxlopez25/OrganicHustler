@@ -62,7 +62,7 @@ class ProductController < ApplicationController
   end
 
   def basic_product_params(pr_params)
-    pr_params.permit(:title, :sku, :status, :price, :tax_band, :stock, :description)
+    pr_params.permit(:title, :sku, :status, :price, :tax_band, :stock, :description, :customizable)
   end
 
   def title_params(params_s)
@@ -78,6 +78,7 @@ class ProductController < ApplicationController
   end
 
   def save_product
+    p params[:attr], '#################'
     (Product.find params[:id]).update (basic_product_params params[:attr])
     render :nothing => true, :status => 200
   end
@@ -91,7 +92,12 @@ class ProductController < ApplicationController
   end
 
   def add_category
-    Product.find(params['pr_id']).categories << Category.new(title_params (params))
+    cat = Category.find_by(title: params['title'].downcase)
+    if cat
+      Product.find(params['pr_id']).categories << cat
+    else
+      Product.find(params['pr_id']).categories << Category.new(title: text)
+    end
   end
 
   def add_style
@@ -180,6 +186,7 @@ class ProductController < ApplicationController
     product.title = params['title']
     product.price = params['price']
     product.status = params['status']
+    product.customizable = params['customizable']
     product.stock = params['stock']
     product.sku = params['sku']
     product.description = params['description']

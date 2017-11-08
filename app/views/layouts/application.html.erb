@@ -86,15 +86,15 @@
               </button>
             </div>
 
-            <hr style="margin-bottom: 0">
-            <div style="margin-bottom: 10px">
+            <hr class="customizable_presets" style="margin-bottom: 0">
+            <div class="customizable_presets" style="margin-bottom: 10px">
               <div id="icon-show-logo" class="hidden">
                 <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h5></div>
               <div id="icon-hide-logo">
                 <h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h5></div>
             </div>
 
-            <div style="height: 80px" id="icon_loader_logo" class="jcarousel-wrapper">
+            <div style="height: 80px" id="icon_loader_logo" class="jcarousel-wrapper customizable_presets">
               <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
               </button>
@@ -108,7 +108,7 @@
             </div>
 
             <div>
-              <button style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_view_2(product.data)">CUSTOMIZE
+              <button id="customize_btn" style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_view_2(product.data)">CUSTOMIZE
                 IT
               </button>
               <button id="replacesable_button_edit" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD
@@ -568,11 +568,11 @@
         });
         LAYER.add(GROUP);
 
-        GROUP.on('touchstart mousedown', function () {
+        GROUP.on('dragstart mousedown', function () {
             p1 = STAGE.getPointerPosition();
         });
 
-        GROUP.on('touchend mouseup', function () {
+        GROUP.on('mouseup dragend', function () {
             p2 = STAGE.getPointerPosition();
             if ((p2.x - p1.x) / stage_scale < -50) {
                 var mover = -500 * (current_pointer + 1);
@@ -585,8 +585,20 @@
                             GROUP.move({x: mover - x, y: 0});
                             once ? current_pointer = current_pointer + 1 : null;
                             once = false;
+                            animation_1.stop();
                         } else {
                             GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                            once ? current_pointer = current_pointer + 1 : null;
+                            once = false;
+                        }
+                    } else if (x < mover && x < 0) {
+                        if (x + (50 * frame.time / 1000) > mover) {
+                            GROUP.move({x: mover - x, y: 0});
+                            once ? current_pointer = current_pointer + 1 : null;
+                            once = false;
+                            animation_1.stop();
+                        } else {
+                            GROUP.move({x: 50 * frame.time / 1000, y: 0});
                             once ? current_pointer = current_pointer + 1 : null;
                             once = false;
                         }
@@ -598,6 +610,7 @@
             } else if ((p2.x - p1.x) / stage_scale > 50) {
                 var mover = -500 * (current_pointer - 1);
                 var once = true;
+                var lim = 500 * (views.length - 1) * -1;
                 var animation_2 = new Konva.Animation(function (frame) {
                     var x = GROUP.getX();
                     if (x < mover && x < 0) {
@@ -605,8 +618,20 @@
                             GROUP.move({x: mover - x, y: 0});
                             once ? current_pointer = current_pointer - 1 : null;
                             once = false;
+                            animation_2.stop();
                         } else {
                             GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                            once ? current_pointer = current_pointer - 1 : null;
+                            once = false;
+                        }
+                    } else if (x > mover && x > lim) {
+                        if (x - (50 * frame.time / 1000) < mover) {
+                            GROUP.move({x: mover - x, y: 0});
+                            once ? current_pointer = current_pointer - 1 : null;
+                            once = false;
+                            animation_2.stop();
+                        } else {
+                            GROUP.move({x: -50 * frame.time / 1000, y: 0});
                             once ? current_pointer = current_pointer - 1 : null;
                             once = false;
                         }
@@ -975,9 +1000,9 @@
                     create_image_slider(data);
                     if (view_stationary && GROUP) {
                         GROUP.draggable(false);
-                        GROUP.off('touchstart');
+                        GROUP.off('dragstart');
                         GROUP.off('mousedown');
-                        GROUP.off('touchend');
+                        GROUP.off('dragend');
                         GROUP.off('mouseup');
                     }
                 },
@@ -1017,9 +1042,9 @@
 
         if (GROUP) {
             GROUP.draggable(false);
-            GROUP.off('touchstart');
+            GROUP.off('dragstart');
             GROUP.off('mousedown');
-            GROUP.off('touchend');
+            GROUP.off('dragend');
             GROUP.off('mouseup');
         }
 
@@ -1138,9 +1163,9 @@
 
         if (GROUP) {
             GROUP.draggable(false);
-            GROUP.off('touchstart');
+            GROUP.off('dragstart');
             GROUP.off('mousedown');
-            GROUP.off('touchend');
+            GROUP.off('dragend');
             GROUP.off('mouseup');
         }
 
@@ -1555,15 +1580,19 @@
 
         if (OVERALL_MODE) {
 
-            var delete_modify = '<button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: left" class="btn-danger btn" onclick="delete_element()">DELETE\n' +
+            var delete_modify = '<button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: left" class="btn-sp btn" onclick="delete_element()">DELETE\n' +
                 '              </button>' +
-                '              <button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-warning btn" onclick="modify_element()">UPDATE\n' +
+                '              <button id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-sp btn" onclick="modify_element()">UPDATE\n' +
                 '              </button>';
             var btn1 = document.getElementById('replacesable_button_edit');
             btn1 ? (btn1.outerHTML = delete_modify) : null;
             var btn2 = document.getElementById('replacesable_second_button_edit');
             btn2 ? (btn2.outerHTML = delete_modify) : null;
 
+        }
+
+        if (!product.data.customizable) {
+            document.getElementById('customize_btn').outerHTML = '';
         }
 
         var actor = document.getElementById('actor');
@@ -1601,11 +1630,11 @@
             var p1 = 0;
             var p2 = 0;
 
-            GROUP.on('touchstart mousedown', function () {
+            GROUP.on('dragstart mousedown', function () {
                 p1 = STAGE.getPointerPosition();
             });
 
-            GROUP.on('touchend mouseup', function () {
+            GROUP.on('dragend mouseup', function () {
                 p2 = STAGE.getPointerPosition();
                 if ((p2.x - p1.x) / stage_scale < -50) {
                     var mover = -500 * (current_pointer + 1);
@@ -1737,34 +1766,41 @@
             success: function (data) {
                 console.log(data);
 
-                var carousel_jq = $('ul#container-presets');
+                if (data.length > 0) {
 
-                for (var i = 0; i < data.length; i++) {
-                    console.log('d');
-                    carousel_jq.append('<li><div onclick="load_data_preset(\'' + data[i].color_id + '\', \'' + data[i].logo_id + '\', \'' + data[i].x + '\', \'' + data[i].y + '\', \'' + data[i].multiplexer + '\', \'' + data[i].picture_id + '\');" style="width: 70px; height: 70px" id="div_preview_' + data[i].id + '"></div></li>');
-                    if (data[i].id === id_preset_temp) {
-                        load_data_preset(data[i].color_id, data[i].logo_id, data[i].x, data[i].y, data[i].multiplexer, data[i].picture_id);
-                        id_preset_temp = null;
+                    var carousel_jq = $('ul#container-presets');
+
+                    for (var i = 0; i < data.length; i++) {
+                        console.log('d');
+                        carousel_jq.append('<li><div onclick="load_data_preset(\'' + data[i].color_id + '\', \'' + data[i].logo_id + '\', \'' + data[i].x + '\', \'' + data[i].y + '\', \'' + data[i].multiplexer + '\', \'' + data[i].picture_id + '\');" style="width: 70px; height: 70px" id="div_preview_' + data[i].id + '"></div></li>');
+                        if (data[i].id === id_preset_temp) {
+                            load_data_preset(data[i].color_id, data[i].logo_id, data[i].x, data[i].y, data[i].multiplexer, data[i].picture_id);
+                            id_preset_temp = null;
+                        }
                     }
+
+                    for (var t = 0; t < data.length; t++) {
+                        create_preview(data[t]);
+                    }
+
+                    var jcarouselSelector = '.jcarousel';
+
+                    $(jcarouselSelector).reloadJcarousel();
+
+                    $('.jcarousel-control-prev').jcarouselControl({
+                        // Options go here
+                        target: '-=1'
+                    });
+                    $('.jcarousel-control-next').jcarouselControl({
+                        // Options go here
+                        target: '+=1'
+                    });
+                    $('div#preview_preset_cr_carousel').jcarousel('reload');
+                } else {
+                    $('.customizable_presets').each(function (i, element) {
+                        element.outerHTML = '';
+                    })
                 }
-
-                for (var t = 0; t < data.length; t++) {
-                    create_preview(data[t]);
-                }
-
-                var jcarouselSelector = '.jcarousel';
-
-                $(jcarouselSelector).reloadJcarousel();
-
-                $('.jcarousel-control-prev').jcarouselControl({
-                    // Options go here
-                    target: '-=1'
-                });
-                $('.jcarousel-control-next').jcarouselControl({
-                    // Options go here
-                    target: '+=1'
-                });
-                $('div#preview_preset_cr_carousel').jcarousel('reload');
             },
             error: function (data) {
 
