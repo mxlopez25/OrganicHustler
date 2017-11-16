@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   post '/add_cart' => 'home#add_to_cart'
   delete '/remove_from_cart' => 'home#delete_from_cart'
 
-  get '/admin/home' => 'admin#main'
+  get '/admin' => 'admin#main'
   get '/admin/products' => 'admin#products'
   get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
