@@ -45,28 +45,29 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li>
+        <li <%= (request.original_url.include? 'home') ? 'class=active' : '' %>>
           <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-home"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'products') ? 'class=active' : '' %>>
           <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-product-hunt"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'orders') ? 'class=active' : '' %>>
           <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-truck"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'mailer') ? 'class=active' : '' %>>
           <a href="/admin/mailer">Mailer<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-envelope"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'categories') ? 'class=active' : '' %>>
           <a>Categories manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-list"></span></a>
         </li>
-        <li>
-          <a>Promotion codes<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-qrcode"></span></a>
+        <li <%= (request.original_url.include? 'promo') ? 'class=active' : '' %>>
+          <a href="/admin/promos">Promotion
+            codes<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-qrcode"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'taxes') ? 'class=active' : '' %>>
           <a>Tax manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-tags"></span></a>
         </li>
-        <li>
+        <li <%= (request.original_url.include? 'stats') ? 'class=active' : '' %>>
           <a>Statistics<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-bar-chart"></span></a>
         </li>
       </ul>

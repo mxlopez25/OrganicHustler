@@ -78,7 +78,6 @@ class ProductController < ApplicationController
   end
 
   def save_product
-    p params[:attr], '#################'
     (Product.find params[:id]).update (basic_product_params params[:attr])
     render :nothing => true, :status => 200
   end

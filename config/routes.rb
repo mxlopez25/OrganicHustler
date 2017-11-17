@@ -49,12 +49,13 @@ Rails.application.routes.draw do
   post '/add_cart' => 'home#add_to_cart'
   delete '/remove_from_cart' => 'home#delete_from_cart'
 
-  get '/admin' => 'admin#main'
+  get '/admin/home' => 'admin#main'
   get '/admin/products' => 'admin#products'
   get '/admin/logos' => 'admin#logo'
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
+  get '/admin/promos' => 'admin#promo_code'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -148,5 +149,6 @@ Rails.application.routes.draw do
   resource :showcases
   resource :user_addresses
   resource :orders
+  resource :promotion_codes
 
 end
