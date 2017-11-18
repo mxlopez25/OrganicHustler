@@ -152,4 +152,29 @@ class CartController < ApplicationController
     mail.deliver_now
   end
 
+  def add_promo_code
+    promo = PromotionCode.find_by(code: params['promo_code'])
+    cart = Cart.find(params['cart_id'])
+
+    if !promo
+      render json: {code: 1000}.to_json
+    elsif promo.used
+      render json: {code: 1001}.to_json
+    elsif promo.limitUsage <= 0
+      promo.used = true
+      promo.save
+      render json: {code: 1002}.to_json
+    elsif Time.now > promo.timeAvailable
+      render json: {code: 1003}.to_json
+    elsif cart.promotion_codes.size == 1
+      render json: {code: 1004}.to_json
+    else
+      cart.promotion_codes << promo
+      promo.limitUsage = promo.limitUsage - 1
+      promo.save
+      render json: {code: 1005}.to_json
+    end
+
+  end
+
 end

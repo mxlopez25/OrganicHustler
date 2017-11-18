@@ -111,9 +111,48 @@
 
         <h3>PROMOTION CODE</h3>
 
-        <div class="content-part content-part-10 desktopnot">
-          <hr>
+        <div class="content-part content-part-10 field-data">
+
+          <label>
+            <div>CODE</div>
+          </label>
+          <span id="alert_messenger" style="width: auto" class="label label-warning"></span>
+          <input id="promo_code" name="promo_code" class="field" placeholder="XXXXXX" value="<%= user.cart.promotion_codes.first&.code %>">
+          <button onclick="apply_promo()" class="btn btn-sp" type="button">APPLY</button>
         </div>
+
+        <script>
+            function apply_promo() {
+                $.ajax({
+                    url: '/cart/promo-code',
+                    type: 'patch',
+                    dataType: 'json',
+                    data: {
+                        cart_id: '<%= user.cart.id %>',
+                        promo_code: document.getElementById('promo_code').value
+                    },
+                    success: function (data, statusText, xhr) {
+                        console.log(data);
+                        if (data.code === 1005) {
+                            window.location.reload(true);
+                        } else if (data.code === 1004) {
+                            document.getElementById('alert_messenger').innerHTML = 'ALREADY USED'
+                        } else if (data.code === 1003) {
+                            document.getElementById('alert_messenger').innerHTML = 'PROMOTION EXPIRED'
+                        } else if (data.code === 1002) {
+                            document.getElementById('alert_messenger').innerHTML = 'MAXIMUM AMOUNT OF USERS REACHED'
+                        } else if (data.code === 1001) {
+                            document.getElementById('alert_messenger').innerHTML = 'ALREADY USED'
+                        } else if (data.code === 1000) {
+                            document.getElementById('alert_messenger').innerHTML = 'DOESN\'T EXIST'
+                        }
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+        </script>
 
       </div>
       <div style="position: relative" class="content-part preview-cart content-part-10">

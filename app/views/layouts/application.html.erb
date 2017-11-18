@@ -1013,7 +1013,9 @@
 
             fitStageIntoParentContainer();
             window.addEventListener('resize', fitStageIntoParentContainer);
-            $('#image-container .konvajs-content').removeAttr("position");
+            $('.konvajs-content').each(function (index) {
+                $(this)['0'].style.position = null;
+            })
         }
     }
 
