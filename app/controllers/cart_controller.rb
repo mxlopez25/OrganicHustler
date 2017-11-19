@@ -101,18 +101,24 @@ class CartController < ApplicationController
       begin
         charge = nil
 
+        amount = cost_t + tax_t
+        promo_code = get_cart.promotion_codes.first
+        if promo_code
+          amount = amount - (amount * (promo_code.rate / 100))
+        end
+
         if user['c_stripe_id']
           charge = Stripe::Charge.create(
-              :amount => ((cost_t + tax_t)*100).to_i,
+              :amount => (amount*100).to_i,
               :currency => "usd",
               :description => "Example charge",
               :customer => user.c_stripe_id,
           )
         else
           token = params[:token][:id]
-          p ((cost_t + tax_t)*100).to_i
+          p (amount*100).to_i
           charge = Stripe::Charge.create(
-              :amount => ((cost_t + tax_t)*100).to_i,
+              :amount => (amount*100).to_i,
               :currency => "usd",
               :description => "Example charge",
               :source => token,

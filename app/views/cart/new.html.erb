@@ -81,9 +81,9 @@
         <h3>PAYMENT OPTIONS</h3>
 
         <% if !@card %>
-        <label>
-          <span>Card</span>
-        </label>
+            <label>
+              <span>Card</span>
+            </label>
             <div id="card-element" style="padding: 0 0 0 10px" class="field content-part content-part-10 field-data card-element"></div>
 
             <% if user_signed_in? %>
@@ -172,36 +172,36 @@
               var Stage = {};
           </script>
 
-        <h4><span><%= get_item_count %></span> Items</h4>
-        <hr>
-        <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
+          <h4><span><%= get_item_count %></span> Items</h4>
+          <hr>
+          <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
               <% product_temp = get_product_l(product.product_id) %>
-            <div class="item-checkout" style="margin-bottom: 20px">
-              <div onclick="edit_catalog(<%= product.id %>)" style="float: left; width: 33%; position: relative">
-                <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;">
+              <div class="item-checkout" style="margin-bottom: 20px">
+                <div onclick="edit_catalog(<%= product.id %>)" style="float: left; width: 33%; position: relative">
+                  <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;">
 
+                  </div>
+                </div>
+                <div style="float: right; width: 63%; position: relative">
+                  <h4><%= product_temp['title'] %></h4>
+                  <div style="float: left; width: 50%">
+                    <h6>Size: <%= (Size.find product.size_id).title %></h6>
+                    <h6>Customized:
+                      <% if product.has_emblem %>YES
+                      <% elsif product.has_logo %>YES
+                      <% else %>NO
+                      <% end %></h6>
+                    <h6>Color: <%= (Color.find product.color_id).title %></h6>
+                  </div>
+                  <div style="float: left; width: 50%; text-align: center">
+                    <h3 style="font-size: 20px;">Qty: 1</h3> <!-- Attach to backend -->
+                    <% pr_price = product_price(product.id) %>
+                    <h4><%= format('$%.2f', pr_price[5]) %></h4>
+                    <% tax_array.push(pr_price[1]) %>
+                    <% cost_array.push(pr_price[5]) %>
+                  </div>
                 </div>
               </div>
-              <div style="float: right; width: 63%; position: relative">
-                <h4><%= product_temp['title'] %></h4>
-                <div style="float: left; width: 50%">
-                  <h6>Size: <%= (Size.find product.size_id).title %></h6>
-                  <h6>Customized:
-                    <% if product.has_emblem %>YES
-                    <% elsif product.has_logo %>YES
-                    <% else %>NO
-                    <% end %></h6>
-                  <h6>Color: <%= (Color.find product.color_id).title %></h6>
-                </div>
-                <div style="float: left; width: 50%; text-align: center">
-                  <h3 style="font-size: 20px;">Qty: 1</h3> <!-- Attach to backend -->
-                  <% pr_price = product_price(product.id) %>
-                  <h4><%= format('$%.2f',pr_price[5]) %></h4>
-                  <% tax_array.push(pr_price[1]) %>
-                  <% cost_array.push(pr_price[5]) %>
-                </div>
-              </div>
-            </div>
 
               <script id="create-shape">
 
@@ -342,43 +342,73 @@
 
               </script>
 
-        <% end %>
-
-        <h3>ORDER DETAILS</h3>
-        <hr>
-        <div style="overflow: hidden; margin: 5px">
-          <% cost_t = 0 %>
-          <% cost_array.each do |cost| %>
-              <% cost_t = cost_t + cost %>
           <% end %>
-          <h4 class="t-right">Subtotal</h4><h4 class="s-left"><%= format('$%.2f', cost_t) %></h4>
-        </div>
 
-        <div style="overflow: hidden; margin: 5px">
-          <h4 class="t-right">Shipping</h4><h4 class="s-left">(Free US)</h4>
-        </div>
+          <h3>ORDER DETAILS</h3>
+          <hr>
+          <div style="overflow: hidden; margin: 5px">
+            <% cost_t = 0 %>
+            <% cost_array.each do |cost| %>
+                <% cost_t = cost_t + cost %>
+            <% end %>
+            <h4 class="t-right">Subtotal</h4><h4 class="s-left"><%= format('$%.2f', cost_t) %></h4>
+          </div>
 
-        <div style="overflow: hidden; margin: 5px">
-          <% tax_t = 0 %>
-          <% tax_array.each do |tax| %>
-              <% tax_t = tax_t + tax %>
+          <div style="overflow: hidden; margin: 5px">
+            <h4 class="t-right">Shipping</h4><h4 class="s-left">(Free US)</h4>
+          </div>
+
+          <div style="overflow: hidden; margin: 5px">
+            <% tax_t = 0 %>
+            <% tax_array.each do |tax| %>
+                <% tax_t = tax_t + tax %>
+            <% end %>
+            <h4 class="t-right">Estimated Tax</h4><h4 class="s-left"><%= format("$%.2f", tax_t) %></h4>
+          </div>
+
+          <% cart = get_cart.promotion_codes.first %>
+          <% if cart %>
+              <div style="overflow: hidden; margin: 40px 5px 5px;">
+                <h4 class="t-right">Sub total</h4>
+                <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
+              </div>
+
+              <div style="overflow: hidden; margin: 40px 5px 5px;">
+                <h4 class="t-right">Discount percentage</h4>
+                <h4 style="font-weight: lighter;" class="s-left"><%= cart.rate %>%</h4>
+              </div>
+
+              <div style="overflow: hidden; margin: 40px 5px 5px;">
+                <h4 class="t-right">Estimated total</h4>
+                <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart.rate/100))) %></h3>
+              </div>
+
+              <hr>
+
+              <input type="checkbox"> I agree to the terms and conditions.
+
+              <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart.rate/100))) %></button>
+              <div class="outcome">
+                <div id="error_hand"></div>
+              </div>
+
+          <% else %>
+
+              <div style="overflow: hidden; margin: 40px 5px 5px;">
+                <h4 class="t-right">Estimated total</h4>
+                <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
+              </div>
+
+              <hr>
+
+              <input type="checkbox"> I agree to the terms and conditions.
+
+              <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", tax_t + cost_t) %></button>
+              <div class="outcome">
+                <div id="error_hand"></div>
+              </div>
+
           <% end %>
-          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left"><%= format("$%.2f", tax_t) %></h4>
-        </div>
-
-        <div style="overflow: hidden; margin: 40px 5px 5px;">
-          <h4 class="t-right">Estimated total</h4>
-          <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
-        </div>
-
-        <hr>
-
-        <input type="checkbox"> I agree to the terms and conditions.
-
-        <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", tax_t + cost_t) %></button>
-        <div class="outcome">
-          <div id="error_hand"></div>
-        </div>
         </div>
       </div>
   <% end %>
