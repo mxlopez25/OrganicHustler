@@ -101,18 +101,24 @@ class CartController < ApplicationController
       begin
         charge = nil
 
+        amount = cost_t + tax_t
+        promo_code = get_cart.promotion_codes.first
+        if promo_code
+          amount = amount - (amount * (promo_code.rate / 100))
+        end
+
         if user['c_stripe_id']
           charge = Stripe::Charge.create(
-              :amount => ((cost_t + tax_t)*100).to_i,
+              :amount => (amount*100).to_i,
               :currency => "usd",
               :description => "Example charge",
               :customer => user.c_stripe_id,
           )
         else
           token = params[:token][:id]
-          p ((cost_t + tax_t)*100).to_i
+          p (amount*100).to_i
           charge = Stripe::Charge.create(
-              :amount => ((cost_t + tax_t)*100).to_i,
+              :amount => (amount*100).to_i,
               :currency => "usd",
               :description => "Example charge",
               :source => token,
@@ -150,6 +156,31 @@ class CartController < ApplicationController
     user = TempUser.find session[:temp_user_id]
     mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
     mail.deliver_now
+  end
+
+  def add_promo_code
+    promo = PromotionCode.find_by(code: params['promo_code'])
+    cart = Cart.find(params['cart_id'])
+
+    if !promo
+      render json: {code: 1000}.to_json
+    elsif promo.used
+      render json: {code: 1001}.to_json
+    elsif promo.limitUsage <= 0
+      promo.used = true
+      promo.save
+      render json: {code: 1002}.to_json
+    elsif Time.now > promo.timeAvailable
+      render json: {code: 1003}.to_json
+    elsif cart.promotion_codes.size == 1
+      render json: {code: 1004}.to_json
+    else
+      cart.promotion_codes << promo
+      promo.limitUsage = promo.limitUsage - 1
+      promo.save
+      render json: {code: 1005}.to_json
+    end
+
   end
 
 end

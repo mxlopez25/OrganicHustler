@@ -462,14 +462,9 @@ nav.sidebar, .main {
   /*Allow main to be next to Nav*/
   .main {
     position: absolute;
-    width: calc(100% - 40px); /*keeps 100% minus nav size*/
-    margin-left: 40px;
-    float: right;
-  }
-
-  /*lets nav bar to be showed on mouseover*/
-  nav.sidebar:hover + .main {
+    width: calc(100% - 200px); /*keeps 100% minus nav size*/
     margin-left: 200px;
+    float: right;
   }
 
   /*Center Brand*/
@@ -524,7 +519,7 @@ nav.sidebar, .main {
   nav.sidebar {
     width: 200px;
     height: 100%;
-    margin-left: -160px;
+    margin-left: 0;
     float: left;
     z-index: 8000;
     margin-bottom: 0;
@@ -535,10 +530,6 @@ nav.sidebar, .main {
     width: 100%;
   }
 
-  /* Move nav to full on mouse over*/
-  nav.sidebar:hover {
-    margin-left: 0;
-  }
   /*for hiden things when navbar hidden*/
   .forAnimate {
     opacity: 0;

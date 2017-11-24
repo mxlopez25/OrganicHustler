@@ -190,7 +190,7 @@
                     <h5>Bag id: <%= o.id %></h5>
                     <h5>Status: <%= product.state || o.state %></h5>
                     <h5>Product id: <%= product_temp['id'] %></h5>
-                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= format("$%.2f", product_price(product.id).last) %></h4>
+                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= format("$%.2f", product_price(product.id)[6]) %></h4>
                   </div>
                 </div>
             <% end %>

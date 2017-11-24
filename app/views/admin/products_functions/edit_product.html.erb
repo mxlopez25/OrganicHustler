@@ -1,40 +1,3 @@
-<head>
-  <!--Color picker-->
-  <%= stylesheet_link_tag 'spectrum.css' %>
-  <%= javascript_include_tag 'spectrum.js' %>
-</head>
-
-<nav class="navbar navbar-inverse sidebar" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">Organic Hustler</a>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/admin/home">Home<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-home"></span></a>
-        </li>
-        <li class="active">
-          <a href="/admin/products">Products<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-product-hunt"></span></a>
-        </li>
-        <li>
-          <a href="/admin/logos">Logos<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-picture-o"></span></a>
-        </li>
-        <li>
-          <a href="/admin/orders">Orders<span style="font-size:16px;" class="pull-right hidden-xs show opacity fa fa-truck"></span></a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
 <body style="background-color: #dedede">
 <div class="main">
 
@@ -73,10 +36,28 @@
       </select>
     </div>
 
-    <!--Status edit field-->
+    <!--Customizable edit field-->
     <div class="form-group">
       <label for="customizable_edit" style="float: left; width: 100%">Customizable</label>
       <select style="width: 100%" id="customizable_edit" name="status">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+
+    <!--Emblemable edit field-->
+    <div class="form-group">
+      <label for="emblemable_edit" style="float: left; width: 100%">Allow emblems</label>
+      <select style="width: 100%" id="emblemable_edit" name="status">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+
+    <!--Movable edit field-->
+    <div class="form-group">
+      <label for="movable_edit" style="float: left; width: 100%">Allow moving logos</label>
+      <select style="width: 100%" id="movable_edit" name="status">
         <option value="0">No</option>
         <option value="1">Yes</option>
       </select>
@@ -121,6 +102,8 @@
 
         $('select#status_edit').val('<%= product_i.status %>' === 'true' ? 1 : 0);
         $('select#customizable_edit').val('<%= product_i.customizable %>' === 'true' ? 1 : 0);
+        $('select#emblemable_edit').val('<%= product_i.emblemable %>' === 'true' ? 1 : 0);
+        $('select#movable_edit').val('<%= product_i.movable %>' === 'true' ? 1 : 0);
 
         function save_1(id) {
             $.ajax({
@@ -137,7 +120,9 @@
                         tax_band: $('input#tax_edit').val(),
                         stock: $('input#stock_level_edit').val(),
                         description: $('textarea#description_edit').val(),
-                        customizable: $('select#customizable_edit').val()
+                        customizable: $('select#customizable_edit').val(),
+                        emblemable: $('select#emblemable_edit').val(),
+                        movable: $('select#movable_edit').val()
                     }
                 },
                 success: function () {

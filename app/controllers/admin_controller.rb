@@ -29,13 +29,13 @@ class AdminController < ApplicationController
     render json: Category.all, code: 200
   end
 
-  def logo
-  end
-
   def orders
   end
 
   def mailer
+  end
+
+  def promo_code
   end
 
   def change_main_picture

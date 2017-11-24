@@ -200,14 +200,14 @@ module HomeHelper
     if order_id.nil?
       total_price = 0
       get_cart.cart_products.each do |t|
-        total_price += product_price(t.id).last
+        total_price += product_price(t.id)[6]
       end
 
       return total_price
     else
       total_price = 0
       Order.find(order_id).cart.cart_products.each do |t|
-        total_price += product_price(t.id).last
+        total_price += product_price(t.id)[6]
       end
 
       return total_price

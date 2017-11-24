@@ -188,7 +188,7 @@
                   <h5>Bag id: <%= o.id %></h5>
                   <h5>Status: <%= product.state || o.state %></h5>
                   <h5>Product id: <%= product_temp['id'] %></h5>
-                  <h4 class="text_light_pink" style="float: left; width: 100%; font-size: large; height: 35px;line-height: 35px;"><%= product_price(product.id).last.round(2) %>
+                  <h4 class="text_light_pink" style="float: left; width: 100%; font-size: large; height: 35px;line-height: 35px;"><%= product_price(product.id)[6].round(2) %>
                     $</h4>
                 </div>
               </div>

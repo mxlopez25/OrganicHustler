@@ -41,6 +41,7 @@ Rails.application.routes.draw do
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
+  patch '/cart/promo-code' => 'cart#add_promo_code'
   get '/mail_token' => 'cart#mail_token'
 
   get '/shopping_bag' => 'home#bag'
@@ -55,6 +56,7 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
+  get '/admin/promos' => 'admin#promo_code'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -148,5 +150,6 @@ Rails.application.routes.draw do
   resource :showcases
   resource :user_addresses
   resource :orders
+  resource :promotion_codes
 
 end
