@@ -44,11 +44,11 @@
     <div id="general_p_content" class="g-wrapper" style="position: relative">
       <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
       <div id="product_display" class="wrapper-side">
+        <div class="image-container-quick" id="image-container">
+        </div>
         <button id="slide-left" style="top: 0; bottom: 0; margin: auto; border: none; left: 0; float: left; position: absolute; width: 10%" href="#" class="jcarousel-control-prev">
           <i class="fa fa-chevron-left" aria-hidden="true"></i>
         </button>
-        <div class="image-container-quick" id="image-container">
-        </div>
         <button id="slide-right" style="top: 0; bottom: 0; margin: auto; border: none; right: 0; float: right; position: absolute; width: 10%" href="#" class="jcarousel-control-next">
           <i class="fa fa-chevron-right" aria-hidden="true"></i>
         </button>
@@ -145,11 +145,11 @@
                 </button>
               </div>
             </div>
-            <div style="width: 100%; text-align: center">
+            <div id="share-div" style="width: 100%; text-align: center">
               <button id="share" class="styling_btn btn">SHARE
               </button>
             </div>
-            <hr class="pro">
+            <hr id="bar" class="pro">
             <div id="icon-show-logos" class="hidden">
               <h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
             <div id="icon-hide-logos"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
@@ -167,10 +167,12 @@
               </button>
             </div>
 
+            <div id="jr-filler"></div>
+
             <div id="selection-btn-s">
               <button onclick="start_over(); load_view_2(product.data);" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
                 <span class="cell-btn">START OVER</span></button>
-              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
+              <button id="done-section-2" type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
                 DONE
               </button>
             </div>
@@ -529,7 +531,6 @@
 
     function load_data_preset(color_id, logo_id, x, y, multiplexer, picture_id) {
 
-        console.log('Hola');
         product.clean();
         product.color_id = color_id;
 
@@ -1013,7 +1014,7 @@
 
             fitStageIntoParentContainer();
             window.addEventListener('resize', fitStageIntoParentContainer);
-            $('.konvajs-content').each(function (index) {
+            $('#image-container').find('.konvajs-content').each(function (index) {
                 $(this)['0'].style.position = null;
             })
         }
@@ -1152,6 +1153,19 @@
         document.getElementById('view_1').style.display = 'none';
         document.getElementById('view_3').style.display = 'none';
         document.getElementById('view_2').style.display = 'block';
+
+        if (!product.data.emblemable) {
+            document.getElementById('done-section-2').onclick = function () {
+                addToCart();
+            }
+        }
+
+        if (!product.data.movable) {
+            document.getElementById('controllers').outerHTML = '';
+            document.getElementById('bar').outerHTML = '';
+            document.getElementById('jr-filler').innerHTML = document.getElementById('share-div').outerHTML;
+            document.getElementById('share-div').outerHTML = '<div style="height: 60px"></div>';
+        }
 
         var actor = document.getElementById('actor');
         var new_element = actor.cloneNode(true);
@@ -1794,7 +1808,6 @@
                     var carousel_jq = $('ul#container-presets');
 
                     for (var i = 0; i < data.length; i++) {
-                        console.log('d');
                         carousel_jq.append('<li><div onclick="load_data_preset(\'' + data[i].color_id + '\', \'' + data[i].logo_id + '\', \'' + data[i].x + '\', \'' + data[i].y + '\', \'' + data[i].multiplexer + '\', \'' + data[i].picture_id + '\');" style="width: 70px; height: 70px" id="div_preview_' + data[i].id + '"></div></li>');
                         if (data[i].id === id_preset_temp) {
                             load_data_preset(data[i].color_id, data[i].logo_id, data[i].x, data[i].y, data[i].multiplexer, data[i].picture_id);

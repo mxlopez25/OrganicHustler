@@ -62,7 +62,7 @@ class ProductController < ApplicationController
   end
 
   def basic_product_params(pr_params)
-    pr_params.permit(:title, :sku, :status, :price, :tax_band, :stock, :description, :customizable)
+    pr_params.permit(:title, :sku, :status, :price, :tax_band, :stock, :description, :customizable, :emblemable, :movable)
   end
 
   def title_params(params_s)
@@ -186,6 +186,8 @@ class ProductController < ApplicationController
     product.price = params['price']
     product.status = params['status']
     product.customizable = params['customizable']
+    product.emblemable = params['emblemable']
+    product.movable = params['movable']
     product.stock = params['stock']
     product.sku = params['sku']
     product.description = params['description']
