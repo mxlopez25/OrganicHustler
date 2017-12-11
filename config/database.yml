@@ -58,11 +58,12 @@ test:
 #
 production:
   port: 3306
-  url: <%= ENV['DATABASE_URL'] %>
-  database: OrganicHustler_production
-  username: <%= ENV['USERNAME_DB'] %>
+  database: OrganicHustler
+  username: root
   password: <%= ENV['PASSWORD_DB'] %>
   adapter: mysql2
   encoding: utf8
   reconnect: false
   pool: 5
+  host: 0.0.0.0
+  url: mysql2://0.0.0.0:3306
