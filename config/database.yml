@@ -59,7 +59,7 @@ test:
 production:
   port: 3306
   database: OrganicHustler
-  username: root
+  username: <%= ENV['USER_DB'] %>
   password: <%= ENV['PASSWORD_DB'] %>
   adapter: mysql2
   encoding: utf8
