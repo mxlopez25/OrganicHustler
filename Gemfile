@@ -5,13 +5,13 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '2.4.2'
+ruby '2.4.0'
 gem 'devise'
 gem 'moltin'
 gem 'rest-client'
 gem 'paperclip'
 gem 'aws-sdk', '~> 2.9.1'
-gem 'font-awesome-sass'
+gem 'font-awesome-rails'
 gem 'figaro'
 gem 'paperclip-ffmpeg', '~> 1.0.1'
 gem 'ffmpeg'
