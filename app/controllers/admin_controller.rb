@@ -38,6 +38,10 @@ class AdminController < ApplicationController
   def promo_code
   end
 
+  def tax_band
+
+  end
+
   def change_main_picture
     (Color.find params[:color_id]).change_main_photo(params[:photo_id])
   end
@@ -145,40 +149,6 @@ class AdminController < ApplicationController
     @id = params['variation_id']
     @product = params['source_product']
     render 'admin/products_functions/modify_variation'
-  end
-
-  def add_variation
-    p params
-    @product_id = params['source_product']
-    if request.method.eql?('GET')
-      @modifiers = []
-      AdminHelper.get_product_by_id(@product_id)['modifiers'].each do |modifiers|
-        @modifiers.push(modifiers)
-      end
-      render 'admin/products_functions/add_variation'
-    elsif request.method.eql?('POST')
-      p params['var_s']
-      case params['var_s']
-        when "0"
-          object = "{\"image_id\": \"#{params['id_pic']}\", \"x\": \"#{params['pos-x']}\", \"y\": \"#{params['pos-y']}\", \"width\": \"#{params['width-p']}\", \"height\": \"#{params['height-p']}\", \"s_w\": \"#{params['source_w']}\", \"s_h\": \"#{params['source_h']}\"}"
-          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: '+0'}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-        when "1"
-          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-        when "2"
-          object = "{\"code\": \"#{params['favcolor']}\", \"title\": \"#{params['changes']}\"}"
-          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: object, mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-        when "3"
-          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-        when "4"
-          RestClient.post("https://api.molt.in/v1/products/#{@product_id}/modifiers/#{params['modifier']}/variations", {title: params['changes'], mod_price: "#{params['sign']}#{params['price_mod']}"}, {:Authorization => "Bearer #{AdminHelper.generate_token}"})
-        else
-          # type code here
-      end
-
-      @product = AdminHelper.get_product_by_id(@product_id)
-
-      render 'admin/products_functions/edit_product'
-    end
   end
 
 end

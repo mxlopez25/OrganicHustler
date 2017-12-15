@@ -1,0 +1,62 @@
+<body style="background-color: #dedede">
+
+<div class="main">
+  <div style="margin: 20px; padding: 20px; overflow: hidden" class="card content-part-10">
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Title</span>
+      <input id="title" class="form-control" aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Amount</span>
+      <input id="rate" type="number" step="any" class="form-control" aria-describedby="basic-addon1">
+      <span class="input-group-addon">%</span>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Description</span>
+      <input id="description" class="form-control" aria-describedby="basic-addon1">
+    </div>
+
+    <button onclick="create()" style="width: 100%" class="btn btn-success">ADD</button>
+
+  </div>
+</div>
+
+<script>
+    function create() {
+        $.ajax({
+            url: '/tax_bands',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                taxes: {
+                    titulo: document.getElementById('title').value,
+                    amount: parseInt(document.getElementById('rate').value) / 100,
+                    description: document.getElementById('description').value
+                }
+            },
+            success: function (data) {
+                console.log(data);
+                window.location.href = '/admin/taxes';
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    function generateCode() {
+        var text = "";
+
+        for (var i = 0; i < 6; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        document.getElementById('code').value = text;
+    }
+
+</script>
+
+</body>

@@ -64,8 +64,9 @@
           <a href="/admin/promos">Promotion
             codes<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-qrcode"></span></a>
         </li>
-        <li <%= (request.original_url.include? 'taxes') ? 'class=active' : '' %>>
-          <a>Tax manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-tags"></span></a>
+        <li <%= (request.original_url.include? 'tax') ? 'class=active' : '' %>>
+          <a href="/admin/taxes">Tax
+            manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-tags"></span></a>
         </li>
         <li <%= (request.original_url.include? 'stats') ? 'class=active' : '' %>>
           <a>Statistics<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-bar-chart"></span></a>
