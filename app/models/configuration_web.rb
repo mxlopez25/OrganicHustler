@@ -1,0 +1,2 @@
+class ConfigurationWeb < ApplicationRecord
+end

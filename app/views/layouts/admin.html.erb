@@ -58,7 +58,7 @@
           <a href="/admin/mailer">Mailer<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-envelope"></span></a>
         </li>
         <li <%= (request.original_url.include? 'categories') ? 'class=active' : '' %>>
-          <a>Categories manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-list"></span></a>
+          <a href="/admin/categories">Categories manager<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-list"></span></a>
         </li>
         <li <%= (request.original_url.include? 'promo') ? 'class=active' : '' %>>
           <a href="/admin/promos">Promotion

@@ -58,6 +58,7 @@ Rails.application.routes.draw do
   get '/admin/orders/:id_o' => 'admin#order_details'
   get '/admin/promos' => 'admin#promo_code'
   get '/admin/taxes' => 'admin#tax_band'
+  get '/admin/categories' => 'admin#category'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -153,5 +154,7 @@ Rails.application.routes.draw do
   resource :orders
   resource :promotion_codes
   resource :tax_bands
+  resource :categories
+  resource :configuration_webs
 
 end

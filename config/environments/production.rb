@@ -88,7 +88,7 @@ Rails.application.configure do
   # config/environments/production.rb
 
   config.paperclip_defaults = {
-      :url => "/system/:rails_env/:class/:attachment/:id_partition/:style/:filename",
+      :url => "/system/production/:class/:attachment/:id_partition/:style/:filename",
       :path => ":rails_root/public:url"
   }
 

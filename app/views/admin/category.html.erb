@@ -1,0 +1,99 @@
+<body style="background-color: #dedede">
+<div class="main">
+
+  <div style="margin: 20px; padding: 20px; overflow: hidden" class="card content-part-10">
+
+    <div style="overflow: hidden" class="content-part-10">
+
+      <div style="padding: 0 10px;margin: 0" class="content-part-7">
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Title</span>
+          <input id="title" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <button style="margin-bottom: 5px; width: 100%" onclick="load_data()" class="btn btn-success">SEARCH</button>
+      </div>
+
+      <div style="padding: 0 10px;margin: 0" class="content-part-3">
+        <button onclick="window.location.href = '/categories/new'" style="margin-bottom: 5px; width: 100%" class="btn btn-success">ADD</button>
+        <button onclick="(selected !== null) ? (window.location.href = '/categories/edit?id='+selected.toString()) : null" style="margin-bottom: 5px; width: 100%" class="btn btn-warning">MODIFY</button>
+        <button onclick="(selected !== null) ? (destroy()) : null" style="margin-bottom: 5px; width: 100%" class="btn btn-danger" disabled >DELETE</button>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <table border="1" style="width: 100%">
+      <thead>
+      <tr>
+        <th></th>
+        <th>ID</th>
+        <th>Title</th>
+      </tr>
+      </thead>
+      <tbody id="data-table">
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+</body>
+
+<script>
+
+    var selected = null;
+
+    function select_row(id) {
+        $('input[name="radio_btn"]').each(function () {
+            alert(this.attr('id'))
+        });
+    }
+
+    function destroy() {
+        $.ajax({
+            url: '/categories?id=' + selected.toString(),
+            type: 'delete',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                window.location.href = '/admin/categories';
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function load_data() {
+        var data_table = document.getElementById('data-table');
+        var text = '';
+        $.ajax({
+            url: '/categories',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                title: document.getElementById('title').value
+            },
+            success: function (data) {
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    text = text +
+                        '<tr>' +
+                        '<td><input id="' + data[i]['id'] + '" name="radio_btn" type="radio" onclick="selected = \'' + data[i]['id'] + '\'"></td>' +
+                        '<td>' + data[i]['id'] + '</td>' +
+                        '<td>' + data[i]['title'] + '</td>' +
+                        '</tr>';
+                }
+                data_table.innerHTML = text;
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    load_data();
+
+</script>

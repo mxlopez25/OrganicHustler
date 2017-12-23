@@ -39,7 +39,9 @@ class AdminController < ApplicationController
   end
 
   def tax_band
+  end
 
+  def category
   end
 
   def change_main_picture
