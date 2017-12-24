@@ -1145,240 +1145,259 @@
         $("#slide-left").prop("disabled", true);
         $("#slide-right").prop("disabled", true);
 
-        ACTUAL_VIEW = product.views[current_pointer];
-        ACTUAL_LOGO = ACTUAL_VIEW.konva_elements.logo;
-
-        document.getElementById('view_2').outerHTML = view_2.outerHTML;
-
-        document.getElementById('view_1').style.display = 'none';
-        document.getElementById('view_3').style.display = 'none';
-        document.getElementById('view_2').style.display = 'block';
-
-        if (!product.data.emblemable) {
-            document.getElementById('done-section-2').onclick = function () {
-                addToCart();
-            }
-        }
-
-        if (!product.data.movable) {
-            document.getElementById('controllers').outerHTML = '';
-            document.getElementById('bar').outerHTML = '';
-            document.getElementById('jr-filler').innerHTML = document.getElementById('share-div').outerHTML;
-            document.getElementById('share-div').outerHTML = '<div style="height: 60px"></div>';
-        }
-
-        var actor = document.getElementById('actor');
-        var new_element = actor.cloneNode(true);
-        new_element.addEventListener("click", function () {
-            load_view_1(product_)
-        });
-        new_element.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
-        actor.parentNode.replaceChild(new_element, actor);
-
-        load_colors(product_.id);
-
-        if (GROUP) {
-            GROUP.draggable(false);
-            GROUP.off('dragstart');
-            GROUP.off('mousedown');
-            GROUP.off('dragend');
-            GROUP.off('mouseup');
-        }
-
-        for (var i = 0; i < product.views.length; i++) {
-            var temp_view = product.views[i].konva_elements.logo;
-            if (temp_view) {
-                temp_view.draggable(true);
-            }
-        }
-
         $.ajax({
-            url: '/catalog/product/logos?product_id=' + product.product_id,
+            url: '/catalog/product/color/images',
             type: 'GET',
             dataType: 'json',
-            data: {},
+            data: {
+                color_id: product.color_id
+            },
             success: function (data) {
                 console.log(data);
-
-                var carousel_jq = $('ul#container-logos');
-
-                for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\', ' + current_pointer + ')"></li>');
+                if (product.views.length === 0) {
+                    create_objects_array(data);
                 }
-
-                var jcarouselSelector = '.jcarousel';
-
-                $(jcarouselSelector).reloadJcarousel();
-
-                $('.jcarousel-control-prev').jcarouselControl({
-                    // Options go here
-                    target: '-=1'
-                });
-                $('.jcarousel-control-next').jcarouselControl({
-                    // Options go here
-                    target: '+=1'
-                });
-                $('div#preview_size_cr_carousel').jcarousel('reload');
             },
             error: function (data) {
-
+                console.log(data);
             }
-        });
+        }).done(function () {
 
-        var iconShow = $("#icon-show-logos");
-        var iconHide = $("#icon-hide-logos");
-        var loader = $("#icon_loader-logos");
+            ACTUAL_VIEW = product.views[current_pointer];
+            ACTUAL_LOGO = ACTUAL_VIEW.konva_elements.logo;
 
-        iconShow.click(function () {
-            loader.animate({
-                height: 70
-            }, 100, function () {
-                loader.css({
-                    overflow: 'visible'
-                });
+            document.getElementById('view_2').outerHTML = view_2.outerHTML;
+
+            document.getElementById('view_1').style.display = 'none';
+            document.getElementById('view_3').style.display = 'none';
+            document.getElementById('view_2').style.display = 'block';
+
+            if (!product.data.emblemable) {
+                document.getElementById('done-section-2').onclick = function () {
+                    addToCart();
+                }
+            }
+
+            if (!product.data.movable) {
+                document.getElementById('controllers').outerHTML = '';
+                document.getElementById('bar').outerHTML = '';
+                document.getElementById('jr-filler').innerHTML = document.getElementById('share-div').outerHTML;
+                document.getElementById('share-div').outerHTML = '<div style="height: 60px"></div>';
+            }
+
+            var actor = document.getElementById('actor');
+            var new_element = actor.cloneNode(true);
+            new_element.addEventListener("click", function () {
+                load_view_1(product_)
             });
-            iconShow.addClass(" hidden");
-            iconHide.removeClass(" hidden");
-        });
+            new_element.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
+            actor.parentNode.replaceChild(new_element, actor);
 
-        iconHide.click(function () {
-            loader.animate({
-                height: 0
-            }, 100, function () {
-                loader.css({
-                    overflow: 'hidden'
-                });
+            load_colors(product_.id);
+
+            if (GROUP) {
+                GROUP.draggable(false);
+                GROUP.off('dragstart');
+                GROUP.off('mousedown');
+                GROUP.off('dragend');
+                GROUP.off('mouseup');
+            }
+
+            for (var i = 0; i < product.views.length; i++) {
+                var temp_view = product.views[i].konva_elements.logo;
+                if (temp_view) {
+                    temp_view.draggable(true);
+                }
+            }
+
+            $.ajax({
+                url: '/catalog/product/logos?product_id=' + product.product_id,
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    console.log(data);
+
+                    var carousel_jq = $('ul#container-logos');
+
+                    for (var i = 0; i < data.length; i++) {
+                        carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\', ' + current_pointer + ')"></li>');
+                    }
+
+                    var jcarouselSelector = '.jcarousel';
+
+                    $(jcarouselSelector).reloadJcarousel();
+
+                    $('.jcarousel-control-prev').jcarouselControl({
+                        // Options go here
+                        target: '-=1'
+                    });
+                    $('.jcarousel-control-next').jcarouselControl({
+                        // Options go here
+                        target: '+=1'
+                    });
+                    $('div#preview_size_cr_carousel').jcarousel('reload');
+                },
+                error: function (data) {
+
+                }
             });
-            iconHide.addClass(" hidden");
-            iconShow.removeClass(" hidden");
-        });
 
-        var anim_zoom_in = new Konva.Animation(function (frame) {
+            var iconShow = $("#icon-show-logos");
+            var iconHide = $("#icon-hide-logos");
+            var loader = $("#icon_loader-logos");
 
-            console.log(ACTUAL_LOGO);
-            console.log(ACTUAL_VIEW);
-            if (ACTUAL_LOGO !== null) {
-                ACTUAL_LOGO.scale({
-                    x: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff,
-                    y: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff
+            iconShow.click(function () {
+                loader.animate({
+                    height: 70
+                }, 100, function () {
+                    loader.css({
+                        overflow: 'visible'
+                    });
                 });
-                LAYER.draw();
+                iconShow.addClass(" hidden");
+                iconHide.removeClass(" hidden");
+            });
 
-                ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff;
-            }
-        }, LAYER);
-
-        var anim_zoom_out = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null) {
-
-                ACTUAL_LOGO.scale({
-                    x: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff,
-                    y: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff
+            iconHide.click(function () {
+                loader.animate({
+                    height: 0
+                }, 100, function () {
+                    loader.css({
+                        overflow: 'hidden'
+                    });
                 });
-                LAYER.draw();
+                iconHide.addClass(" hidden");
+                iconShow.removeClass(" hidden");
+            });
 
-                ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff;
-            }
-        }, LAYER);
+            var anim_zoom_in = new Konva.Animation(function (frame) {
 
-        var anim_right = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.x + ACTUAL_LOGO.getClientRect().width) < 500) {
-                ACTUAL_LOGO.x(ACTUAL_LOGO.x() + (105 * frame.timeDiff / 1000));
-                LAYER.draw();
+                console.log(ACTUAL_LOGO);
+                console.log(ACTUAL_VIEW);
+                if (ACTUAL_LOGO !== null) {
+                    ACTUAL_LOGO.scale({
+                        x: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff,
+                        y: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff
+                    });
+                    LAYER.draw();
 
-                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
-                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
-            }
-        }, LAYER);
+                    ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff;
+                }
+            }, LAYER);
 
-        var anim_left = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null && ACTUAL_VIEW.x > 0) {
-                ACTUAL_LOGO.x(ACTUAL_LOGO.x() - (105 * frame.timeDiff / 1000));
-                LAYER.draw();
+            var anim_zoom_out = new Konva.Animation(function (frame) {
+                if (ACTUAL_LOGO !== null) {
 
-                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
-                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
-            }
-        }, LAYER);
+                    ACTUAL_LOGO.scale({
+                        x: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff,
+                        y: ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff
+                    });
+                    LAYER.draw();
 
-        var anim_up = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null && ACTUAL_VIEW.y > 0) {
-                ACTUAL_LOGO.y(ACTUAL_LOGO.y() - (105 * frame.timeDiff / 1000));
-                LAYER.draw();
+                    ACTUAL_VIEW.multiplexer = ACTUAL_VIEW.multiplexer - 0.0005 * frame.timeDiff;
+                }
+            }, LAYER);
 
-                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
-                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
-            }
-        }, LAYER);
+            var anim_right = new Konva.Animation(function (frame) {
+                if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.x + ACTUAL_LOGO.getClientRect().width) < 500) {
+                    ACTUAL_LOGO.x(ACTUAL_LOGO.x() + (105 * frame.timeDiff / 1000));
+                    LAYER.draw();
 
-        var anim_down = new Konva.Animation(function (frame) {
-            if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.y + ACTUAL_LOGO.getClientRect().height) < 500) {
-                ACTUAL_LOGO.y(ACTUAL_LOGO.y() + (105 * frame.timeDiff / 1000));
-                LAYER.draw();
+                    ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                    ACTUAL_VIEW.y = ACTUAL_LOGO.y();
+                }
+            }, LAYER);
 
-                ACTUAL_VIEW.x = ACTUAL_LOGO.x();
-                ACTUAL_VIEW.y = ACTUAL_LOGO.y();
-            }
-        }, LAYER);
+            var anim_left = new Konva.Animation(function (frame) {
+                if (ACTUAL_LOGO !== null && ACTUAL_VIEW.x > 0) {
+                    ACTUAL_LOGO.x(ACTUAL_LOGO.x() - (105 * frame.timeDiff / 1000));
+                    LAYER.draw();
 
-        var btn_up = $("#up-btn");
-        var btn_down = $("#down-btn");
-        var btn_left = $("#left-btn");
-        var btn_right = $("#right-btn");
-        var btn_minus = $("#minus-btn");
-        var btn_plus = $("#plus-btn");
-        var btn_restart = $("#restart-btn");
+                    ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                    ACTUAL_VIEW.y = ACTUAL_LOGO.y();
+                }
+            }, LAYER);
 
-        btn_minus.on('mousedown touchstart', function () {
-            anim_zoom_out.start();
+            var anim_up = new Konva.Animation(function (frame) {
+                if (ACTUAL_LOGO !== null && ACTUAL_VIEW.y > 0) {
+                    ACTUAL_LOGO.y(ACTUAL_LOGO.y() - (105 * frame.timeDiff / 1000));
+                    LAYER.draw();
+
+                    ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                    ACTUAL_VIEW.y = ACTUAL_LOGO.y();
+                }
+            }, LAYER);
+
+            var anim_down = new Konva.Animation(function (frame) {
+                if (ACTUAL_LOGO !== null && (ACTUAL_VIEW.y + ACTUAL_LOGO.getClientRect().height) < 500) {
+                    ACTUAL_LOGO.y(ACTUAL_LOGO.y() + (105 * frame.timeDiff / 1000));
+                    LAYER.draw();
+
+                    ACTUAL_VIEW.x = ACTUAL_LOGO.x();
+                    ACTUAL_VIEW.y = ACTUAL_LOGO.y();
+                }
+            }, LAYER);
+
+            var btn_up = $("#up-btn");
+            var btn_down = $("#down-btn");
+            var btn_left = $("#left-btn");
+            var btn_right = $("#right-btn");
+            var btn_minus = $("#minus-btn");
+            var btn_plus = $("#plus-btn");
+            var btn_restart = $("#restart-btn");
+
+            btn_minus.on('mousedown touchstart', function () {
+                anim_zoom_out.start();
+            });
+
+            btn_minus.on('mouseup touchend', function () {
+                anim_zoom_out.stop();
+            });
+
+            btn_plus.on('mousedown touchstart', function () {
+                anim_zoom_in.start();
+            });
+
+            btn_plus.on('mouseup touchend', function () {
+                anim_zoom_in.stop();
+            });
+
+            btn_up.on('mousedown touchstart', function () {
+                anim_up.start();
+            });
+
+            btn_up.on('mouseup touchend', function () {
+                anim_up.stop();
+            });
+
+            btn_down.on('mousedown touchstart', function () {
+                anim_down.start();
+            });
+
+            btn_down.on('mouseup touchend', function () {
+                anim_down.stop();
+            });
+
+            btn_left.on('mousedown touchstart', function () {
+                anim_left.start();
+            });
+
+            btn_left.on('mouseup touchend', function () {
+                anim_left.stop();
+            });
+
+            btn_right.on('mousedown touchstart', function () {
+                anim_right.start();
+            });
+
+            btn_right.on('mouseup touchend', function () {
+                anim_right.stop();
+            });
+
+            $('#quick_view, #general_p_content').animate({scrollTop: '0px'}, 500);
+
         });
-
-        btn_minus.on('mouseup touchend', function () {
-            anim_zoom_out.stop();
-        });
-
-        btn_plus.on('mousedown touchstart', function () {
-            anim_zoom_in.start();
-        });
-
-        btn_plus.on('mouseup touchend', function () {
-            anim_zoom_in.stop();
-        });
-
-        btn_up.on('mousedown touchstart', function () {
-            anim_up.start();
-        });
-
-        btn_up.on('mouseup touchend', function () {
-            anim_up.stop();
-        });
-
-        btn_down.on('mousedown touchstart', function () {
-            anim_down.start();
-        });
-
-        btn_down.on('mouseup touchend', function () {
-            anim_down.stop();
-        });
-
-        btn_left.on('mousedown touchstart', function () {
-            anim_left.start();
-        });
-
-        btn_left.on('mouseup touchend', function () {
-            anim_left.stop();
-        });
-
-        btn_right.on('mousedown touchstart', function () {
-            anim_right.start();
-        });
-
-        btn_right.on('mouseup touchend', function () {
-            anim_right.stop();
-        });
-
-        $('#quick_view, #general_p_content').animate({scrollTop: '0px'}, 500);
-
     }
 
     function change_source(id) {
@@ -2572,6 +2591,11 @@
                 if (search_f.is(":focus") && (e.keyCode === 13)) {
                     location.href = '/catalog?search=' + search_f.val();
                 }
+
+                var search_2 = $("#search-bot");
+                if (search_2.is(":focus") && (e.keyCode === 13)) {
+                    location.href = '/catalog?search=' + search_2.val();
+                }
             });
         </script>
 
@@ -2579,8 +2603,8 @@
       <% if @parameters.nil? || params['action'] != 'catalog' %>
           <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get in Touch
           </button>
-          <button style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</button>
-          <button style="float: left" type="button" class="btn btn-link">Twitter</button>
+          <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</a>
+          <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>" style="float: left" type="button" class="btn btn-link">Twitter</a>
       <% else %>
           <h5 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 400; padding-right: 5px; float: left;">Your
             Items
@@ -2654,8 +2678,8 @@
       <br>
       <br>
       <h5 style="color: #A4A4A4;"> STORY </h5>
-      <h5 style="color: #A4A4A4;"> SHOP MEN</h5>
-      <h5 style="color: #A4A4A4;"> SHOP WOMEN </h5>
+      <h5 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h5>
+      <h5 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP WOMEN </h5>
       <h5 style="color: #A4A4A4;"> CONTACT US</h5>
 
 
@@ -2665,11 +2689,11 @@
       <h3 style="color: white;">SHOP</h3>
       <br>
       <br>
-      <h5 style="color: #A4A4A4;">LOOKS </h5>
-      <h5 style="color: #A4A4A4;"> HATS</h5>
-      <h5 style="color: #A4A4A4;">MEN </h5>
-      <h5 style="color: #A4A4A4;"> WOMEN</h5>
-      <h5 style="color: #A4A4A4;"> MEN</h5>
+      <h5 onclick="location.href = '/catalog?looks=true&view=looks'" style="color: #A4A4A4; cursor: pointer">LOOKS </h5>
+      <h5 onclick="location.href = '/catalog?hats=true&view=hats'" style="color: #A4A4A4; cursor: pointer"> HATS</h5>
+      <h5 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> MEN </h5>
+      <h5 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> WOMEN</h5>
+      <h5 onclick="location.href = '/catalog?brand=true&view=brand'" style="color: #A4A4A4; cursor: pointer"> BRAND</h5>
 
 
     </div>
@@ -2693,18 +2717,18 @@
       </div>
 
 
-      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
+      <h3 id="subscriber" style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
       <%= form_tag root_path, method: :post do %>
-          <% if !@notice %>
-              <input class="foot-form" type="text" name="email" placeholder="Email Address">
+          <% if params['success'].eql? 'true' %>
+          <input class="foot-form" type="text" name="email" placeholder="Successfully saved!">
           <% else %>
-              <input class="foot-form" type="text" name="email" placeholder="Successfully saved">
+          <input class="foot-form" type="text" name="email" placeholder="Email Address">
           <% end %>
       <% end %>
 
 
       <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> SEARCH SHOP</h3>
-      <input class="foot-form" type="text" name="">
+      <input id="search-bot" class="foot-form" type="text" name="" value="<%= params['search'] %>">
 
       <div>
         <img src="/images/logo_sm" style="width: 30px; margin-top: 50px;">

@@ -7,6 +7,9 @@ class HomeController < ApplicationController
   before_action :authenticate_user!, only: 'account'
 
   def index
+
+    @config_products = ConfigurationWeb.where content_type: 1
+
   end
 
   def colored_image
@@ -450,9 +453,11 @@ class HomeController < ApplicationController
   def subscribe
 
     subscriber = Subscriber.new(email: params['email'])
-    subscriber.save!
-
-    redirect_to root_path
+    if subscriber.save!
+      redirect_to '?success=true#subscriber'
+    else
+      redirect_to '?success=false#subscriber'
+    end
   end
 
   #SHOWCASES

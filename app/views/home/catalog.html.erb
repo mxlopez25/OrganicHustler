@@ -179,17 +179,6 @@
                         + '</div>';
                     document.getElementById('items').innerHTML = html_items;
 
-                    /*$.ajax({
-                        url: '/catalog/product/main_image?pr_id=' + data[id].id,
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {},
-                        success: function (data) {
-                            console.log('item_img_' + data.id);
-                            document.getElementById('item_img_' + data.id).src = data.src;
-                        }
-                    });*/
-
                     $.ajax({
                         url: '/catalog/product/colors?product_id=' + data[id].id,
                         type: 'GET',

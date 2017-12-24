@@ -51,12 +51,12 @@
                   }
 
                   html = html + '<div class="item ' + active + ' ">\n' +
-                      '          <img onclick="location.href = \'/catalog?id=' + data[i]['id'] + '&looks=true&view=looks\'" src="' + data[i]['product_image_id'] + '" style="height: 200px; margin: 10px auto;">\n' +
+                      '          <img onclick="open_quick(\''+ data[i]['id'] +'\', 1)" src="' + data[i]['product_image_id'] + '" style="height: 200px; margin: 10px auto;">\n' +
                       '          <div class="carousel-cap">\n' +
                       '            <p class="text_light">' + data[i]['title'] + '<br>Eco-Friendly + Customizable</p>\n' +
                       '          </div>\n' +
                       '          <div class="desktopnot" style="margin-left: auto; margin-right:auto; text-align: center;">\n' +
-                      '            <button onclick="location.href = \'/catalog?id=' + data[i]['id'] + '&view=2&looks=true&view=looks\'" class="btn styling_btn">CUSTOMIZE</button>\n' +
+                      '            <button onclick="open_quick(\''+ data[i]['id'] +'\', 1)" class="btn styling_btn">CUSTOMIZE</button>\n' +
                       '          </div>\n' +
                       '        </div>';
               }
@@ -157,12 +157,13 @@
 <div class="container mobilenot">
   <div style="position: relative">
 
+    <% product = Product.all.first %>
     <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
-      <img id="img_1" src="<%= Product.all.first.colors.first.product_images.first.picture %>" style="height: 370px;">
+      <img onclick="open_quick('<%= product.id %>', <%= product.customizable ? 2 : 1 %>)" id="img_1" src="<%= product.colors.first.product_images.first.picture %>" style="height: 370px;">
       <h4 id="title_1" class="text-center text_light"></h4>
       <h5 class="text-center text_light">Eco-Friendly+Customizable</h5>
       <article>
-        <button id="customize_1" class="button styling_btn btn">CUSTOMIZE</button>
+        <button onclick="open_quick('<%= product.id %>', <%= product.customizable ? 2 : 1 %>)" id="customize_1" class="button styling_btn btn">CUSTOMIZE</button>
       </article>
     </div>
 
@@ -176,7 +177,7 @@
 
 <script>
 
-    load_list(0, 'primary_product', 1);
+    load_side_elements(<%= @config_products.where(title: 'Main product')[0].value %>, 1);
 
     function load_side_elements(id, dd) {
         $.ajax({
@@ -188,13 +189,13 @@
                 console.log(data);
 
                 var side_list = $('#side-list-' + dd);
-
+                //data[i].id
                 for (var i = 0; i < data.length; i++) {
-                    side_list.append('<div onclick="location.href = \'/catalog?id=' + id + '&looks=true&view=looks&preset_id=' + data[i].id + '\'" id="div_preview_' + dd + '_' + data[i].id + '" class="img4 selectable" style="margin: 5px auto;width: 100px;">\n' +
+                    side_list.append('<div onclick="open_quick(\'' + id + '\',1)" id="div_preview_' + dd + '_' + data[i].id + '" class="img4 selectable" style="margin: 5px auto;width: 100px;">\n' +
                         '      </div>');
                 }
 
-                side_list.append('<button onclick="location.href = \'/catalog?id=' + id + '&looks=true&view=looks\'" class="btn-sm btn-link center-block" style="color:black;  ">' +
+                side_list.append('<button onclick="open_quick(\' '+ id +' \',1)" class="btn-sm btn-link center-block" style="color:black;  ">' +
                     '<h4 class="text_light" style="font-style: italic"> MORE </h4>' +
                     '</button>');
 
@@ -281,29 +282,6 @@
         });
     }
 
-    function load_list(screen, title, id) {
-        $.ajax({
-            url: '/home/showcase/product',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                screen: screen,
-                name_entity: title
-            },
-            success: function (data) {
-                load_side_elements(data['id'], id);
-                document.getElementById('img_' + id).src = data['product_image_id'];
-                document.getElementById('title_' + id).innerHTML = data['title'];
-                document.getElementById('customize_' + id).onclick = function () {
-                    location.href = '/catalog?id=' + data['id'] + '&looks=true&view=looks'
-                }
-            },
-            error: function (data) {
-                console.log(data)
-            }
-        });
-    }
-
 </script>
 
 
@@ -340,7 +318,7 @@
   </div>
 
   <script>
-      load_list(3, 'product_showcase_variations_2', 2)
+      load_side_elements(<%= @config_products.where(title: 'Product 1')[0].value %>, 2);
   </script>
 
 </div>
@@ -353,7 +331,7 @@
   <p class="text_light" style="margin-bottom: 20px">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
-    <button onclick="location.href = '/catalog?men=true&view=men'" class="btn styling_btn">SHOP WOMEN</button>
+    <button onclick="location.href = '/catalog?women=true&view=women'" class="btn styling_btn">SHOP WOMEN</button>
   </article>
 
   <div id="side-list-3" class="side-list mobilenot">
@@ -362,7 +340,7 @@
   </div>
 
   <script>
-      load_list(3, 'product_showcase_variations_3', 3);
+      load_side_elements(<%= @config_products.where(title: 'Product 2')[0].value %>, 3);
   </script>
 
 </div>
@@ -388,9 +366,9 @@
 <div class="desktopnot" style="margin-top: 20px">
   <div style="margin-left: auto; margin-right: auto; text-align: center">
     <div class="showcase-add">
-      <img style="width: 100%;" src="<%= url_to_image 'index/al.jpg' %>" align="middle">
+      <video style="width: 100%;" id="video_desk" loop muted src="/videos/index/v_1"></video>
       <p class="text-center">Organic Hustler Video 1</p>
-      <button class="center-block  btn-sm btn-link" style="color:black; ">VIEW ></button>
+      <a href="#video-player" class="center-block  btn-sm btn-link" style="color:black; ">VIEW ></a>
     </div>
 
     <div style="width: 1px; margin-left: 2.5%; margin-right: 2.5%; float: left; height: 150px; background: #b692a2">
@@ -398,9 +376,9 @@
 
 
     <div class="showcase-add">
-      <img style="width: 100%;" src="<%= url_to_image 'index/th.jpg' %>" align="middle">
+      <video style="width: 100%;" id="video_desk" loop muted src="/videos/index/v_1"></video>
       <p class="text-center">Organic Hustler Video 2</p>
-      <button class="  btn-sm btn-link center-block" style="color:black;  "> VIEW ></button>
+      <a href="#video-player" class="btn-sm btn-link center-block" style="color:black;  "> VIEW ></a>
     </div>
   </div>
 </div>
@@ -409,7 +387,7 @@
 <div style="width: 75%" class="container mobilenot">
   <div class="row row-centered" style="position: relative; height: 250px">
     <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: auto;" class="col-xs-5 col-lg-5 text-center center col-cen col-centered  ">
-      <a href="https://instagram.com/"><img class="img1lg" src="/images/index/m4" align="left"></a>
+      <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>"><img class="img1lg" src="/images/index/m4" align="left"></a>
     </div>
 
     <div style="width: 1px; float: left; height: 150px; background: #b692a2; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
@@ -417,7 +395,7 @@
 
 
     <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: auto; right: 0;" class="col-xs-5 col-lg-5 text-center center col-cen col-centered ">
-      <a href="https://twitter.com/"><img class="img2lg" src="/images/index/m5" align="right"></a>
+      <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>"><img class="img2lg" src="/images/index/m5" align="right"></a>
     </div>
   </div>
 </div>
@@ -426,9 +404,9 @@
 
   <div class=" text-center center col-cen col-centered " style="margin-top: 8px;">
 
-    <img class="img3" src="<%= url_to_image 'index/sun.jpg' %>" align="middle" style="width: 200px; height: 150px; margin: auto;display: block;">
+    <img class="img3" src="/images/index/m4" align="middle" style="width: 200px; height: 150px; margin: auto;display: block;">
     <p class="text-center " style="margin-top: 15px;">Organic Hustler Video 3</p>
-    <button class="btn styling_btn" style="width: auto">FOLLOW US ON INSTAGRAM</button>
+    <button onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>'" class="btn styling_btn" style="width: auto">FOLLOW US ON INSTAGRAM</button>
 
 
   </div>
@@ -438,7 +416,7 @@
 
   <div class=" text-center center col-cen col-centered " style="margin-top: 30px; margin-bottom: 30px;">
 
-    <button class="btn styling_btn">FOLLOW US ON INSTAGRAM</button>
+    <button onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>'" class="btn styling_btn">FOLLOW US ON INSTAGRAM</button>
 
 
   </div>
