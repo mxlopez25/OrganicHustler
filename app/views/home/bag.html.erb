@@ -11,33 +11,71 @@
         var Stage = {};
     </script>
 
-    <% CartProduct.where(cart_id: get_cart_id).each do |product| %>
-        <% product_temp = get_product_l(product.product_id) %>
+    <%
+      products_partial = []
+      CartProduct.where(cart_id: get_cart_id).each do |cp|
+        ne_p = cp.as_json
+        ne_p.merge!('qty' => 1)
+        ne_p.merge!('consolidated' => false)
+        products_partial << ne_p
+      end
+
+      products = products_partial
+
+      (0..products_partial.length - 1).each {|i|
+
+        pr = products_partial[i]
+
+        unless pr['consolidated']
+          products_partial.each do |dl|
+            if (dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == dl['has_logo'] && pr['product_id'] == dl['product_id'])
+              tem_pr = CartProduct.find(pr['id'])
+              tem_dl = CartProduct.find(pr['id'])
+
+              if (tem_pr.custom_logos == tem_dl.custom_logos && tem_pr.custom_emblems == tem_dl.custom_emblems)
+                dl['consolidated'] = true
+                products[i]['qty'] = products[i]['qty'] + 1
+              end
+            end
+          end
+        end
+      }
+
+    %>
+
+    <% products.each do |product| %>
+
+
+      <% pr_price = product_price(product['id']) %>
+      <% tax_array.push(pr_price[1]) %>
+      <% cost_array.push(pr_price[5]) %>
+
+      <% unless product['consolidated'] %>
+
+        <% product_temp = get_product_l(product['product_id']) %>
         <div class="item-checkout" style="padding-bottom: 20px; overflow: hidden; border-bottom: thin black solid">
-          <div onclick="edit_catalog(<%= product.id %>)" style="float: left; width: 33%; position: relative">
-          <div id="cart<%= product.id %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
+          <div style="float: left; width: 33%; position: relative">
+          <div id="cart<%= product['id'] %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>
         </div>
           <div style="float: right; width: 63%; position: relative">
-          <h4 class="text_light text-uppercase"><%= product_temp['title'] %></h4>
-          <% pr_price = product_price(product.id) %>
-            <h4 class="text_light_pink"><%= format("$%.2f", pr_price[5]) %></h4>
-
-          <div style="float: left; width: 50%">
-            <h6 class="text_light" style="font-weight: 400">Size: <%= (Size.find product.size_id).title %></h6>
-            <h6 class="text_light" style="font-weight: 400">Customized:
-              <% if product.has_emblem %>YES
-              <% elsif product.has_logo %>YES
-              <% else %>NO
-              <% end %></h6>
-            <h6 class="text_light" style="font-weight: 400">Color: <%= (Color.find product.color_id).title %></h6>
+            <h4 style="width: 80%"><%= product_temp['title'] %></h4>
+            <a onclick="delete_element('<%= product['id'] %>')" style="width: 20%; position: absolute; color: #2E2F30; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            <div style="float: left; width: 50%">
+              <h6>Size: <%= (Size.find product['size_id']).title %></h6>
+              <h6>Customized:
+                <% if product['has_emblem'] %>YES
+                <% elsif product['has_logo'] %>YES
+                <% else %>NO
+                <% end %></h6>
+              <h6>Color: <%= (Color.find product['color_id']).title %></h6>
+            </div>
+            <div style="float: left; width: 50%; text-align: center">
+              <h3 style="font-size: 20px;">Qty: <%= product['qty'] %></h3>
+              <h4><%= format('$%.2f', pr_price[5]) %></h4>
+            </div>
+            <button type="button" id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-sp btn" onclick="edit_catalog(<%= product['id'] %>)">EDIT
+            </button>
           </div>
-          <div style="float: left; width: 50%; text-align: center">
-            <h3 style="margin: 10px; padding-top: 15px; padding-bottom: 15px; font-size: 20px;">Qty:
-              1</h3> <!-- Attach to backend -->
-            <% tax_array.push(pr_price[1]) %>
-            <% cost_array.push(pr_price[5]) %>
-          </div>
-        </div>
       </div>
 
       <script id="create-shape">
@@ -45,7 +83,7 @@
           var stageWidth = 500;
           var stageHeight = 500;
 
-          createShape('cart<%= product.id %>', null, null, null, null, null, '<%= product.color_id %>');
+          createShape('cart<%= product['id'] %>', null, null, null, null, null, '<%= product['color_id'] %>');
 
           function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id, emblem_id) {
               var container = $('#' + id);
@@ -89,89 +127,19 @@
                       console.log(data);
                   }
               });
-
-              /*var logoImg = new Konva.Image({
-                  x: stageWidth * x / s_w,
-                  y: stageHeight * y / s_h
-              });
-              layer.add(logoImg);
-
-              var imageObj2 = new Image();
-              imageObj2.onload = function () {
-                  logoImg.image(imageObj2);
-                  logoImg.scale({
-                      x: stageWidth * multiplexer / s_w,
-                      y: stageHeight * multiplexer / s_h
-                  });
-                  layer.draw();
-              };
-
-              if (logo_id !== null) {
-                  $.ajax({
-                      url: '/catalog/product/logo?logo_id=' + logo_id,
-                      type: 'GET',
-                      dataType: 'text',
-                      data: {},
-                      success: function (data) {
-                          imageObj2.src = data
-                      },
-                      error: function (data) {
-                          console.log(data);
-                      }
-                  });
-              }
-
-              var emblem = new Konva.Image({
-                  x: 0,
-                  y: 0
-              });
-              layer.add(emblem);
-
-              var imageEmblem = new Image();
-              imageEmblem.onload = function () {
-                  emblem.image(imageEmblem);
-                  emblem.setWidth(this.width);
-                  emblem.setHeight(this.height);
-                  layer.draw();
-              };
-
-              if (emblem_id !== null) {
-
-
-                  $.ajax({
-                      url: '/catalog/product/emblem?emblem_id=' + emblem_id,
-                      type: 'GET',
-                      dataType: 'json',
-                      data: {},
-                      success: function (data) {
-                          emblem.setX(stageWidth * data.x / 500);
-                          emblem.setY(stageWidth * data.y / 500);
-                          emblem.scale({
-                              x: stageWidth * data.multiplexer / 500,
-                              y: stageWidth * data.multiplexer / 500
-                          });
-                          imageEmblem.src = data.src;
-
-                      },
-                      error: function (data) {
-                          console.log(data);
-                      }
-                  });
-              }*/
-
               layer.draw();
           }
 
           function fitStageIntoParentContainer_we() {
-              var container = $('#cart<%= product.id %>');
+              var container = $('#cart<%= product['id'] %>');
               container.height(container.width());
 
               // now we need to fit stage into parent
               var containerWidth = container.width();
               // to do this we need to scale the stage
               var scale = containerWidth / stageWidth;
-              Stage['cart<%= product.id %>'].scale({x: scale, y: scale});
-              Stage['cart<%= product.id %>'].draw();
+              Stage['cart<%= product['id'] %>'].scale({x: scale, y: scale});
+              Stage['cart<%= product['id'] %>'].draw();
           }
 
           fitStageIntoParentContainer_we();
@@ -180,7 +148,10 @@
 
       </script>
 
-  <% end %>
+  <% end end %>
+
+    <button class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: left; margin-bottom: 20px; color: black; border-color: black" onclick="clear_bag();">CLEAR BAG</button>
+    <button class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: right; margin-bottom: 20px; color: black; border-color: black" onclick="location.href = '/'">CONTINUE SHOPPING</button>
 
 </div>
   <div style="position: relative; border-width: 1px" class="content-part preview-cart content-part-10">

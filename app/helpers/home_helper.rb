@@ -156,7 +156,7 @@ module HomeHelper
       p user.cart
     end
 
-    user.cart.n_products
+    user.cart.cart_products.length
   end
 
   def get_products_catalog(parameters)
