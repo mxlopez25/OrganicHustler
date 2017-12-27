@@ -2070,6 +2070,12 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<script>
+    function close_modal_a() {
+        document.getElementsByTagName('body')[0].classList.remove('modal-open');
+        modal.style.display = "none";
+    }
+</script>
 
 <div id="myModal" style="z-index: 100;" class="modal">
 
@@ -2077,7 +2083,7 @@
     <div id="triangle" class="triangle mobilenot"></div>
     <!-- Modal content -->
     <div id="modal_c" style="padding: 0; position: relative; top: auto; box-shadow: 0 0; margin-top: 0" class="modal-content">
-      <span class="close">&times;</span>
+      <span onclick="close_modal_a()" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
       <div class="modal_c_part">
         <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin: 10px auto;">Your
           Bag</h3>
@@ -2318,7 +2324,9 @@
                     bagModal.style.width = '100%';
                     bagModal.style.margin = 'auto';
                     bagModal.style.height = '100%';
-                    modal_c.style.height = '100%';
+
+                    modal_c.style.top = '20px';
+                    modal_c.style.height = '550px';
 
                     if ($(window).width() > 468) {
 
@@ -2431,13 +2439,71 @@
                     dataType: 'json',
                     data: {},
                     success: function (data) {
-                        imageBase.src = data.picture
+                        imageBase.src = data.picture;
+
+                        var baseLogo = new Konva.Image({
+                            x: 0,
+                            y: 0,
+                            width: container.width(),
+                            height: container.height(),
+                            draggable: false,
+                            preventDefault: false
+                        });
+                        layer.add(baseLogo);
+
+                        var logoBase = new Image();
+                        logoBase.onload = function () {
+                            baseLogo.image(logoBase);
+                            baseLogo.setWidth(this.width / 500 * container.width());
+                            baseLogo.setHeight(this.height / 500 * container.height());
+                        };
+
+                        $.ajax({
+                            url: '/get_cart_item?product_cart_id=' + preview.id,
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {},
+                            success: function (data) {
+                                console.log(data);
+                                var logo = data.logos[0];
+                                if (logo) {
+                                    logoBase.src = logo.logo_url;
+
+                                    var image = getImage(data.pictures, logo.product_image_id);
+                                    if (image) {
+                                        imageBase.src = image.url;
+                                    }
+                                    baseLogo.setX(logo.x / 500 * container.width());
+                                    baseLogo.setY(logo.y / 500 * container.height());
+                                    baseLogo.scale({
+                                        x: logo.multiplexer,
+                                        y: logo.multiplexer
+                                    });
+
+                                    layer.draw();
+                                }
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+
                     },
                     error: function (data) {
                         console.log(data);
                     }
                 });
+
             }
+
+            function getImage(array, id) {
+                for(var i = 0; i < array.length; i++){
+                    if (array[i].id === parseInt(id)){
+                        return array[i];
+                    }
+                }
+            }
+
         </script>
       </div>
 
@@ -2477,11 +2543,11 @@
         <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 37px"><%= a = get_item_count; (a == 0 ? '' : a)  %></span>
         <% if user_signed_in? %>
             <h5 class="link-style">
-              <a href="/account">ACCOUNT</a>
+              <a style="display: none" href="/account">ACCOUNT</a>
             </h5>
         <% else %>
             <h5 class="link-style">
-              <a href="/account">LOG IN</a>
+              <a style="display: none" href="/account">LOG IN</a>
             </h5>
         <% end %>
       </div>
@@ -2523,11 +2589,11 @@
         <input id="search-input" style="background: #f0f5e6;margin-top: 8px; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
         <% if user_signed_in? %>
             <h5 class="link-style">
-              <a href="/account">ACCOUNT</a>
+              <a style="display: none" href="/account">ACCOUNT</a>
             </h5>
         <% else %>
             <h5 class="link-style">
-              <a href="/account">LOG IN</a>
+              <a style="display: none" href="/account">LOG IN</a>
             </h5>
         <% end %>
         <img style="float: right; z-index: 3;" id="cart_ic_2" class="cart_ic" src="/images/bag_icon">
@@ -2650,13 +2716,11 @@
       <h3 style="color: white;"> FIND US AT</h3>
       <br>
       <br>
-      <h5 style="color: #A4A4A4;"> INSTAGRAM </h5>
-      <h5 style="color: #A4A4A4;"> TWITTER </h5>
-      <h5 style="color: #A4A4A4;"> YOUTUBE</h5>
-      <h5 style="color: #A4A4A4;"> FACEBOOK</h5>
-      <h5 style="color: #A4A4A4;"> E-MAIL</h5>
-
-
+      <h5 onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>' " style="color: #A4A4A4; cursor: pointer"> INSTAGRAM </h5>
+      <h5 onclick="location.href = 'https://twitter.com/<%= ConfigurationWeb.find(1).value %>' " style="color: #A4A4A4; cursor: pointer"> TWITTER </h5>
+      <h5 onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="color: #A4A4A4; cursor: pointer"> YOUTUBE</h5>
+      <h5 onclick="location.href = 'https://facebook.com/<%= ConfigurationWeb.find(2).value %>' " style="color: #A4A4A4; cursor: pointer"> FACEBOOK</h5>
+      <h5 class="uppercase" style="color: #A4A4A4;"><%= ConfigurationWeb.find(9).value %></h5>
     </div>
 
     <div class="col-sm-6">

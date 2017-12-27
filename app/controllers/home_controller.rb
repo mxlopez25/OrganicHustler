@@ -308,6 +308,12 @@ class HomeController < ApplicationController
     color = al.colors.where(preferred: true).first
     al.attributes.merge(main_color: color)
 
+    pictures_array = []
+    color.product_images.each do |prff|
+      n_prff = prff.as_json.merge!(url: prff.picture)
+      pictures_array << n_prff
+    end
+
     product = {
         id: cart_product.id,
         source_data: JSON::parse(al.to_json).merge({main_color: color}),
@@ -323,6 +329,7 @@ class HomeController < ApplicationController
             code_hex: color.code_hex,
         },
         picture: product_image.picture,
+        pictures: pictures_array,
         logos: [],
         emblems: [],
         has_logo: cart_product.has_logo,
@@ -334,6 +341,7 @@ class HomeController < ApplicationController
           product_image_id: cl.product_image_id,
           color_id: cl.color_id,
           logo_id: cl.logo_id,
+          logo_url: Logo.find(cl.logo_id).picture,
           x: cl.x,
           y: cl.y,
           multiplexer: cl.multiplexer

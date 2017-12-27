@@ -28,11 +28,11 @@
 
         unless pr['consolidated']
           products_partial.each do |dl|
-            if (dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == dl['has_logo'] && pr['product_id'] == dl['product_id'])
+            if (dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id'])
               tem_pr = CartProduct.find(pr['id'])
               tem_dl = CartProduct.find(pr['id'])
 
-              if (tem_pr.custom_logos == tem_dl.custom_logos && tem_pr.custom_emblems == tem_dl.custom_emblems)
+              if (tem_pr.custom_emblems == tem_dl.custom_emblems)
                 dl['consolidated'] = true
                 products[i]['qty'] = products[i]['qty'] + 1
               end
@@ -121,7 +121,55 @@
                   dataType: 'json',
                   data: {},
                   success: function (data) {
-                      imageObj1.src = data.picture
+                      imageObj1.src = data.picture;
+
+                      var baseLogo = new Konva.Image({
+                          x: 0,
+                          y: 0,
+                          width: container.width(),
+                          height: container.height(),
+                          draggable: false,
+                          preventDefault: false
+                      });
+                      layer.add(baseLogo);
+
+                      var logoBase = new Image();
+                      logoBase.onload = function () {
+                          baseLogo.image(logoBase);
+                          baseLogo.setWidth(this.width);
+                          baseLogo.setHeight(this.height);
+                      };
+
+                      $.ajax({
+                          url: '/get_cart_item?product_cart_id=' + <%= product['id'] %>,
+                          type: 'GET',
+                          dataType: 'json',
+                          data: {},
+                          success: function (data) {
+                              console.log(data);
+                              var logo = data.logos[0];
+                              if (logo) {
+                                  logoBase.src = logo.logo_url;
+
+                                  var image = getImage(data.pictures, logo.product_image_id);
+                                  if (image) {
+                                      imageObj1.src = image.url;
+                                  }
+                                  baseLogo.setX(logo.x);
+                                  baseLogo.setY(logo.y);
+                                  baseLogo.scale({
+                                      x: logo.multiplexer,
+                                      y: logo.multiplexer
+                                  });
+
+                                  layer.draw();
+                              }
+                          },
+                          error: function (data) {
+                              console.log(data);
+                          }
+                      });
+
                   },
                   error: function (data) {
                       console.log(data);
