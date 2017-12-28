@@ -10,6 +10,7 @@ class HomeController < ApplicationController
 
     @config_products = ConfigurationWeb.where content_type: 1
     @cart_product_shared = params['cp']
+    @shared_image = 'https://eat24hours.com/files/cuisines/v4/thai.jpg?e24v=103?e24v=178?e24v=178'
 
   end
 
