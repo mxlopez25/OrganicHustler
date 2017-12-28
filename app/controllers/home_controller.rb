@@ -17,7 +17,7 @@ class HomeController < ApplicationController
   def save_to_share
     product = CartProduct.create! do |u|
       u.product_id = params[:product][:product_id]
-      u.size_id = params[:product][:size_id]
+      u.size_id = 1
       u.color_id = params[:product][:color_id]
     end
 
