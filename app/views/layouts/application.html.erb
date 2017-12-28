@@ -173,13 +173,23 @@
 
               <script>
                   function show_socials() {
-                      var button_share = document.getElementById('share');
-                      button_share.outerHTML =
-                          '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp=360 &link=http://organichustler.com?cp=360 &picture=<%= @shared_image %> &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
-                          '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp=360 Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n' +
-                          '    <a onclick="window.open(this.href, \'Google+\', \'width=450,height=530\'); return false;" href="https://plus.google.com/share?url=http://organichustler.com/?cp=360" style="color: white; width: 80%; margin: 2px; background-color: #dd4b39" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-google-plus"></span>Google plus</a>\n' +
-                          '    <a href="whatsapp://send?text=http://organichustler.com/?cp=360 Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>';
-                  }
+                      $.ajax({
+                          type: "POST",
+                          url: "/share",
+                          data: {
+                              product: product.send_info()
+                          },
+                          success: function (data, status, xhr) {
+                              var button_share = document.getElementById('share');
+                              button_share.outerHTML =
+                                  '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp='+ data +' &link=http://organichustler.com?cp='+ data +' &picture=<%= @shared_image %> &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
+                                  '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp='+ data +' Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n' +
+                                  '    <a onclick="window.open(this.href, \'Google+\', \'width=450,height=530\'); return false;" href="https://plus.google.com/share?url=http://organichustler.com/?cp='+ data +'" style="color: white; width: 80%; margin: 2px; background-color: #dd4b39" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-google-plus"></span>Google plus</a>\n' +
+                                  '    <a href="whatsapp://send?text=http://organichustler.com/?cp='+ data +' Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>';
+                          },
+                          dataType: 'json'
+                      });
+                      }
               </script>
 
             </div>

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
   get '/home/showcase/product' => 'home#get_showcase_product'
+  post '/share' => 'home#save_to_share'
 
   get '/account' => 'home#account'
   get '/cancel_order' => 'home#cancel_order'

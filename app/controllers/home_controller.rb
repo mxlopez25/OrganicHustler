@@ -14,6 +14,53 @@ class HomeController < ApplicationController
 
   end
 
+  def save_to_share
+    product = CartProduct.create! do |u|
+      u.product_id = params[:product][:product_id]
+      u.size_id = params[:product][:size_id]
+      u.color_id = params[:product][:color_id]
+    end
+
+    params[:product][:views].each do |index|
+
+      custom_view = params[:product][:views][index]
+
+      unless custom_view[:logo_id].blank?
+        product.custom_logos << CustomLogo.create! do |cl|
+          cl.product_image_id = custom_view[:picture_id]
+          cl.color_id = custom_view[:color_id]
+          cl.logo_id = custom_view[:logo_id]
+          cl.x = custom_view[:x]
+          cl.y = custom_view[:y]
+          cl.multiplexer = custom_view[:multiplexer]
+        end
+      end
+
+      unless custom_view[:position_emblem_id].blank?
+        product.custom_emblems << CustomEmblem.create! do |ce|
+          ce.product_image_id = custom_view[:picture_id]
+          ce.color_id = custom_view[:color_id]
+          ce.position_emblem_admin_id = custom_view[:position_emblem_id]
+        end
+      end
+    end
+
+    if product.custom_logos.length > 0
+      product.has_logo = true
+    else
+      product.has_logo = false
+    end
+
+    if product.custom_emblems.length > 0
+      product.has_emblem = true
+    else
+      product.has_emblem = false
+    end
+
+    product.save!
+    render text: product.id, status: :ok
+  end
+
   def colored_image
     pr_id = params['pr_id']
     mod = params['mod']
