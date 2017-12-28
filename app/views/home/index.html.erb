@@ -375,6 +375,8 @@
     </div>
 
 
+
+
     <div class="showcase-add">
       <video style="width: 100%;" id="video_desk" loop muted src="/videos/index/v_1"></video>
       <p class="text-center">Organic Hustler Video 2</p>
@@ -408,7 +410,6 @@
     <p class="text-center " style="margin-top: 15px;">Organic Hustler Video 3</p>
     <button onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>'" class="btn styling_btn" style="width: auto">FOLLOW US ON INSTAGRAM</button>
 
-
   </div>
 </div>
 
@@ -423,40 +424,9 @@
   <span style="width: 100%" class="hr2 desktopnot"></span>
 </div>
 
-<div class="desktopnot">
-
-  <div style="overflow: hidden; margin: 30px auto;border: solid 1px #b692a2; padding: 10px" class="desktopnot">
-    <a style="color: black; width: 24%" class="btn"><span class="fa fa-facebook"></span></a>
-    <a style="color: black; width: 24%" class="btn"><span class="fa fa-twitter"></span></a>
-    <a style="color: black; width: 24%" class="btn"><span class="fa fa-instagram"></span></a>
-    <a style="color: black; width: 24%" class="btn"><span class="fa fa-google"></span></a>
-  </div>
-
-</div>
-
-<div class="container-fluid blc desktopnot">
-  <div class="row" style="margin-top: 20px;">
-    <h3 style="color: white;"> BRAND</h3>
-    <br>
-    <h4 style="color: #A4A4A4;"> STORY </h4>
-    <h4 style="color: #A4A4A4;"> SHOP MEN</h4>
-    <h4 style="color: #A4A4A4;"> SHOP WOMEN </h4>
-    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
-    <br>
-    <h3 style="color: white;"> SHOP</h3>
-    <br>
-    <h4 style="color: #A4A4A4;"> STORY </h4>
-    <h4 style="color: #A4A4A4;"> SHOP MEN</h4>
-    <h4 style="color: #A4A4A4;"> SHOP WOMEN </h4>
-    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
-    <br>
-    <h3 style="color: white;"> VISIT</h3>
-    <h4 style="color: #A4A4A4; margin-bottom: 30px; margin-top: 10px;"> 12 ERICSSON STREET <br> BOSTON, MA Q2122</h4>
-
-    <img src="/images/logo_sm" style="width: 60px;">
-
-    <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
-
-
-  </div>
-</div>
+<script>
+    if ( <%= @cart_product_shared %> ){
+        replicate_cart_product('<%= @cart_product_shared %>');
+        $('head').append('<meta property="og:image" content="https://static.pexels.com/photos/70497/pexels-photo-70497.jpeg" />');
+    }
+</script>

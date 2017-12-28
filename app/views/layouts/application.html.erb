@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:fb="http://ogp.me/ns/fb#">
 <head>
 
   <meta charset="utf-8">
@@ -2147,6 +2148,74 @@
 
             var ACTUAL_CART_ITEM_EDIT = null;
 
+            function replicate_cart_product(id) {
+                OVERALL_MODE = false;
+                ACTUAL_CART_ITEM_EDIT = id;
+                $.ajax({
+                    url: '/get_cart_item',
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        product_cart_id: id
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        product.data = data['source_data'];
+                        product.product_id = data['source_data']['id'];
+                        product.color_id = data['color']['id'];
+                        product.size_id = data['size']['id'];
+
+                        $.ajax({
+                            url: '/catalog/product/color/images',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                color_id: product.color_id
+                            },
+                            success: function (data_) {
+                                if (product.views.length === 0) {
+                                    create_objects_array(data_);
+                                }
+
+                                for (var i = 0; i < data['logos'].length; i++) {
+                                    var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.logo_id = data['logos'][i]['logo_id'];
+                                        modified_view.x = parseFloat(data['logos'][i]['x']);
+                                        modified_view.y = parseFloat(data['logos'][i]['y']);
+                                        modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                                    }
+                                }
+
+                                for (var j = 0; j < data['emblems'].length; j++) {
+                                    var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                                    }
+                                }
+
+                                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                                load_viewer();
+                                load_view_1(product.data);
+
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+                        console.log(product);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                var body = $("body");
+                body.addClass("modal-open");
+                body.css('overflow', 'hidden');
+                modal_quick.style.display = "block";
+            }
+
             function edit_catalog(id) {
                 document.getElementsByTagName('body')[0].classList.remove('modal-open');
                 modal.style.display = "none";
@@ -2684,6 +2753,44 @@
 
 </body>
 
+<div class="desktopnot">
+
+  <div style="overflow: hidden; margin: 30px auto;border: solid 1px #b692a2; padding: 10px" class="desktopnot">
+    <a onclick="location.href = 'https://facebook.com/<%= ConfigurationWeb.find(2).value %>' " style="color: black; width: 24%" class="btn"><span class="fa fa-facebook"></span></a>
+    <a onclick="location.href = 'https://twitter.com/<%= ConfigurationWeb.find(1).value %>' " style="color: black; width: 24%" class="btn"><span class="fa fa-twitter"></span></a>
+    <a onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>' " style="color: black; width: 24%" class="btn"><span class="fa fa-instagram"></span></a>
+    <a onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="color: black; width: 24%" class="btn"><span class="fa fa-youtube"></span></a>
+  </div>
+
+</div>
+
+<div class="container-fluid blc desktopnot">
+  <div class="row" style="margin-top: 20px;">
+    <h3 style="color: white;"> BRAND</h3>
+    <br>
+    <h4 style="color: #A4A4A4;"> STORY </h4>
+    <h4 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h4>
+    <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP WOMEN </h4>
+    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
+    <br>
+    <h3 style="color: white;"> SHOP</h3>
+    <br>
+    <h4 style="color: #A4A4A4;"> STORY </h4>
+    <h4 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h4>
+    <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP WOMEN </h4>
+    <h4 style="color: #A4A4A4;"> CONTACT US</h4>
+    <br>
+    <h3 style="color: white;"> VISIT</h3>
+    <h4 style="color: #A4A4A4; margin-bottom: 30px; margin-top: 10px;"> 12 ERICSSON STREET <br> BOSTON, MA Q2122</h4>
+
+    <img src="/images/logo_sm" style="width: 60px;">
+
+    <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
+
+
+  </div>
+</div>
+
 <div class="container-fluid blc mobilenot">
   <div class="row" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
 
@@ -2718,7 +2825,7 @@
       <br>
       <h5 onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>' " style="color: #A4A4A4; cursor: pointer"> INSTAGRAM </h5>
       <h5 onclick="location.href = 'https://twitter.com/<%= ConfigurationWeb.find(1).value %>' " style="color: #A4A4A4; cursor: pointer"> TWITTER </h5>
-      <h5 onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="color: #A4A4A4; cursor: pointer"> YOUTUBE</h5>
+      <h5 onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="color: #A4A4A4; cursor: pointer"> YOUTUBE </h5>
       <h5 onclick="location.href = 'https://facebook.com/<%= ConfigurationWeb.find(2).value %>' " style="color: #A4A4A4; cursor: pointer"> FACEBOOK</h5>
       <h5 class="uppercase" style="color: #A4A4A4;"><%= ConfigurationWeb.find(9).value %></h5>
     </div>

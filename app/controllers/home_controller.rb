@@ -9,6 +9,7 @@ class HomeController < ApplicationController
   def index
 
     @config_products = ConfigurationWeb.where content_type: 1
+    @cart_product_shared = params['cp']
 
   end
 
