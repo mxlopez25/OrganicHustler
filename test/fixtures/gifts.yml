@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rate: 9.99
+  code: MyString
+  limit_usage: 1
+  time_available: 2017-12-30 18:51:05
+  used: false
+
+two:
+  rate: 9.99
+  code: MyString
+  limit_usage: 1
+  time_available: 2017-12-30 18:51:05
+  used: false
