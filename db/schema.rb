@@ -90,12 +90,12 @@ ActiveRecord::Schema.define(version: 20171223102541) do
     t.string   "main_picture"
   end
 
-  create_table "configurations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "configuration_webs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "title"
-    t.text     "value",      limit: 65535
-    t.integer  "type"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.text     "value",        limit: 65535
+    t.integer  "content_type"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "custom_emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
