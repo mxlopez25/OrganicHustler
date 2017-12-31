@@ -113,7 +113,13 @@
 
       <h3>GIFT OPTIONS</h3>
 
-      <div class="content-part content-part-10">
+      <div class="content-part content-part-10 field-data">
+        <label>
+          <div>CODE</div>
+        </label>
+        <span id="alert_messenger_g" style="width: auto" class="label label-warning"></span>
+        <input id="promo_code_g" name="promo_code" class="field" placeholder="XXXXXX" value="<%= user.cart.gifts.first&.code %>">
+        <button onclick="apply_gift()" class="btn btn-sp" type="button">APPLY</button>
         <hr>
       </div>
 
@@ -130,6 +136,38 @@
       </div>
 
       <script>
+
+          function apply_gift() {
+              $.ajax({
+                  url: '/cart/gift-code',
+                  type: 'patch',
+                  dataType: 'json',
+                  data: {
+                      cart_id: '<%= user.cart.id %>',
+                      promo_code: document.getElementById('promo_code_g').value
+                  },
+                  success: function (data, statusText, xhr) {
+                      console.log(data);
+                      if (data.code === 1005) {
+                          window.location.reload(true);
+                      } else if (data.code === 1004) {
+                          document.getElementById('alert_messenger_g').innerHTML = 'ALREADY USED'
+                      } else if (data.code === 1003) {
+                          document.getElementById('alert_messenger_g').innerHTML = 'PROMOTION EXPIRED'
+                      } else if (data.code === 1002) {
+                          document.getElementById('alert_messenger_g').innerHTML = 'MAXIMUM AMOUNT OF USERS REACHED'
+                      } else if (data.code === 1001) {
+                          document.getElementById('alert_messenger_g').innerHTML = 'ALREADY USED'
+                      } else if (data.code === 1000) {
+                          document.getElementById('alert_messenger_g').innerHTML = 'DOESN\'T EXIST'
+                      }
+                  },
+                  error: function (data) {
+
+                  }
+              });
+          }
+
           function apply_promo() {
               $.ajax({
                   url: '/cart/promo-code',
@@ -220,155 +258,159 @@
           <% cost_array.push(pr_price[5]) %>
 
           <% unless product['consolidated'] %>
-          <% product_temp = get_product_l(product['product_id']) %>
-          <div class="item-checkout" style="margin-bottom: 20px">
-            <div style="float: left; width: 33%; position: relative">
-              <div id="cart<%= product['id'] %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;">
+            <% product_temp = get_product_l(product['product_id']) %>
+            <div class="item-checkout" style="margin-bottom: 20px">
+              <div style="float: left; width: 33%; position: relative">
+                <div id="cart<%= product['id'] %>" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;">
 
+                </div>
+              </div>
+              <div style="float: right; width: 63%; position: relative">
+                <h4 style="width: 80%"><%= product_temp['title'] %></h4>
+                <a onclick="delete_element('<%= product['id'] %>', 't', true)" style="width: 20%; position: absolute; color: #2E2F30; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                <div style="float: left; width: 50%">
+                  <h6>Size: <%= (Size.find product['size_id']).title %></h6>
+                  <h6>Customized:
+                    <% if product['has_emblem'] %>YES
+                    <% elsif product['has_logo'] %>YES
+                    <% else %>NO
+                    <% end %></h6>
+                  <h6>Color: <%= (Color.find product['color_id']).title %></h6>
+                </div>
+                <div style="float: left; width: 50%; text-align: center">
+                  <h3 style="font-size: 20px;">Qty: <%= product['qty'] %></h3>
+                  <h4><%= format('$%.2f', pr_price[5]) %></h4>
+                </div>
+                <button type="button" id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-sp btn" onclick="edit_catalog(<%= product['id'] %>)">EDIT
+                </button>
               </div>
             </div>
-            <div style="float: right; width: 63%; position: relative">
-              <h4 style="width: 80%"><%= product_temp['title'] %></h4>
-              <a onclick="delete_element('<%= product['id'] %>', 't', true)" style="width: 20%; position: absolute; color: #2E2F30; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-trash" aria-hidden="true"></i></a>
-              <div style="float: left; width: 50%">
-                <h6>Size: <%= (Size.find product['size_id']).title %></h6>
-                <h6>Customized:
-                  <% if product['has_emblem'] %>YES
-                  <% elsif product['has_logo']%>YES
-                  <% else %>NO
-                  <% end %></h6>
-                <h6>Color: <%= (Color.find product['color_id']).title %></h6>
-              </div>
-              <div style="float: left; width: 50%; text-align: center">
-                <h3 style="font-size: 20px;">Qty: <%= product['qty'] %></h3>
-                <h4><%= format('$%.2f', pr_price[5]) %></h4>
-              </div>
-              <button type="button" id="replacesable_button_edit" style="width: 49%; margin-top: 10px; float: right" class="btn-sp btn" onclick="edit_catalog(<%= product['id'] %>)">EDIT
-              </button>
-            </div>
-          </div>
 
-          <script id="create-shape">
+            <script id="create-shape">
 
-              var stageWidth = 500;
-              var stageHeight = 500;
+                var stageWidth = 500;
+                var stageHeight = 500;
 
-              createShape('cart<%= product['id'] %>', '<%= product['color_id'] %>');
+                createShape('cart<%= product['id'] %>', '<%= product['color_id'] %>');
 
-              function createShape(id, color_id) {
-                  var container = $('#' + id);
-                  container.height(container.width());
+                function createShape(id, color_id) {
+                    var container = $('#' + id);
+                    container.height(container.width());
 
-                  var stage = new Konva.Stage({
-                      container: id,
-                      width: stageWidth,
-                      height: stageHeight,
-                      preventDefault: false
-                  });
-                  var layer = new Konva.Layer();
-                  stage.add(layer);
+                    var stage = new Konva.Stage({
+                        container: id,
+                        width: stageWidth,
+                        height: stageHeight,
+                        preventDefault: false
+                    });
+                    var layer = new Konva.Layer();
+                    stage.add(layer);
 
-                  Stage[id] = stage;
+                    Stage[id] = stage;
 
-                  var baseImg = new Konva.Image({
-                      width: stageWidth,
-                      height: stageHeight,
-                      draggable: false,
-                      preventDefault: false
-                  });
-                  layer.add(baseImg);
+                    var baseImg = new Konva.Image({
+                        width: stageWidth,
+                        height: stageHeight,
+                        draggable: false,
+                        preventDefault: false
+                    });
+                    layer.add(baseImg);
 
-                  var imageObj1 = new Image();
-                  imageObj1.onload = function () {
-                      baseImg.image(imageObj1);
-                      layer.draw();
-                  };
+                    var imageObj1 = new Image();
+                    imageObj1.onload = function () {
+                        baseImg.image(imageObj1);
+                        layer.draw();
+                    };
 
-                  $.ajax({
-                      url: '/catalog/product/color/main_image?color_id=' + color_id,
-                      type: 'GET',
-                      dataType: 'json',
-                      data: {},
-                      success: function (data) {
-                          imageObj1.src = data.picture;
+                    $.ajax({
+                        url: '/catalog/product/color/main_image?color_id=' + color_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            imageObj1.src = data.picture;
 
-                          var baseLogo = new Konva.Image({
-                              x: 0,
-                              y: 0,
-                              width: container.width(),
-                              height: container.height(),
-                              draggable: false,
-                              preventDefault: false
-                          });
-                          layer.add(baseLogo);
+                            var baseLogo = new Konva.Image({
+                                x: 0,
+                                y: 0,
+                                width: container.width(),
+                                height: container.height(),
+                                draggable: false,
+                                preventDefault: false
+                            });
+                            layer.add(baseLogo);
 
-                          var logoBase = new Image();
-                          logoBase.onload = function () {
-                              baseLogo.image(logoBase);
-                              baseLogo.setWidth(this.width);
-                              baseLogo.setHeight(this.height);
-                          };
+                            var logoBase = new Image();
+                            logoBase.onload = function () {
+                                baseLogo.image(logoBase);
+                                baseLogo.setWidth(this.width);
+                                baseLogo.setHeight(this.height);
+                            };
 
-                          $.ajax({
-                              url: '/get_cart_item?product_cart_id=' + <%= product['id'] %>,
-                              type: 'GET',
-                              dataType: 'json',
-                              data: {},
-                              success: function (data) {
-                                  console.log(data);
-                                  var logo = data.logos[0];
-                                  if (logo) {
-                                      logoBase.src = logo.logo_url;
+                            $.ajax({
+                                url: '/get_cart_item?product_cart_id=' + <%= product['id'] %>,
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {},
+                                success: function (data) {
+                                    console.log(data);
+                                    var logo = data.logos[0];
+                                    if (logo) {
+                                        logoBase.src = logo.logo_url;
 
-                                      var image = getImage(data.pictures, logo.product_image_id);
-                                      if (image) {
-                                          imageObj1.src = image.url;
-                                      }
-                                      baseLogo.setX(logo.x);
-                                      baseLogo.setY(logo.y);
-                                      baseLogo.scale({
-                                          x: logo.multiplexer,
-                                          y: logo.multiplexer
-                                      });
+                                        var image = getImage(data.pictures, logo.product_image_id);
+                                        if (image) {
+                                            imageObj1.src = image.url;
+                                        }
+                                        baseLogo.setX(logo.x);
+                                        baseLogo.setY(logo.y);
+                                        baseLogo.scale({
+                                            x: logo.multiplexer,
+                                            y: logo.multiplexer
+                                        });
 
-                                      layer.draw();
-                                  }
-                              },
-                              error: function (data) {
-                                  console.log(data);
-                              }
-                          });
-                      },
-                      error: function (data) {
-                          console.log(data);
-                      }
-                  });
+                                        layer.draw();
+                                    }
+                                },
+                                error: function (data) {
+                                    console.log(data);
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
 
-                  layer.draw();
-              }
+                    layer.draw();
+                }
 
-              function fitStageIntoParentContainer_we() {
-                  var container = $('#cart<%= product['id'] %>');
-                  container.height(container.width());
+                function fitStageIntoParentContainer_we() {
+                    var container = $('#cart<%= product['id'] %>');
+                    container.height(container.width());
 
-                  // now we need to fit stage into parent
-                  var containerWidth = container.width();
-                  // to do this we need to scale the stage
-                  var scale = containerWidth / stageWidth;
-                  Stage['cart<%= product['id'] %>'].scale({x: scale, y: scale});
-                  Stage['cart<%= product['id'] %>'].draw();
-              }
+                    // now we need to fit stage into parent
+                    var containerWidth = container.width();
+                    // to do this we need to scale the stage
+                    var scale = containerWidth / stageWidth;
+                    Stage['cart<%= product['id'] %>'].scale({x: scale, y: scale});
+                    Stage['cart<%= product['id'] %>'].draw();
+                }
 
-              fitStageIntoParentContainer_we();
-              // adapt the stage on any window resize
-              window.addEventListener('resize', fitStageIntoParentContainer_we);
+                fitStageIntoParentContainer_we();
+                // adapt the stage on any window resize
+                window.addEventListener('resize', fitStageIntoParentContainer_we);
 
-          </script>
-        <% end
-          end %>
+            </script>
+          <% end
+             end %>
 
-        <button type="button" class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: left; margin-bottom: 20px; color: black; border-color: black" onclick="clear_bag();">CLEAR BAG</button>
-        <button type="button" class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: right; margin-bottom: 20px; color: black; border-color: black" onclick="location.href = '/'">CONTINUE SHOPPING</button>
+        <button type="button" class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: left; margin-bottom: 20px; color: black; border-color: black" onclick="clear_bag();">CLEAR
+          BAG
+        </button>
+        <button type="button" class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: right; margin-bottom: 20px; color: black; border-color: black" onclick="location.href = '/'">CONTINUE
+          SHOPPING
+        </button>
 
         <h3>ORDER DETAILS</h3>
         <hr>
@@ -392,8 +434,38 @@
           <h4 class="t-right">Estimated Tax</h4><h4 class="s-left"><%= format("$%.2f", tax_t) %></h4>
         </div>
 
-        <% cart = get_cart.promotion_codes.first %>
-        <% if cart %>
+        <% c = get_cart %>
+        <% cart = c.promotion_codes.first %>
+        <% cart_g = c.gifts.first %>
+
+        <% if cart && cart_g %>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Sub total</h4>
+            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
+          </div>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Discount percentage</h4>
+            <h4 style="font-weight: lighter;" class="s-left"><%= (cart.rate + cart_g.rate) %>%</h4>
+          </div>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Estimated total</h4>
+            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * ((cart.rate + cart_g.rate) / 100))) %></h3>
+          </div>
+
+          <hr>
+
+          <input type="checkbox"> I agree to the
+          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
+
+          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * ((cart.rate + cart_g.rate) / 100))) %></button>
+          <div class="outcome">
+            <div id="error_hand"></div>
+          </div>
+
+        <% elsif cart %>
           <div style="overflow: hidden; margin: 40px 5px 5px;">
             <h4 class="t-right">Sub total</h4>
             <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
@@ -411,9 +483,37 @@
 
           <hr>
 
-          <input type="checkbox"> I agree to the <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
+          <input type="checkbox"> I agree to the
+          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
 
           <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart.rate / 100))) %></button>
+          <div class="outcome">
+            <div id="error_hand"></div>
+          </div>
+
+        <% elsif cart_g %>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Sub total</h4>
+            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
+          </div>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Discount percentage</h4>
+            <h4 style="font-weight: lighter;" class="s-left"><%= cart_g.rate %>%</h4>
+          </div>
+
+          <div style="overflow: hidden; margin: 40px 5px 5px;">
+            <h4 class="t-right">Estimated total</h4>
+            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart_g.rate / 100))) %></h3>
+          </div>
+
+          <hr>
+
+          <input type="checkbox"> I agree to the
+          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
+
+          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart_g.rate / 100))) %></button>
           <div class="outcome">
             <div id="error_hand"></div>
           </div>
@@ -427,7 +527,8 @@
 
           <hr>
 
-          <input type="checkbox"> I agree to the <a href="" data-toggle="modal" data-target="#modal_rtft" >terms and conditions</a>.
+          <input type="checkbox"> I agree to the
+          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
 
           <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", tax_t + cost_t) %></button>
           <div class="outcome">

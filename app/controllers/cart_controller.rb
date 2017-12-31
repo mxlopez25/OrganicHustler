@@ -27,6 +27,30 @@ class CartController < ApplicationController
     end
   end
 
+  def add_gift_code
+    promo = Gift.find_by(code: params['promo_code'])
+    cart = Cart.find(params['cart_id'])
+
+    if !promo
+      render json: {code: 1000}.to_json
+    elsif promo.used
+      render json: {code: 1001}.to_json
+    elsif promo.limit_usage <= 0
+      promo.used = true
+      promo.save
+      render json: {code: 1002}.to_json
+    elsif Time.now > promo.time_available
+      render json: {code: 1003}.to_json
+    elsif cart.promotion_codes.size == 1
+      render json: {code: 1004}.to_json
+    else
+      cart.gifts << promo
+      promo.limit_usage = promo.limit_usage - 1
+      promo.save
+      render json: {code: 1005}.to_json
+    end
+  end
+
   def create
 
     user = nil
@@ -103,8 +127,14 @@ class CartController < ApplicationController
 
         amount = cost_t + tax_t
         promo_code = get_cart.promotion_codes.first
-        if promo_code
+        promo_code_g = get_cart.gifts.first
+
+        if promo_code && promo_code_g
+          amount = amount - (amount * ((promo_code.rate + promo_code_g.rate) / 100))
+        elsif promo_code
           amount = amount - (amount * (promo_code.rate / 100))
+        elsif promo_code_g
+          amount = amount - (amount * (promo_code_g.rate / 100))
         end
 
         if user['c_stripe_id']

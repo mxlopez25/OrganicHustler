@@ -71,6 +71,9 @@
         <li <%= (request.original_url.include? 'stats') ? 'class=active' : '' %>>
           <a>Statistics<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-bar-chart"></span></a>
         </li>
+        <li <%= (request.original_url.include? 'gifts') ? 'class=active' : '' %>>
+          <a href="/admin/gifts">Gifts<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-bar-chart"></span></a>
+        </li>
       </ul>
     </div>
   </div>

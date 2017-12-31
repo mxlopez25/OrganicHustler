@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171223102541) do
+ActiveRecord::Schema.define(version: 20171231031756) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false, collation: "utf8_general_ci"
@@ -62,6 +62,11 @@ ActiveRecord::Schema.define(version: 20171223102541) do
     t.string   "order_id",                                                       collation: "utf8_general_ci"
   end
 
+  create_table "carts_gifts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "cart_id"
+    t.string "gift_id"
+  end
+
   create_table "carts_promotion_codes", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "cart_id",           limit: 11
     t.string "promotion_code_id", limit: 11
@@ -90,12 +95,12 @@ ActiveRecord::Schema.define(version: 20171223102541) do
     t.string   "main_picture"
   end
 
-  create_table "configurations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "configuration_webs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "title"
-    t.text     "value",      limit: 65535
-    t.integer  "type"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.text     "value",        limit: 65535
+    t.integer  "content_type"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "custom_emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -139,6 +144,16 @@ ActiveRecord::Schema.define(version: 20171223102541) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "product_id",                           collation: "utf8_general_ci"
+  end
+
+  create_table "gifts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.decimal  "rate",           precision: 10, scale: 2
+    t.string   "code"
+    t.integer  "limit_usage"
+    t.datetime "time_available"
+    t.boolean  "used"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   create_table "group_showcases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

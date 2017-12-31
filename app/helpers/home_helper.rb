@@ -192,7 +192,6 @@ module HomeHelper
     real_product_tax = total_m * base_product_tax/product_price
 
     [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
-
   end
 
   def get_price(order_id = nil)
