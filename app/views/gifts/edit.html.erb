@@ -1,0 +1,74 @@
+<body style="background-color: #dedede">
+
+<div class="main">
+  <div style="margin: 20px; padding: 20px; overflow: hidden" class="card content-part-10">
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Discount rate</span>
+      <input id="rate" value="<%= @promo.rate %>" type="number" step="any" class="form-control" aria-describedby="basic-addon1">
+      <span class="input-group-addon">%</span>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Discount code</span>
+      <input value="<%= @promo.code %>" id="code" class="form-control" aria-describedby="basic-addon1">
+      <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="generateCode()" style="font-size: xx-small" class="btn btn-default">GENERATE</button></span>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Usage limit</span>
+      <input value="<%= @promo.limit_usage %>" id="usage" class="form-control" aria-describedby="basic-addon1">
+      <span class="input-group-addon"><i class="fa fa-arrow-left" aria-hidden="true"></i> Less than</span>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Until</span>
+      <input id="until" type="datetime-local" class="form-control" aria-describedby="basic-addon1">
+    </div>
+
+    <button onclick="create()" style="width: 100%" class="btn btn-warning">MODIFY</button>
+
+  </div>
+</div>
+
+<script>
+
+    $('#until').val('<%= @promo.time_available.to_s(:db) %>'.split(' ').join('T'));
+
+    function create() {
+        $.ajax({
+            url: '/gifts',
+            type: 'patch',
+            dataType: 'json',
+            data: {
+                id: '<%= @promo.id %>',
+                promo: {
+                    rate: document.getElementById('rate').value,
+                    code: document.getElementById('code').value,
+                    limit_usage: document.getElementById('usage').value,
+                    time_available: document.getElementById('until').value,
+                    used: false
+                }
+            },
+            success: function (data) {
+                console.log(data);
+                window.location.href = '/admin/gifts';
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    function generateCode() {
+        var text = "";
+
+        for (var i = 0; i < 6; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        document.getElementById('code').value = text;
+    }
+
+</script>
+
+</body>

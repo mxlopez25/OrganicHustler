@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
   patch '/cart/promo-code' => 'cart#add_promo_code'
+  patch '/cart/gift-code' => 'cart#add_gift_code'
   get '/mail_token' => 'cart#mail_token'
 
   get '/shopping_bag' => 'home#bag'
@@ -60,6 +61,7 @@ Rails.application.routes.draw do
   get '/admin/promos' => 'admin#promo_code'
   get '/admin/taxes' => 'admin#tax_band'
   get '/admin/categories' => 'admin#category'
+  get '/admin/gifts' => 'admin#gifts'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -154,6 +156,7 @@ Rails.application.routes.draw do
   resource :user_addresses
   resource :orders
   resource :promotion_codes
+  resource :gifts
   resource :tax_bands
   resource :categories
   resource :configuration_webs

@@ -1,0 +1,75 @@
+<div style="padding: 20px">
+
+</div>
+
+<script>
+
+    var id = '<%= @cart_product %>';
+
+    OVERALL_MODE = false;
+    ACTUAL_CART_ITEM_EDIT = id;
+    $.ajax({
+        url: '/get_cart_item',
+        method: 'get',
+        dataType: 'json',
+        data: {
+            product_cart_id: id
+        },
+        success: function (data) {
+            console.log(data);
+            product.data = data['source_data'];
+            product.product_id = data['source_data']['id'];
+            product.color_id = data['color']['id'];
+            product.size_id = data['size']['id'];
+
+            $.ajax({
+                url: '/catalog/product/color/images',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    color_id: product.color_id
+                },
+                success: function (data_) {
+                    if (product.views.length === 0) {
+                        create_objects_array(data_);
+                    }
+
+                    for (var i = 0; i < data['logos'].length; i++) {
+                        var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                        if (modified_view !== null) {
+                            modified_view.logo_id = data['logos'][i]['logo_id'];
+                            modified_view.x = parseFloat(data['logos'][i]['x']);
+                            modified_view.y = parseFloat(data['logos'][i]['y']);
+                            modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                        }
+                    }
+
+                    for (var j = 0; j < data['emblems'].length; j++) {
+                        var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                        if (modified_view !== null) {
+                            modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                        }
+                    }
+
+                    document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                    load_viewer();
+                    load_view_1(product.data);
+
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            console.log(product);
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
+    var body = $("body");
+    body.addClass("modal-open");
+    body.css('overflow', 'hidden');
+    modal_quick.style.display = "block";
+
+</script>
