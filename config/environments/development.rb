@@ -60,13 +60,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      :address => 'email-smtp.us-west-2.amazonaws.com',
-      :domain => 'email-smtp.us-west-2.amazonaws.com',
-      :port => '25',
-      :user_name => ENV.fetch('SES_SMTP_USERNAME'), #Your SMTP user
-      :password => ENV.fetch('SES_SMTP_PASSWORD'), #Your SMTP password
-      :authentication => :login,
-      :enable_starttls_auto => true
+      :authentication => :plain,
+      :address => "smtp.mailgun.org",
+      :port => 587,
+      :domain => "organichustler.com",
+      :user_name => "postmaster@organichustler.com",
+      :password => "organichustler"
   }
 
 end

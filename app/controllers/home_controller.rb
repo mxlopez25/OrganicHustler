@@ -6,6 +6,12 @@ class HomeController < ApplicationController
 
   before_action :authenticate_user!, only: 'account'
 
+  def contact_us
+  end
+
+  def story
+  end
+
   def index
 
     @config_products = ConfigurationWeb.where content_type: 1
@@ -208,7 +214,62 @@ class HomeController < ApplicationController
   end
 
   def bag
+  end
 
+  def bag_items
+
+    products_partial = []
+    CartProduct.where(cart_id: get_cart_id).each do |cp|
+      ne_p = cp.as_json
+      ne_p.merge!('qty' => 1)
+      ne_p.merge!('consolidated' => false)
+      products_partial << ne_p
+    end
+
+    products = products_partial
+
+    (0..products_partial.length - 1).each {|i|
+
+      pr = products_partial[i]
+
+      unless pr['consolidated']
+        products_partial.each do |dl|
+          if dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id']
+            tem_pr = CartProduct.find(pr['id'])
+            tem_dl = CartProduct.find(pr['id'])
+
+            if tem_pr.custom_emblems == tem_dl.custom_emblems
+              dl['consolidated'] = true
+              products[i]['qty'] = products[i]['qty'] + 1
+            end
+          end
+        end
+      end
+    }
+
+    cart_products = {
+        tax_array: [],
+        cost_array: [],
+        products: []
+    }
+
+    products.each do |product|
+
+      pr_price = product_price(product['id'])
+      cart_products[:tax_array].push(pr_price[1])
+      cart_products[:cost_array].push(pr_price[5])
+
+      unless product['consolidated']
+
+        product['data'] = get_product_l(product['product_id'])
+        product['size'] = Size.find product['size_id']
+        product['color'] = Color.find product['color_id']
+        product['price_sgl'] = format('$%.2f', pr_price[5])
+        cart_products[:products].push(product)
+      end
+
+    end
+    render json: cart_products.to_json, status: :ok
   end
 
   def temp_user_act

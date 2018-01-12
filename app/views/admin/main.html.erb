@@ -1,4 +1,5 @@
 
+<script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
 <body style="background-color: #dedede">
 <div class="main masonry">
   <div style="padding: 20px; margin: 20px" class="card content-part-10">
@@ -14,6 +15,11 @@
           <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="set_v('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">SET</button></span>
         <% elsif co.content_type == 1 %>
           <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="find_id('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">SELECT PRODUCT</button></span>
+        <% elsif co.content_type == 2 %>
+          <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="edit_entry('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">EDIT ENTRY</button></span>
+          <script>
+            document.getElementById(<%= co.id %>).disabled = true;
+          </script>
         <% end %>
       </div>
 
@@ -24,6 +30,22 @@
       <!-- The Modal -->
       <div id="modal" class="modal">
 
+      </div>
+
+      <div id="entry_editor" class="modal">
+        <div class="modal-content">
+
+          <textarea name="editor" id="editor" rows="10" cols="80">
+          </textarea>
+          <script>
+              // Replace the <textarea id="editor1"> with a CKEditor
+              // instance, using default configuration.
+              CKEDITOR.replace('editor');
+          </script>
+
+          <button type="button" class="btn btn-success" onclick="update_entry();">Select product</button>
+
+        </div>
       </div>
 
       <div id="product_finder" class="modal">
@@ -142,6 +164,28 @@
                     }
                 });
 
+                function update_entry() {
+                    document.getElementById(temp_id).value = CKEDITOR.instances.editor.getData();
+                    var modal = document.getElementById('entry_editor');
+                    modal.style.display = "none";
+
+                    $.ajax({
+                        url: '/configuration_webs',
+                        type: 'patch',
+                        dataType: 'json',
+                        data: {
+                            id: temp_id,
+                            value: CKEDITOR.instances.editor.getData()
+                        },
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (data) {
+                            console.log(data)
+                        }
+                    })
+                }
+
                 function selected_item() {
                     document.getElementById(temp_id).value = item;
                     var modal = document.getElementById('product_finder');
@@ -186,6 +230,13 @@
                     temp_id = id;
                     var modal = document.getElementById('product_finder');
                     modal.style.display = "block";
+                }
+
+                function edit_entry(id) {
+                    temp_id = id;
+                    var modal = document.getElementById('entry_editor');
+                    modal.style.display = "block";
+                    CKEDITOR.instances['editor'].setData(document.getElementById(temp_id).value);
                 }
 
                 function loadTable() {

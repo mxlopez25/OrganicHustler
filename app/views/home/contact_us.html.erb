@@ -1,0 +1,17 @@
+<div class="desktopnot" style="margin-top: 30px"></div>
+<div class="mobilenot" style="margin-top: 80px"></div>
+<div class="body">
+  <h1 class="text_light">CONTACT US</h1>
+  <h5 class="uppercase" style="color: #A4A4A4;"><%= ConfigurationWeb.find(9).value %></h5>
+  <%= ConfigurationWeb.find(11).value.html_safe %>
+  <form enctype="multipart/form-data" id="support" method="post" name="support">
+    <div style="float: none" class="content-part field-data">
+      <input style="margin-bottom: 10px" name="user-email" class="field" type="email" placeholder="Email" value="" required="">
+
+      <input name="user-name" class="field" type="text" placeholder="Name" value="" required="">
+      <hr>
+      <textarea style="height: auto" name="user-message" class="field" placeholder="Message" required="" rows="10"></textarea>
+      <button class="btn btn-sp" name="submit" type="submit" value="SEND"/>SEND</button>
+    </div>
+  </form>
+</div>
