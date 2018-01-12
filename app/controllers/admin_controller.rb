@@ -122,8 +122,8 @@ class AdminController < ApplicationController
     subject = params['subject']
     content = params['editor'].html_safe
     Subscriber.all.each do |user|
-      mail = SubscriptionMailer.new_promotion(user.email, subject, content)
-      mail.deliver_now
+        mail = SubscriptionMailer.new_promotion(user.email, subject + ' a ' + i.to_s, content)
+        p mail.deliver_later
     end
   end
 
