@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180115012725) do
+ActiveRecord::Schema.define(version: 20180115063549) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false, collation: "utf8_general_ci"
@@ -206,18 +206,28 @@ ActiveRecord::Schema.define(version: 20180115012725) do
     t.string "product_id"
   end
 
+  create_table "order_confirmations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "confirmation_token"
+    t.boolean  "used"
+    t.datetime "limit"
+    t.string   "order_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "state",                                        collation: "utf8_general_ci"
-    t.text     "description",       limit: 65535,              collation: "utf8_general_ci"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "carrier",                                      collation: "utf8_general_ci"
-    t.string   "tracking_code",                                collation: "utf8_general_ci"
-    t.string   "overall_user_id",                              collation: "utf8_general_ci"
-    t.string   "overall_user_type",                            collation: "utf8_general_ci"
-    t.string   "charge_id",                                    collation: "utf8_general_ci"
-    t.string   "tag_link",                                     collation: "utf8_general_ci"
-    t.string   "user_address_id",                              collation: "utf8_general_ci"
+    t.string   "state",                                                        collation: "utf8_general_ci"
+    t.text     "description",       limit: 65535,                              collation: "utf8_general_ci"
+    t.string   "carrier",                                                      collation: "utf8_general_ci"
+    t.string   "tracking_code",                                                collation: "utf8_general_ci"
+    t.string   "overall_user_id",                                              collation: "utf8_general_ci"
+    t.string   "overall_user_type",                                            collation: "utf8_general_ci"
+    t.string   "charge_id",                                                    collation: "utf8_general_ci"
+    t.boolean  "confirmed",                       default: false
+    t.string   "tag_link",                                                     collation: "utf8_general_ci"
+    t.string   "user_address_id",                                              collation: "utf8_general_ci"
+    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                                      null: false
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

@@ -219,7 +219,7 @@ class HomeController < ApplicationController
   def bag_items
 
     products_partial = []
-    CartProduct.where(cart_id: get_cart_id).each do |cp|
+    CartProduct.where(cart_id: params['o_id'] || get_cart_id).each do |cp|
       ne_p = cp.as_json
       ne_p.merge!('qty' => 1)
       ne_p.merge!('consolidated' => false)

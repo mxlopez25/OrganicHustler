@@ -146,6 +146,9 @@ class CartController < ApplicationController
         user.user_address.order = order
         user.user_address.save!
 
+        mail = PurchaseMailer.new_purchase order
+        p mail.deliver_now
+
       end
     rescue Stripe::CardError => e
       charge = e.json_body[:error]
