@@ -269,6 +269,12 @@ class HomeController < ApplicationController
       end
 
     end
+
+    c = get_cart
+    cart_p = c.promotion_codes.first.try(:rate)
+    cart_g = c.gifts.first.try(:rate)
+    cart_products.merge!('discount' => (cart_p || cart_g || {rate: 0}))
+
     render json: cart_products.to_json, status: :ok
   end
 

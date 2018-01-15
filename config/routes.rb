@@ -45,9 +45,14 @@ Rails.application.routes.draw do
 
   get '/checkout' => 'cart#new'
   post '/checkout' => 'cart#create'
+  get '/mail_token' => 'cart#mail_token'
+
   patch '/cart/promo-code' => 'cart#add_promo_code'
   patch '/cart/gift-code' => 'cart#add_gift_code'
-  get '/mail_token' => 'cart#mail_token'
+  patch '/change_order_email' => 'cart#change_order_manager'
+
+  delete '/cart/promo-code' => 'cart#remove_promo_code'
+  delete '/cart/gift-code' => 'cart#remove_gift_code'
 
   get '/shopping_bag' => 'home#bag'
 

@@ -14,7 +14,7 @@
         <label>
           <div>CHECKOUT DETAILS</div>
         </label>
-        <input name="cardholder-email" class="field" placeholder="user@domain.com" value="<%= user['email'] %>" required>
+        <input id="cardholder-email" name="cardholder-email" class="field" placeholder="user@domain.com" value="<%= user['email'] %>" required>
       </div>
 
       <div class="content-part content-part-10">
@@ -90,6 +90,7 @@
         <hr>
       </div>
 
+      <% unless user.cart.promotion_codes.first %>
       <h3>GIFT OPTIONS</h3>
 
       <div class="content-part content-part-10 field-data">
@@ -98,9 +99,16 @@
         </label>
         <span id="alert_messenger_g" style="width: auto" class="label label-warning"></span>
         <input id="promo_code_g" name="promo_code" class="field" placeholder="XXXXXX" value="<%= user.cart.gifts.first&.code %>">
-        <button onclick="apply_gift()" class="btn btn-sp" type="button">APPLY</button>
+        <% if !user.cart.gifts.first %>
+          <button onclick="apply_gift()" class="btn btn-sp" type="button">APPLY</button>
+        <% else %>
+          <button onclick="remove_gift()" class="btn btn-sp" type="button">REMOVE</button>
+        <% end %>
         <hr>
       </div>
+      <% end %>
+
+      <% unless user.cart.gifts.first %>
 
       <h3>PROMOTION CODE</h3>
 
@@ -111,8 +119,14 @@
         </label>
         <span id="alert_messenger" style="width: auto" class="label label-warning"></span>
         <input id="promo_code" name="promo_code" class="field" placeholder="XXXXXX" value="<%= user.cart.promotion_codes.first&.code %>">
-        <button onclick="apply_promo()" class="btn btn-sp" type="button">APPLY</button>
+        <% if !user.cart.promotion_codes.first %>
+          <button onclick="apply_promo()" class="btn btn-sp" type="button">APPLY</button>
+        <% else %>
+          <button onclick="remove_promo()" class="btn btn-sp" type="button">REMOVE</button>
+        <% end %>
       </div>
+
+      <% end %>
 
       <script>
 
@@ -130,7 +144,7 @@
                       if (data.code === 1005) {
                           window.location.reload(true);
                       } else if (data.code === 1004) {
-                          document.getElementById('alert_messenger_g').innerHTML = 'ALREADY USED'
+                          document.getElementById('alert_messenger_g').innerHTML = 'PROMOTION OR GIFT CODE ALREADY APPLIED TO THIS PRODUCT'
                       } else if (data.code === 1003) {
                           document.getElementById('alert_messenger_g').innerHTML = 'PROMOTION EXPIRED'
                       } else if (data.code === 1002) {
@@ -161,7 +175,7 @@
                       if (data.code === 1005) {
                           window.location.reload(true);
                       } else if (data.code === 1004) {
-                          document.getElementById('alert_messenger').innerHTML = 'ALREADY USED'
+                          document.getElementById('alert_messenger').innerHTML = 'PROMOTION OR GIFT CODE ALREADY APPLIED TO THIS PRODUCT'
                       } else if (data.code === 1003) {
                           document.getElementById('alert_messenger').innerHTML = 'PROMOTION EXPIRED'
                       } else if (data.code === 1002) {
@@ -177,6 +191,37 @@
                   }
               });
           }
+
+          function remove_promo() {
+              $.ajax({
+                  url: '/cart/promo-code',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {},
+                  success: function (data) {
+                      window.location.reload(true);
+                  },
+                  error: function (data) {
+
+                  }
+              });
+          }
+
+          function remove_gift() {
+              $.ajax({
+                  url: '/cart/gift-code',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {},
+                  success: function (data) {
+                      window.location.reload(true);
+                  },
+                  error: function (data) {
+
+                  }
+              });
+          }
+
       </script>
 
     </div>
@@ -219,6 +264,7 @@
 
                     taxes = data['tax_array'];
                     prices = data['cost_array'];
+                    var discount_rate = parseFloat(data['discount']);
 
                     create_entry(0, data['products'].length);
 
@@ -351,8 +397,7 @@
                                     console.log(data);
                                 }
                             });
-                        }
-                        else {
+                        } else {
 
                             var buttons = document.createElement('div');
                             buttons.innerHTML = '<button class="btn styling_btn text_light" style="width: 48%; font-size: 10px; min-width: auto; float: left; margin-bottom: 20px; color: black; border-color: black" onclick="clear_bag();">CLEAR\n' +
@@ -391,9 +436,28 @@
                                 tax += parseFloat(taxes[t]);
                             }
 
-                            document.getElementById('sub_total').innerText = cost.toFixed(2);
-                            document.getElementById('estimated_tax').innerText = tax.toFixed(2);
-                            document.getElementById('estimated_total').innerText = (cost + tax).toFixed(2);
+                            document.getElementById('sub_total').innerText = '$' + cost.toFixed(2);
+                            document.getElementById('estimated_tax').innerText = '$' + tax.toFixed(2);
+
+                            if (discount_rate > 0){
+                                document.getElementById('discountable').innerHTML = '<div style="overflow: hidden; margin: 40px 5px 5px;">\n' +
+                                    '            <h4 class="t-right">Sub total</h4>\n' +
+                                    '            <h3 style="font-weight: lighter;" class="s-left">$' + (cost + tax).toFixed(2) + '</h3>\n' +
+                                    '          </div>\n' +
+                                    '          <div style="overflow: hidden; margin: 40px 5px 5px;">\n' +
+                                    '            <h4 class="t-right">Discount percentage</h4>\n' +
+                                    '            <h4 style="font-weight: lighter;" class="s-left">'+ parseInt(discount_rate) +'%</h4>\n' +
+                                    '          </div>';
+                                $('.estimated_total').each(function (index) {
+                                    $(this).html(((cost + tax) - ((cost + tax) * discount_rate / 100)).toFixed(2))
+                                });
+                            }else{
+                                $('.estimated_total').each(function (index) {
+                                    $(this).html((cost + tax).toFixed(2));
+                                });
+                            }
+
+
                         }
                     }
                 },
@@ -407,11 +471,7 @@
         <h3>ORDER DETAILS</h3>
         <hr>
         <div style="overflow: hidden; margin: 5px">
-          <% cost_t = 0 %>
-          <% cost_array.each do |cost| %>
-            <% cost_t = cost_t + cost %>
-          <% end %>
-          <h4 class="t-right">Subtotal</h4><h4 class="s-left"><%= format('$%.2f', cost_t) %></h4>
+          <h4 class="t-right">Subtotal</h4><h4 id="sub_total" class="s-left">-</h4>
         </div>
 
         <div style="overflow: hidden; margin: 5px">
@@ -419,32 +479,14 @@
         </div>
 
         <div style="overflow: hidden; margin: 5px">
-          <% tax_t = 0 %>
-          <% tax_array.each do |tax| %>
-            <% tax_t = tax_t + tax %>
-          <% end %>
-          <h4 class="t-right">Estimated Tax</h4><h4 class="s-left"><%= format("$%.2f", tax_t) %></h4>
+          <h4 class="t-right">Estimated Tax</h4><h4 id="estimated_tax" class="s-left">-</h4>
         </div>
 
-        <% c = get_cart %>
-        <% cart = c.promotion_codes.first %>
-        <% cart_g = c.gifts.first %>
-
-        <% if cart && cart_g %>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Sub total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
-          </div>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Discount percentage</h4>
-            <h4 style="font-weight: lighter;" class="s-left"><%= (cart.rate + cart_g.rate) %>%</h4>
-          </div>
+          <div id="discountable"></div>
 
           <div style="overflow: hidden; margin: 40px 5px 5px;">
             <h4 class="t-right">Estimated total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * ((cart.rate + cart_g.rate) / 100))) %></h3>
+            <h3 style="font-weight: lighter;" class="s-left">$<span style="font: inherit" class="estimated_total">-</span></h3>
           </div>
 
           <hr>
@@ -452,82 +494,10 @@
           <input type="checkbox"> I agree to the
           <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
 
-          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * ((cart.rate + cart_g.rate) / 100))) %></button>
+          <button class="btn btn-sp" type="submit">Pay $<span class="estimated_total">-</span></button>
           <div class="outcome">
             <div id="error_hand"></div>
           </div>
-
-        <% elsif cart %>
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Sub total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
-          </div>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Discount percentage</h4>
-            <h4 style="font-weight: lighter;" class="s-left"><%= cart.rate %>%</h4>
-          </div>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Estimated total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart.rate / 100))) %></h3>
-          </div>
-
-          <hr>
-
-          <input type="checkbox"> I agree to the
-          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
-
-          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart.rate / 100))) %></button>
-          <div class="outcome">
-            <div id="error_hand"></div>
-          </div>
-
-        <% elsif cart_g %>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Sub total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
-          </div>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Discount percentage</h4>
-            <h4 style="font-weight: lighter;" class="s-left"><%= cart_g.rate %>%</h4>
-          </div>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Estimated total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart_g.rate / 100))) %></h3>
-          </div>
-
-          <hr>
-
-          <input type="checkbox"> I agree to the
-          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
-
-          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", (tax_t + cost_t) - ((tax_t + cost_t) * (cart_g.rate / 100))) %></button>
-          <div class="outcome">
-            <div id="error_hand"></div>
-          </div>
-
-        <% else %>
-
-          <div style="overflow: hidden; margin: 40px 5px 5px;">
-            <h4 class="t-right">Estimated total</h4>
-            <h3 style="font-weight: lighter;" class="s-left"><%= format("$%.2f", tax_t + cost_t) %></h3>
-          </div>
-
-          <hr>
-
-          <input type="checkbox"> I agree to the
-          <a href="" data-toggle="modal" data-target="#modal_rtft">terms and conditions</a>.
-
-          <button class="btn btn-sp" type="submit">Pay <%= format("$%.2f", tax_t + cost_t) %></button>
-          <div class="outcome">
-            <div id="error_hand"></div>
-          </div>
-
-        <% end %>
       </div>
     </div>
   <% end %>
@@ -577,6 +547,69 @@
         card.mount('#card-element');
     }
 
+    var btn_holder = null;
+    var new_holder = null;
+
+    function modify_email(order_id, code) {
+        var email_field = document.getElementById('email_address');
+        var email_data = email_field.innerText;
+        email_field.outerHTML = '<input id="email_holder" name="email" value="'+ email_data +'">';
+        new_holder = document.getElementById('email_holder');
+        new_holder.focus();
+        new_holder.setSelectionRange(0, new_holder.value.length);
+
+        var bodyRect = document.body.getBoundingClientRect();
+
+        var rect = new_holder.getBoundingClientRect();
+        btn_holder = document.createElement('div');
+        btn_holder.id = 'button_holder';
+        btn_holder.style.position = 'absolute';
+        btn_holder.style.width = '20px';
+        btn_holder.style.height = '20px';
+        btn_holder.style.top = rect.top - bodyRect.top + 'px';
+        btn_holder.style.left = rect.right + 3 + 'px';
+        btn_holder.style.zIndex = '1';
+        btn_holder.style.borderRadius = '50%';
+        btn_holder.style.background = '#89c13e';
+        btn_holder.style.textAlign = 'center';
+
+        btn_holder.innerHTML = '<i id="confirmation_check" onclick="change_email(\'' + order_id + '\', \'' + code + '\')" class="fa fa-check" style="cursor: pointer; font-size: 18px; align-self: center; color: #ffffff" aria-hidden="true"></i>';
+        document.getElementsByTagName('body')[0].appendChild(btn_holder);
+    }
+
+    function change_email(order_id, code) {
+        var check = document.getElementById('confirmation_check');
+        check.outerHTML = '<i id="confirmation_check" class="fa fa-spinner" style="animation: spin 2s linear infinite; font-size: 14px; align-self: center; color: #ffffff" aria-hidden="true"></i>'
+        check = document.getElementById('confirmation_check');
+        btn_holder.style.background = '#b692a2';
+        $.ajax({
+            url: '/change_order_email',
+            type: 'patch',
+            dataType: 'json',
+            data: {
+                order: order_id,
+                code_authenticity: code,
+                n_mail: new_holder.value
+            },
+            statusCode: {
+                403: function (xhr) {
+                    check.outerHTML = '<i id="confirmation_check" class="fa fa-times" style="font-size: 14px; align-self: center; color: #ffffff" aria-hidden="true"></i>';
+                    console.log(data);
+                }
+            },
+            success: function (data) {
+                var order_id = data['order_id'];
+                var code = data['auth_code'];
+                btn_holder.remove();
+                console.log(data);
+                new_holder.outerHTML = '<span id="email_address" style="font-weight: bold">'+ new_holder.value +'</span>';
+                document.getElementById('email_changer').outerHTML = '<a id="email_changer" onclick="modify_email(\''+ order_id +'\',\''+ code +'\');" class="text-uppercase text_light_pink" style="cursor: pointer; margin: 5px; text-decoration: none; float: left">Change email</a>';
+            },
+            error: function (data) {
+            }
+        })
+    }
+
     function setOutcome(result) {
 
         var error_h = document.getElementById('error_hand');
@@ -603,16 +636,24 @@
                     data: values,
                     success: function (data) {
                         console.log(data);
-                        if (data['paid']) {
-                            document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>';
-                            if (<%= user_signed_in? %>) {
-                                location.href = '/account';
-                            } else {
-                                location.href = '/temp_user_act'
-                            }
-                        } else if (data['sign']) {
-                            location.href = '/users/sign_in?tu=' + data['temp_user_id'];
-                            document.getElementById('loading').classList.add('hidden');
+                        var charging_data = data['charge'];
+                        if (charging_data['paid']) {
+                            document.getElementById('loading').innerHTML ='  <div style="padding: 0; width: 80%; height: 365px" class="card content-part message_container">\n' +
+                                '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>\n' +
+                                '    <div style="padding-left: 20px; padding-right: 20px; height: 120px; overflow-y: auto">\n' +
+                                '      <h4 class="text_light">An email has been sent to <span id="email_address" style="font-weight: bold">' + document.getElementById('cardholder-email').value + '</span>, if you did not see it check your spam folder, change the email if any mistake or click resend to send the confirmation once again, if you need help contact <a href="/contact_us" target="_blank" style="text-decoration: none; color: #b692a2; cursor: pointer" >support</a>.</h4>\n' +
+                                '\n' +
+                                '    </div>\n' +
+                                '\n' +
+                                '    <div style="bottom: 10px; width: 100%">\n' +
+                                '      <hr>\n' +
+                                '      <a id="email_changer" onclick="modify_email(\''+ data['order']['id'] +'\',\''+ data['ca'] +'\');" class="text-uppercase text_light_pink" style="cursor: pointer; margin: 5px; text-decoration: none; float: left">Change email</a>\n' +
+                                '      <a href="/" class="text-uppercase text_light_pink" style="cursor: pointer; margin: 5px; text-decoration: none; float: right">Continue</a>\n' +
+                                '      <div style="float: right; border: #0b0b0b 2px"></div>\n' +
+                                '      <a class="text-uppercase text_light_pink" style="cursor: pointer; margin: 5px; text-decoration: none; float: right">Resend</a>\n' +
+                                '    </div>\n' +
+                                '  </div>\n' +
+                                '</div>';
                         } else {
 
                             var message = {
@@ -631,7 +672,7 @@
                             };
 
                             document.getElementById('loading').classList.add('hidden');
-                            error_h.innerHTML = '<div class="error_message"><h6>' + message[data['code']] + '</h6></div>';
+                            error_h.innerHTML = '<div class="error_message"><h6>' + message[charging_data['code']] + '</h6></div>';
                         }
                     },
                     error: function () {

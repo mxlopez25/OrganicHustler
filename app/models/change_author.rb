@@ -1,0 +1,2 @@
+class ChangeAuthor < ApplicationRecord
+end
