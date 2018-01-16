@@ -251,7 +251,7 @@ class HomeController < ApplicationController
         tax_array: [],
         cost_array: [],
         products: [],
-        order: JSON.parse((Order.find params['order_id']).to_json)
+        order: params['order_id'] ? JSON.parse((Order.find params['order_id']).to_json) : {}
     }
 
     p cart_products[:order]
