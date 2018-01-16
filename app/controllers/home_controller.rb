@@ -127,7 +127,7 @@ class HomeController < ApplicationController
           #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
     #{products_col ? 'INNER JOIN colors ON products.id = colors.product_id' : ''}
     #{products_mat ? 'INNER JOIN materials_products ON products.id = materials_products.product_id' : ''}
-          WHERE #{products_cat ? ' category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : ' products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
+          WHERE products.status = 1 #{products_cat ? 'AND category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : ' products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''}"
 
     results = ActiveRecord::Base.connection.execute(sql)
     products = []
@@ -250,8 +250,11 @@ class HomeController < ApplicationController
     cart_products = {
         tax_array: [],
         cost_array: [],
-        products: []
+        products: [],
+        order: JSON.parse((Order.find params['order_id']).to_json)
     }
+
+    p cart_products[:order]
 
     products.each do |product|
 
@@ -270,7 +273,7 @@ class HomeController < ApplicationController
 
     end
 
-    c = get_cart
+    c = params[:o_id] ? Cart.find(params[:o_id]) : get_cart
     cart_p = c.promotion_codes.first.try(:rate)
     cart_g = c.gifts.first.try(:rate)
     cart_products.merge!('discount' => (cart_p || cart_g || {rate: 0}))
@@ -292,7 +295,6 @@ class HomeController < ApplicationController
 
       tuc = TempUserControl.where(ip_address: request.env['REMOTE_ADDR']).last
       if tuc
-        p tuc.to_json, session['temp_token']
         @user = nil
         if tuc.t_available > Time.now && tuc.auth_token.eql?(session['temp_token'])
           @user = TempUser.find(tuc.temp_user_id)
@@ -321,6 +323,22 @@ class HomeController < ApplicationController
 
     mail = TUserTokenRequestMailer.new_token_request(user, request.host, request.port)
     mail.deliver_now
+  end
+
+  def invalidate
+    TempUserControl.find_by_auth_token(session['temp_token']).delete
+  end
+
+  def orders
+    user = TempUser.find TempUserControl.find_by_auth_token(session['temp_token']).temp_user_id
+
+    orders = []
+    user.orders.each do |o|
+      ol = JSON.parse(o.to_json)
+      ol.merge!(cart_id: o.cart.id)
+      orders.push(ol)
+    end
+    render json: orders.to_json
   end
 
   def get_image_by_id
@@ -587,7 +605,15 @@ class HomeController < ApplicationController
   #SHOWCASES
 
   def showcase_mobile_products
-    render json: (Product.all.order("id desc").limit 10).to_json, code: 200
+    values = ConfigurationWeb.find_by_title('Showcase products').value.gsub /"/, ''
+    y = values[1..-2].split(',').collect! {|n| n.to_s}
+
+    products = []
+    y.each do |p|
+      products << Product.find(p)
+    end
+
+    render json: products.to_json, code: 200
   end
 
 

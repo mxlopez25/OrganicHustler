@@ -39,6 +39,24 @@ class ProductController < ApplicationController
     end
   end
 
+  # noinspection RailsChecklist01
+  def confirm_email
+    oc_check = OrderConfirmation.where(order_id: params[:id]).last
+    oc = OrderConfirmation.where(order_id: params[:id], confirmation_token: params[:token]).last
+    if oc
+      if (oc.limit < Time.now) && (oc_check == oc) && !oc.used
+        oc.used = true
+        oc.save!
+        redirect_to "/temporary/user/orders?email=#{Order.find(oc.order_id).overall_user.email}"
+      else
+        redirect_to '/'
+      end
+    else
+      redirect_to '/'
+    end
+
+  end
+
   def table_products
 
     parameters = {}
@@ -362,7 +380,13 @@ class ProductController < ApplicationController
   end
 
   def delete_product
-    (Product.find(params['pro_id'])).destroy!
+    p = Product.find(params['pro_id'])
+    if params[:permanent].eql? 'true'
+      p.destroy!
+    else
+      p.status = false
+      p.save
+    end
   end
 
 end

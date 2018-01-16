@@ -1,6 +1,8 @@
 class PurchaseMailer < ApplicationMailer
   def new_purchase(order)
 
+    @order_id = order.id
+
     products_partial = []
     order.cart.cart_products.each do |cp|
       ne_p = cp.as_json
@@ -59,7 +61,7 @@ class PurchaseMailer < ApplicationMailer
     @cart_products.merge!('discount' => (cart_p || cart_g || {rate: 0}))
 
     oc = OrderConfirmation.create do |o|
-      o.confirmation_token = [*('a'..'z'),*('0'..'9'),*('A'..'Z')].shuffle[0,32].join
+      o.confirmation_token = get_random_string(128)
       o.used = false
       o.limit = Time.now
       o.order_id = order.id
@@ -74,6 +76,13 @@ class PurchaseMailer < ApplicationMailer
   end
 
   private
+
+  def get_random_string(length=5)
+    source=("a".."z").to_a + ("A".."Z").to_a + (0..9).to_a + ["_","-","."]
+    key=""
+    length.times{ key += source[rand(source.size)].to_s }
+    key
+  end
 
   def product_price(p_cart_id)
     product = CartProduct.find(p_cart_id)

@@ -16,7 +16,9 @@ class TaxBandsController < ApplicationController
   end
 
   def destroy
-    TaxBand.find(params['id']).destroy!
+    ta = TaxBand.find(params['id'])
+    ta.active = !ta.active
+    ta.save!
   end
 
   def create

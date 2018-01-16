@@ -2,18 +2,14 @@
 <div id="items-container" class="message_wrapper">
   <div class="card content-part message_container">
     <%= form_tag '/temporary/user/orders', id: 'form', method: :get do %>
-        <input autocomplete="off" id="token_f" style="width: 100%" placeholder="Token" type="text" class="serious-input" name="token">
+        <input autocomplete="off" id="email_f" value="<%= params['em'] %>" style="width: 100%" placeholder="Email" type="text" class="serious-input" name="token">
+        <input autocomplete="off" id="token_f" value="<%= params['tk'] %>" style="width: 100%" placeholder="Token" type="text" class="serious-input" name="token">
         <button type="button" onclick="orders()" class="btn-sp btn" style="width: 100%">Manage orders</button>
     <% end %>
   </div>
 </div>
 
 <script>
-
-    $('#form').submit(function (event) {
-        event.preventDefault();
-        orders();
-    });
 
     function orders() {
         $.ajax({
@@ -23,6 +19,7 @@
                 'Authorization': $('#token_f').val()
             },
             dataType: 'text',
+            data: {email: $('#email_f').val()},
             success: function (data) {
                 location.href = '/temporary/user/orders'
             },
@@ -32,5 +29,11 @@
         });
     }
 </script>
+
+<% if params['em'] %>
+<script>
+    orders();
+</script>
+<% end %>
 
 </body>

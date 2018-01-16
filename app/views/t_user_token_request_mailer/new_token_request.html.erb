@@ -1,2 +1,22 @@
-<h4>Your token is: <%= @token %>, Valid fo 1 hour</h4>
-<a href="http://<%= @host %>/temporary/user/menu">link</a>
+<div style="margin: 20px auto; max-width: 720px; display: block">
+
+  <div style="position: relative; width: 100%; height: 50px">
+    <img width="100" src="<%= ENV['HOST'] %>/images/logo">
+  </div>
+  <div style="width: 100%; border: solid 3px #b692a2; border-radius: 10px; background: #b592a2"></div>
+
+  <h1 style="font-family: Arial, Baskerville, monospace; color: #b592a2">TEMPORARY CREDENTIALS</h1>
+
+  <div>
+
+    <input autocomplete="off" id="email_f" value="<%= @email %>" style="width: 100%; margin: 5px; border-radius: 0; background: #f6f6f6; border: none; line-height: 45px; height: 45px; padding-left: 20px; padding-right: 20px; font-size: 20px; font-family: 'Roboto', serif; font-weight: 100; font-style: normal" placeholder="Email" type="text" class="serious-input" disabled name="email">
+    <input autocomplete="off" id="token_f" value="<%= @token %>" style="width: 100%; margin: 5px; border-radius: 0; background: #f6f6f6; border: none; line-height: 45px; height: 45px; padding-left: 20px; padding-right: 20px; font-size: 20px; font-family: 'Roboto', serif; font-weight: 100; font-style: normal" placeholder="Token" type="text" class="serious-input" disabled name="token">
+
+  </div>
+
+  <div style="margin: 50px 20px 20px;">
+    <h3 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter; text-align: center">This credentials are use once and are only valid for 1 hour, after that you should request re-validation.</h3>
+    <a target="_blank" href="<%= ENV['HOST'] %>/temporary/user/menu?em=<%= @email %>&tk=<%= @token %>" style="font-family: 'Helvetica Neue', Helvetica, serif; text-decoration: none; margin: 0 auto; display: block; width: 50%; border-radius: 0; background: #b592a2; color: white; font-weight: 600; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.5), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">MANAGE ORDERS</a>
+  </div>
+
+</div>

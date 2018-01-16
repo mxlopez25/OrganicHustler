@@ -25,7 +25,7 @@
       <div style="padding: 0 10px;margin: 0" class="content-part-3">
         <button onclick="window.location.href = '/tax_bands/new'" style="margin-bottom: 5px; width: 100%" class="btn btn-success">ADD</button>
         <button onclick="(selected !== null) ? (window.location.href = '/tax_bands/edit?id='+selected.toString()) : null" style="margin-bottom: 5px; width: 100%" class="btn btn-warning">MODIFY</button>
-        <button onclick="(selected !== null) ? (destroy()) : null" style="margin-bottom: 5px; width: 100%" class="btn btn-danger"disabled >DELETE</button>
+        <button onclick="(selected !== null) ? (destroy()) : null" style="margin-bottom: 5px; width: 100%" class="btn btn-danger" >DISABLE</button>
       </div>
 
     </div>
@@ -92,8 +92,9 @@
             success: function (data) {
                 console.log(data);
                 for (var i = 0; i < data.length; i++) {
+                    var background_color = data[i]['active'] ? 'white' : '#ff8787';
                     text = text +
-                        '<tr>' +
+                        '<tr style="background: '+ background_color +'">' +
                         '<td><input id="' + data[i]['id'] + '" name="radio_btn" type="radio" onclick="selected = \'' + data[i]['id'] + '\'"></td>' +
                         '<td>' + data[i]['id'] + '</td>' +
                         '<td>' + data[i]['titulo'] + '</td>' +

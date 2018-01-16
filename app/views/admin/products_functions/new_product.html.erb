@@ -36,14 +36,8 @@
             <option value="1">Live</option>
           </select>
 
-          <label for="customizable">Customizable</label>
+          <label for="customizable">Customizable / Allow moving logos</label>
           <select style="width: 100%" id="customizable" name="customizable">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-          </select>
-
-          <label for="movable">Allow moving logos</label>
-          <select style="width: 100%" id="movable" name="movable">
             <option value="0">No</option>
             <option value="1">Yes</option>
           </select>
@@ -1001,7 +995,7 @@
                         brands: brands_g[id_row],
                         tax_band: row.find('select[name="tax"]').val(),
                         customizable: row.find('select[name="customizable"]').val(),
-                        movable: row.find('select[name="movable"]').val(),
+                        movable: row.find('select[name="customizable"]').val(),
                         emblemable: row.find('select[name="emblemable"]').val()
 
                     },

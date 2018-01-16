@@ -66,7 +66,7 @@
     </button>
     <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
     <button type="button" class="btn btn-warning" onclick="edit_selection()">Edit</button>
-    <button type="button" class="btn btn-danger" onclick="delete_selection()"disabled >DELETE</button>
+    <button type="button" class="btn btn-danger" onclick="delete_selection_np()" >DELETE</button>
   </div>
 
   <div class="table_products card">
@@ -97,7 +97,10 @@
                 var text = '';
                 for (var i = 0; i < data.length; i++) {
                     console.log(data[i]);
-                    text = text + '<tr id="product-row">\n' +
+
+                    var background_color = (data[i]['status'] ? 'white' : '#ff8787');
+
+                    text = text + '<tr id="product-row" style="background: '+ background_color +'">\n' +
                         '            <td>\n' +
                         '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
                         '            </td>\n' +
@@ -366,7 +369,7 @@
             }
         }
 
-        function delete_selection() {
+        function delete_selection_np() {
             var j = 0;
             var k = items.length;
 
@@ -375,7 +378,34 @@
                     url: '/product',
                     method: 'delete',
                     data: {
-                        pro_id: items[i]
+                        pro_id: items[i],
+                        permanent: false
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        j = j + 1;
+                        if (j === k) {
+                            window.location.href = '/admin/products';
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            }
+        }
+
+        function delete_selection_p() {
+            var j = 0;
+            var k = items.length;
+
+            for (var i = 0; i < items.length; i++) {
+                $.ajax({
+                    url: '/product',
+                    method: 'delete',
+                    data: {
+                        pro_id: items[i],
+                        permanent: true
                     },
                     dataType: 'json',
                     success: function (data) {

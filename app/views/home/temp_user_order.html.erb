@@ -13,7 +13,7 @@
     </div>
 
     <% if @user %>
-        <a onclick="remove_from_system()"><span style="float: right; cursor: pointer; color: orange"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Log out</span></a>
+      <a onclick="remove_from_system()"><span style="float: right; cursor: pointer; color: orange"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Log out</span></a>
     <% end %>
     <h2>Orders</h2>
     <hr>
@@ -21,191 +21,277 @@
 
     <script>
         var Stage = {};
+
+
+        function resend_validation(qty) {
+            qty = qty || true;
+            qty ? (document.getElementById('loading').classList.remove('hidden')) : null;
+            $.ajax({
+                url: '/temporary/user/re_send',
+                method: 'delete',
+                data: {
+                    email: $('#email').val()
+                },
+                success: function () {
+                    qty ? (document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>') : null;
+                }
+            })
+        }
+
     </script>
 
     <% if @user %>
-        <% @user.orders.each do |o| %>
-            <% o.cart.cart_products.where("created_at > ?", 10.days.ago).each do |product| %>
-                <div style="overflow: hidden; width: 100%; text-align: left; border-bottom: lightgrey solid 1px; padding-bottom: 10px; margin-bottom: 10px">
-                  <div onclick="edit_catalog(<%= product.id %>)" id="img-container" style="float: left; width: 24%" class="content-part content-part-3">
-                    <div id="order_<%= product.id %>" style="width: 100%; height: 100px; float: left">
 
-                    </div>
-                  </div>
-                  <% product_temp = get_product_l(product.product_id) %>
-                  <script id="create-shape">
+      <div id="container_lts"></div>
+
+        <script id="create-shape">
+
+          $.ajax({
+              url: '/orders',
+              type: 'get',
+              dataType: 'json',
+              data: {
+
+              },
+              success: function (data_SS) {
+
+                  var hg = 0;
+                  var limit = data_SS.length;
+
+                  hg < limit ? di(data_SS[hg]) : null;
+                  var stages = [];
+
+                  function di(data_f){
+                      var taxes = [];
+                      var prices = [];
 
                       var stageWidth = 500;
                       var stageHeight = 500;
 
-                      createShape('order_<%= product.id %>', null, null, null, null, null, '<%= product.color_id %>');
+                      var container_lts = document.getElementById('container_lts');
 
-                      function createShape(id, multiplexer, x, y, s_w, s_h, color_id, logo_id, emblem_id) {
-                          var container = $('#' + id);
-                          container.height(container.width());
+                      $.ajax({
+                          url: '/bag_items?o_id='+ data_f['cart_id'] +'&order_id=' + data_f['id'],
+                          type: 'GET',
+                          dataType: 'json',
+                          data: {},
+                          success: function (data) {
+                              console.log(data);
 
-                          var stage = new Konva.Stage({
-                              container: id,
-                              width: stageWidth,
-                              height: stageHeight,
-                          });
-                          var layer = new Konva.Layer();
-                          stage.add(layer);
+                              taxes = data['tax_array'];
+                              prices = data['cost_array'];
+                              var discount_rate = parseFloat(data['discount']);
 
-                          Stage[id] = stage;
+                              create_entry(0, data['products'].length);
 
-                          var baseImg = new Konva.Image({
-                              width: stageWidth,
-                              height: stageHeight,
-                              draggable: false
-                          });
+                              function create_entry(i, lim) {
+                                  if (i < lim) {
+                                      var product = data['products'][i];
 
-                          layer.add(baseImg);
-
-                          var imageObj1 = new Image();
-                          imageObj1.onload = function () {
-                              baseImg.image(imageObj1);
-                              layer.draw();
-                          };
-
-                          $.ajax({
-                              url: '/catalog/product/color/main_image?color_id=' + color_id,
-                              type: 'GET',
-                              dataType: 'json',
-                              data: {},
-                              success: function (data) {
-                                  imageObj1.src = data.picture
-                              },
-                              error: function (data) {
-                                  console.log(data);
-                              }
-                          });
-
-                          /*var logoImg = new Konva.Image({
-                              x: stageWidth * x / s_w,
-                              y: stageHeight * y / s_h
-                          });
-                          layer.add(logoImg);
-
-                          var imageObj2 = new Image();
-                          imageObj2.onload = function () {
-                              logoImg.image(imageObj2);
-                              logoImg.scale({
-                                  x: stageWidth * multiplexer / s_w,
-                                  y: stageHeight * multiplexer / s_h
-                              });
-                              layer.draw();
-                          };
-
-                          if (logo_id !== null) {
-                              $.ajax({
-                                  url: '/catalog/product/logo?logo_id=' + logo_id,
-                                  type: 'GET',
-                                  dataType: 'text',
-                                  data: {},
-                                  success: function (data) {
-                                      imageObj2.src = data
-                                  },
-                                  error: function (data) {
-                                      console.log(data);
-                                  }
-                              });
-                          }
-
-                          var emblem = new Konva.Image({
-                              x: 0,
-                              y: 0
-                          });
-                          layer.add(emblem);
-
-                          var imageEmblem = new Image();
-                          imageEmblem.onload = function () {
-                              emblem.image(imageEmblem);
-                              emblem.setWidth(this.width);
-                              emblem.setHeight(this.height);
-                              layer.draw();
-                          };
-
-                          if (emblem_id !== null) {
+                                      var pre = '<div class="item-checkout" style="padding-bottom: 20px; overflow: hidden;">\n' +
+                                          '        <div style="float: left; width: 33%; position: relative">\n' +
+                                          '          <div class="cart_item" id="cart' + product['id'] + '" style="width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>\n' +
+                                          '        </div>\n' +
+                                          '          <div style="float: right; width: 63%; position: relative">\n' +
+                                          '                   <div style="float: right" class="dropdown">\n' +
+                                          '                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+                                          '                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>\n' +
+                                          '                      <ul class="dropdown-menu dropdown-menu-right">\n' +
+                                          '                        <li>\n' +
+                                          '                          <a href="/cancel_order?id_order=' + data['order']['id'] + '&id_product_cart=' + product['id'] + '">Cancel\n' +
+                                          '                            Order</a>\n' +
+                                          '                        </li>\n' +
+                                          '                        <li><a href="#">Checkout details</a></li>\n' +
+                                          '                        <li><a href="#">Track order</a></li>\n' +
+                                          '                      </ul>\n' +
+                                          '                    </div>' +
+                                          '            <h4 style="width: 80%; margin-bottom: 10px;">' + product['data']['title'] + '</h4>\n' +
+                                          '            <div style="float: right; width: 50%; text-align: center">\n' +
+                                          '              <h3 style="font-size: 20px;">Qty: ' + product['qty'] + '</h3>\n' +
+                                          '              <h4 style="color: #b592a2">' + product['price_sgl'] + '</h4>\n' +
+                                          '            </div>\n' +
+                                          '            <div style="float: left; width: 50%">\n' +
+                                          '              <h6>Size: ' + product['size']['title'] + '</h6>\n' +
+                                          '              <h6>Customized: ' + ((product['has_emblem'] || product['has_logo']) ? 'YES' : 'NO') + '\n' +
+                                          '              <h6>Color: ' + product['color']['title'] + '</h6>\n' +
+                                          '              <h6>Bag id: ' + data['order']['id'] + '</h6>\n' +
+                                          '              <h6>Status: ' + ((product['state'] === null) ? (data['order']['state']) : (product['state'])) + '</h6>\n' +
+                                          '              <h6>Product id: ' + product['data']['id'] + '</h6>\n' +
+                                          '            </div>\n' +
+                                          '          </div>\n' +
+                                          '      </div>';
 
 
-                              $.ajax({
-                                  url: '/catalog/product/emblem?emblem_id=' + emblem_id,
-                                  type: 'GET',
-                                  dataType: 'json',
-                                  data: {},
-                                  success: function (data) {
-                                      emblem.setX(stageWidth * data.x / 500);
-                                      emblem.setY(stageWidth * data.y / 500);
-                                      emblem.scale({
-                                          x: stageWidth * data.multiplexer / 500,
-                                          y: stageWidth * data.multiplexer / 500
+                                      var div = document.createElement('div');
+                                      div.innerHTML = pre;
+
+                                      container_lts.appendChild(div);
+
+                                      var id = 'cart' + product['id'];
+                                      var container = $('#' + id);
+                                      console.log(container);
+                                      container.height(container.width());
+
+                                      var stage = new Konva.Stage({
+                                          container: id,
+                                          width: stageWidth,
+                                          height: stageHeight,
+                                          preventDefault: false
                                       });
-                                      imageEmblem.src = data.src;
+                                      var layer = new Konva.Layer();
+                                      stage.add(layer);
+                                      stages.push(stage);
 
-                                  },
-                                  error: function (data) {
-                                      console.log(data);
+                                      var baseImg = new Konva.Image({
+                                          width: stageWidth,
+                                          height: stageHeight,
+                                          draggable: false,
+                                          preventDefault: false
+                                      });
+                                      layer.add(baseImg);
+
+                                      var search_logo = true;
+
+                                      var imageObj1 = new Image();
+                                      imageObj1.onload = function () {
+                                          baseImg.image(imageObj1);
+
+                                          if (search_logo) {
+                                              var baseLogo = new Konva.Image({
+                                                  x: 0,
+                                                  y: 0,
+                                                  width: container.width(),
+                                                  height: container.height(),
+                                                  draggable: false,
+                                                  preventDefault: false
+                                              });
+                                              layer.add(baseLogo);
+
+                                              var logoBase = new Image();
+                                              logoBase.onload = function () {
+                                                  baseLogo.image(logoBase);
+                                                  baseLogo.setWidth(this.width);
+                                                  baseLogo.setHeight(this.height);
+
+                                                  i += 1;
+                                                  create_entry(i, lim);
+                                                  layer.draw();
+                                              };
+
+                                              $.ajax({
+                                                  url: '/get_cart_item?product_cart_id=' + product['id'],
+                                                  type: 'GET',
+                                                  dataType: 'json',
+                                                  data: {},
+                                                  success: function (data) {
+                                                      console.log(data);
+                                                      var logo = data.logos[0];
+                                                      if (logo) {
+                                                          var image = getImage(data.pictures, logo.product_image_id);
+                                                          if (image) {
+                                                              search_logo = false;
+                                                              imageObj1.src = image.url;
+                                                              logoBase.src = logo.logo_url;
+                                                              baseLogo.setX(logo.x);
+                                                              baseLogo.setY(logo.y);
+                                                              baseLogo.scale({
+                                                                  x: logo.multiplexer,
+                                                                  y: logo.multiplexer
+                                                              });
+
+                                                          }
+                                                      } else {
+                                                          i += 1;
+                                                          create_entry(i, lim);
+                                                          layer.draw();
+                                                      }
+                                                  },
+                                                  error: function (data) {
+                                                      console.log(data);
+                                                  }
+                                              });
+                                          }
+                                      };
+
+                                      $.ajax({
+                                          url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
+                                          type: 'GET',
+                                          dataType: 'json',
+                                          data: {},
+                                          success: function (data) {
+                                              imageObj1.src = data.picture;
+                                          },
+                                          error: function (data) {
+                                              console.log(data);
+                                          }
+                                      });
+                                  } else {
+
+                                      function fitStageIntoParentContainer_we() {
+                                          $('.cart_item').each(function (index) {
+
+                                              $(this).height($(this).width());
+
+                                              // now we need to fit stage into parent
+                                              var containerWidth = $(this).width();
+                                              // to do this we need to scale the stage
+                                              var scale = containerWidth / stageWidth;
+                                              stages[index].scale({x: scale, y: scale});
+                                              stages[index].draw();
+                                          });
+                                      }
+
+                                      hg = hg + 1;
+                                      if (hg < limit){
+                                          di(data_SS[hg]);
+                                          fitStageIntoParentContainer_we();
+                                      }else{
+                                          fitStageIntoParentContainer_we();
+                                          window.addEventListener('resize', fitStageIntoParentContainer_we);
+                                      }
                                   }
-                              });
-                          }*/
+                              }
+                          },
+                          error: function (data) {
+                              console.log(data);
+                          }
+                      });
+                  }
+              },
+              error: function (data) {
 
-                          layer.draw();
-                      }
+              }
+          }).done(function () {
+              console.log('done');
+          });
 
-                      function fitStageIntoParentContainer_we() {
-                          var container = $('#order_<%= product.id %>');
-                          container.height(container.width());
+        </script>
+    <% elsif params['email'] %>
 
-                          // now we need to fit stage into parent
-                          var containerWidth = container.width();
-                          // to do this we need to scale the stage
-                          var scale = containerWidth / stageWidth;
-                          Stage['order_<%= product.id %>'].scale({x: scale, y: scale});
-                          Stage['order_<%= product.id %>'].draw();
-                      }
+      <h3>Email confirmed</h3>
+      <div style="text-align: left; padding: 20px">
+        <h5>
+          The email was confirmed successfully from now on the products can be managed with this email address. An email
+          has been sent with your temporary credentials.
+        </h5>
+      </div>
+      <input id="email" type="text" placeholder="Email" value="<%= params['email'] %>" name="email" class="serious-input" style="width: 98%">
+      <span onclick="resend_validation(true)" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
+      <script>
+          resend_validation(false);
+      </script>
 
-                      fitStageIntoParentContainer_we();
-                      // adapt the stage on any window resize
-                      window.addEventListener('resize', fitStageIntoParentContainer_we);
-
-                  </script>
-                  <div class="content-part content-part-7" style="float: right; width: 76%">
-
-
-                    <div style="float: right" class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>
-                      <ul class="dropdown-menu dropdown-menu-right">
-                        <li>
-                          <a href="/cancel_order?id_order=<%= o.id %>&id_product_cart=<%= product.id %>">Cancel
-                            Order</a>
-                        </li>
-                        <li><a href="#">Checkout details</a></li>
-                        <li><a href="#">Track order</a></li>
-                      </ul>
-                    </div>
-
-                    <h4 class="text-uppercase" style="font-size: large; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif"><%= product_temp['title'] %></h4>
-                    <h5>Bag id: <%= o.id %></h5>
-                    <h5>Status: <%= product.state || o.state %></h5>
-                    <h5>Product id: <%= product_temp['id'] %></h5>
-                    <h4 style="float: left; width: 100%; font-size: large;color: #e5bbd1;height: 35px; font-weight: lighter; font-family: 'PT Sans Narrow', sans-serif;vertical-align: middle;line-height: 35px;"><%= format("$%.2f", product_price(product.id)[6]) %></h4>
-                  </div>
-                </div>
-            <% end %>
-        <% end %>
     <% else %>
 
-        <h3>User not authenticated, here's a list of possible reasons:</h3>
-        <div style="text-align: left; padding: 20px">
-          <ul>
-            <li><h5>It was authenticated in another devise</h5></li>
-            <li><h5>The submitted token is incorrect</h5></li>
-          </ul>
-        </div>
-        <input id="email" type="text" placeholder="Email" name="email" class="serious-input" style="width: 98%">
-        <span onclick="resend_validation()" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
+      <h3>User not authenticated, here's a list of possible reasons:</h3>
+      <div style="text-align: left; padding: 20px">
+        <ul>
+          <li><h5>It was authenticated in another devise</h5></li>
+          <li><h5>The submitted token is incorrect</h5></li>
+        </ul>
+      </div>
+      <input id="email" type="text" placeholder="Email" name="email" class="serious-input" style="width: 98%">
+      <span onclick="resend_validation(true)" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
     <% end %>
   </div>
 
@@ -213,22 +299,22 @@
 
 <script>
     function remove_from_system() {
-        console.log('hi')
-    }
-
-    function resend_validation() {
-        document.getElementById('loading').classList.remove('hidden');
         $.ajax({
-            url: '/temporary/user/re_send',
-            method: 'delete',
-            data: {
-                email: $('#email').val()
+            url: '/invalidate',
+            type: 'delete',
+            dataType: 'json',
+            data:{
+
             },
-            success: function () {
-                document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>';
+            success: function (data) {
+                document.location.reload(true);
+            },
+            error: function (data) {
+                document.location.reload(true);
             }
         })
     }
+
 </script>
 
 </body>

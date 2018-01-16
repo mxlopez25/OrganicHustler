@@ -12,8 +12,8 @@ class TUserTokenRequestMailer < ApplicationMailer
     tuc.valid_token = true
     tuc.save!
 
-    @host = "#{host}:#{port}"
     @token = tuc.auth_token
+    @email = user.email
 
     mail to: user.email,
          subject: 'Review orders petition'

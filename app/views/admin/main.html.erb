@@ -20,6 +20,8 @@
           <script>
             document.getElementById(<%= co.id %>).disabled = true;
           </script>
+        <% elsif co.content_type == 3 %>
+          <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="find_ids('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">SELECT PRODUCTS</button></span>
         <% end %>
       </div>
 
@@ -232,6 +234,13 @@
                     modal.style.display = "block";
                 }
 
+
+                function find_ids(id) {
+                    temp_id = id;
+                    var modal = document.getElementById('products_finder');
+                    modal.style.display = "block";
+                }
+
                 function edit_entry(id) {
                     temp_id = id;
                     var modal = document.getElementById('entry_editor');
@@ -286,6 +295,207 @@
                     console.log(item);
                 }
 
+                function show_selection() {
+                    if (item !== null) {
+                        window.open('/admin/product/' + item);
+                    }
+                }
+            </script>
+          </div>
+        </div>
+      </div>
+
+      <div id="products_finder" class="modal">
+        <div class="modal-content">
+
+          <div class="table_search card">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon2">ID</span>
+              <label for="id"></label>
+              <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input_2" name="id_input">
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon2">SKU</span>
+              <label for="sku"></label>
+              <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku_2" name="sku">
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-addon">Title</span>
+              <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title_2" name="title">
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-addon">Less than</span>
+              <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount_2" name="amount">
+              <span class="input-group-addon">$</span>
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon2">Category</span>
+              <label for="category"></label>
+              <select class="form-control" id="category_2" name="category">
+
+              </select>
+            </div>
+
+            <script>
+
+                $.ajax({
+                    url: '/admin/all_categories',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {},
+                    success: function (data) {
+                        var category_side = document.getElementById('category_2');
+                        var text = '<option value="">All categories</option>';
+                        for (var i = 0; i < data.length; i++) {
+                            text = text + '<option value="' + data[i]['id'] + '">' + data[i]['title'] + '</option>';
+                        }
+                        category_side.innerHTML = text;
+                    },
+                    error: function (data) {
+
+                    }
+                });
+
+            </script>
+
+            <button class="btn btn-primary" onclick="loadTable_2()" style="width: 100%" type="button">Search</button>
+          </div>
+
+          <div class="table_buttons card">
+            <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
+            <button type="button" class="btn btn-success" onclick="set_values_ids()">Done</button>
+          </div>
+
+          <div class="table_products card">
+            <table class="table" id="table">
+              <thead>
+              <tr>
+                <th></th>
+                <th><i class="fa fa-picture-o" aria-hidden="true"></i></th>
+                <th class="header-ele">Title</th>
+                <th class="header-ele">Inventory</th>
+                <th class="header-ele">Category</th>
+                <th class="header-ele">Price $</th>
+              </tr>
+              </thead>
+              <tbody id="list-to-m_2">
+
+              </tbody>
+            </table>
+            <script>
+
+                var ids = [];
+
+                function add_item_s(id){
+                    ids.includes(id) ? ids.remove(id) : ids.push(id)
+                }
+
+                Array.prototype.remove = function() {
+                    var what, a = arguments, L = a.length, ax;
+                    while (L && this.length) {
+                        what = a[--L];
+                        while ((ax = this.indexOf(what)) !== -1) {
+                            this.splice(ax, 1);
+                        }
+                    }
+                    return this;
+                };
+
+                $.ajax({
+                    url: '/admin/all_products',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {},
+                    success: function (data) {
+                        var table_body = document.getElementById('list-to-m_2');
+                        var text = '';
+                        for (var i = 0; i < data.length; i++) {
+                            console.log(data[i]);
+                            text = text + '<tr id="product-row">\n' +
+                                '            <td>\n' +
+                                '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item_s(\'' + data[i]['id'] + '\')">\n' +
+                                '            </td>\n' +
+                                '            <td>\n' +
+                                '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
+                                '            </td>\n' +
+                                '            <td>' + data[i]['title'] + '</td>\n' +
+                                '            <td>' + data[i]['stock'] + '</td>\n' +
+                                '            <td>' + data[i]['categories_l'] + '</td>\n' +
+                                '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                                '          </tr>'
+                        }
+                        table_body.innerHTML = text;
+                    },
+                    error: function (data) {
+
+                    }
+                });
+
+                function set_values_ids() {
+
+                    document.getElementById(temp_id).value = ids;
+                    var modal = document.getElementById('products_finder');
+                    modal.style.display = "none";
+
+                    $.ajax({
+                        url: '/configuration_webs',
+                        type: 'patch',
+                        dataType: 'json',
+                        data: {
+                            id: temp_id,
+                            value: ids
+                        },
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (data) {
+                            console.log(data)
+                        }
+                    })
+                }
+
+                function loadTable_2() {
+                    $.ajax({
+                        url: '/admin/all_products',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            id: document.getElementById('id_input_2').value,
+                            sku: document.getElementById('sku_2').value,
+                            title: document.getElementById('title_2').value,
+                            amount: document.getElementById('amount_2').value,
+                            category: document.getElementById('category_2').value
+                        },
+                        success: function (data) {
+                            var table_body = document.getElementById('list-to-m_2');
+                            var text = '';
+                            for (var i = 0; i < data.length; i++) {
+                                console.log(data[i]);
+                                text = text + '<tr id="product-row">\n' +
+                                    '            <td>\n' +
+                                    '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item_s(\'' + data[i]['id'] + '\')">\n' +
+                                    '            </td>\n' +
+                                    '            <td>\n' +
+                                    '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
+                                    '            </td>\n' +
+                                    '            <td>' + data[i]['title'] + '</td>\n' +
+                                    '            <td>' + data[i]['stock'] + '</td>\n' +
+                                    '            <td>' + data[i]['categories_l'] + '</td>\n' +
+                                    '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                                    '          </tr>'
+                            }
+                            table_body.innerHTML = text;
+                        },
+                        error: function (data) {
+
+                        }
+                    });
+                }
+
                 $('*[class*=price]:visible').each(function () {
                     var amount = $(this).html();
                     var i = parseFloat(amount);
@@ -309,12 +519,6 @@
                     s = minus + s;
                     $(this).html(s);
                 });
-
-                function show_selection() {
-                    if (item !== null) {
-                        window.open('/admin/product/' + item);
-                    }
-                }
             </script>
           </div>
         </div>

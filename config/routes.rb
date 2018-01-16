@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get '/story' => 'home#story'
   get '/bag_items' => 'home#bag_items'
   get '/cancel_order' => 'home#cancel_order'
+  get '/confirm_email' => 'product#confirm_email'
 
   post '/' => 'home#subscribe'
 
@@ -148,6 +149,10 @@ Rails.application.routes.draw do
   get '/temp_user_act' => 'home#temp_user_act'
   get '/temporary/user/orders' => 'home#temp_user_order'
   get '/temporary/user/menu' => 'home#temp_user_menu'
+  get '/orders' => 'home#orders'
+
+  delete '/invalidate' => 'home#invalidate'
+
 
   delete '/temporary/user/re_send' => 'home#send_verification'
 

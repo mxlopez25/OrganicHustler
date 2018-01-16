@@ -16,7 +16,9 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    Category.find(params['id']).destroy!
+    ca = Category.find(params['id'])
+    ca.active = !ca.active
+    ca.save!
   end
 
   def create

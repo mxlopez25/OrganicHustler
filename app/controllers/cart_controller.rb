@@ -182,6 +182,9 @@ class CartController < ApplicationController
           end
           ca.save!
 
+          mail = PurchaseMailer.new_purchase order
+          p mail.deliver_now
+
           render json: {order_id: params[:order], auth_code: ca.code_authenticity}.to_json, status: :ok
 
         rescue

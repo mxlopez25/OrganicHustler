@@ -575,11 +575,6 @@ button:active {
 
 @media screen and (min-width: 480px) {
 
-  .single-element-center {
-    margin: 200px auto;
-    min-width: 50%;
-  }
-
   .modal-content {
     width: 100%;
   }
@@ -605,6 +600,11 @@ button:active {
 }
 
 @media screen and (min-width: 768px) {
+
+  .single-element-center {
+    margin: 200px auto;
+    min-width: 50%;
+  }
 
   .image-container-quick {
     position: absolute;
