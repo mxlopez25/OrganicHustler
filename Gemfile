@@ -7,6 +7,7 @@ end
 
 ruby '2.4.0'
 gem 'devise'
+gem 'mjml-rails'
 gem 'rest-client'
 gem 'paperclip'
 gem 'aws-sdk', '~> 2.9.1'

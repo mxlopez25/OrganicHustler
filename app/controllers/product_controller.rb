@@ -1,5 +1,5 @@
 require 'rest_client'
-require 'RMagick'
+require 'rmagick'
 require 'tempfile'
 require 'json'
 
@@ -8,6 +8,36 @@ class ProductController < ApplicationController
   layout 'customs_bl'
 
   skip_before_action :verify_authenticity_token
+
+  def self.build_image(cart_p)
+
+    cart_p = CartProduct.find cart_p
+
+    base_color = cart_p.color_id
+    logo = cart_p.custom_logos[0]
+
+    if logo
+      picture = (ApplicationRecord::Color.find base_color).product_images.where(id: logo.product_image_id).first
+      base = Image.read("public#{picture.picture.url(:original, timestamp: false)}").first
+
+      logo_s = logo.logo.picture.url(:original, timestamp: false)
+      overlay = Image.read("public#{logo_s}").first
+      overlay.change_geometry!("#{overlay.columns * logo.multiplexer}x#{overlay.rows * logo.multiplexer}") { |cols, rows, img|
+        img.resize!(cols, rows)
+      }
+
+      pp = base.composite(overlay, logo.x, logo.y, Magick::OverCompositeOp)
+      temp = Tempfile.new("image")
+      pp.write("png:"+ temp.path)
+      cart_p.picture = temp
+      cart_p.save!
+
+      render text: cart_p.picture, status: :ok
+    else
+      picture = (ApplicationRecord::Color.find base_color).product_images.where(main: true).first
+      render text: picture.picture, status: :ok
+    end
+  end
 
   def table_products
 
