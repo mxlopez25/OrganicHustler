@@ -56,34 +56,39 @@
 <body style="background-color: white">
 
 
+<% tracker = EasyPost::Tracker.create({
+                                          tracking_code: 'EZ2000000002', #@order.tracking_code,
+                                          carrier: 'usps'
+                                      }) %>
+
 <div style="padding: 60px" class="main">
 
   <div style="position: relative; height: 100px">
     <div style="width: 75%; height: 10px; background: #b592a2; position: absolute; top: 20px; right: 0; left: 0"></div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 10%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Pre-Transit</h5>
+        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'pre_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'pre_transit' %> font-weight: bold <% end %>" >Pre-Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 35%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">In
+        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'in_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'in_transit' %> font-weight: bold <% end %>">In
           Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 60%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Out
+        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'out_for_delivery' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'out_for_delivery' %> font-weight: bold <% end %>">Out
           for Delivery</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 85%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Delivered</h5>
+        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'delivered' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'delivered' %> font-weight: bold <% end %>">Delivered</h5>
       </div>
     </div>
   </div>
@@ -1022,6 +1027,10 @@
             <tr>
               <td>Destination</td>
               <td><%= @order.user_address.city %></td>
+            </tr>
+            <tr>
+              <td>Tracker information</td>
+              <td><%= tracker['tracking_details'][0]['message'] %></td>
             </tr>
             </tbody>
           </table>

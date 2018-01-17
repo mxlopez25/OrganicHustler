@@ -36,10 +36,10 @@ class OrdersController < ApplicationController
     )
 
     parcel = EasyPost::Parcel.create(
-        length: 9,
-        width: 6,
-        height: 2,
-        weight: 10
+        length: params['l'],
+        width: params['w'],
+        height:  params['h'],
+        weight:  params['w_o']
     )
 
     shipment = EasyPost::Shipment.create(
@@ -48,17 +48,13 @@ class OrdersController < ApplicationController
         parcel: parcel
     )
 
-    shipment.rates.each do |rate|
-      puts(rate.carrier)
-      puts(rate.service)
-      puts(rate.rate)
-      puts(rate.id)
-    end
-
     shipment.buy(
         rate: shipment.lowest_rate(carriers = ['USPS'], services = ['First'])
     )
-    p shipment, '####################'
+    order.tag_link = shipment.id
+    order.carrier = 'USPS'
+    order.tracking_code = shipment.tracker.tracking_code
+    order.save!
 
     render :json => {url: shipment.postage_label.label_url}.to_json
   end
