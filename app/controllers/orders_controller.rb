@@ -26,9 +26,10 @@ class OrdersController < ApplicationController
     )
 
     to_address = EasyPost::Address.create(
-        name: params['client_name'],
+        name: '',
         company: 'Vandelay Industries',
         street1: '1 E 161st St.',
+        street2: '',
         city: 'Bronx',
         state: 'NY',
         zip: '10451'
@@ -57,6 +58,7 @@ class OrdersController < ApplicationController
     shipment.buy(
         rate: shipment.lowest_rate(carriers = ['USPS'], services = ['First'])
     )
+    p shipment, '####################'
 
     render :json => {url: shipment.postage_label.label_url}.to_json
   end

@@ -68,6 +68,8 @@ class CartController < ApplicationController
     user.save!
 
     user_address = {
+        :name => params['cardholder-first-name'],
+        :last_name => params['cardholder-last-name'],
         :street_address => params['cardholder-street'],
         :city => params['cardholder-city'],
         :state => params['cardholder-state'],

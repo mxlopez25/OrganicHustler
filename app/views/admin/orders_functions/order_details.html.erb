@@ -1,42 +1,1051 @@
-<body style="background-color: #dedede">
-<div class="main">
-  <%= form_for @order, url: orders_path do |f| %>
-      <div style="padding: 20px" class="content-part-10 card">
 
-        <div class="input-group">
-          <span class="input-group-addon">Status</span>
-          <%= f.text_field :state, value: @order.state, class: 'form-control' %>
-        </div>
 
-        <div class="input-group">
-          <span class="input-group-addon">Description</span>
-          <%= f.text_field :description, value: @order.description, class: 'form-control' %>
-        </div>
+<style>
+  table {
+    color: #333;
 
-        <div class="input-group">
-          <span class="input-group-addon">Carrier</span>
-          <%= f.text_field :carrier, value: @order.carrier, class: 'form-control', disabled: true %>
-        </div>
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
 
-        <div class="input-group">
-          <span class="input-group-addon">Tracking code</span>
-          <%= f.text_field :tracking_code, value: @order.tracking_code, class: 'form-control', disabled: true %>
-        </div>
+    width: 640px;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 
-        <div style="width: 30%; float: left">
-          <input id="length" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>L &times;</span>
-          <input id="width" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>W &times;</span>
-          <input id="height" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>H,</span>
-          <input id="weight" style="text-align: right; width: 15%" type="text" step="2" placeholder="15"><span>Oz</span>
-        </div>
-        <button type="button" onclick="get_shipping_tag(<%= @order.id %>)" class="btn btn-default" style="width: 70%">Generate
-          sipping
-          tag
-        </button>
+  td, th {
+    border: 1px solid transparent; /* No more visible border */
+    height: 30px;
+    transition: all 0.3s;
+  }
 
-        <%= f.submit 'Update', class: 'btn btn-default', style: 'width: 100%' %>
+  th {
+    background: #b592a2;
+    text-align: center;
+    font-size: large;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+  td {
+    background: #FAFAFA;
+  }
+
+  /* Cells in even rows (2,4,6...) are one color */
+  tr:nth-child(even) td {
+    background: #F1F1F1;
+  }
+
+  /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
+  tr:nth-child(odd) td {
+    background: #FEFEFE;
+  }
+
+  tr td:hover {
+    background: #666;
+    color: #FFF;
+  }
+
+  .text-light {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+</style>
+
+<body style="background-color: white">
+
+
+<div style="padding: 60px" class="main">
+
+  <div style="position: relative; height: 100px">
+    <div style="width: 75%; height: 10px; background: #b592a2; position: absolute; top: 20px; right: 0; left: 0"></div>
+    <div style="width: 50px; height: 50px; background: #b592a2; left: 10%; position: absolute; border-radius: 50%">
+      <div style="position: relative; width: 100%; height: 100%">
+        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Pre-Transit</h5>
       </div>
-  <% end %>
+    </div>
+    <div style="width: 50px; height: 50px; background: #b592a2; left: 35%; position: absolute; border-radius: 50%">
+      <div style="position: relative; width: 100%; height: 100%">
+        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">In
+          Transit</h5>
+      </div>
+    </div>
+    <div style="width: 50px; height: 50px; background: #b592a2; left: 60%; position: absolute; border-radius: 50%">
+      <div style="position: relative; width: 100%; height: 100%">
+        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Out
+          for Delivery</h5>
+      </div>
+    </div>
+    <div style="width: 50px; height: 50px; background: #b592a2; left: 85%; position: absolute; border-radius: 50%">
+      <div style="position: relative; width: 100%; height: 100%">
+        <div style="width: 30px; height: 30px; background: white; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center">Delivered</h5>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 20px; background: white" class="content-part-10">
+    <div style="z-index: 9999;" id="quick_view" class="modal_quick modal_base">
+      <!-- Modal content -->
+      <div id="modal-content-center" class="modal-content_quick modal-content_base" style="width: 100%; height: 100%; min-height: auto; overflow: hidden; padding: 0; max-height: 100%">
+        <div class="g-wrapper" id="general_p_content" style="position: relative; height: 100%; min-height: auto; max-height: 100%">
+          <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; font-size: xx-large; left: 10px; height: 100%; min-height: auto; max-height: 100%"><i onclick="close_modal()" class="fa fa-times" aria-hidden="true"></i></span>
+          <div id="product_display">
+            <div class="image-container-quick" id="image-container">
+            </div>
+            <button id="slide-left" style="top: 0; bottom: 0; margin: auto; border: none; left: 0; float: left; position: absolute; width: 10%" href="#" class="jcarousel-control-prev">
+              <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button id="slide-right" style="top: 0; bottom: 0; margin: auto; border: none; right: 0; float: right; position: absolute; width: 10%" href="#" class="jcarousel-control-next">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="text-light" style="text-align: left">Order #<%= @order.id %></h1>
+    <div style="width: 100%; border: solid 3px #b692a2; border-radius: 10px; background: #b592a2"></div>
+
+    <div style="padding: 10px">
+      <h2 style="text-align: left" class="text-light">Products</h2>
+      <hr>
+      <div style="padding: 10px">
+
+        <div style="overflow: hidden; padding: 10px" id="container_lts"></div>
+
+        <script id="create-shape">
+
+            function close_modal() {
+                product.remove();
+                modal_quick.style.display = "none";
+                $("body").removeClass("modal-open");
+                $('body').css('overflow', 'auto');
+                $('body').css('position', 'relative');
+            }
+
+            var default_modal = document.getElementById('modal-content-center').cloneNode(true);
+
+            function add_image_in_position(url, id, x, group, i) {
+
+                var view = product.views[i];
+
+                console.log('Primera parte');
+
+                if (TEMP_PRESET_HOLDER !== null) {
+                    console.log(view.picture_id);
+                    console.log(TEMP_PRESET_HOLDER.picture_id);
+
+                    if (view.picture_id === parseInt(TEMP_PRESET_HOLDER.picture_id)) {
+                        current_pointer = i;
+                        view.logo_id = TEMP_PRESET_HOLDER.logo_id;
+                        view.x = parseFloat(TEMP_PRESET_HOLDER.x);
+                        view.y = parseFloat(TEMP_PRESET_HOLDER.y);
+                        view.multiplexer = parseFloat(TEMP_PRESET_HOLDER.multiplexer);
+                    }
+                }
+
+                var img_grp = new Konva.Group({
+                    x: x,
+                    y: 0,
+                    width: 500,
+                    height: 500,
+                    draggable: false,
+                    name: 'grp' + i
+                });
+                group.add(img_grp);
+
+                var img = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    width: 500,
+                    height: 500,
+                    draggable: false,
+                    name: id
+                });
+                img_grp.add(img);
+                view.konva_elements.image = img;
+
+                var image = new Image();
+                image.onload = function () {
+                    img.image(image);
+                    LAYER.draw();
+                };
+                image.src = url;
+
+                if (view.logo_id) {
+                    console.log('has logo');
+                    var logo = new Konva.Image({
+                        x: view.x,
+                        y: view.y,
+                        draggable: false,
+                        dragBoundFunc: function (pos) {
+                            return {
+                                x: pos.x > 0 ? pos.x : this.getAbsolutePosition().x,
+                                y: pos.y > 0 ? pos.y : this.getAbsolutePosition().y
+                            }
+                        }
+                    });
+                    img_grp.add(logo);
+                    view.konva_elements.logo = logo;
+
+                    logo.on('dragend', function () {
+                        view.x = logo.x();
+                        view.y = logo.y();
+                    });
+
+                    var imageLogo = new Image();
+                    imageLogo.onload = function () {
+                        logo.image(imageLogo);
+                        logo.setWidth(this.width);
+                        logo.setHeight(this.height);
+                        logo.scale({
+                            x: view.multiplexer,
+                            y: view.multiplexer
+                        });
+                        LAYER.draw()
+                    };
+
+                    $.ajax({
+                        url: '/catalog/product/logo?logo_id=' + view.logo_id,
+                        type: 'GET',
+                        dataType: 'text',
+                        data: {},
+                        success: function (data) {
+                            imageLogo.src = data
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+
+                if (view.position_emblem_id) {
+
+                    $.ajax({
+                        url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            var emblem = new Konva.Image({
+                                x: data.x,
+                                y: data.y
+                            });
+                            img_grp.add(emblem);
+                            view.konva_elements.emblem = emblem;
+
+                            var imageEmblem = new Image();
+                            imageEmblem.onload = function () {
+                                emblem.image(imageEmblem);
+                                emblem.setWidth(this.width);
+                                emblem.setHeight(this.height);
+                                emblem.scale({
+                                    x: data.multiplexer,
+                                    y: data.multiplexer
+                                });
+                                LAYER.draw();
+                            };
+
+                            imageEmblem.src = data.src;
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
+            }
+
+            //MAIN LAYER
+            var LAYER = null;
+
+            //MAIN STAGE
+            var STAGE = null;
+            var stage_scale = 1;
+            var limit = 0;
+
+            var GROUP = null;
+            var current_pointer = 0;
+
+            var TEMP_PRESET_HOLDER = null;
+
+            var UPDATABLE_VIEW = {
+                id: null,
+                view: null,
+                parent: null
+            };
+
+            //Main product
+            var product = {
+                data: null,
+                product_id: null,
+                color_id: null,
+                size_id: null,
+                views: [],
+                send_info: function () {
+                    return {
+                        data: this.data,
+                        product_id: this.product_id,
+                        color_id: this.color_id,
+                        size_id: this.size_id,
+                        views: sendable_views(this.views)
+                    }
+                },
+                remove: function () {
+                    this.data = null;
+                    this.product_id = null;
+                    this.color_id = null;
+                    this.size_id = null;
+                    this.views = [];
+                    current_pointer = 0;
+                    current_view = 1;
+                    LAYER = null;
+                    STAGE = null;
+                    stage_scale = 1;
+                    limit = 0;
+                    GROUP = null;
+                    ACTUAL_VIEW = null;
+                    ACTUAL_LOGO = null;
+                    UPDATABLE_VIEW = {
+                        id: null,
+                        view: null,
+                        parent: null
+                    };
+                    UPDATABLE_EMBLEM = {
+                        x: null,
+                        y: null,
+                        multiplexer: null,
+                        src: null
+                    };
+                    TEMP_PRESET_HOLDER = null;
+                },
+                clean: function () {
+                    this.views = [];
+                    current_pointer = 0;
+                    LAYER = null;
+                    STAGE = null;
+                    stage_scale = 1;
+                    limit = 0;
+                    GROUP = null;
+                    ACTUAL_VIEW = null;
+                    ACTUAL_LOGO = null;
+                    UPDATABLE_VIEW = {
+                        id: null,
+                        view: null,
+                        parent: null
+                    };
+                    UPDATABLE_EMBLEM = {
+                        x: null,
+                        y: null,
+                        multiplexer: null,
+                        src: null
+                    };
+                },
+                no_custom: function () {
+                    for (var t = 0; t < this.views.length; t++) {
+                        this.views[t].remove();
+                    }
+                }
+            };
+
+            function fitStageIntoParentContainer() {
+                var container = document.querySelector('#image-container');
+                // now we need to fit stage into parent
+                var containerWidth = container.offsetWidth;
+                var containerHeight = container.offsetHeight;
+                var cur = containerHeight;
+                if (containerWidth < containerHeight) {
+                    cur = containerWidth;
+                }
+                // to do this we need to scale the stage
+                limit = limit / stage_scale;
+                var scale = cur / 500;
+                stage_scale = scale;
+                limit = limit * stage_scale;
+                STAGE.width(500 * scale);
+                STAGE.height(500 * scale);
+                STAGE.scale({x: scale, y: scale});
+                STAGE.draw();
+            }
+
+            function create_image_slider(views) {
+
+                current_pointer = 0;
+                var p1 = 0;
+                var p2 = 0;
+
+                limit = 500 * (views.length - 1) * -1 * stage_scale;
+
+                GROUP = new Konva.Group({
+                    x: 0,
+                    y: 0,
+                    height: 500,
+                    width: 500 * views.length,
+                    draggable: true,
+                    dragBoundFunc: function (pos) {
+                        return {
+                            x: pos.x < 0 && pos.x > limit ? pos.x : this.getAbsolutePosition().x,
+                            y: this.getAbsolutePosition().y
+                        }
+                    }
+                });
+                LAYER.add(GROUP);
+
+                GROUP.on('dragstart mousedown', function () {
+                    p1 = STAGE.getPointerPosition();
+                });
+
+                GROUP.on('mouseup dragend', function () {
+                    p2 = STAGE.getPointerPosition();
+                    if ((p2.x - p1.x) / stage_scale < -50) {
+                        var mover = -500 * (current_pointer + 1);
+                        var once = true;
+                        var lim = 500 * (views.length - 1) * -1;
+                        var animation_1 = new Konva.Animation(function (frame) {
+                            var x = GROUP.getX();
+                            if (x > mover && x > lim) {
+                                if (x - (50 * frame.time / 1000) < mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    once ? current_pointer = current_pointer + 1 : null;
+                                    once = false;
+                                    animation_1.stop();
+                                } else {
+                                    GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                    once ? current_pointer = current_pointer + 1 : null;
+                                    once = false;
+                                }
+                            } else if (x < mover && x < 0) {
+                                if (x + (50 * frame.time / 1000) > mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    once ? current_pointer = current_pointer + 1 : null;
+                                    once = false;
+                                    animation_1.stop();
+                                } else {
+                                    GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                    once ? current_pointer = current_pointer + 1 : null;
+                                    once = false;
+                                }
+                            } else {
+                                animation_1.stop();
+                            }
+                        }, LAYER);
+                        animation_1.start();
+                    } else if ((p2.x - p1.x) / stage_scale > 50) {
+                        var mover = -500 * (current_pointer - 1);
+                        var once = true;
+                        var lim = 500 * (views.length - 1) * -1;
+                        var animation_2 = new Konva.Animation(function (frame) {
+                            var x = GROUP.getX();
+                            if (x < mover && x < 0) {
+                                if (x + (50 * frame.time / 1000) > mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    once ? current_pointer = current_pointer - 1 : null;
+                                    once = false;
+                                    animation_2.stop();
+                                } else {
+                                    GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                    once ? current_pointer = current_pointer - 1 : null;
+                                    once = false;
+                                }
+                            } else if (x > mover && x > lim) {
+                                if (x - (50 * frame.time / 1000) < mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    once ? current_pointer = current_pointer - 1 : null;
+                                    once = false;
+                                    animation_2.stop();
+                                } else {
+                                    GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                    once ? current_pointer = current_pointer - 1 : null;
+                                    once = false;
+                                }
+                            } else {
+                                animation_2.stop();
+                            }
+                        }, LAYER);
+                        animation_2.start();
+                    } else {
+                        var mover = -500 * current_pointer;
+                        var x = GROUP.getX();
+                        if (x > mover) {
+                            var animation_3 = new Konva.Animation(function (frame) {
+                                x = GROUP.getX();
+                                if (x - (50 * frame.time / 1000) < mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    animation_3.stop();
+                                } else if (x > mover) {
+                                    GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                }
+                            }, LAYER);
+                            animation_3.start();
+                        } else if (x < mover) {
+                            var animation_4 = new Konva.Animation(function (frame) {
+                                x = GROUP.getX();
+                                if (x + (50 * frame.time / 1000) > mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    animation_4.stop();
+                                } else if (x < mover) {
+                                    GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                }
+                            }, LAYER);
+                            animation_4.start();
+                        }
+                    }
+                });
+
+                for (var i = 0; i < views.length; i++) {
+                    add_image_in_position(views[i].src, 'img' + i, 500 * i, GROUP, i);
+                }
+
+                LAYER.draw();
+            }
+
+            function load_viewer(_url_base, view, view_stationary) {
+                _url_base = _url_base || null;
+
+                if (view !== undefined && view !== null) {
+                    UPDATABLE_VIEW.id = view;
+                    UPDATABLE_VIEW.view = product.views[view];
+                    UPDATABLE_VIEW.parent = product.views[view].konva_elements.image.getParent();
+
+                    update_section();
+                } else {
+                    if (_url_base === 'null') {
+                        _url_base = null;
+                    }
+
+                    var stageWidth = 500;
+                    var stageHeight = 500;
+
+                    STAGE = new Konva.Stage({
+                        container: 'image-container',
+                        width: stageWidth,
+                        height: stageHeight
+                    });
+                    LAYER = new Konva.Layer();
+                    STAGE.add(LAYER);
+
+                    $('#slide-right').unbind();
+                    $('#slide-right').on('click', function () {
+                        var mover = -500 * (current_pointer + 1);
+                        var once = true;
+                        var lim = 500 * (product.views.length - 1) * -1;
+                        var animation_1 = new Konva.Animation(function (frame) {
+                            var x = GROUP.getX();
+                            if (x > mover && x > lim && mover > lim - 500) {
+                                if (x - (50 * frame.time / 1000) < mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    animation_1.stop();
+                                } else {
+                                    GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                }
+                                once ? current_pointer = current_pointer + 1 : null;
+                                once = false;
+                            } else {
+                                animation_1.stop();
+                            }
+                        }, LAYER);
+                        animation_1.start();
+                    });
+
+                    $('#slide-left').unbind();
+                    $('#slide-left').on('click', function () {
+                        var mover = -500 * (current_pointer - 1);
+                        var once = true;
+                        var animation_2 = new Konva.Animation(function (frame) {
+                            var x = GROUP.getX();
+                            if (x < mover && x < 0 && mover < 500) {
+                                if (x + (50 * frame.time / 1000) > mover) {
+                                    GROUP.move({x: mover - x, y: 0});
+                                    animation_2.stop();
+                                } else {
+                                    GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                }
+                                once ? current_pointer = current_pointer - 1 : null;
+                                once = false;
+                            } else {
+                                animation_2.stop();
+                            }
+                        }, LAYER);
+                        animation_2.start();
+                    });
+
+                    $.ajax({
+                        url: '/catalog/product/color/images',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            color_id: product.color_id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (product.views.length === 0) {
+                                create_objects_array(data);
+                            }
+                            create_image_slider(data);
+                            if (view_stationary && GROUP) {
+                                GROUP.draggable(false);
+                                GROUP.off('dragstart');
+                                GROUP.off('mousedown');
+                                GROUP.off('dragend');
+                                GROUP.off('mouseup');
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+
+                    fitStageIntoParentContainer();
+                    window.addEventListener('resize', fitStageIntoParentContainer);
+                    $('#image-container').find('.konvajs-content').each(function (index) {
+                        $(this)['0'].style.position = null;
+                    })
+                }
+            }
+
+            var modal_quick = document.getElementById('quick_view');
+
+            function find_in_custom(p_id) {
+                var custom = null;
+                console.log(product.views.length);
+                for (var i = 0; i < product.views.length; i++) {
+                    console.log(product.views[i].picture_id);
+                    console.log(p_id);
+                    if (product.views[i].picture_id.toString() === p_id.toString()) {
+                        custom = product.views[i];
+                    }
+                }
+                return custom;
+            }
+
+            function ModifiedView(product_id, picture_id, color_id) {
+                this.product_id = product_id;
+                this.picture_id = picture_id;
+                this.color_id = color_id;
+                this.position_emblem_id = null;
+                this.logo_id = null;
+                this.x = null;
+                this.y = null;
+                this.multiplexer = 1;
+
+                this.sendable_info = function () {
+                    return {
+                        product_id: this.product_id,
+                        picture_id: this.picture_id,
+                        color_id: this.color_id,
+                        position_emblem_id: this.position_emblem_id,
+                        logo_id: this.logo_id,
+                        x: this.x,
+                        y: this.y,
+                        multiplexer: this.multiplexer
+                    }
+                };
+
+                this.konva_elements = {
+                    logo: null,
+                    emblem: null,
+                    image: null
+                };
+
+                this.remove = function () {
+                    this.position_emblem_id = null;
+                    this.logo_id = null;
+                    this.x = null;
+                    this.y = null;
+                    this.multiplexer = 1;
+                    this.konva_elements.logo = null;
+                    this.konva_elements.emblem = null;
+                }
+            }
+
+            $('#quick_view').on('click', function (e) {
+                if (e.target === this)
+                    close_modal();
+
+            });
+
+            function create_objects_array(data) {
+                for (var i = 0; i < data.length; i++) {
+                    product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
+                }
+                console.log(product);
+            }
+
+            function review_cp(id, color) {
+
+                product.color_id = color;
+
+                $.ajax({
+                    url: '/get_cart_item',
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        product_cart_id: id
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        product.data = data['source_data'];
+                        product.product_id = data['source_data']['id'];
+                        product.size_id = data['size']['id'];
+
+                        $.ajax({
+                            url: '/catalog/product/color/images',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                color_id: product.color_id
+                            },
+                            success: function (data_) {
+                                if (product.views.length === 0) {
+                                    create_objects_array(data_);
+                                }
+
+                                for (var i = 0; i < data['logos'].length; i++) {
+                                    var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.logo_id = data['logos'][i]['logo_id'];
+                                        modified_view.x = parseFloat(data['logos'][i]['x']);
+                                        modified_view.y = parseFloat(data['logos'][i]['y']);
+                                        modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                                    }
+                                }
+
+                                for (var j = 0; j < data['emblems'].length; j++) {
+                                    var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                                    if (modified_view !== null) {
+                                        modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                                    }
+                                }
+
+                                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                                load_viewer();
+
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+                        console.log(product);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+
+                var body = $("body");
+                body.addClass("modal-open");
+                body.css('overflow', 'hidden');
+                modal_quick.style.display = "block";
+            }
+
+            function getImage(array, id) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].id === parseInt(id)) {
+                        return array[i];
+                    }
+                }
+            }
+
+            var taxes = [];
+            var prices = [];
+            var stages = [];
+
+            var stageWidth = 500;
+            var stageHeight = 500;
+
+            var container_lts = document.getElementById('container_lts');
+
+            $.ajax({
+                url: '/bag_items?o_id=<%= @order.cart.id %>&order_id=<%= @order.id %>',
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    console.log(data);
+
+                    taxes = data['tax_array'];
+                    prices = data['cost_array'];
+                    var discount_rate = parseFloat(data['discount']);
+
+                    create_entry(0, data['products'].length);
+
+                    function create_entry(i, lim) {
+                        if (i < lim) {
+                            var product = data['products'][i];
+
+                            var pre = '<div class="item-checkout-admin card" style="padding-bottom: 20px; overflow: hidden;">\n' +
+                                '        <div onclick="review_cp(\'' + product['id'] + '\', \'' + product['color']['id'] + '\')" style="float: left; width: 100%; position: relative">\n' +
+                                '          <div class="cart_item" id="cart' + product['id'] + '" style="cursor: zoom-in; width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>\n' +
+                                '        </div>\n' +
+                                '        <hr style="float: left; width: 100%; margin-top: 5px; margin-bottom: 5px"> \n' +
+                                '            <h4 class="text-light" style="float: left; width: 100%;">' + product['data']['title'] + '</h4>\n' +
+                                '          <div style="float: left; width: 100%; position: relative">\n' +
+                                '            <div style="float: left; width: 50%">\n' +
+                                '              <h6 class="text-light">Size: ' + product['size']['title'] + '</h6>\n' +
+                                '              <h6 class="text-light">Customized: ' + ((product['has_emblem'] || product['has_logo']) ? 'YES' : 'NO') + '\n' +
+                                '              <h6 class="text-light">Color: ' + product['color']['title'] + '</h6>\n' +
+                                '            </div>\n' +
+                                '            <div style="float: left; width: 50%; text-align: center">\n' +
+                                '              <h3 class="text-light" style="font-size: 20px;">Qty: ' + product['qty'] + '</h3>\n' +
+                                '              <h4 class="text-light">' + product['price_sgl'] + '</h4>\n' +
+                                '            </div>\n' +
+                                '          </div>\n' +
+                                '      </div>';
+
+
+                            var div = document.createElement('div');
+                            div.innerHTML = pre;
+
+                            container_lts.appendChild(div);
+
+                            var id = 'cart' + product['id'];
+                            var container = $('#' + id);
+                            console.log(container);
+                            container.height(container.width());
+
+                            var stage = new Konva.Stage({
+                                container: id,
+                                width: stageWidth,
+                                height: stageHeight,
+                                preventDefault: false
+                            });
+                            var layer = new Konva.Layer();
+                            stage.add(layer);
+                            stages.push(stage);
+
+                            var baseImg = new Konva.Image({
+                                width: stageWidth,
+                                height: stageHeight,
+                                draggable: false,
+                                preventDefault: false
+                            });
+                            layer.add(baseImg);
+
+                            var search_logo = true;
+
+                            var imageObj1 = new Image();
+                            imageObj1.onload = function () {
+                                baseImg.image(imageObj1);
+
+                                if (search_logo) {
+                                    var baseLogo = new Konva.Image({
+                                        x: 0,
+                                        y: 0,
+                                        width: container.width(),
+                                        height: container.height(),
+                                        draggable: false,
+                                        preventDefault: false
+                                    });
+                                    layer.add(baseLogo);
+
+                                    var logoBase = new Image();
+                                    logoBase.onload = function () {
+                                        baseLogo.image(logoBase);
+                                        baseLogo.setWidth(this.width);
+                                        baseLogo.setHeight(this.height);
+
+                                        i += 1;
+                                        create_entry(i, lim);
+                                        layer.draw();
+                                    };
+
+                                    $.ajax({
+                                        url: '/get_cart_item?product_cart_id=' + product['id'],
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        data: {},
+                                        success: function (data) {
+                                            console.log(data);
+                                            var logo = data.logos[0];
+                                            if (logo) {
+                                                var image = getImage(data.pictures, logo.product_image_id);
+                                                if (image) {
+                                                    search_logo = false;
+                                                    imageObj1.src = image.url;
+                                                    logoBase.src = logo.logo_url;
+                                                    baseLogo.setX(logo.x);
+                                                    baseLogo.setY(logo.y);
+                                                    baseLogo.scale({
+                                                        x: logo.multiplexer,
+                                                        y: logo.multiplexer
+                                                    });
+
+                                                }
+                                            } else {
+                                                i += 1;
+                                                create_entry(i, lim);
+                                                layer.draw();
+                                            }
+                                        },
+                                        error: function (data) {
+                                            console.log(data);
+                                        }
+                                    });
+                                }
+                            };
+
+                            $.ajax({
+                                url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {},
+                                success: function (data) {
+                                    imageObj1.src = data.picture;
+                                },
+                                error: function (data) {
+                                    console.log(data);
+                                }
+                            });
+                        } else {
+
+
+                            function fitStageIntoParentContainer_we() {
+                                $('.cart_item').each(function (index) {
+
+                                    $(this).height($(this).width());
+
+                                    // now we need to fit stage into parent
+                                    var containerWidth = $(this).width();
+                                    // to do this we need to scale the stage
+                                    var scale = containerWidth / stageWidth;
+                                    stages[index].scale({x: scale, y: scale});
+                                    stages[index].draw();
+                                });
+                            }
+
+                            fitStageIntoParentContainer_we();
+                            window.addEventListener('resize', fitStageIntoParentContainer_we);
+
+                            var cost = 0;
+                            for (var t = 0; t < prices.length; t++) {
+                                cost += parseFloat(prices[t]);
+                            }
+
+                            var tax = 0;
+                            for (var t = 0; t < taxes.length; t++) {
+                                tax += parseFloat(taxes[t]);
+                            }
+
+                            document.getElementById('sub_total').innerText = '$' + cost.toFixed(2);
+                            document.getElementById('estimated_tax').innerText = '$' + tax.toFixed(2);
+
+                            if (discount_rate > 0) {
+                                document.getElementById('discountable').innerHTML = '<div style="overflow: hidden; margin: 10px;">\n' +
+                                    '            <h4 class="t-right text-light">Sub total</h4>\n' +
+                                    '            <h3 style="font-weight: lighter;" class="s-left text-light">$' + (cost + tax).toFixed(2) + '</h3>\n' +
+                                    '          </div>\n' +
+                                    '          <div style="overflow: hidden; margin: 10px;">\n' +
+                                    '            <h4 class="t-right text-light">Discount percentage</h4>\n' +
+                                    '            <h4 style="font-weight: lighter;" class="s-left text-light">' + parseInt(discount_rate) + '%</h4>\n' +
+                                    '          </div>';
+                                $('.estimated_total').each(function (index) {
+                                    $(this).html(((cost + tax) - ((cost + tax) * discount_rate / 100)).toFixed(2))
+                                });
+                            } else {
+                                $('.estimated_total').each(function (index) {
+                                    $(this).html((cost + tax).toFixed(2));
+                                });
+                            }
+
+
+                        }
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        </script>
+
+        <h2 style="text-align: left" class="text-light">ORDER DETAILS</h2>
+        <hr>
+        <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+          <h4 class="t-right text-light">Subtotal</h4><h4 id="sub_total" class="s-left text-light">-</h4>
+        </div>
+
+        <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+          <h4 class="t-right text-light">Estimated Tax</h4><h4 id="estimated_tax" class="s-left text-light">-</h4>
+        </div>
+
+        <div id="discountable"></div>
+
+        <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+          <h4 class="t-right text-light">Estimated total</h4>
+          <h3 style="font-weight: lighter; color: #b592a2" class="s-left text-light">$<span style="font: inherit" class="estimated_total">-</span>
+          </h3>
+        </div>
+
+        <div style="margin: 30px 10px 10px;">
+          <h3 style="text-align: left" class="text-light">Extra info</h3>
+          <hr>
+          <table border="1" style="width: 100%">
+            <thead>
+            <tr>
+              <th width="180">Object</th>
+              <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>ID</td>
+              <td><%= @order.id %></td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td><%= @order.state %></td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td><%= @order.description %></td>
+            </tr>
+            <tr>
+              <td>Carrier</td>
+              <td><%= @order.carrier || 'Not assigned' %></td>
+            </tr>
+            <tr>
+              <td>Tracking code</td>
+              <td><%= @order.tracking_code || 'Not assigned' %></td>
+            </tr>
+            <tr>
+              <td>Buyer</td>
+              <td><%= "#{@order.user_address.name} #{@order.user_address.last_name}" %></td>
+            </tr>
+            <tr>
+              <td>Charge ID</td>
+              <td><%= @order.charge_id %></td>
+            </tr>
+            <tr>
+              <td>Destination</td>
+              <td><%= @order.user_address.city %></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 style="text-align: left" class="text-light">Functions</h2>
+        <hr>
+
+        <div style="overflow: hidden; padding: 10px" class="card">
+        <input id="length" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Length" name="search-field">
+        <input id="width" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Width" name="search-field">
+        <input id="height" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Height" name="search-field">
+        <input id="weight" style="margin: 2% 2% 2% 0%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Weigth" name="search-field">
+
+        <i style="float: left" class="fa fa-question" aria-hidden="true"></i>
+        <button onclick="get_shipping_tag('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">GENERATE SHIPPING TAG</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
 </div>
 
 <script>

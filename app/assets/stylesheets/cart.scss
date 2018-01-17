@@ -106,6 +106,16 @@
   margin-left: auto;
 }
 
+.item-checkout-admin {
+  float: left;
+  text-align: left;
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  background: #fcd7e8;
+  border-radius: 10px;
+}
+
 .t-right {
   float: left;
   font-weight: 400;
@@ -224,7 +234,26 @@ button:active {
   font-size: 13px;
 }
 
+@media screen and (min-width: 420px) {
+  .item-checkout-admin {
+    float: left;
+    text-align: left;
+    overflow: hidden;
+    width: 50%;
+    margin: 0;
+  }
+}
+
 @media screen and (min-width: 768px) {
+
+  .item-checkout-admin {
+    float: left;
+    text-align: left;
+    overflow: hidden;
+    width: 20%;
+    margin: 2.5%;
+    height: 330px;
+  }
 
   .content-part-10 {
     width: 100%;

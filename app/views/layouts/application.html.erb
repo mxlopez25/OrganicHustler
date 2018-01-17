@@ -94,6 +94,11 @@
               </div>
             </div>
             <hr style="margin-bottom: 0">
+
+            <h6 id="removable-color-title" style="font-weight: bold">Select color(s):</h6>
+            <div style="width: 100%; overflow: hidden" id="checkboxes-color">
+            </div>
+
             <div style="margin-bottom: 10px">
               <div id="icon-show" class="hidden">
                 <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h5></div>
@@ -142,9 +147,6 @@
 
         <div style="display: none" id="view_2">
           <div class="wrap">
-            <h6 id="removable-color-title" style="font-weight: bold">Select color(s):</h6>
-            <div id="checkboxes-color">
-            </div>
             <div id="controllers" style="float: left; width: 100%">
               <div style="margin-left: auto; margin-right: auto; text-align: center">
                 <button id="minus-btn" class="direction border-bg-sty resizable">
@@ -1236,8 +1238,6 @@
             new_element.innerHTML = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
             actor.parentNode.replaceChild(new_element, actor);
 
-            load_colors(product_.id);
-
             if (GROUP) {
                 GROUP.draggable(false);
                 GROUP.off('dragstart');
@@ -1707,6 +1707,8 @@
         if (!product.data.customizable) {
             document.getElementById('customize_btn').outerHTML = '';
         }
+
+        load_colors(_product.id);
 
         var actor = document.getElementById('actor');
         var new_element = actor.cloneNode(true);
