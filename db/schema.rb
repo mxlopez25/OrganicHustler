@@ -78,8 +78,9 @@ ActiveRecord::Schema.define(version: 20180116000439) do
 
   create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.boolean  "active",     default: true
   end
 
   create_table "categories_products", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -220,17 +221,18 @@ ActiveRecord::Schema.define(version: 20180116000439) do
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "state",                                        collation: "utf8_general_ci"
-    t.text     "description",       limit: 65535,              collation: "utf8_general_ci"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "carrier",                                      collation: "utf8_general_ci"
-    t.string   "tracking_code",                                collation: "utf8_general_ci"
-    t.string   "overall_user_id",                              collation: "utf8_general_ci"
-    t.string   "overall_user_type",                            collation: "utf8_general_ci"
-    t.string   "charge_id",                                    collation: "utf8_general_ci"
-    t.string   "tag_link",                                     collation: "utf8_general_ci"
-    t.string   "user_address_id",                              collation: "utf8_general_ci"
+    t.string   "state",                                                        collation: "utf8_general_ci"
+    t.text     "description",       limit: 65535,                              collation: "utf8_general_ci"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.string   "carrier",                                                      collation: "utf8_general_ci"
+    t.string   "tracking_code",                                                collation: "utf8_general_ci"
+    t.string   "overall_user_id",                                              collation: "utf8_general_ci"
+    t.string   "overall_user_type",                                            collation: "utf8_general_ci"
+    t.string   "charge_id",                                                    collation: "utf8_general_ci"
+    t.string   "tag_link",                                                     collation: "utf8_general_ci"
+    t.string   "user_address_id",                                              collation: "utf8_general_ci"
+    t.boolean  "confirmed",                       default: false
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -365,9 +367,10 @@ ActiveRecord::Schema.define(version: 20180116000439) do
     t.string   "titulo"
     t.decimal  "amount",                    precision: 10, scale: 3
     t.text     "description", limit: 65535
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
     t.integer  "product_id"
+    t.boolean  "active",                                             default: true
   end
 
   create_table "temp_user_controls", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
