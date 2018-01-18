@@ -268,6 +268,7 @@ class HomeController < ApplicationController
         product['size'] = Size.find product['size_id']
         product['color'] = Color.find product['color_id']
         product['price_sgl'] = format('$%.2f', pr_price[5])
+        product['status'] = product['state']
         cart_products[:products].push(product)
       end
 
@@ -495,7 +496,7 @@ class HomeController < ApplicationController
 
   def get_cart_items
 
-    obj = CartProduct.where(cart_id: get_cart_id)
+    obj = CartProduct.where(cart_id: get_cart.id)
     json_obj = JSON.parse(obj.to_json)
     json_obj.each {|json_data|
       json_data['product_data'] = Product.find(json_data['product_id'])
@@ -529,7 +530,8 @@ class HomeController < ApplicationController
     size_price = HomeController.to_decimal((Size.find product.size_id).price)
 
     total_m = (product_price + size_price + price_logos + price_emblems)
-    real_product_tax = total_m * base_product_tax/product_price
+    real_product_tax = total_m * base_product_tax
+
 
     [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
   end
@@ -551,26 +553,7 @@ class HomeController < ApplicationController
 
   def cancel_order
 
-    id_order = params[:id_order]
-    id_product_cart = params[:id_product_cart]
-
-    user = nil
-    if user_signed_in?
-      user = current_user
-    else
-      user = TempUser.find(session[:temp_user_id])
-    end
-
-    order_a = user.orders.find(id_order)
-    refund(order_a, id_product_cart)
-    unless order_a.state.eql?('shipped')
-      cart_a = order_a.cart
-      product = cart_a.cart_products.find(id_product_cart)
-      cart_a.n_products = user.cart.n_products - 1
-      cart_a.save!
-      product.state = 'Cancelled'
-      product.save!
-    end
+    #OrdersController.cancel_order
 
     redirect_to '/temporary/user/orders'
 

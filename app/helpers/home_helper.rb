@@ -189,7 +189,7 @@ module HomeHelper
     size_price = HomeController.to_decimal((Size.find product.size_id).price)
 
     total_m = (product_price + size_price + price_logos + price_emblems)
-    real_product_tax = total_m * base_product_tax/product_price
+    real_product_tax = total_m * base_product_tax
 
     [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
   end

@@ -1,5 +1,3 @@
-
-
 <style>
   table {
     color: #333;
@@ -59,36 +57,45 @@
 <% tracker = EasyPost::Tracker.create({
                                           tracking_code: 'EZ2000000002', #@order.tracking_code,
                                           carrier: 'usps'
-                                      }) %>
+                                      })
+   if @order.tag_link
+     shipment = EasyPost::Shipment.retrieve(@order.tag_link)
+   end
+%>
 
 <div style="padding: 60px" class="main">
 
   <div style="position: relative; height: 100px">
     <div style="width: 75%; height: 10px; background: #b592a2; position: absolute; top: 20px; right: 0; left: 0"></div>
+
     <div style="width: 50px; height: 50px; background: #b592a2; left: 10%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
         <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'pre_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'pre_transit' %> font-weight: bold <% end %>" >Pre-Transit</h5>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'pre_transit' %> font-weight: bold
+          <% end %>">Pre-Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 35%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
         <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'in_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'in_transit' %> font-weight: bold <% end %>">In
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'in_transit' %> font-weight: bold
+          <% end %>">In
           Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 60%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
         <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'out_for_delivery' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'out_for_delivery' %> font-weight: bold <% end %>">Out
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'out_for_delivery' %> font-weight: bold
+          <% end %>">Out
           for Delivery</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 85%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
         <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'delivered' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'delivered' %> font-weight: bold <% end %>">Delivered</h5>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'delivered' %> font-weight: bold
+          <% end %>">Delivered</h5>
       </div>
     </div>
   </div>
@@ -781,13 +788,26 @@
                     function create_entry(i, lim) {
                         if (i < lim) {
                             var product = data['products'][i];
+                            var status_color = ((product['status'] === 'Cancelled') ? 'red' : ((product['status'] === 'Cancel requested') ? 'white' : 'black'));
+                            var background_d = (product['status'] === 'Cancel requested') ? 'red' : 'white';
 
-                            var pre = '<div class="item-checkout-admin card" style="padding-bottom: 20px; overflow: hidden;">\n' +
-                                '        <div onclick="review_cp(\'' + product['id'] + '\', \'' + product['color']['id'] + '\')" style="float: left; width: 100%; position: relative">\n' +
+                            var pre = '<div class="item-checkout-admin card" style="padding-bottom: 20px; overflow: hidden; position: relative">\n' +
+                                '                   <div style="position: absolute; right: 5px; top: 5px; z-index: 99" class="dropdown">\n' +
+                                '                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+                                '                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>\n' +
+                                '                      <ul class="dropdown-menu dropdown-menu-right">\n' +
+                                '                        <li>\n' +
+                                '                          <a onclick="cancel_shipment(\'' + data['order']['id'] + '\', \'' + product['id'] + '\')">Cancel product</a>\n' +
+                                '                        </li>\n' +
+                                '                      </ul>\n' +
+                                '                    </div>' +
+                                '        <div onclick="review_cp(\'' + product['id'] + '\', \'' + product['color']['id'] + '\')" style="float: left; width: 100%; position: relative; overflow: hidden">\n' +
                                 '          <div class="cart_item" id="cart' + product['id'] + '" style="cursor: zoom-in; width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>\n' +
                                 '        </div>\n' +
+                                '          <div style="float: left; width: 100%; position: relative">\n' +
                                 '        <hr style="float: left; width: 100%; margin-top: 5px; margin-bottom: 5px"> \n' +
                                 '            <h4 class="text-light" style="float: left; width: 100%;">' + product['data']['title'] + '</h4>\n' +
+                                '           </div>' +
                                 '          <div style="float: left; width: 100%; position: relative">\n' +
                                 '            <div style="float: left; width: 50%">\n' +
                                 '              <h6 class="text-light">Size: ' + product['size']['title'] + '</h6>\n' +
@@ -799,6 +819,11 @@
                                 '              <h4 class="text-light">' + product['price_sgl'] + '</h4>\n' +
                                 '            </div>\n' +
                                 '          </div>\n' +
+                                '          <div style="float: left; width: 100%; height: 100px; position: relative">\n' +
+                                '              <h6 class="text-light">SKU: ' + product['data']['sku'] + '</h6>\n' +
+                                '              <h6 onclick="document.location.href = \'/admin/product/' + product['data']['id'] + '\'" style="color: #b592a2; cursor: pointer" class="text-light">ID: ' + product['data']['id'] + '</h6>\n' +
+                                '              <h6 style="color: ' + status_color + '; background: '+ background_d +'" class="text-light">Status: ' + (product['status'] === null ? 'Booked' : product['status']) + '</h6>\n' +
+                                '          </div>' +
                                 '      </div>';
 
 
@@ -1032,6 +1057,10 @@
               <td>Tracker information</td>
               <td><%= tracker['tracking_details'][0]['message'] %></td>
             </tr>
+            <tr>
+              <td>Tag link</td>
+              <td><%= @order.tag_link %></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -1039,15 +1068,29 @@
         <h2 style="text-align: left" class="text-light">Functions</h2>
         <hr>
 
-        <div style="overflow: hidden; padding: 10px" class="card">
-        <input id="length" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Length" name="search-field">
-        <input id="width" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Width" name="search-field">
-        <input id="height" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Height" name="search-field">
-        <input id="weight" style="margin: 2% 2% 2% 0%;width: 21%; float: left;" class="serious-input text-light" type="text" id="order_id" placeholder="Weigth" name="search-field">
+        <form>
+        <div style="position: relative; overflow: hidden; padding: 10px" class="card">
+          <h3 style="text-align: left" class="text-light">Shipping tag</h3>
+          <hr>
+          <% if !@order.tracking_code %>
+            <input required id="length" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Length" name="search-field">
+            <input required id="width" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Width" name="search-field">
+            <input required id="height" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Height" name="search-field">
+            <input required id="weight" style="margin: 2% 2% 2% 0%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Weigth" name="search-field">
 
-        <i style="float: left" class="fa fa-question" aria-hidden="true"></i>
-        <button onclick="get_shipping_tag('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">GENERATE SHIPPING TAG</button>
+            <button onclick="get_shipping_tag('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">GENERATE
+              SHIPPING TAG
+            </button>
+          <% else %>
+            <img style="width: 70%; float: left" src="<%= shipment.postage_label.label_url %>">
+            <div style="width: 30%; float: left; padding: 10px">
+              <button type="submit" onclick="cancel_shipment('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                CANCEL SHIPMENT
+              </button>
+            </div>
+          <% end %>
         </div>
+        </form>
 
       </div>
     </div>
@@ -1073,13 +1116,31 @@
                 w_o: $('#weight').val()
             },
             success: function (data) {
-                window.open(data.url, '_blank')
+                window.open(data.url, '_blank');
+                document.location.reload(true);
             },
             error: function () {
-
             }
         });
 
+    }
+
+    function cancel_shipment(order, item) {
+        $.ajax({
+            url: '/orders',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                id_order: order,
+                id_product_cart: item
+            },
+            success: function (data) {
+                document.location.reload(true);
+            },
+            error: function (data) {
+                document.location.reload(true);
+            }
+        })
     }
 
 </script>
