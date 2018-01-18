@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180116000439) do
+ActiveRecord::Schema.define(version: 20180118181419) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false, collation: "utf8_general_ci"
@@ -223,16 +223,27 @@ ActiveRecord::Schema.define(version: 20180116000439) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "state",                                                        collation: "utf8_general_ci"
     t.text     "description",       limit: 65535,                              collation: "utf8_general_ci"
+<<<<<<< HEAD
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+=======
+>>>>>>> 390420771665cdee44725753343b8436c8e6ebbd
     t.string   "carrier",                                                      collation: "utf8_general_ci"
     t.string   "tracking_code",                                                collation: "utf8_general_ci"
     t.string   "overall_user_id",                                              collation: "utf8_general_ci"
     t.string   "overall_user_type",                                            collation: "utf8_general_ci"
     t.string   "charge_id",                                                    collation: "utf8_general_ci"
+<<<<<<< HEAD
     t.string   "tag_link",                                                     collation: "utf8_general_ci"
     t.string   "user_address_id",                                              collation: "utf8_general_ci"
     t.boolean  "confirmed",                       default: false
+=======
+    t.boolean  "confirmed",                       default: false
+    t.string   "tag_link",                                                     collation: "utf8_general_ci"
+    t.string   "user_address_id",                                              collation: "utf8_general_ci"
+    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                                      null: false
+>>>>>>> 390420771665cdee44725753343b8436c8e6ebbd
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -328,6 +339,13 @@ ActiveRecord::Schema.define(version: 20180116000439) do
     t.float    "top_margin",    limit: 24
     t.float    "right_margin",  limit: 24
     t.float    "bottom_margin", limit: 24
+  end
+
+  create_table "shipping_tag_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "order_id"
+    t.string   "easy_post_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "showcases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

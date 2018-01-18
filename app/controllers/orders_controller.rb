@@ -18,19 +18,59 @@ class OrdersController < ApplicationController
 
   def self.cancel_order(id_order, id_product_cart)
 
-    p id_order, "#############12"
     order_a = Order.find(id_order)
     if order_a
-      if !order_a.state.eql?('Shipped')
-        p order_a
-        refund(order_a, id_product_cart)
-        cart_a = order_a.cart
-        product = cart_a.cart_products.find(id_product_cart)
-        product.state = 'Cancelled'
-        product.save!
-      else
+      if order_a.tag_link
 
+        begin
+          shipment = EasyPost::Shipment.retrieve(@order.tag_link)
+          shipment.refund
+
+          unless order_a.state.eql?('Shipped')
+            p order_a
+            refund(order_a, id_product_cart)
+            if id_product_cart
+              cart_a = order_a.cart
+              product = cart_a.cart_products.find(id_product_cart)
+              product.state = 'Cancelled'
+              product.save!
+            else
+              order_a.state = 'Cancelled'
+              order_a.save!
+            end
+          end
+        rescue => e
+          render json: {error: e}, status: :unauthorized
+        end
+      else
+        unless order_a.state.eql?('Shipped')
+          p order_a
+          refund(order_a, id_product_cart)
+          if id_product_cart
+            cart_a = order_a.cart
+            product = cart_a.cart_products.find(id_product_cart)
+            product.state = 'Cancelled'
+            product.save!
+          else
+            order_a.state = 'Cancelled'
+            order_a.save!
+          end
+        end
       end
+    end
+  end
+
+  def cancel_shipment
+    order = Order.find params[:order_id]
+    shipment = EasyPost::Shipment.retrieve(order.tag_link)
+    begin
+      shipment.refund
+      order.shipping_tag_histories << ShippingTagHistory.create!(easy_post_id: shipment.id)
+      order.tag_link = nil
+      order.save!
+      render json: {message: 'successful'}, status: :ok
+    rescue => e
+      render json: {error: e}, status: :unauthorized
     end
   end
 
@@ -63,8 +103,8 @@ class OrdersController < ApplicationController
     parcel = EasyPost::Parcel.create(
         length: params['l'],
         width: params['w'],
-        height:  params['h'],
-        weight:  params['w_o']
+        height: params['h'],
+        weight: params['w_o']
     )
 
     shipment = EasyPost::Shipment.create(

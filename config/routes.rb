@@ -150,6 +150,7 @@ Rails.application.routes.draw do
   get '/temporary/user/orders' => 'home#temp_user_order'
   get '/temporary/user/menu' => 'home#temp_user_menu'
   get '/orders' => 'home#orders'
+  delete '/orders/shipment' => 'orders#cancel_shipment'
 
   delete '/invalidate' => 'home#invalidate'
 
