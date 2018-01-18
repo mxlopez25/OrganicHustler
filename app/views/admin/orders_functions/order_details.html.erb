@@ -58,6 +58,7 @@
                                           tracking_code: 'EZ2000000002', #@order.tracking_code,
                                           carrier: 'usps'
                                       })
+  shipment = {tracker: {status: ''}}.to_json
    if @order.tag_link
      shipment = EasyPost::Shipment.retrieve(@order.tag_link)
    end
@@ -70,31 +71,31 @@
 
     <div style="width: 50px; height: 50px; background: #b592a2; left: 10%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'pre_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'pre_transit' %> font-weight: bold
+        <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'pre_transit' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'pre_transit' %> font-weight: bold
           <% end %>">Pre-Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 35%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'in_transit' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'in_transit' %> font-weight: bold
+        <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'in_transit' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'in_transit' %> font-weight: bold
           <% end %>">In
           Transit</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 60%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'out_for_delivery' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'out_for_delivery' %> font-weight: bold
+        <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'out_for_delivery' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'out_for_delivery' %> font-weight: bold
           <% end %>">Out
           for Delivery</h5>
       </div>
     </div>
     <div style="width: 50px; height: 50px; background: #b592a2; left: 85%; position: absolute; border-radius: 50%">
       <div style="position: relative; width: 100%; height: 100%">
-        <div style="width: 30px; height: 30px; <% if tracker['status'].eql? 'delivered' %> background: #f0f5e6; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
-        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if tracker['status'].eql? 'delivered' %> font-weight: bold
+        <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'delivered' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+        <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'delivered' %> font-weight: bold
           <% end %>">Delivered</h5>
       </div>
     </div>
@@ -797,7 +798,7 @@
                                 '                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>\n' +
                                 '                      <ul class="dropdown-menu dropdown-menu-right">\n' +
                                 '                        <li>\n' +
-                                '                          <a onclick="cancel_shipment(\'' + data['order']['id'] + '\', \'' + product['id'] + '\')">Cancel product</a>\n' +
+                                '                          <a onclick="cancel_product(\'' + data['order']['id'] + '\', \'' + product['id'] + '\')">Cancel product</a>\n' +
                                 '                        </li>\n' +
                                 '                      </ul>\n' +
                                 '                    </div>' +
@@ -1068,7 +1069,7 @@
         <h2 style="text-align: left" class="text-light">Functions</h2>
         <hr>
 
-        <form>
+        <form action="javascript:void(0);">
         <div style="position: relative; overflow: hidden; padding: 10px" class="card">
           <h3 style="text-align: left" class="text-light">Shipping tag</h3>
           <hr>
@@ -1082,15 +1083,199 @@
               SHIPPING TAG
             </button>
           <% else %>
-            <img style="width: 70%; float: left" src="<%= shipment.postage_label.label_url %>">
-            <div style="width: 30%; float: left; padding: 10px">
+            <div id="loading" class="hidden">
+
+              <div class="loader">
+
+              </div>
+
+            </div>
+            <img style="width: 60%; float: left" src="<%= shipment.postage_label.label_url %>">
+            <div style="width: 40%; float: left; padding: 10px">
+              <h4 style="text-align: left" class="text-light">Details</h4>
+              <hr>
+              <table border="1" style="width: 100%">
+                <thead>
+                <tr>
+                  <th>Object</th>
+                  <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>Price</td>
+                  <td>$<%= shipment["selected_rate"]["rate"] %></td>
+                </tr>
+                <tr>
+                  <td>Est. days</td>
+                  <td><%= shipment["selected_rate"]["est_delivery_days"] %></td>
+                </tr>
+                </tbody>
+              </table>
+
+              <!--<h4 style="text-align: left; margin-top: 30px" class="text-light">History</h4>
+              <hr>
+              <p style="text-align: left;" class="text-light">(All ongoing shipping refund status will apear here)</p>
+              <table border="1" style="width: 100%">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>-->
+
+              <h4 style="text-align: left; margin-top: 30px" class="text-light">Actions</h4>
+              <hr>
               <button type="submit" onclick="cancel_shipment('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
                 CANCEL SHIPMENT
               </button>
+              <div class="text-light" style="color: red" id="error_shipping">
+
+              </div>
             </div>
           <% end %>
         </div>
         </form>
+
+        <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
+          <h3 style="text-align: left" class="text-light">Tracking</h3>
+          <hr>
+          <% if !@order.tracking_code %>
+            <h4 class="text-light">NO INFORMATION YET</h4>
+          <% else %>
+            <div style="padding: 10px">
+              <h4 style="text-align: left" class="text-light">Current</h4>
+              <hr>
+
+              <% curr = shipment["tracker"]["tracking_details"].last %>
+
+              <div style="padding: 10px">
+                <table border="1" style="width: 100%">
+                <thead>
+                <tr>
+                  <th width="180">Object</th>
+                  <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>Message</td>
+                  <td><%= curr["message"] %></td>
+                </tr>
+                <tr>
+                  <td>Date</td>
+                  <td><%= curr["datetime"] %></td>
+                </tr>
+                <tr>
+                  <td>Source</td>
+                  <td><%= curr["source"] %></td>
+                </tr>
+                <tr>
+                  <td>City</td>
+                  <td><%= curr["tracking_location"]["city"] %></td>
+                </tr>
+                <tr>
+                  <td>State</td>
+                  <td><%= curr["tracking_location"]["state"] %></td>
+                </tr>
+                <tr>
+                  <td>Country</td>
+                  <td><%= curr["tracking_location"]["country"] %></td>
+                </tr>
+                <tr>
+                  <td>ZIP Code</td>
+                  <td><%= curr["tracking_location"]["zip"] %></td>
+                </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            <h4 style="text-align: left" class="text-light">History</h4>
+            <hr>
+            <div style="padding: 10px">
+              <table border="1" style="width: 100%">
+                <thead>
+                <tr>
+                  <th width="180">Object</th>
+                  <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+            <% shipment["tracker"]["tracking_details"].each do |curr| %>
+
+
+                <tr>
+                  <td>Message</td>
+                  <td><%= curr["message"] %></td>
+                </tr>
+                <tr>
+                  <td>Date</td>
+                  <td><%= curr["datetime"] %></td>
+                </tr>
+                <tr>
+                  <td>Source</td>
+                  <td><%= curr["source"] %></td>
+                </tr>
+                <tr>
+                  <td>City</td>
+                  <td><%= curr["tracking_location"]["city"] %></td>
+                </tr>
+                <tr>
+                  <td>State</td>
+                  <td><%= curr["tracking_location"]["state"] %></td>
+                </tr>
+                <tr>
+                  <td>Country</td>
+                  <td><%= curr["tracking_location"]["country"] %></td>
+                </tr>
+                <tr style="border-bottom: dotted 4px #b592a2">
+                  <td>ZIP Code</td>
+                  <td><%= curr["tracking_location"]["zip"] %></td>
+                </tr>
+            <% end %>
+            </tbody>
+            </table>
+            </div>
+          <% end %>
+          </div>
+
+        <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
+
+          <div id="loading2" class="hidden">
+
+            <div class="loader">
+
+            </div>
+
+          </div>
+
+          <h3 style="text-align: left" class="text-light">Actions</h3>
+          <hr>
+
+
+          <button type="submit" onclick="cancel_order('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+            CANCEL ORDER
+          </button>
+
+          <div class="text-light" style="color: red" id="error_shipping_2">
+
+          </div>
+
+          <button type="submit" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+            SUPPORT CENTER
+          </button>
+
+          <button type="submit" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+            COMPLETE ORDER
+          </button>
+
+        </div>
+
+        </div>
 
       </div>
     </div>
@@ -1125,7 +1310,7 @@
 
     }
 
-    function cancel_shipment(order, item) {
+    function cancel_product(order, item) {
         $.ajax({
             url: '/orders',
             type: 'delete',
@@ -1139,6 +1324,48 @@
             },
             error: function (data) {
                 document.location.reload(true);
+            }
+        })
+    }
+
+    function cancel_shipment(order) {
+        document.getElementById('loading').classList.remove('hidden');
+        $.ajax({
+            url: '/orders/shipment',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                order_id: order
+            },
+            success: function (data) {
+                document.location.reload(true);
+                document.getElementById('loading').classList.add('hidden');
+            },
+            error: function (data) {
+                console.log(data);
+                document.getElementById('error_shipping').innerText = data.responseJSON.error;
+                document.getElementById('loading').classList.add('hidden');
+            }
+        })
+    }
+
+    function cancel_order(order) {
+        document.getElementById('loading2').classList.remove('hidden');
+        $.ajax({
+            url: '/orders',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                id_order: order
+            },
+            success: function (data) {
+                document.location.reload(true);
+                document.getElementById('loading2').classList.add('hidden');
+            },
+            error: function (data) {
+                document.location.reload(true);
+                document.getElementById('error_shipping_2').innerText = data.responseJSON.error;
+                document.getElementById('loading2').classList.add('hidden');
             }
         })
     }
