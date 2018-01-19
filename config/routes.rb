@@ -67,10 +67,13 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
+  get '/admin/support/ticket/:id' => 'admin#ticket_details'
+  get '/admin/support/:email' => 'admin#support_user'
   get '/admin/promos' => 'admin#promo_code'
   get '/admin/taxes' => 'admin#tax_band'
   get '/admin/categories' => 'admin#category'
   get '/admin/gifts' => 'admin#gifts'
+  get '/admin/support' => 'admin#support'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -150,7 +153,9 @@ Rails.application.routes.draw do
   get '/temporary/user/orders' => 'home#temp_user_order'
   get '/temporary/user/menu' => 'home#temp_user_menu'
   get '/orders' => 'home#orders'
+
   delete '/orders/shipment' => 'orders#cancel_shipment'
+  patch '/orders/complete' => 'orders#complete'
 
   delete '/invalidate' => 'home#invalidate'
 

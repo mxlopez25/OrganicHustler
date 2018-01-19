@@ -1245,7 +1245,7 @@
 
         <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
 
-          <div id="loading2" class="hidden">
+          <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; width: 120px; height: 120px;" id="loading2" class="hidden">
 
             <div class="loader">
 
@@ -1257,7 +1257,7 @@
           <hr>
 
 
-          <button type="submit" onclick="cancel_order('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+          <button type="button" onclick="cancel_order('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
             CANCEL ORDER
           </button>
 
@@ -1265,12 +1265,12 @@
 
           </div>
 
-          <button type="submit" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+          <button type="button" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
             SUPPORT CENTER
           </button>
 
-          <button type="submit" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
-            COMPLETE ORDER
+          <button type="button" onclick="change_order_state('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+            <%= @order.confirmed ? 'OPEN ORDER' : 'CLOSE (COMPLETE) ORDER' %>
           </button>
 
         </div>
@@ -1363,9 +1363,25 @@
                 document.getElementById('loading2').classList.add('hidden');
             },
             error: function (data) {
-                document.location.reload(true);
                 document.getElementById('error_shipping_2').innerText = data.responseJSON.error;
                 document.getElementById('loading2').classList.add('hidden');
+            }
+        })
+    }
+
+    function change_order_state(order) {
+        $.ajax({
+            url: '/orders/complete',
+            type: 'patch',
+            dataType: 'json',
+            data: {
+                id_order: order
+            },
+            success: function (data) {
+                document.location.reload(true);
+            },
+            error: function (data) {
+                document.location.reload(true);
             }
         })
     }

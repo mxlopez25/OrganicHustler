@@ -13,21 +13,16 @@ class OrdersController < ApplicationController
     id_order = params[:id_order]
     id_product_cart = params[:id_product_cart]
 
-    OrdersController.cancel_order id_order, id_product_cart
-  end
-
-  def self.cancel_order(id_order, id_product_cart)
-
     order_a = Order.find(id_order)
     if order_a
       if order_a.tag_link
-
         begin
-          shipment = EasyPost::Shipment.retrieve(@order.tag_link)
+          p order_a
+          shipment = EasyPost::Shipment.retrieve(order_a.tag_link)
           shipment.refund
 
           unless order_a.state.eql?('Shipped')
-            p order_a
+            p order_a, '################'
             refund(order_a, id_product_cart)
             if id_product_cart
               cart_a = order_a.cart
@@ -35,6 +30,7 @@ class OrdersController < ApplicationController
               product.state = 'Cancelled'
               product.save!
             else
+
               order_a.state = 'Cancelled'
               order_a.save!
             end
@@ -58,6 +54,12 @@ class OrdersController < ApplicationController
         end
       end
     end
+  end
+
+  def complete
+    order = Order.find params[:id_order]
+    order.confirmed = !order.confirmed
+    order.save!
   end
 
   def cancel_shipment

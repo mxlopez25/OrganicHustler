@@ -67,5 +67,6 @@ Rails.application.configure do
       :user_name => ENV['MAILGUN_USR'],
       :password => ENV['MAILGUN_PSD']
   }
+  EasyPost.api_key = ENV['EASYPOST_SECRET']
 
 end

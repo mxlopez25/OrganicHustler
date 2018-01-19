@@ -8,6 +8,9 @@ class AdminController < ApplicationController
   def main
   end
 
+  def support
+  end
+
   def products
     @amount = params[:limit] || 40
   end
@@ -116,6 +119,18 @@ class AdminController < ApplicationController
     id_o = params['id_o']
     @order = Order.find(id_o)
     render '/admin/orders_functions/order_details'
+  end
+
+  def ticket_details
+    id = params['id']
+    @ticket = Ticket.find id
+    render '/admin/support_functions/ticket_details.html.erb'
+  end
+
+  def support_user
+    email = params['email']
+    @temp_user = TempUser.find_by_email(email)
+    render '/admin/support_functions/support_email.html.erb'
   end
 
   def mailer_send
