@@ -12,3 +12,4 @@ tmp/pids/
 tmp/restart.txt
 tmp/sockets/
 .idea/runConfigurations/
+db/schema.rb
