@@ -234,7 +234,7 @@ class HomeController < ApplicationController
 
       unless pr['consolidated']
         products_partial.each do |dl|
-          if dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id']
+          if dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id'] && pr['color_id'] == dl['color_id']
             tem_pr = CartProduct.find(pr['id'])
             tem_dl = CartProduct.find(pr['id'])
 
