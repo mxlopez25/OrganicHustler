@@ -231,16 +231,27 @@ ActiveRecord::Schema.define(version: 20180119074849) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "state",                                                        collation: "utf8_general_ci"
     t.text     "description",       limit: 65535,                              collation: "utf8_general_ci"
+<<<<<<< HEAD
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+=======
+>>>>>>> 390420771665cdee44725753343b8436c8e6ebbd
     t.string   "carrier",                                                      collation: "utf8_general_ci"
     t.string   "tracking_code",                                                collation: "utf8_general_ci"
     t.string   "overall_user_id",                                              collation: "utf8_general_ci"
     t.string   "overall_user_type",                                            collation: "utf8_general_ci"
     t.string   "charge_id",                                                    collation: "utf8_general_ci"
+<<<<<<< HEAD
+    t.string   "tag_link",                                                     collation: "utf8_general_ci"
+    t.string   "user_address_id",                                              collation: "utf8_general_ci"
+    t.boolean  "confirmed",                       default: false
+=======
     t.boolean  "confirmed",                       default: false
     t.string   "tag_link",                                                     collation: "utf8_general_ci"
     t.string   "user_address_id",                                              collation: "utf8_general_ci"
     t.datetime "updated_at",                                      null: false
     t.datetime "created_at",                                      null: false
+>>>>>>> 390420771665cdee44725753343b8436c8e6ebbd
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
