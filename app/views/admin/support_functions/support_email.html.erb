@@ -49,6 +49,12 @@
     font-weight: 300;
   }
 
+    .ticket_entry:hover {
+      background: #b592a2;
+      color: white;
+      cursor: pointer;
+    }
+
 </style>
 
 <body style="background-color: white">
@@ -61,13 +67,29 @@
     <h2 class="text-light" style="text-align: left">Tickets</h2>
     <hr>
 
-    <h2 class="text-light" style="text-align: left">Actions</h2>
+    <% @temp_user.tickets.each do |t| %>
+
+    <div onclick="location.href = '/admin/support/ticket?id=<%= t.id %>'" style="padding: 10px; margin: 15px; overflow: hidden" class="card ticket_entry">
+      <div style="float: left; width: 30%; border-right: #5e5e5e dotted 1px ">
+        <%= t.created_at %>
+      </div>
+      <div style="float: left; width: 60%; border-right: #5e5e5e dotted 1px ">
+        <%= t.subject %>
+      </div>
+      <div style="float: left; width: 10%;">
+        <%= t.status ? '<span style="color: red" >Closed</span>'.html_safe : '<span style="color: green" >Open</span>'.html_safe %>
+      </div>
+    </div>
+
+    <% end %>
+
+    <h2 class="text-light" style="text-align: left; margin-top: 50px;">Actions</h2>
     <hr>
-    <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
+    <div style="position: relative; overflow: hidden; padding: 10px;" class="card">
       <h3 class="text-light" style="text-align: left">Tickets</h3>
       <hr>
       <input required id="subject" style="margin: 2% 2% 2% 2%;width: 96%; float: left;" class="serious-input text-light" type="text" placeholder="Subject" name="search-field">
-      <button type="button" onclick="create_ticket()" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+      <button type="button" onclick="create_ticket('<%= @temp_user.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
         NEW TICKET
       </button>
     </div>
@@ -80,18 +102,19 @@
 <script>
   function create_ticket(user) {
       $.ajax({
-          url: '',
+          url: '/tickets',
           type: 'post',
           dataType: 'json',
           data: {
-              user_id: user,
-              subject: document.getElementById('subject').value
+              temp_user_id: user,
+              subject: document.getElementById('subject').value,
+              status: false
           },
           success: function (data) {
-
+              document.location.reload(true);
           },
           error: function (data) {
-
+              document.location.reload(true);
           }
       })
   }

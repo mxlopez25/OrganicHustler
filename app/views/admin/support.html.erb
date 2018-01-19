@@ -54,7 +54,7 @@
   <div class="content-part-7 card">
     <h2 class="text-light">Support</h2>
     <input style="margin: 0" class="content-part-7 serious-input text-light" type="text" id="email" placeholder="User mail" name="search-field">
-    <button onclick="document.location.href = '/admin/orders/' + document.getElementById('order_id').value" style="margin: 0; color: white" type="submit" class="btn btn-sp content-part-3 text-light">Search</button>
+    <button onclick="document.location.href = '/admin/support/user?email=' + document.getElementById('email').value" style="margin: 0; color: white" type="submit" class="btn btn-sp content-part-3 text-light">Search</button>
     <div style="overflow: hidden; width: 100%">
       <h3  class="text-light">Latest unfinished tickets</h3>
     </div>
@@ -95,7 +95,7 @@
 
       function see_details() {
           if (selected !== 0) {
-              location.href = '/admin/support/ticket/' + selected
+              location.href = '/admin/support/ticket?id=' + selected
           }
       }
 

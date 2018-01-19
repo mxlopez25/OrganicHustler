@@ -69,7 +69,7 @@
       </tr>
       </thead>
       <tbody>
-      <% Order.where(confirmed: false).order(updated_at: :asc).each do |o| %>
+      <% Order.where(confirmed: false).order(created_at: :asc).each do |o| %>
           <tr>
             <td>
               <input onclick="click_radio('<%= o.id %>')" class="selected-r" name="order" type="radio" id="selection_<%= o.id %>" value="<%= o.id %>">

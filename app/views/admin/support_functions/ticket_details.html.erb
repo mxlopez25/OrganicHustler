@@ -1,0 +1,192 @@
+<style>
+  table {
+    color: #333;
+
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+
+    width: 640px;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  td, th {
+    border: 1px solid transparent; /* No more visible border */
+    height: 30px;
+    transition: all 0.3s;
+  }
+
+  th {
+    background: #b592a2;
+    text-align: center;
+    font-size: large;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+  td {
+    background: #FAFAFA;
+  }
+
+  /* Cells in even rows (2,4,6...) are one color */
+  tr:nth-child(even) td {
+    background: #F1F1F1;
+  }
+
+  /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
+  tr:nth-child(odd) td {
+    background: #FEFEFE;
+  }
+
+  tr td:hover {
+    background: #666;
+    color: #FFF;
+  }
+
+  .text-light {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+  .speech-bubble {
+    position: relative;
+    background: #b592a2;
+    border-radius: .4em;
+    width: 60%;
+    float: left;
+    left: 34px;
+    color: white;
+    margin-top: 10px;
+
+  }
+
+  .speech-bubble:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 34px solid transparent;
+    border-right-color: #b592a2;
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -17px;
+    margin-left: -34px;
+  }
+
+  .speech-bubble-admin {
+    position: relative;
+    background: #b592a2;
+    border-radius: .4em;
+    width: 60%;
+    float: right;
+    right: 34px;
+    color: white;
+    margin-top: 10px;
+  }
+
+  .speech-bubble-admin:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 34px solid transparent;
+    border-left-color: #b592a2;
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -17px;
+    margin-right: -34px;
+  }
+
+</style>
+
+<body style="background-color: white">
+<div style="float: right" class="main">
+
+  <h1 class="text-light" style="text-align: left">Ticket #<%= @ticket.id %></h1>
+  <div style="width: 100%; border: solid 3px #b692a2; border-radius: 10px; background: #b592a2"></div>
+  <div style="padding: 10px">
+
+    <h2 class="text-light" style="text-align: left">Messages</h2>
+    <hr>
+
+    <div style="padding: 10px; height: 500px;">
+      <div id="mydiv" style="overflow-y: scroll; height: 300px">
+        <div style="overflow: visible">
+          <% @ticket.messages.each do |m| %>
+            <div class="speech-bubble<%= m.client ? '' : '-admin' %>">
+              <div class="text-light" style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative">
+                <%= m.data %>
+              </div>
+              <div class="text-light" style="color: white; float: left; width: 30%; padding: 10px">
+                <%= m.created_at %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+
+      <hr>
+
+      <div style="margin: 10px; height: 100px">
+        <textarea id="message" class="content-part-7 serious-input text-light" style="font-size: 14px; line-height: 14px; margin: 0; height: 100%; width: 70%;float: left;"></textarea>
+        <button onclick="send_message('<%= @ticket.id %>')" class="btn btn-sp content-part-3 text-light" style="margin: 0; font-size: 30px; width: 30%;float: left; height: 100%">SEND</button>
+      </div>
+
+      <button type="button" onclick="close_ticket('<%= @ticket.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+        CLOSE TICKET
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+    $("#mydiv").scrollTop($("#mydiv")[0].scrollHeight);
+
+  function send_message(ticket_id) {
+      $.ajax({
+          url: '/messages',
+          type: 'post',
+          dataType: 'json',
+          data: {
+              ticket_id: ticket_id,
+              data: document.getElementById('message').value,
+              client: false
+          },
+          success: function (data) {
+              document.location.reload(true);
+          },
+          error: function (data) {
+              document.location.reload(true);
+          }
+      })
+  }
+
+  function close_ticket(ticket_id) {
+      $.ajax({
+          url: '/messages',
+          type: 'patch',
+          dataType: 'json',
+          data: {
+              ticket_id: ticket_id,
+              data: document.getElementById('message').value,
+              client: false
+          },
+          success: function (data) {
+              document.location.reload(true);
+          },
+          error: function (data) {
+              document.location.reload(true);
+          }
+      })
+  }
+
+</script>

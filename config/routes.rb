@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   get '/admin/orders' => 'admin#orders'
   get '/admin/mailer' => 'admin#mailer'
   get '/admin/orders/:id_o' => 'admin#order_details'
-  get '/admin/support/ticket/:id' => 'admin#ticket_details'
+  get '/admin/support/ticket' => 'admin#ticket_details'
   get '/admin/support/user' => 'admin#support_user'
   get '/admin/promos' => 'admin#promo_code'
   get '/admin/taxes' => 'admin#tax_band'
@@ -180,5 +180,6 @@ Rails.application.routes.draw do
   resource :categories
   resource :configuration_webs
   resource :tickets
+  resource :messages
 
 end
