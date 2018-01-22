@@ -68,5 +68,6 @@ Rails.application.configure do
       :password => ENV['MAILGUN_PSD']
   }
   EasyPost.api_key = ENV['EASYPOST_SECRET']
+  Stripe.api_key = ENV['STRIPE_SECRET']
 
 end

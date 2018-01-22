@@ -1,0 +1,101 @@
+<style>
+  /* Cells in even rows (2,4,6...) are one color */
+  tr:nth-child(even) td {
+    background: #F1F1F1;
+  }
+
+  /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
+  tr:nth-child(odd) td {
+    background: #FEFEFE;
+  }
+</style>
+
+<h1 style="font-family: 'Source Sans Pro', sans-serif; font-weight: bold; color: #b592a2">Order #<%= @order.id %></h1>
+
+<div style="margin: 10px; width: 100%">
+  <table border="1" style="width: 100%;
+      color: #333;
+
+      font-family: 'Source Sans Pro', sans-serif;
+      font-weight: 300;
+
+      width: 640px;
+      border-collapse: collapse;
+      border-spacing: 0;">
+    <thead>
+    <tr>
+      <th width="180" style="
+      border: 1px solid transparent; /* No more visible border */
+          height: 30px;
+          transition: all 0.3s;
+          background: #b592a2;
+          text-align: center;
+          font-size: large;
+          color: white;
+          font-family: 'Source Sans Pro', sans-serif;
+          font-weight: 300;">Object</th>
+      <th style="
+      border: 1px solid transparent; /* No more visible border */
+          height: 30px;
+          transition: all 0.3s;
+          background: #b592a2;
+          text-align: center;
+          font-size: large;
+          color: white;
+          font-family: 'Source Sans Pro', sans-serif;
+          font-weight: 300;">Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;">Status</td>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;"><%= @order.state %></td>
+    </tr>
+    <tr>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;">Carrier</td>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;"><%= @order.carrier || 'Not assigned' %></td>
+    </tr>
+    <tr>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;">Tracking code</td>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;"><%= @order.tracking_code || 'Not assigned' %></td>
+    </tr>
+    <tr>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;">Buyer</td>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;"><%= "#{@order.user_address.name} #{@order.user_address.last_name}" %></td>
+    </tr>
+    <tr>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;">Destination</td>
+      <td style="background: #FAFAFA; border: 1px solid transparent; height: 30px;"><%= @order.user_address.city %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<h2 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 300">Products</h2>
+<hr>
+
+<% @cart_products[:products].each do |cp| %>
+  <% product =  cp['data'] %>
+
+  <div style="width: 100%; overflow: hidden">
+    <div style="width: 30%; float: left">
+      <img style="width: 100%" src="<%= "#{ENV['HOST']}#{ProductController.build_image(cp['id'])}" %>">
+    </div>
+    <div style="width: 70%; float: left">
+      <h2 style="font-family: Arial, Baskerville, monospace; font-weight: lighter"><%= product['title'] %></h2>
+      <hr>
+      <div style="width: 50%; float: left">
+        <h3 style="font-family: Arial, Baskerville, monospace; font-weight: lighter">Size: <%= cp['size']['title'] %></h3>
+        <h3 style="font-family: Arial, Baskerville, monospace; font-weight: lighter">Customized: <%= (cp['has_logo'] || cp['has_emblem']) ? 'YES' : 'NO' %></h3>
+        <h3 style="font-family: Arial, Baskerville, monospace; font-weight: lighter">Color: <%= cp['color']['title'] %></h3>
+        <h3 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter;">Status: <%= cp['state'] || 'Booked' %></h3>
+      </div>
+      <div style="width: 50%; float: left">
+        <h1 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter;">Qty: <%= cp['qty'] %></h1>
+        <h1 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter;"><%= cp['price_sgl'] %></h1>
+      </div>
+    </div>
+  </div>
+
+<% end %>

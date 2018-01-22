@@ -54,14 +54,13 @@
 <body style="background-color: white">
 
 
-<% tracker = EasyPost::Tracker.create({
-                                          tracking_code: 'EZ2000000002', #@order.tracking_code,
-                                          carrier: 'usps'
-                                      })
+<%
   shipment = {tracker: {status: ''}}.to_json
    if @order.tag_link
      shipment = EasyPost::Shipment.retrieve(@order.tag_link)
    end
+
+  tracker = shipment['tracker']
 %>
 
 <div style="padding: 60px" class="main">
@@ -1032,7 +1031,7 @@
             </tr>
             <tr>
               <td>Description</td>
-              <td><%= @order.description %></td>
+              <td><%= tracker['tracking_details'] ? tracker['tracking_details'].first.try('message') : @order.description %></td>
             </tr>
             <tr>
               <td>Carrier</td>
@@ -1056,7 +1055,7 @@
             </tr>
             <tr>
               <td>Tracker information</td>
-              <td><%= tracker['tracking_details'][0]['message'] %></td>
+              <td><%= tracker['tracking_details'] ? tracker['tracking_details'].first.try('message') : '' %></td>
             </tr>
             <tr>
               <td>Tag link</td>
@@ -1064,6 +1063,66 @@
             </tr>
             </tbody>
           </table>
+
+          <h3 style="text-align: left; margin-top: 30px" class="text-light">Address info</h3>
+          <hr>
+          <table border="1" style="width: 100%">
+            <thead>
+            <tr>
+              <th width="180">Object</th>
+              <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>ID</td>
+              <td><%= @order.user_address.id %></td>
+            </tr>
+            <tr>
+              <td>Address 1</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="address1"><%= @order.user_address.street_address %></td>
+            </tr>
+            <tr>
+              <td>City</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="city_address"><%= @order.user_address.city %></td>
+            </tr>
+            <tr>
+              <td>State</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="state_address"><%= @order.user_address.state %></td>
+            </tr>
+            <tr>
+              <td>Zip code</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="zip_address"><%= @order.user_address.zip_code %></td>
+            </tr>
+            <tr>
+              <td>Phone</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="phone_address"><%= @order.user_address.number %></td>
+            </tr>
+            <tr>
+              <td>Names</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="name_address"><%= @order.user_address.name %></td>
+            </tr>
+            <tr>
+              <td>Last Names</td>
+              <td onclick="change_to_field(this)" style="cursor: pointer" id="last_name_address"><%= @order.user_address.last_name %></td>
+            </tr>
+            </tbody>
+          </table>
+
+          <button onclick="update_address('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+            UPDATE SHIPPING ADDRESS
+          </button>
+
+          <script>
+            function change_to_field(object) {
+
+            }
+
+            function update_address(order) {
+
+            }
+          </script>
+
         </div>
 
         <h2 style="text-align: left" class="text-light">Functions</h2>
@@ -1073,6 +1132,15 @@
         <div style="position: relative; overflow: hidden; padding: 10px" class="card">
           <h3 style="text-align: left" class="text-light">Shipping tag</h3>
           <hr>
+
+          <div id="loading" class="hidden">
+
+            <div class="loader">
+
+            </div>
+
+          </div>
+
           <% if !@order.tracking_code %>
             <input required id="length" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Length" name="search-field">
             <input required id="width" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Width" name="search-field">
@@ -1082,14 +1150,38 @@
             <button onclick="get_shipping_tag('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">GENERATE
               SHIPPING TAG
             </button>
+
+            <h5 id="error_log" style="text-align: left; text-align: center; color: red" class="text-light"></h5>
+
+            <h4 style="text-align: left; margin-top: 30px" class="text-light">Refund status</h4>
+            <hr>
+            <table border="1" style="width: 100%">
+              <thead>
+              <tr>
+                <th style="text-align: left; width: 40%">Date</th>
+                <th style="text-align: left">Status</th>
+                <th> Resubmit </th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @order.shipping_tag_histories.each do |a| %>
+              <% sth = EasyPost::Shipment.retrieve(a.easy_post_id) %>
+                <tr>
+                  <td><%= time_ago_in_words sth['created_at'] %></td>
+                  <td class="text-uppercase"><%= sth['refund_status'] %></td>
+                  <td style="background: #fcd7e8">
+
+                    <button type="submit" onclick="cancel_shipment_sh('<%= sth['id'] %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                      RESUBMIT
+                    </button>
+
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+
           <% else %>
-            <div id="loading" class="hidden">
-
-              <div class="loader">
-
-              </div>
-
-            </div>
             <img style="width: 60%; float: left" src="<%= shipment.postage_label.label_url %>">
             <div style="width: 40%; float: left; padding: 10px">
               <h4 style="text-align: left" class="text-light">Details</h4>
@@ -1113,19 +1205,31 @@
                 </tbody>
               </table>
 
-              <!--<h4 style="text-align: left; margin-top: 30px" class="text-light">History</h4>
+              <h4 style="text-align: left; margin-top: 30px" class="text-light">Refund status</h4>
               <hr>
-              <p style="text-align: left;" class="text-light">(All ongoing shipping refund status will apear here)</p>
               <table border="1" style="width: 100%">
                 <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Status</th>
+                  <th style="text-align: left; width: 40%">Date</th>
+                  <th style="text-align: left">Status</th>
+                  <th> Resubmit </th>
                 </tr>
                 </thead>
                 <tbody>
+                <% @order.shipping_tag_histories.each do |a| %>
+                  <% sth = EasyPost::Shipment.retrieve(a.easy_post_id) %>
+                  <tr>
+                    <td><%= time_ago_in_words sth['created_at'] %></td>
+                    <td class="text-uppercase"><%= sth['refund_status'] %></td>
+                    <td style="background: #fcd7e8">
+                      <button type="submit" onclick="cancel_shipment_sh('<%= sth['id'] %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                        RESUBMIT
+                      </button>
+                    </td>
+                  </tr>
+                <% end %>
                 </tbody>
-              </table>-->
+              </table>
 
               <h4 style="text-align: left; margin-top: 30px" class="text-light">Actions</h4>
               <hr>
@@ -1143,54 +1247,51 @@
         <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
           <h3 style="text-align: left" class="text-light">Tracking</h3>
           <hr>
-          <% if !@order.tracking_code %>
-            <h4 class="text-light">NO INFORMATION YET</h4>
-          <% else %>
+          <% curr = shipment["tracker"]["tracking_details"].try(:last) %>
+          <% if curr %>
             <div style="padding: 10px">
               <h4 style="text-align: left" class="text-light">Current</h4>
               <hr>
 
-              <% curr = shipment["tracker"]["tracking_details"].last %>
-
               <div style="padding: 10px">
                 <table border="1" style="width: 100%">
-                <thead>
-                <tr>
-                  <th width="180">Object</th>
-                  <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>Message</td>
-                  <td><%= curr["message"] %></td>
-                </tr>
-                <tr>
-                  <td>Date</td>
-                  <td><%= curr["datetime"] %></td>
-                </tr>
-                <tr>
-                  <td>Source</td>
-                  <td><%= curr["source"] %></td>
-                </tr>
-                <tr>
-                  <td>City</td>
-                  <td><%= curr["tracking_location"]["city"] %></td>
-                </tr>
-                <tr>
-                  <td>State</td>
-                  <td><%= curr["tracking_location"]["state"] %></td>
-                </tr>
-                <tr>
-                  <td>Country</td>
-                  <td><%= curr["tracking_location"]["country"] %></td>
-                </tr>
-                <tr>
-                  <td>ZIP Code</td>
-                  <td><%= curr["tracking_location"]["zip"] %></td>
-                </tr>
-                </tbody>
-              </table>
+                  <thead>
+                  <tr>
+                    <th width="180">Object</th>
+                    <th>Value</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Message</td>
+                    <td><%= curr["message"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Date</td>
+                    <td><%= curr["datetime"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Source</td>
+                    <td><%= curr["source"] %></td>
+                  </tr>
+                  <tr>
+                    <td>City</td>
+                    <td><%= curr["tracking_location"]["city"] %></td>
+                  </tr>
+                  <tr>
+                    <td>State</td>
+                    <td><%= curr["tracking_location"]["state"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td><%= curr["tracking_location"]["country"] %></td>
+                  </tr>
+                  <tr>
+                    <td>ZIP Code</td>
+                    <td><%= curr["tracking_location"]["zip"] %></td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -1205,41 +1306,43 @@
                 </tr>
                 </thead>
                 <tbody>
-            <% shipment["tracker"]["tracking_details"].each do |curr| %>
+                <% shipment["tracker"]["tracking_details"].each do |curr| %>
 
 
-                <tr>
-                  <td>Message</td>
-                  <td><%= curr["message"] %></td>
-                </tr>
-                <tr>
-                  <td>Date</td>
-                  <td><%= curr["datetime"] %></td>
-                </tr>
-                <tr>
-                  <td>Source</td>
-                  <td><%= curr["source"] %></td>
-                </tr>
-                <tr>
-                  <td>City</td>
-                  <td><%= curr["tracking_location"]["city"] %></td>
-                </tr>
-                <tr>
-                  <td>State</td>
-                  <td><%= curr["tracking_location"]["state"] %></td>
-                </tr>
-                <tr>
-                  <td>Country</td>
-                  <td><%= curr["tracking_location"]["country"] %></td>
-                </tr>
-                <tr style="border-bottom: dotted 4px #b592a2">
-                  <td>ZIP Code</td>
-                  <td><%= curr["tracking_location"]["zip"] %></td>
-                </tr>
-            <% end %>
-            </tbody>
-            </table>
+                  <tr>
+                    <td>Message</td>
+                    <td><%= curr["message"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Date</td>
+                    <td><%= curr["datetime"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Source</td>
+                    <td><%= curr["source"] %></td>
+                  </tr>
+                  <tr>
+                    <td>City</td>
+                    <td><%= curr["tracking_location"]["city"] %></td>
+                  </tr>
+                  <tr>
+                    <td>State</td>
+                    <td><%= curr["tracking_location"]["state"] %></td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td><%= curr["tracking_location"]["country"] %></td>
+                  </tr>
+                  <tr style="border-bottom: dotted 4px #b592a2">
+                    <td>ZIP Code</td>
+                    <td><%= curr["tracking_location"]["zip"] %></td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
             </div>
+          <% else %>
+            <h4 class="text-light">NO INFORMATION YET</h4>
           <% end %>
           </div>
 
@@ -1256,16 +1359,17 @@
           <h3 style="text-align: left" class="text-light">Actions</h3>
           <hr>
 
-
+          <% unless @order.state.eql? 'Cancelled' %>
           <button type="button" onclick="cancel_order('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
             CANCEL ORDER
           </button>
+          <% end %>
 
           <div class="text-light" style="color: red" id="error_shipping_2">
 
           </div>
 
-          <button type="button" onclick="" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+          <button type="button" onclick="location.href = '/admin/support/user?email=<%= @order.overall_user.email %>'" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
             SUPPORT CENTER
           </button>
 
@@ -1288,6 +1392,7 @@
 <script>
 
     function get_shipping_tag(order) {
+        document.getElementById('loading').classList.remove('hidden');
 
         $.ajax({
             url: '/admin/orders/tag',
@@ -1301,10 +1406,14 @@
                 w_o: $('#weight').val()
             },
             success: function (data) {
+                document.getElementById('loading').classList.add('hidden');
                 window.open(data.url, '_blank');
                 document.location.reload(true);
             },
-            error: function () {
+            error: function (data) {
+                console.log(data);
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('error_log').innerText = data['responseJSON']['error'];
             }
         });
 
@@ -1328,6 +1437,28 @@
         })
     }
 
+    function cancel_shipment_sh(sh_id){
+        document.getElementById('loading').classList.remove('hidden');
+        $.ajax({
+            url: '/orders/shipment',
+            type: 'delete',
+            dataType: 'json',
+            data: {
+                sh_id: sh_id
+            },
+            success: function (data) {
+                console.log(data);
+                document.location.reload(true);
+                document.getElementById('loading').classList.add('hidden');
+            },
+            error: function (data) {
+                console.log(data);
+                document.getElementById('error_shipping').innerText = data.responseJSON.error;
+                document.getElementById('loading').classList.add('hidden');
+            }
+        })
+    }
+
     function cancel_shipment(order) {
         document.getElementById('loading').classList.remove('hidden');
         $.ajax({
@@ -1338,6 +1469,7 @@
                 order_id: order
             },
             success: function (data) {
+                console.log(data);
                 document.location.reload(true);
                 document.getElementById('loading').classList.add('hidden');
             },
