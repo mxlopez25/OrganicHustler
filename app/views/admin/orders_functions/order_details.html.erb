@@ -1109,17 +1109,63 @@
             </tbody>
           </table>
 
+          <h5 id="error_log_ss" style="text-align: left; text-align: center; color: red" class="text-light"></h5>
+
           <button onclick="update_address('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
             UPDATE SHIPPING ADDRESS
           </button>
 
           <script>
-            function change_to_field(object) {
+
+            var count = 0;
+
+            function set_value(object) {
+                count -= 1;
+                var parent = object.parentElement;
+                var input_val = parent.getElementsByClassName('cot')[0].value;
+                parent.onclick = function () {
+                    change_to_field(parent);
+                };
+                parent.innerText = input_val;
 
             }
 
-            function update_address(order) {
+            function change_to_field(object) {
+                count += 1;
+                object.removeAttribute("onclick");
+                var value_temp = object.innerText;
+                object.innerHTML = '<input class="cot" style=" width: 70%; color: #000;" value="'+ value_temp +'">      <i onmouseup="set_value(this)" style="color: green; background: white; border-radius: 50%;" class="fa fa-check" aria-hidden="true"></i>'
+            }
 
+            function update_address(order) {
+                if(count > 0){document.getElementById('error_log_ss').innerText = 'Please set all the values before we send the information.'}
+                else {
+                    $.ajax({
+                        url: '/user_addresses',
+                        type: 'patch',
+                        dataType: 'json',
+                        data: {
+                            order: order,
+                            user_address:{
+                                street_address: document.getElementById('address1').innerText,
+                                city: document.getElementById('city_address').innerText,
+                                state: document.getElementById('state_address').innerText,
+                                zip_code: document.getElementById('zip_address').innerText,
+                                number: document.getElementById('phone_address').innerText,
+                                name: document.getElementById('name_address').innerText,
+                                last_name: document.getElementById('last_name_address').innerText
+                            }
+                        },
+                        success: function (data) {
+                            document.getElementById('error_log_ss').innerText = '';
+
+                        },
+                        error: function (data) {
+                            document.getElementById('error_log_ss').innerText = '';
+
+                        }
+                    });
+                }
             }
           </script>
 

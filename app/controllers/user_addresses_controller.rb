@@ -1,11 +1,11 @@
 class UserAddressesController < ApplicationController
 
   def update
-    current_user.create_user_address(address_params)
+    Order.find(params[:order]).user_address.update address_params
   end
 
   def address_params
-    params.require(:user_address).permit(:street_address, :city, :state, :zip_code, :area, :number)
+    params.require(:user_address).permit(:street_address, :city, :state, :zip_code, :area, :number, :name, :last_name)
   end
 
 end

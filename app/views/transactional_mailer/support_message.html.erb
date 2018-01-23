@@ -1,0 +1,21 @@
+<div style="padding: 10px; height: 500px;">
+  <div id="mydiv" style="overflow-y: scroll; height: 300px">
+    <div style="overflow: visible">
+      <% @ticket.messages.each do |m| %>
+        <div style="<%= m.client ? 'position: relative; background: #b592a2; border-radius: .4em; width: 60%; float: left; left: 34px; color: white; margin-top: 10px;' : 'position: relative; background: #b592a2; border-radius: .4em; width: 60%; float: right; right: 34px; color: white; margin-top: 10px;' %>">
+          <div style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative;
+              font-family: 'Source Sans Pro', sans-serif;
+              font-weight: 300;">
+            <%= m.data %>
+          </div>
+          <div style="color: white; float: left; width: 30%; padding: 10px;
+              font-family: 'Source Sans Pro', sans-serif;
+              font-weight: 300;">
+            <%= m.created_at %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>
