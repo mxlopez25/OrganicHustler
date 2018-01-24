@@ -875,13 +875,15 @@
 
             function send_2(id) {
                 $(row).css('background-color', '#ffe5e0');
+                var color_t = colors[id].color;
+                color_t = ((color_t.length < 3) ? '#000000' : color_t);
                 $.ajax({
                     url: "/product/new/color",
                     type: "POST",
                     data: {
                         title: colors[id].title,
                         price: colors[id].price,
-                        color: colors[id].color,
+                        color: color_t,
                         stock: colors[id].stock,
                         preferred: colors[id].preferred,
                         main_picture: colors[id].main_picture
