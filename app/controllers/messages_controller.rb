@@ -29,14 +29,15 @@ class MessagesController < ApplicationController
     ticket_id = params['ticket_id']
     data = params['data']
     client = params['client']
+    t = Ticket.find(ticket_id)
 
     Message.create! ({
-        ticket: Ticket.find(ticket_id),
+        ticket: t,
         data: data,
         client: client
     })
 
-    #send mail of open ticket
+    TransactionalMailer.support_message(t).deliver_now
 
   end
 

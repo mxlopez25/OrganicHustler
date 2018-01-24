@@ -85,8 +85,15 @@ class TransactionalMailer < ApplicationMailer
 
   end
 
-  def support_message
+  def support_message(ticket)
+    @ticket = ticket
+    @token = get_random_string(8)
 
+    ticket.respond_token = @token
+    ticket.valid_token = true
+    ticket.save!
+
+    mail to: @ticket.temp_user.email, subject: 'OrganicHustler Support'
   end
 
   def product_canceled
@@ -127,6 +134,13 @@ class TransactionalMailer < ApplicationMailer
     real_product_tax = total_m * base_product_tax
 
     [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
+  end
+
+  def get_random_string(length=5)
+    source=("a".."z").to_a + ("A".."Z").to_a + (0..9).to_a + ["_", "-", "."]
+    key=""
+    length.times{ key += source[rand(source.size)].to_s }
+    key
   end
 
 end

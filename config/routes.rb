@@ -153,16 +153,17 @@ Rails.application.routes.draw do
   get '/temporary/user/orders' => 'home#temp_user_order'
   get '/temporary/user/menu' => 'home#temp_user_menu'
   get '/orders' => 'home#orders'
+  get '/support/message' => 'home#message_admin'
 
   delete '/orders/shipment' => 'orders#cancel_shipment'
   patch '/orders/complete' => 'orders#complete'
 
   delete '/invalidate' => 'home#invalidate'
-
-
   delete '/temporary/user/re_send' => 'home#send_verification'
 
   post '/temporary/user/orders' => 'home#temp_user_order'
+  post '/messages-user' => 'home#message_user_add'
+  post '/contact_us' => 'home#message_user_add'
 
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'

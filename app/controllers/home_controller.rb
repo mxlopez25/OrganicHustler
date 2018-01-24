@@ -216,6 +216,41 @@ class HomeController < ApplicationController
   def bag
   end
 
+  def message_admin
+    @ticket = Ticket.find_by(respond_token: params[:token], valid_token: true)
+    if @ticket
+      session[:ticket] = @ticket.id
+      @ticket.valid_token = false
+      @ticket.save!
+    elsif session[:ticket]
+      @ticket = Ticket.find session[:ticket]
+    else
+      tt = Ticket.find_by(respond_token: params[:token])
+      p tt
+      if tt
+        TransactionalMailer.support_message(tt).deliver_now
+      end
+      redirect_to '/404.html'
+    end
+  end
+
+  def message_user_add_new
+
+  end
+
+  def message_user_add
+    ticket_id = session[:ticket]
+    data = params['data']
+    client = params['client']
+    t = Ticket.find(ticket_id)
+
+    Message.create! ({
+        ticket: t,
+        data: data,
+        client: client
+    })
+  end
+
   def bag_items
 
     products_partial = []

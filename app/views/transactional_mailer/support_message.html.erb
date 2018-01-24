@@ -3,12 +3,12 @@
     <div style="overflow: visible">
       <% @ticket.messages.each do |m| %>
         <div style="<%= m.client ? 'position: relative; background: #b592a2; border-radius: .4em; width: 60%; float: left; left: 34px; color: white; margin-top: 10px;' : 'position: relative; background: #b592a2; border-radius: .4em; width: 60%; float: right; right: 34px; color: white; margin-top: 10px;' %>">
-          <div style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative;
+          <div style="text-align: justify; float: left; width: 100%; border-bottom: dotted white 1px; min-height: 60px; padding: 15px; position: relative;
               font-family: 'Source Sans Pro', sans-serif;
               font-weight: 300;">
             <%= m.data %>
           </div>
-          <div style="color: white; float: left; width: 30%; padding: 10px;
+          <div style="color: white; float: left; width: 100%; padding: 10px;
               font-family: 'Source Sans Pro', sans-serif;
               font-weight: 300;">
             <%= m.created_at %>
@@ -16,6 +16,6 @@
         </div>
       <% end %>
     </div>
-
   </div>
+  <a href="http://10.0.0.9:3000/support/message?token=<%= @token %>" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; background: #b592a2; padding: 6px 12px; font-size: 100%; text-align: center; vertical-align: middle; border: none;">RESPOND</a>
 </div>
