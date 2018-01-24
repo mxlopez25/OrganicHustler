@@ -1475,13 +1475,22 @@
 
                     for (var i = 0; i < data.length; i++) {
                         if (data[i].id.toString() === product.color_id.toString()) {
-                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
-                                '<div id="color-picker" class="">' +
-                                '<i style="color: white" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
+                            var a = data[i].code_hex;
+                            a = a.substr(1,6);
+
+                            var red = parseInt(a.substring(0,2), 16);
+                            var green = parseInt(a.substring(2,4), 16);
+                            var blue = parseInt(a.substring(4,6), 16);
+
+                            var color = (((red*0.299 + green*0.587 + blue*0.114) > 186) ? '#000000' : '#ffffff')
+
+                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="border: solid black 1px; background: ' + data[i].code_hex  + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                                '<div style="position: relative; width: 17px; height: 17px;" id="color-picker" class="">' +
+                                '<i style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; color: '+ color +'" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
                                 '</div>' +
                                 '</div>');
                         } else {
-                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="border: solid black 1px; position: relative; background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
                                 '<div id="color-picker" class="">' +
 
                                 '</div>' +

@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   include AdminHelper
   include CartHelper
 
+  skip_before_filter :verify_authenticity_token
   before_action :authenticate_user!, only: 'account'
 
   def contact_us
@@ -235,7 +236,28 @@ class HomeController < ApplicationController
   end
 
   def message_user_add_new
+    temp_user = TempUser.find_by_email(params['user-email'])
+    unless temp_user
+      temp_user = TempUser.create!
+      temp_user.email = params['user-email']
+    end
+    subject = params['reason']
 
+    t = Ticket.create! ({
+        temp_user: temp_user,
+        subject: subject,
+        status: false
+    })
+
+    data = params['user-message']
+
+    Message.create! ({
+        ticket: t,
+        data: data,
+        client: true
+    })
+
+    TransactionalMailer.support_message(t).deliver_now
   end
 
   def message_user_add

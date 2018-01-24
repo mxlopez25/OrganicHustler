@@ -69,10 +69,6 @@ class TransactionalMailer < ApplicationMailer
 
   end
 
-  def closed_order
-
-  end
-
   def canceled_order
 
   end
