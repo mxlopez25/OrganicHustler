@@ -613,6 +613,8 @@ class HomeController < ApplicationController
 
     product = user.cart.cart_products.find(id)
     product.unbind_cart
+
+    render json: {}
   end
 
   def cancel_order

@@ -2153,9 +2153,10 @@
             success: function (data) {
                 console.log(data);
                 for (var l = 0; l < data.length; l++) {
+                    alert(l);
+                    alert(data.length - 1);
                     delete_element(data[l]['id'], null, (l === data.length - 1))
                 }
-
             },
             error: function (data) {
                 console.log(data);
