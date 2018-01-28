@@ -564,6 +564,10 @@ button.btn-cust:hover {
   overflow: hidden;
 }
 
+.carousel-indicators .active {
+  background-color: #b592a2;
+}
+
 button:focus {
   background: #c2a5b2;
 }

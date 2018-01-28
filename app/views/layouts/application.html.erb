@@ -44,7 +44,45 @@
 
 </head>
 
+<style>
+
+  .bubble {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  @media screen and (min-width: 768px) {
+    .bubble {
+      position: absolute;
+      top: auto;
+      bottom: auto;
+      left: auto;
+      right: auto;
+    }
+
+    .triangle_up:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 63%;
+      width: 0;
+      height: 0;
+      border: 20px solid transparent;
+      border-bottom-color: #ffffff;
+      border-top: 0;
+      margin-left: 0;
+      margin-top: -20px;
+    }
+
+  }
+</style>
+
 <script>
+
+  var ACTUAL_CART_ITEM_EDIT = null;
+
     window.twttr = (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0],
             t = window.twttr || {};
@@ -61,8 +99,483 @@
 
         return t;
     }(document, "script", "twitter-wjs"));
+
+    function getImage(array, id) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].id === parseInt(id)) {
+                return array[i];
+            }
+        }
+    }
+
+    function getCoords(elem) { // crossbrowser version
+        var box = elem.getBoundingClientRect();
+
+        var body = document.body;
+        var docEl = document.documentElement;
+
+        var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+        var clientTop = docEl.clientTop || body.clientTop || 0;
+        var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+        var top  = box.top +  scrollTop - clientTop;
+        var left = box.left + scrollLeft - clientLeft;
+
+        return { top: Math.round(top), left: Math.round(left) };
+    }
+
+    function edit_catalog(id) {
+        document.getElementsByTagName('body')[0].classList.remove('modal-open');
+        $('#cart_modal').modal('toggle');
+        close_modal();
+        OVERALL_MODE = true;
+        ACTUAL_CART_ITEM_EDIT = id;
+        $.ajax({
+            url: '/get_cart_item',
+            method: 'get',
+            dataType: 'json',
+            data: {
+                product_cart_id: id
+            },
+            success: function (data) {
+                console.log(data);
+                product.data = data['source_data'];
+                product.product_id = data['source_data']['id'];
+                product.color_id = data['color']['id'];
+                product.size_id = data['size']['id'];
+
+                $.ajax({
+                    url: '/catalog/product/color/images',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        color_id: product.color_id
+                    },
+                    success: function (data_) {
+                        if (product.views.length === 0) {
+                            create_objects_array(data_);
+                        }
+
+                        for (var i = 0; i < data['logos'].length; i++) {
+                            var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                            if (modified_view !== null) {
+                                modified_view.logo_id = data['logos'][i]['logo_id'];
+                                modified_view.x = parseFloat(data['logos'][i]['x']);
+                                modified_view.y = parseFloat(data['logos'][i]['y']);
+                                modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                            }
+                        }
+
+                        for (var j = 0; j < data['emblems'].length; j++) {
+                            var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                            if (modified_view !== null) {
+                                modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                            }
+                        }
+
+                        document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                        load_viewer();
+                        load_view_1(product.data);
+
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+                console.log(product);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+
+        var body = $("body");
+        body.addClass("modal-open");
+        body.css('overflow', 'hidden');
+        modal_quick.style.display = "block";
+    }
+
 </script>
 
+<nav class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-color: white; background: white; box-shadow:0px 1px 10px #dedede;">
+
+  <% available = true %>
+
+  <div class="desktopnot">
+
+    <div class="navbar-header">
+
+      <button type="button" style="background: white; margin-left: 16px; margin-top: 12px; padding: 3px; border: none;" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar" style="background: black"></span>
+        <span class="icon-bar" style="background: black"></span>
+        <span class="icon-bar" style="background: black"></span>
+      </button>
+
+      <div style="float: right; overflow: hidden">
+        <a class="navbar-brand brand" href="/"><img width="66" src="/images/logo"></a>
+        <img data-toggle="modal" data-target="#cart_modal" id="cart_ic_1" class="cart_ic" src="/images/bag_icon">
+        <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 20px"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
+      </div>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a class="selectable ">STORY</a>
+        </li>
+        <li>
+          <a class="selectable
+              <% unless params['men'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
+        </li>
+        <li>
+          <a class="selectable
+              <% unless params['women'].blank? and available %>selected
+              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
+        </li>
+        <li>
+          <a class="selectable" onclick="location.href = '/catalog'">FULL COLLECTION</a>
+        </li>
+        <li class="selectable ">
+          <a onclick="location.href = '/contact_us'">CONTACT US</a>
+        </li>
+        <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mobilenot">
+    <div style="padding: 10px; width: 100%" class="navbar-header">
+
+      <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
+        <input id="search-input" style="background: #f0f5e6;margin-top: 8px; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
+        <img data-toggle="modal" data-target="#cart_modal" style="float: right; z-index: 3;" id="cart_ic_2" class="cart_ic" src="/images/bag_icon">
+        <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
+
+        <script>
+            $(document).keyup(function (e) {
+                var search_f = $("#search-input");
+                if (search_f.is(":focus") && (e.keyCode === 13)) {
+                    location.href = '/catalog?search=' + search_f.val();
+                }
+
+                var search_2 = $("#search-bot");
+                if (search_2.is(":focus") && (e.keyCode === 13)) {
+                    location.href = '/catalog?search=' + search_2.val();
+                }
+            });
+        </script>
+
+      </div>
+      <% if @parameters.nil? || params['action'] != 'catalog' %>
+        <a href="/contact_us" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get
+          in Touch</a>
+        <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</a>
+        <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>" style="float: left" type="button" class="btn btn-link">Twitter</a>
+      <% else %>
+        <h5 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 400; padding-right: 5px; float: left;">Your
+          Items
+          <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
+        </h5>
+      <% end %>
+
+      <div class="menu-center">
+        <a style="margin-left: auto; margin-right: auto;" href="/"><img width="66" src="/images/logo"></a>
+        <ul id="ul_top_hypers" style="padding-top: 40px">
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['looks'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
+            </li>
+          </div>
+
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['hats'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
+            </li>
+          </div>
+
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['men'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
+            </li>
+          </div>
+
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['women'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
+            </li>
+          </div>
+
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['brand'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
+            </li>
+          </div>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</nav>
+
+<body style="padding-top: 60px">
+<%= yield %>
+
+<div class="modal " id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
+  <div id="bubble" class="modal-dialog triangle_up bubble" role="document">
+    <div style="width: 335px; margin-top: 0; -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        -moz-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        -o-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        box-shadow: 0 5px 15px rgba(0,0,0,0); " class="modal-content">
+
+      <span style="position: absolute;" class="close" data-dismiss="modal" aria-label="Close">×</span>
+
+      <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin-bottom: 10px;">Your
+        Bag</h3>
+
+      <hr class="no-spacing-bar">
+
+      <div style="position: relative" id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol id="container_ind_cart" class="carousel-indicators" style="bottom: -20px">
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div id="container_lts_cart" class="carousel-inner" style="max-height: 480px; min-height: 339px">
+        </div>
+
+        <!-- Controls -->
+        <a class="carousel-control" href="#myCarousel" role="button" data-slide="prev" style="left: 0; position: absolute; right: auto">
+          <div style="position: relative; height: 100%">
+            <span class="fa fa-chevron-left" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
+          </div>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control" href="#myCarousel" role="button" data-slide="next" style="right: 0; position: absolute; left: auto">
+          <span class="fa fa-chevron-right" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <hr style="margin-top: 20px" class="no-spacing-bar">
+
+      <div style="overflow: hidden">
+        <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
+        <span id="sub_total_cart" class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;">-</span>
+      </div>
+
+      <hr class="no-spacing-bar">
+
+      <div>
+        <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CHECKOUT</button>
+        <button onclick="location.href='/shopping_bag'" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">EDIT
+          ORDER
+        </button>
+        <button onclick="clear_bag();" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CLEAR
+          BAG
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+    var taxes_cart = [];
+    var prices_cart = [];
+    var stages_cart = [];
+
+    var stageWidth_cart = 500;
+    var stageHeight_cart = 500;
+
+    var container_lts_cart = document.getElementById('container_lts_cart');
+    var container_ind_cart = document.getElementById('container_ind_cart');
+
+    $.ajax({
+        url: '/bag_items',
+        type: 'GET',
+        dataType: 'json',
+        data: {},
+        success: function (data) {
+            console.log(data);
+
+            taxes_cart = data['tax_array'];
+            prices_cart = data['cost_array'];
+            var discount_rate = parseFloat(data['discount']);
+
+            for (var hj = 0; hj < data['products'].length; hj++){
+                container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="'+ hj +'" class="'+((hj === 0) ? 'active' : '')+'"></li>'
+            }
+
+            create_entry_cart(0, data['products'].length);
+
+            function create_entry_cart(i, lim) {
+                if (i < lim) {
+                    var product = data['products'][i];
+
+
+                    var pre = '<div class="item-checkout item '+ ((i === 0) ? 'active' : '') +'" style="margin-top: 20px; padding-bottom: 20px; overflow: hidden;">\n' +
+                        '        <div style="float: left; width: 100%; position: relative">\n' +
+                        '          <div class="cart_item_modal" id="cart_' + product['id'] + '" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto;"></div>\n' +
+                        '        </div>\n' +
+                        '        <div style="float: right; width: 100%; position: relative; text-align: center">\n' +
+                        '           <p class="text-uppercase text_light_20">' + product['data']['title'] + '</p>\n' +
+                        '           <p class="text_light_pink" style="font-size: 20px; height: 35px; line-height: 35px;">' + product['price_sgl'] + '</p>\n' +
+                        '           <a onclick="edit_catalog(\'' + product['id'] + '\')" style="color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                        '        </div>\n' +
+                        '      </div>';
+
+
+                    var div = document.createElement('div');
+                    div.innerHTML = pre;
+
+                    container_lts_cart.appendChild(div.childNodes[0]);
+
+                    var id = 'cart_' + product['id'];
+                    var container = $('#' + id);
+                    console.log(container);
+                    container.height(container.width());
+
+                    var stage = new Konva.Stage({
+                        container: id,
+                        width: stageWidth_cart,
+                        height: stageHeight_cart,
+                        preventDefault: false
+                    });
+                    var layer = new Konva.Layer();
+                    stage.add(layer);
+                    stages_cart.push(stage);
+
+                    var baseImg = new Konva.Image({
+                        width: stageWidth_cart,
+                        height: stageHeight_cart,
+                        draggable: false,
+                        preventDefault: false
+                    });
+                    layer.add(baseImg);
+
+                    var search_logo = true;
+
+                    var imageObj1 = new Image();
+                    imageObj1.onload = function () {
+                        baseImg.image(imageObj1);
+
+                        if (search_logo) {
+                            var baseLogo = new Konva.Image({
+                                x: 0,
+                                y: 0,
+                                width: container.width(),
+                                height: container.height(),
+                                draggable: false,
+                                preventDefault: false
+                            });
+                            layer.add(baseLogo);
+
+                            var logoBase = new Image();
+                            logoBase.onload = function () {
+                                baseLogo.image(logoBase);
+                                baseLogo.setWidth(this.width);
+                                baseLogo.setHeight(this.height);
+
+                                i += 1;
+                                create_entry_cart(i, lim);
+                                layer.draw();
+                            };
+
+                            $.ajax({
+                                url: '/get_cart_item?product_cart_id=' + product['id'],
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {},
+                                success: function (data) {
+                                    console.log(data);
+                                    var logo = data.logos[0];
+                                    if (logo) {
+                                        var image = getImage(data.pictures, logo.product_image_id);
+                                        if (image) {
+                                            search_logo = false;
+                                            imageObj1.src = image.url;
+                                            logoBase.src = logo.logo_url;
+                                            baseLogo.setX(logo.x);
+                                            baseLogo.setY(logo.y);
+                                            baseLogo.scale({
+                                                x: logo.multiplexer,
+                                                y: logo.multiplexer
+                                            });
+
+                                        }
+                                    } else {
+                                        i += 1;
+                                        create_entry_cart(i, lim);
+                                        layer.draw();
+                                    }
+                                },
+                                error: function (data) {
+                                    console.log(data);
+                                }
+                            });
+                        }
+                    };
+
+                    $.ajax({
+                        url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {},
+                        success: function (data) {
+                            imageObj1.src = data.picture;
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                } else {
+                    window.addEventListener('resize', fitStageIntoParentContainer_we_cart);
+
+                    var cost = 0;
+                    for (var t = 0; t < prices_cart.length; t++) {
+                        cost += parseFloat(prices_cart[t]);
+                    }
+
+                    document.getElementById('sub_total_cart').innerText = '$' + cost.toFixed(2);
+                }
+            }
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
+    function fitStageIntoParentContainer_we_cart() {
+        $('.cart_item_modal').each(function (index) {
+
+            $(this).height(200);
+
+            // now we need to fit stage into parent
+            var containerWidth = 200;
+            // to do this we need to scale the stage
+            var scale = containerWidth / stageWidth_cart;
+            stages_cart[index].scale({x: scale, y: scale});
+            stages_cart[index].draw();
+        });
+    }
+
+</script>
 
 <!-- The Modal -->
 <div id="quick_view" class="modal_quick modal_base">
@@ -184,14 +697,14 @@
                           success: function (data, status, xhr) {
                               var button_share = document.getElementById('share');
                               button_share.outerHTML =
-                                  '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp='+ data +' &link=http://organichustler.com?cp='+ data +' &picture=<%= @shared_image %> &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
-                                  '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp='+ data +' Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n' +
-                                  '    <a onclick="window.open(this.href, \'Google+\', \'width=450,height=530\'); return false;" href="https://plus.google.com/share?url=http://organichustler.com/?cp='+ data +'" style="color: white; width: 80%; margin: 2px; background-color: #dd4b39" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-google-plus"></span>Google plus</a>\n' +
-                                  '    <a href="whatsapp://send?text=http://organichustler.com/?cp='+ data +' Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>';
+                                  '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp=' + data + ' &link=http://organichustler.com?cp=' + data + ' &picture=<%= @shared_image %> &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
+                                  '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n' +
+                                  '    <a onclick="window.open(this.href, \'Google+\', \'width=450,height=530\'); return false;" href="https://plus.google.com/share?url=http://organichustler.com/?cp=' + data + '" style="color: white; width: 80%; margin: 2px; background-color: #dd4b39" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-google-plus"></span>Google plus</a>\n' +
+                                  '    <a href="whatsapp://send?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>';
                           },
                           dataType: 'json'
                       });
-                      }
+                  }
               </script>
 
             </div>
@@ -270,7 +783,6 @@
   </div>
 
 </div>
-
 <script>
 
     //reload jcarousel
@@ -320,10 +832,6 @@
             $('body').css('overflow', 'auto');
             $('body').css('position', 'relative');
             OVERALL_MODE = false;
-        }
-
-        if (event.target === modal) {
-            modal.style.display = "none";
         }
     };
 
@@ -1476,17 +1984,17 @@
                     for (var i = 0; i < data.length; i++) {
                         if (data[i].id.toString() === product.color_id.toString()) {
                             var a = data[i].code_hex;
-                            a = a.substr(1,6);
+                            a = a.substr(1, 6);
 
-                            var red = parseInt(a.substring(0,2), 16);
-                            var green = parseInt(a.substring(2,4), 16);
-                            var blue = parseInt(a.substring(4,6), 16);
+                            var red = parseInt(a.substring(0, 2), 16);
+                            var green = parseInt(a.substring(2, 4), 16);
+                            var blue = parseInt(a.substring(4, 6), 16);
 
-                            var color = (((red*0.299 + green*0.587 + blue*0.114) > 186) ? '#000000' : '#ffffff');
+                            var color = (((red * 0.299 + green * 0.587 + blue * 0.114) > 186) ? '#000000' : '#ffffff');
 
-                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="border: solid black 1px; background: ' + data[i].code_hex  + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
+                            div_color_container.append('<div onclick="change_source(\'' + data[i].id + '\')" style="border: solid black 1px; background: ' + data[i].code_hex + '; width: 17px; height: 17px; margin-right: 5px; margin-bottom: 7px; float: left; cursor: pointer">' +
                                 '<div style="position: relative; width: 17px; height: 17px;" id="color-picker" class="">' +
-                                '<i style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; color: '+ color +'" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
+                                '<i style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; color: ' + color + '" class="fa fa-check-circle-o" aria-hidden="true"></i>' +
                                 '</div>' +
                                 '</div>');
                         } else {
@@ -1644,17 +2152,15 @@
             dataType: 'json',
             success: function (data) {
                 console.log(data);
-                for (var product in data) {
-                    delete_element(data[product]['id'], 't')
+                for (var l = 0; l < data.length; l++) {
+                    delete_element(data[l]['id'], null, (l === data.length - 1))
                 }
 
             },
             error: function (data) {
                 console.log(data);
             }
-        }).done(function () {
-            location.reload();
-        });
+        })
     }
 
     function modify_element() {
@@ -1881,7 +2387,7 @@
                 var carousel_jq = $('ul#container-sizes');
 
                 for (var i = 0; i < data.length; i++) {
-                    carousel_jq.append('<li><span style="font-size: 15px" id="' + data[i].id + '" onclick="changeSize(\'' + data[i].id + '\')" class="badge badge-size text_light '+ ((OVERALL_MODE && product.size_id === data[i].id) ? 'badge_selected' : '')  + '">' + data[i].title + '</span></li>');
+                    carousel_jq.append('<li><span style="font-size: 15px" id="' + data[i].id + '" onclick="changeSize(\'' + data[i].id + '\')" class="badge badge-size text_light ' + ((OVERALL_MODE && product.size_id === data[i].id) ? 'badge_selected' : '') + '">' + data[i].title + '</span></li>');
                 }
             },
             error: function (data) {
@@ -2126,8 +2632,7 @@
 
 </script>
 
-
-<div id="modal_rtft" class="modal fade" style="z-index: 99999999" tabindex="-1" role="dialog">
+<div id="modal_terms" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div style="width: 100%" class="modal-content">
       <div class="modal-header">
@@ -2139,688 +2644,33 @@
       <div class="modal-body">
         <p style="text-justify: inter-word; text-align: justify;"><%= ConfigurationWeb.find(7).value %></p>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<script>
-    function close_modal_a() {
-        document.getElementsByTagName('body')[0].classList.remove('modal-open');
-        modal.style.display = "none";
-    }
-</script>
-
-<div id="myModal" style="z-index: 100;" class="modal">
-
-  <div id="bag_modal" style="float: right; position: fixed;">
-    <div id="triangle" class="triangle mobilenot"></div>
-    <!-- Modal content -->
-    <div id="modal_c" style="padding: 0; position: relative; top: auto; box-shadow: 0 0; margin-top: 0" class="modal-content">
-      <span onclick="close_modal_a()" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
-      <div class="modal_c_part">
-        <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin: 10px auto;">Your
-          Bag</h3>
-      </div>
-      <hr class="no-spacing-bar">
-
-      <div class="modal_c_part">
-        <div id="product_loader" class="jcarousel-wrapper">
-          <div id="product-loader-carousel" style="width: 100%; min-height: 200px" class="jcarousel" data-jcarousel="true">
-            <ul id="product-container" style="left: 0; top: 0; text-align: center">
-
-
-            </ul>
-          </div>
-          <button style="top: 50px; border: none" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-          <button style="top: 50px; border: none" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
-            <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
-        </div>
-
-        <script>
-
-            //reload jcarousel
-            (function (window, $, undefined) {
-                var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
-                for (var i = 0; i < plugins.length; i++) {
-                    var plugin = plugins[i];
-                    var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
-                    $.fn[reload_plugin] = (function (plugin) {
-                        return function () {
-                            return this.each(function () {
-                                if (!$(this).data(plugin)) {
-                                    console.log('Element is not an instance of ' + plugin);
-                                    return false;
-                                }
-                                var _options = $(this).data(plugin)._options;
-                                $(this).data(plugin, {}).off()[plugin](_options);
-                            });
-                        };
-                    })(plugin);
-                }
-            })(this, jQuery);
-
-            var btn_i = null;
-            var btn_j = null;
-
-            var span = null;
-            var modal = null;
-            var triangle = null;
-            var modal_c = null;
-            var bagModal = null;
-
-            var cart_icon_1 = null;
-            var cart_icon_2 = null;
-
-            var cart_position = null;
-            var triangle_position = null;
-            var triangle_width = null;
-            var cart_width = null;
-            var cart_bottom = null;
-
-            var ACTUAL_CART_ITEM_EDIT = null;
-
-            function replicate_cart_product(id) {
-                OVERALL_MODE = false;
-                ACTUAL_CART_ITEM_EDIT = id;
-                $.ajax({
-                    url: '/get_cart_item',
-                    method: 'get',
-                    dataType: 'json',
-                    data: {
-                        product_cart_id: id
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        product.data = data['source_data'];
-                        product.product_id = data['source_data']['id'];
-                        product.color_id = data['color']['id'];
-                        product.size_id = data['size']['id'];
-
-                        $.ajax({
-                            url: '/catalog/product/color/images',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {
-                                color_id: product.color_id
-                            },
-                            success: function (data_) {
-                                if (product.views.length === 0) {
-                                    create_objects_array(data_);
-                                }
-
-                                for (var i = 0; i < data['logos'].length; i++) {
-                                    var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
-                                    if (modified_view !== null) {
-                                        modified_view.logo_id = data['logos'][i]['logo_id'];
-                                        modified_view.x = parseFloat(data['logos'][i]['x']);
-                                        modified_view.y = parseFloat(data['logos'][i]['y']);
-                                        modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
-                                    }
-                                }
-
-                                for (var j = 0; j < data['emblems'].length; j++) {
-                                    var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
-                                    if (modified_view !== null) {
-                                        modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
-                                    }
-                                }
-
-                                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
-                                load_viewer();
-                                load_view_1(product.data);
-
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            }
-                        });
-                        console.log(product);
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
-
-                var body = $("body");
-                body.addClass("modal-open");
-                body.css('overflow', 'hidden');
-                modal_quick.style.display = "block";
-            }
-
-            function edit_catalog(id) {
-                document.getElementsByTagName('body')[0].classList.remove('modal-open');
-                modal.style.display = "none";
-                close_modal();
-                OVERALL_MODE = true;
-                ACTUAL_CART_ITEM_EDIT = id;
-                $.ajax({
-                    url: '/get_cart_item',
-                    method: 'get',
-                    dataType: 'json',
-                    data: {
-                        product_cart_id: id
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        product.data = data['source_data'];
-                        product.product_id = data['source_data']['id'];
-                        product.color_id = data['color']['id'];
-                        product.size_id = data['size']['id'];
-
-                        $.ajax({
-                            url: '/catalog/product/color/images',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {
-                                color_id: product.color_id
-                            },
-                            success: function (data_) {
-                                if (product.views.length === 0) {
-                                    create_objects_array(data_);
-                                }
-
-                                for (var i = 0; i < data['logos'].length; i++) {
-                                    var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
-                                    if (modified_view !== null) {
-                                        modified_view.logo_id = data['logos'][i]['logo_id'];
-                                        modified_view.x = parseFloat(data['logos'][i]['x']);
-                                        modified_view.y = parseFloat(data['logos'][i]['y']);
-                                        modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
-                                    }
-                                }
-
-                                for (var j = 0; j < data['emblems'].length; j++) {
-                                    var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
-                                    if (modified_view !== null) {
-                                        modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
-                                    }
-                                }
-
-                                document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
-                                load_viewer();
-                                load_view_1(product.data);
-
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            }
-                        });
-                        console.log(product);
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
-
-                var body = $("body");
-                body.addClass("modal-open");
-                body.css('overflow', 'hidden');
-                modal_quick.style.display = "block";
-            }
-
-            $.ajax({
-                url: '/cart',
-                method: 'get',
-                data: {},
-                dataType: 'json',
-                success: function (data) {
-
-                    console.log(data);
-                    var container = document.getElementById('product-container');
-                    for (var product in data) {
-                        if (data.hasOwnProperty(product)) {
-                            container.innerHTML += '<li class="element_product" style="position: relative">' +
-                                '<div id="' + data[product]['id'] + '-catalog-cart" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">' +
-                                '</div>' +
-                                '<p class="text-uppercase text_light_20">' + data[product]['product_data']['title'] + '</p>' +
-                                '<p class="text_light_pink" style="font-size: 20px; height: 35px;line-height: 35px;">' + parseFloat(data[product]['price'][6]).toFixed(2) + '$</p>' +
-                                '<a onclick="edit_catalog(\'' + data[product]['id'] + '\')" style="width: 20%; position: absolute; color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                '</li>';
-                        }
-                    }
-
-                    for (var image in data) {
-                        if (data.hasOwnProperty(image)) {
-                            create_preview_modal(data[image]);
-                        }
-                    }
-
-                    // Reload carousel
-                    var jcarouselSelector = '.jcarousel';
-
-                    $(jcarouselSelector).reloadJcarousel();
-
-                    $('.jcarousel-control-prev').jcarouselControl({
-                        // Options go here
-                        target: '-=1'
-                    });
-                    $('.jcarousel-control-next').jcarouselControl({
-                        // Options go here
-                        target: '+=1'
-                    });
-                    $('.jcarousel').jcarousel('reload');
-
-                },
-                error: function (data) {
-
-                }
-
-            }).done(function () {
-                btn_j = $('#cart_ic_2');
-                btn_i = $('#cart_ic_1');
-
-                // Get the <span> element that closes the modal
-                span = document.getElementsByClassName("close")[0];
-                // Get the modal
-                modal = document.getElementById('myModal');
-
-                window.onclick = function (event) {
-                    if (event.target === modal) {
-                        document.getElementsByTagName('body')[0].classList.remove('modal-open');
-                        modal.style.display = "none";
-                    }
-                };
-
-                function close_modal() {
-                    document.getElementsByTagName('body')[0].classList.remove('modal-open');
-                    modal.style.display = "none";
-                }
-
-                triangle = document.getElementById('triangle');
-                modal_c = document.getElementById('modal_c');
-                bagModal = document.getElementById('bag_modal');
-
-                cart_icon_1 = document.getElementById('cart_ic_2');
-                cart_icon_2 = document.getElementById('cart_ic_1');
-
-                btn_j.on('click', function () {
-                    modal.style.display = "block";
-                    $("body").addClass("modal-open");
-
-                    cart_position = cart_icon_1.getBoundingClientRect().left;
-                    triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
-                    triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
-                    cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
-                    cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
-
-                    bagModal.style.top = cart_bottom + 'px';
-                    bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
-
-                    var carousel_p = document.getElementById('product-loader-carousel');
-                    $('.element_product').each(function () {
-                        console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                        $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-                    });
-                });
-
-                btn_i.on('click', function () {
-                    modal.style.display = "block";
-                    $("body").addClass("modal-open");
-
-                    bagModal.style.top = 0;
-                    bagModal.style.right = 0;
-                    bagModal.style.left = 0;
-                    bagModal.style.bottom = 0;
-                    bagModal.style.width = '100%';
-                    bagModal.style.margin = 'auto';
-                    bagModal.style.height = '100%';
-
-                    modal_c.style.top = '20px';
-                    modal_c.style.height = '550px';
-
-                    if ($(window).width() > 468) {
-
-                        cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
-
-                        bagModal.style.top = cart_bottom + 'px';
-                        modal_c.style.height = 'auto';
-                        bagModal.style.width = '64%';
-
-                        bagModal.style.left = 0;
-                        bagModal.style.right = 0;
-                        bagModal.style.bottom = 'auto';
-
-                        bagModal.style.margin = 'auto';
-                    }
-
-                    var carousel_p = document.getElementById('product-loader-carousel');
-                    $('.element_product').each(function () {
-                        console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                        $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-                    });
-                });
-
-                span.onclick = function () {
-                    modal.style.display = "none";
-                    $("body").removeClass("modal-open")
-                };
-
-                var width = $(window).width();
-                $(window).on('resize', function () {
-                    if ($(this).width() !== width) {
-                        width = $(this).width();
-
-                        triangle_position = bagModal.getBoundingClientRect().right - triangle.getBoundingClientRect().right;
-                        triangle_width = triangle.getBoundingClientRect().right - triangle.getBoundingClientRect().left;
-
-                        if (width > 765) {
-                            cart_position = cart_icon_1.getBoundingClientRect().left;
-                            cart_width = cart_icon_1.getBoundingClientRect().right - cart_icon_1.getBoundingClientRect().left;
-                            cart_bottom = cart_icon_1.getBoundingClientRect().bottom;
-                            bagModal.style.top = cart_bottom + 'px';
-                            bagModal.style.right = document.body.clientWidth - cart_position - triangle_position - (triangle_width / 2) - (cart_width / 2) + 'px';
-                            bagModal.style.width = 'auto';
-                            bagModal.style.left = 'auto';
-                            bagModal.style.margin = 'auto';
-                        } else if (width > 468) {
-                            cart_bottom = cart_icon_2.getBoundingClientRect().bottom;
-                            bagModal.style.top = cart_bottom + 'px';
-                            modal_c.style.height = 'auto';
-                            bagModal.style.width = '64%';
-                            bagModal.style.left = 0;
-                            bagModal.style.right = 0;
-                            bagModal.style.bottom = 'auto';
-                            bagModal.style.margin = 'auto';
-                        } else {
-                            bagModal.style.top = 0;
-                            bagModal.style.right = 0;
-                            bagModal.style.left = 0;
-                            bagModal.style.bottom = 0;
-                            bagModal.style.width = '100%';
-                            bagModal.style.margin = 'auto';
-                            bagModal.style.height = '100%';
-                            modal_c.style.height = '100%'
-                        }
-                        var carousel_p = document.getElementById('product-loader-carousel');
-                        $('.element_product').each(function () {
-                            console.log(carousel_p.getBoundingClientRect().left - carousel_p.getBoundingClientRect().right);
-                            $(this).width(carousel_p.getBoundingClientRect().right - carousel_p.getBoundingClientRect().left);
-                        });
-                    }
-                });
-            });
-
-            function create_preview_modal(preview) {
-                console.log(preview);
-                var selector = preview.id + '-catalog-cart';
-                var container = $('#' + selector);
-                console.log(container.width);
-
-
-                var stage = new Konva.Stage({
-                    container: selector,
-                    width: container.width(),
-                    height: container.height(),
-                    preventDefault: false
-                });
-
-                var layer = new Konva.Layer();
-                stage.add(layer);
-
-                var baseImg = new Konva.Image({
-                    x: 0,
-                    y: 0,
-                    width: container.width(),
-                    height: container.height(),
-                    draggable: false,
-                    preventDefault: false
-                });
-                layer.add(baseImg);
-
-                var imageBase = new Image();
-                imageBase.onload = function () {
-                    baseImg.image(imageBase);
-                    layer.draw();
-                };
-
-                $.ajax({
-                    url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {},
-                    success: function (data) {
-                        imageBase.src = data.picture;
-
-                        var baseLogo = new Konva.Image({
-                            x: 0,
-                            y: 0,
-                            width: container.width(),
-                            height: container.height(),
-                            draggable: false,
-                            preventDefault: false
-                        });
-                        layer.add(baseLogo);
-
-                        var logoBase = new Image();
-                        logoBase.onload = function () {
-                            baseLogo.image(logoBase);
-                            baseLogo.setWidth(this.width / 500 * container.width());
-                            baseLogo.setHeight(this.height / 500 * container.height());
-                        };
-
-                        $.ajax({
-                            url: '/get_cart_item?product_cart_id=' + preview.id,
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {},
-                            success: function (data) {
-                                console.log(data);
-                                var logo = data.logos[0];
-                                if (logo) {
-                                    logoBase.src = logo.logo_url;
-
-                                    var image = getImage(data.pictures, logo.product_image_id);
-                                    if (image) {
-                                        imageBase.src = image.url;
-                                    }
-                                    baseLogo.setX(logo.x / 500 * container.width());
-                                    baseLogo.setY(logo.y / 500 * container.height());
-                                    baseLogo.scale({
-                                        x: logo.multiplexer,
-                                        y: logo.multiplexer
-                                    });
-
-                                    layer.draw();
-                                }
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            }
-                        });
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
-
-            }
-
-            function getImage(array, id) {
-                for (var i = 0; i < array.length; i++) {
-                    if (array[i].id === parseInt(id)) {
-                        return array[i];
-                    }
-                }
-            }
-
-        </script>
-      </div>
-
-      <hr class="no-spacing-bar">
-      <div style="overflow: hidden" class="modal_c_part">
-        <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
-        <span class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;"><%= format("$%.2f", get_price) %></span>
-      </div>
-      <hr class="no-spacing-bar">
-      <div class="modal_c_part">
-        <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CHECKOUT</button>
-        <button onclick="location.href='/shopping_bag'" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">EDIT
-          ORDER
-        </button>
-        <button onclick="clear_bag();" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CLEAR
-          BAG
-        </button>
-      </div>
     </div>
   </div>
 </div>
 
-<nav class="navbar navbar-default navbar-fixed-top" style="z-index: 2; border-color: white; background: white; box-shadow:0px 1px 10px #dedede;">
-
-  <% available = true %>
-
-  <div class="desktopnot">
-
-    <div class="navbar-header">
-
-      <button type="button" style="background: white; margin-left: 16px; margin-top: 12px; padding: 3px; border: none;" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar" style="background: black"></span>
-        <span class="icon-bar" style="background: black"></span>
-        <span class="icon-bar" style="background: black"></span>
-      </button>
-
-      <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="/"><img width="66" src="/images/logo"></a>
-        <img id="cart_ic_1" class="cart_ic" src="/images/bag_icon">
-        <span class="badge" style="background-color: #89c03e; margin-left: -17px; margin-top: 20px"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
-        <% if user_signed_in? %>
-          <h5 class="link-style">
-            <a style="display: none" href="/account">ACCOUNT</a>
-          </h5>
-        <% else %>
-          <h5 class="link-style">
-            <a style="display: none" href="/account">LOG IN</a>
-          </h5>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a class="selectable ">STORY</a>
-        </li>
-        <li>
-          <a class="selectable
-              <% unless params['men'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
-        </li>
-        <li>
-          <a class="selectable
-              <% unless params['women'].blank? and available %>selected
-              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
-        </li>
-        <li>
-          <a class="selectable" onclick="location.href = '/catalog'">FULL COLLECTION</a>
-        </li>
-        <li class="selectable ">
-          <a onclick="location.href = '/contact_us'">CONTACT US</a>
-        </li>
-        <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
-      </ul>
-    </div>
-  </div>
-
-  <div class="mobilenot">
-    <div style="padding: 10px; width: 100%" class="navbar-header">
-
-      <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
-        <input id="search-input" style="background: #f0f5e6;margin-top: 8px; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
-        <% if user_signed_in? %>
-          <h5 class="link-style">
-            <a style="display: none" href="/account">ACCOUNT</a>
-          </h5>
-        <% else %>
-          <h5 class="link-style">
-            <a style="display: none" href="/account">LOG IN</a>
-          </h5>
-        <% end %>
-        <img style="float: right; z-index: 3;" id="cart_ic_2" class="cart_ic" src="/images/bag_icon">
-        <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
-
-        <script>
-            $(document).keyup(function (e) {
-                var search_f = $("#search-input");
-                if (search_f.is(":focus") && (e.keyCode === 13)) {
-                    location.href = '/catalog?search=' + search_f.val();
-                }
-
-                var search_2 = $("#search-bot");
-                if (search_2.is(":focus") && (e.keyCode === 13)) {
-                    location.href = '/catalog?search=' + search_2.val();
-                }
-            });
-        </script>
-
-      </div>
-      <% if @parameters.nil? || params['action'] != 'catalog' %>
-        <a href="/contact_us" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get in Touch</a>
-        <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</a>
-        <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>" style="float: left" type="button" class="btn btn-link">Twitter</a>
-      <% else %>
-        <h5 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 400; padding-right: 5px; float: left;">Your
-          Items
-          <span style="font-weight: lighter; color: #89c13e; padding-right: 5px; margin-right: 5px; border-right: thin solid #5e5e5e;"><%= get_item_count %></span><span><a href="/checkout" style="color: #000000;cursor: pointer ;text-decoration: none;">Checkout</a></span>
-        </h5>
-      <% end %>
-
-      <div class="menu-center">
-        <a style="margin-left: auto; margin-right: auto;" href="/"><img width="66" src="/images/logo"></a>
-        <ul id="ul_top_hypers" style="padding-top: 40px">
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['looks'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
-            </li>
-          </div>
-
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['hats'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
-            </li>
-          </div>
-
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['men'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
-            </li>
-          </div>
-
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['women'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
-            </li>
-          </div>
-
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['brand'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
-            </li>
-          </div>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-
-</nav>
-
-<body style="padding-top: 60px">
-<%= yield %>
 <script>
+    $(".modal").on("shown.bs.modal", function () {
+        $(".modal-backdrop").remove();
+        fitStageIntoParentContainer_we_cart();
+    });
 
+    function position_card(a) {
+        a = a === 15 ? a : 0;
+        var coords = getCoords(document.getElementById('cart_ic_2'));
+        var bubble = document.getElementById('bubble');
+        if ($(window).width() < 768){
+            bubble.style.top = 0;
+            bubble.style.left = 0;
+        } else {
+            bubble.style.top = (coords.top + 20) + 'px';
+            bubble.style.left = (coords.left - 380 + a) + 'px';
+        }
+    }
+
+
+
+    window.addEventListener('resize', position_card);
+    position_card(15);
 </script>
 
 </body>
@@ -2846,7 +2696,8 @@
     <h3 style="color: white;"> SHOP</h3>
     <br>
     <h4 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h4>
-    <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP WOMEN </h4>
+    <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP
+      WOMEN </h4>
     <h4 onclick="location.href = '/catalog'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
     <br>
 

@@ -151,6 +151,7 @@ Rails.application.routes.draw do
 
   get '/temp_user_act' => 'home#temp_user_act'
   get '/temporary/user/orders' => 'home#temp_user_order'
+  get '/temporary/user/order' => 'home#temp_user_order_details'
   get '/temporary/user/menu' => 'home#temp_user_menu'
   get '/orders' => 'home#orders'
   get '/support/message' => 'home#message_admin'

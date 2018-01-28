@@ -1,0 +1,1719 @@
+<style>
+  table {
+    color: #333;
+
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+
+    width: 640px;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  td, th {
+    border: 1px solid transparent; /* No more visible border */
+    height: 30px;
+    transition: all 0.3s;
+  }
+
+  th {
+    background: #b592a2;
+    text-align: center;
+    font-size: large;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+  td {
+    background: #FAFAFA;
+  }
+
+  /* Cells in even rows (2,4,6...) are one color */
+  tr:nth-child(even) td {
+    background: #F1F1F1;
+  }
+
+  /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
+  tr:nth-child(odd) td {
+    background: #FEFEFE;
+  }
+
+  tr td:hover {
+    background: #666;
+    color: #FFF;
+  }
+
+  .text-light {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+  }
+
+    h5 {
+      font-size: 10px;
+    }
+
+  @media screen and (min-width: 768px) {
+
+    h5 {
+      font-size: 15px;
+    }
+
+  }
+
+</style>
+
+<div class="desktopnot" style="margin-top: 30px"></div>
+<div class="mobilenot" style="margin-top: 80px"></div>
+
+<div id="items-container" style="text-align: center; margin-top: 30px; overflow: hidden; margin-bottom: 30px">
+
+    <% if @user %>
+      <a onclick="remove_from_system()"><span style="cursor: pointer; color: orange"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Log out</span></a>
+    <% end %>
+
+
+    <script>
+        var Stage = {};
+
+        function resend_validation(qty) {
+            qty = qty || true;
+            qty ? (document.getElementById('loading').classList.remove('hidden')) : null;
+            $.ajax({
+                url: '/temporary/user/re_send',
+                method: 'delete',
+                data: {
+                    email: $('#email').val()
+                },
+                success: function () {
+                    qty ? (document.getElementById('loading').innerHTML = '<i class="fa fa-check" style="font-size: 160px; align-self: center; color: #89c13e" aria-hidden="true"></i>') : null;
+                }
+            })
+        }
+
+    </script>
+
+    <% if @user %>
+
+      <div style="background-color: white">
+
+
+      <%
+        shipment = {tracker: {status: ''}}.to_json
+        if @order.tag_link
+          shipment = EasyPost::Shipment.retrieve(@order.tag_link)
+        end
+
+        tracker = shipment['tracker']
+      %>
+
+      <div style="padding: 10px">
+
+        <div style="position: relative; height: 100px">
+          <div style="width: 75%; height: 10px; background: #b592a2; position: absolute; top: 20px; right: 0; left: 0"></div>
+
+          <div style="width: 50px; height: 50px; background: #b592a2; left: 10%; position: absolute; border-radius: 50%">
+            <div style="position: relative; width: 100%; height: 100%">
+              <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'pre_transit' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+              <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'pre_transit' %> font-weight: bold
+                <% end %>">Pre-Transit</h5>
+            </div>
+          </div>
+          <div style="width: 50px; height: 50px; background: #b592a2; left: 35%; position: absolute; border-radius: 50%">
+            <div style="position: relative; width: 100%; height: 100%">
+              <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'in_transit' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+              <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'in_transit' %> font-weight: bold
+                <% end %>">In
+                Transit</h5>
+            </div>
+          </div>
+          <div style="width: 50px; height: 50px; background: #b592a2; left: 60%; position: absolute; border-radius: 50%">
+            <div style="position: relative; width: 100%; height: 100%">
+              <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'out_for_delivery' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+              <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'out_for_delivery' %> font-weight: bold
+                <% end %>">Out
+                for Delivery</h5>
+            </div>
+          </div>
+          <div style="width: 50px; height: 50px; background: #b592a2; left: 85%; position: absolute; border-radius: 50%">
+            <div style="position: relative; width: 100%; height: 100%">
+              <div style="width: 30px; height: 30px; <% if shipment['tracker']['status'].eql? 'delivered' %> background: #b592a2; <% else %> background: white; <% end %> position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; border-radius: 50%"></div>
+              <h5 class="text-light" style="position: absolute; bottom: -40px; left: -125px; width: 300px; text-align: center; <% if shipment['tracker']['status'].eql? 'delivered' %> font-weight: bold
+                <% end %>">Delivered</h5>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 20px; background: white" class="content-part-10">
+          <div style="z-index: 9999;" id="quick_view" class="modal_quick modal_base">
+            <!-- Modal content -->
+            <div id="modal-content-center" class="modal-content_quick modal-content_base" style="width: 100%; height: 100%; min-height: auto; overflow: hidden; padding: 0; max-height: 100%">
+              <div class="g-wrapper" id="general_p_content" style="position: relative; height: 100%; min-height: auto; max-height: 100%">
+                <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; font-size: xx-large; left: 10px; height: 100%; min-height: auto; max-height: 100%"><i onclick="close_modal()" class="fa fa-times" aria-hidden="true"></i></span>
+                <div id="product_display">
+                  <div class="image-container-quick" id="image-container">
+                  </div>
+                  <button id="slide-left" style="top: 0; bottom: 0; margin: auto; border: none; left: 0; float: left; position: absolute; width: 10%" href="#" class="jcarousel-control-prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                  </button>
+                  <button id="slide-right" style="top: 0; bottom: 0; margin: auto; border: none; right: 0; float: right; position: absolute; width: 10%" href="#" class="jcarousel-control-next">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h1 class="text-light" style="text-align: left">Order #<%= @order.id %></h1>
+          <div style="width: 100%; border: solid 3px #b692a2; border-radius: 10px; background: #b592a2"></div>
+
+          <div style="padding: 10px">
+            <h2 style="text-align: left" class="text-light">Products</h2>
+            <hr>
+            <div style="padding: 10px">
+
+              <div style="overflow: hidden; padding: 10px" id="container_lts"></div>
+
+              <script id="create-shape">
+
+                  function close_modal() {
+                      product.remove();
+                      modal_quick.style.display = "none";
+                      $("body").removeClass("modal-open");
+                      $('body').css('overflow', 'auto');
+                      $('body').css('position', 'relative');
+                  }
+
+                  var default_modal = document.getElementById('modal-content-center').cloneNode(true);
+
+                  function add_image_in_position(url, id, x, group, i) {
+
+                      var view = product.views[i];
+
+                      console.log('Primera parte');
+
+                      if (TEMP_PRESET_HOLDER !== null) {
+                          console.log(view.picture_id);
+                          console.log(TEMP_PRESET_HOLDER.picture_id);
+
+                          if (view.picture_id === parseInt(TEMP_PRESET_HOLDER.picture_id)) {
+                              current_pointer = i;
+                              view.logo_id = TEMP_PRESET_HOLDER.logo_id;
+                              view.x = parseFloat(TEMP_PRESET_HOLDER.x);
+                              view.y = parseFloat(TEMP_PRESET_HOLDER.y);
+                              view.multiplexer = parseFloat(TEMP_PRESET_HOLDER.multiplexer);
+                          }
+                      }
+
+                      var img_grp = new Konva.Group({
+                          x: x,
+                          y: 0,
+                          width: 500,
+                          height: 500,
+                          draggable: false,
+                          name: 'grp' + i
+                      });
+                      group.add(img_grp);
+
+                      var img = new Konva.Image({
+                          x: 0,
+                          y: 0,
+                          width: 500,
+                          height: 500,
+                          draggable: false,
+                          name: id
+                      });
+                      img_grp.add(img);
+                      view.konva_elements.image = img;
+
+                      var image = new Image();
+                      image.onload = function () {
+                          img.image(image);
+                          LAYER.draw();
+                      };
+                      image.src = url;
+
+                      if (view.logo_id) {
+                          console.log('has logo');
+                          var logo = new Konva.Image({
+                              x: view.x,
+                              y: view.y,
+                              draggable: false,
+                              dragBoundFunc: function (pos) {
+                                  return {
+                                      x: pos.x > 0 ? pos.x : this.getAbsolutePosition().x,
+                                      y: pos.y > 0 ? pos.y : this.getAbsolutePosition().y
+                                  }
+                              }
+                          });
+                          img_grp.add(logo);
+                          view.konva_elements.logo = logo;
+
+                          logo.on('dragend', function () {
+                              view.x = logo.x();
+                              view.y = logo.y();
+                          });
+
+                          var imageLogo = new Image();
+                          imageLogo.onload = function () {
+                              logo.image(imageLogo);
+                              logo.setWidth(this.width);
+                              logo.setHeight(this.height);
+                              logo.scale({
+                                  x: view.multiplexer,
+                                  y: view.multiplexer
+                              });
+                              LAYER.draw()
+                          };
+
+                          $.ajax({
+                              url: '/catalog/product/logo?logo_id=' + view.logo_id,
+                              type: 'GET',
+                              dataType: 'text',
+                              data: {},
+                              success: function (data) {
+                                  imageLogo.src = data
+                              },
+                              error: function (data) {
+                                  console.log(data);
+                              }
+                          });
+                      }
+
+                      if (view.position_emblem_id) {
+
+                          $.ajax({
+                              url: '/catalog/product/emblem?emblem_id=' + view.position_emblem_id,
+                              type: 'GET',
+                              dataType: 'json',
+                              data: {},
+                              success: function (data) {
+                                  var emblem = new Konva.Image({
+                                      x: data.x,
+                                      y: data.y
+                                  });
+                                  img_grp.add(emblem);
+                                  view.konva_elements.emblem = emblem;
+
+                                  var imageEmblem = new Image();
+                                  imageEmblem.onload = function () {
+                                      emblem.image(imageEmblem);
+                                      emblem.setWidth(this.width);
+                                      emblem.setHeight(this.height);
+                                      emblem.scale({
+                                          x: data.multiplexer,
+                                          y: data.multiplexer
+                                      });
+                                      LAYER.draw();
+                                  };
+
+                                  imageEmblem.src = data.src;
+                              },
+                              error: function (data) {
+                                  console.log(data);
+                              }
+                          });
+                      }
+                  }
+
+                  //MAIN LAYER
+                  var LAYER = null;
+
+                  //MAIN STAGE
+                  var STAGE = null;
+                  var stage_scale = 1;
+                  var limit = 0;
+
+                  var GROUP = null;
+                  var current_pointer = 0;
+
+                  var TEMP_PRESET_HOLDER = null;
+
+                  var UPDATABLE_VIEW = {
+                      id: null,
+                      view: null,
+                      parent: null
+                  };
+
+                  //Main product
+                  var product = {
+                      data: null,
+                      product_id: null,
+                      color_id: null,
+                      size_id: null,
+                      views: [],
+                      send_info: function () {
+                          return {
+                              data: this.data,
+                              product_id: this.product_id,
+                              color_id: this.color_id,
+                              size_id: this.size_id,
+                              views: sendable_views(this.views)
+                          }
+                      },
+                      remove: function () {
+                          this.data = null;
+                          this.product_id = null;
+                          this.color_id = null;
+                          this.size_id = null;
+                          this.views = [];
+                          current_pointer = 0;
+                          current_view = 1;
+                          LAYER = null;
+                          STAGE = null;
+                          stage_scale = 1;
+                          limit = 0;
+                          GROUP = null;
+                          ACTUAL_VIEW = null;
+                          ACTUAL_LOGO = null;
+                          UPDATABLE_VIEW = {
+                              id: null,
+                              view: null,
+                              parent: null
+                          };
+                          UPDATABLE_EMBLEM = {
+                              x: null,
+                              y: null,
+                              multiplexer: null,
+                              src: null
+                          };
+                          TEMP_PRESET_HOLDER = null;
+                      },
+                      clean: function () {
+                          this.views = [];
+                          current_pointer = 0;
+                          LAYER = null;
+                          STAGE = null;
+                          stage_scale = 1;
+                          limit = 0;
+                          GROUP = null;
+                          ACTUAL_VIEW = null;
+                          ACTUAL_LOGO = null;
+                          UPDATABLE_VIEW = {
+                              id: null,
+                              view: null,
+                              parent: null
+                          };
+                          UPDATABLE_EMBLEM = {
+                              x: null,
+                              y: null,
+                              multiplexer: null,
+                              src: null
+                          };
+                      },
+                      no_custom: function () {
+                          for (var t = 0; t < this.views.length; t++) {
+                              this.views[t].remove();
+                          }
+                      }
+                  };
+
+                  function fitStageIntoParentContainer() {
+                      var container = document.querySelector('#image-container');
+                      // now we need to fit stage into parent
+                      var containerWidth = container.offsetWidth;
+                      var containerHeight = container.offsetHeight;
+                      var cur = containerHeight;
+                      if (containerWidth < containerHeight) {
+                          cur = containerWidth;
+                      }
+                      // to do this we need to scale the stage
+                      limit = limit / stage_scale;
+                      var scale = cur / 500;
+                      stage_scale = scale;
+                      limit = limit * stage_scale;
+                      STAGE.width(500 * scale);
+                      STAGE.height(500 * scale);
+                      STAGE.scale({x: scale, y: scale});
+                      STAGE.draw();
+                  }
+
+                  function create_image_slider(views) {
+
+                      current_pointer = 0;
+                      var p1 = 0;
+                      var p2 = 0;
+
+                      limit = 500 * (views.length - 1) * -1 * stage_scale;
+
+                      GROUP = new Konva.Group({
+                          x: 0,
+                          y: 0,
+                          height: 500,
+                          width: 500 * views.length,
+                          draggable: true,
+                          dragBoundFunc: function (pos) {
+                              return {
+                                  x: pos.x < 0 && pos.x > limit ? pos.x : this.getAbsolutePosition().x,
+                                  y: this.getAbsolutePosition().y
+                              }
+                          }
+                      });
+                      LAYER.add(GROUP);
+
+                      GROUP.on('dragstart mousedown', function () {
+                          p1 = STAGE.getPointerPosition();
+                      });
+
+                      GROUP.on('mouseup dragend', function () {
+                          p2 = STAGE.getPointerPosition();
+                          if ((p2.x - p1.x) / stage_scale < -50) {
+                              var mover = -500 * (current_pointer + 1);
+                              var once = true;
+                              var lim = 500 * (views.length - 1) * -1;
+                              var animation_1 = new Konva.Animation(function (frame) {
+                                  var x = GROUP.getX();
+                                  if (x > mover && x > lim) {
+                                      if (x - (50 * frame.time / 1000) < mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          once ? current_pointer = current_pointer + 1 : null;
+                                          once = false;
+                                          animation_1.stop();
+                                      } else {
+                                          GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                          once ? current_pointer = current_pointer + 1 : null;
+                                          once = false;
+                                      }
+                                  } else if (x < mover && x < 0) {
+                                      if (x + (50 * frame.time / 1000) > mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          once ? current_pointer = current_pointer + 1 : null;
+                                          once = false;
+                                          animation_1.stop();
+                                      } else {
+                                          GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                          once ? current_pointer = current_pointer + 1 : null;
+                                          once = false;
+                                      }
+                                  } else {
+                                      animation_1.stop();
+                                  }
+                              }, LAYER);
+                              animation_1.start();
+                          } else if ((p2.x - p1.x) / stage_scale > 50) {
+                              var mover = -500 * (current_pointer - 1);
+                              var once = true;
+                              var lim = 500 * (views.length - 1) * -1;
+                              var animation_2 = new Konva.Animation(function (frame) {
+                                  var x = GROUP.getX();
+                                  if (x < mover && x < 0) {
+                                      if (x + (50 * frame.time / 1000) > mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          once ? current_pointer = current_pointer - 1 : null;
+                                          once = false;
+                                          animation_2.stop();
+                                      } else {
+                                          GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                          once ? current_pointer = current_pointer - 1 : null;
+                                          once = false;
+                                      }
+                                  } else if (x > mover && x > lim) {
+                                      if (x - (50 * frame.time / 1000) < mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          once ? current_pointer = current_pointer - 1 : null;
+                                          once = false;
+                                          animation_2.stop();
+                                      } else {
+                                          GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                          once ? current_pointer = current_pointer - 1 : null;
+                                          once = false;
+                                      }
+                                  } else {
+                                      animation_2.stop();
+                                  }
+                              }, LAYER);
+                              animation_2.start();
+                          } else {
+                              var mover = -500 * current_pointer;
+                              var x = GROUP.getX();
+                              if (x > mover) {
+                                  var animation_3 = new Konva.Animation(function (frame) {
+                                      x = GROUP.getX();
+                                      if (x - (50 * frame.time / 1000) < mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          animation_3.stop();
+                                      } else if (x > mover) {
+                                          GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                      }
+                                  }, LAYER);
+                                  animation_3.start();
+                              } else if (x < mover) {
+                                  var animation_4 = new Konva.Animation(function (frame) {
+                                      x = GROUP.getX();
+                                      if (x + (50 * frame.time / 1000) > mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          animation_4.stop();
+                                      } else if (x < mover) {
+                                          GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                      }
+                                  }, LAYER);
+                                  animation_4.start();
+                              }
+                          }
+                      });
+
+                      for (var i = 0; i < views.length; i++) {
+                          add_image_in_position(views[i].src, 'img' + i, 500 * i, GROUP, i);
+                      }
+
+                      LAYER.draw();
+                  }
+
+                  function load_viewer(_url_base, view, view_stationary) {
+                      _url_base = _url_base || null;
+
+                      if (view !== undefined && view !== null) {
+                          UPDATABLE_VIEW.id = view;
+                          UPDATABLE_VIEW.view = product.views[view];
+                          UPDATABLE_VIEW.parent = product.views[view].konva_elements.image.getParent();
+
+                          update_section();
+                      } else {
+                          if (_url_base === 'null') {
+                              _url_base = null;
+                          }
+
+                          var stageWidth = 500;
+                          var stageHeight = 500;
+
+                          STAGE = new Konva.Stage({
+                              container: 'image-container',
+                              width: stageWidth,
+                              height: stageHeight
+                          });
+                          LAYER = new Konva.Layer();
+                          STAGE.add(LAYER);
+
+                          $('#slide-right').unbind();
+                          $('#slide-right').on('click', function () {
+                              var mover = -500 * (current_pointer + 1);
+                              var once = true;
+                              var lim = 500 * (product.views.length - 1) * -1;
+                              var animation_1 = new Konva.Animation(function (frame) {
+                                  var x = GROUP.getX();
+                                  if (x > mover && x > lim && mover > lim - 500) {
+                                      if (x - (50 * frame.time / 1000) < mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          animation_1.stop();
+                                      } else {
+                                          GROUP.move({x: -50 * frame.time / 1000, y: 0});
+                                      }
+                                      once ? current_pointer = current_pointer + 1 : null;
+                                      once = false;
+                                  } else {
+                                      animation_1.stop();
+                                  }
+                              }, LAYER);
+                              animation_1.start();
+                          });
+
+                          $('#slide-left').unbind();
+                          $('#slide-left').on('click', function () {
+                              var mover = -500 * (current_pointer - 1);
+                              var once = true;
+                              var animation_2 = new Konva.Animation(function (frame) {
+                                  var x = GROUP.getX();
+                                  if (x < mover && x < 0 && mover < 500) {
+                                      if (x + (50 * frame.time / 1000) > mover) {
+                                          GROUP.move({x: mover - x, y: 0});
+                                          animation_2.stop();
+                                      } else {
+                                          GROUP.move({x: 50 * frame.time / 1000, y: 0});
+                                      }
+                                      once ? current_pointer = current_pointer - 1 : null;
+                                      once = false;
+                                  } else {
+                                      animation_2.stop();
+                                  }
+                              }, LAYER);
+                              animation_2.start();
+                          });
+
+                          $.ajax({
+                              url: '/catalog/product/color/images',
+                              type: 'GET',
+                              dataType: 'json',
+                              data: {
+                                  color_id: product.color_id
+                              },
+                              success: function (data) {
+                                  console.log(data);
+                                  if (product.views.length === 0) {
+                                      create_objects_array(data);
+                                  }
+                                  create_image_slider(data);
+                                  if (view_stationary && GROUP) {
+                                      GROUP.draggable(false);
+                                      GROUP.off('dragstart');
+                                      GROUP.off('mousedown');
+                                      GROUP.off('dragend');
+                                      GROUP.off('mouseup');
+                                  }
+                              },
+                              error: function (data) {
+                                  console.log(data);
+                              }
+                          });
+
+                          fitStageIntoParentContainer();
+                          window.addEventListener('resize', fitStageIntoParentContainer);
+                          $('#image-container').find('.konvajs-content').each(function (index) {
+                              $(this)['0'].style.position = null;
+                          })
+                      }
+                  }
+
+                  var modal_quick = document.getElementById('quick_view');
+
+                  function find_in_custom(p_id) {
+                      var custom = null;
+                      console.log(product.views.length);
+                      for (var i = 0; i < product.views.length; i++) {
+                          console.log(product.views[i].picture_id);
+                          console.log(p_id);
+                          if (product.views[i].picture_id.toString() === p_id.toString()) {
+                              custom = product.views[i];
+                          }
+                      }
+                      return custom;
+                  }
+
+                  function ModifiedView(product_id, picture_id, color_id) {
+                      this.product_id = product_id;
+                      this.picture_id = picture_id;
+                      this.color_id = color_id;
+                      this.position_emblem_id = null;
+                      this.logo_id = null;
+                      this.x = null;
+                      this.y = null;
+                      this.multiplexer = 1;
+
+                      this.sendable_info = function () {
+                          return {
+                              product_id: this.product_id,
+                              picture_id: this.picture_id,
+                              color_id: this.color_id,
+                              position_emblem_id: this.position_emblem_id,
+                              logo_id: this.logo_id,
+                              x: this.x,
+                              y: this.y,
+                              multiplexer: this.multiplexer
+                          }
+                      };
+
+                      this.konva_elements = {
+                          logo: null,
+                          emblem: null,
+                          image: null
+                      };
+
+                      this.remove = function () {
+                          this.position_emblem_id = null;
+                          this.logo_id = null;
+                          this.x = null;
+                          this.y = null;
+                          this.multiplexer = 1;
+                          this.konva_elements.logo = null;
+                          this.konva_elements.emblem = null;
+                      }
+                  }
+
+                  $('#quick_view').on('click', function (e) {
+                      if (e.target === this)
+                          close_modal();
+
+                  });
+
+                  function create_objects_array(data) {
+                      for (var i = 0; i < data.length; i++) {
+                          product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
+                      }
+                      console.log(product);
+                  }
+
+                  function review_cp(id, color) {
+
+                      product.color_id = color;
+
+                      $.ajax({
+                          url: '/get_cart_item',
+                          method: 'get',
+                          dataType: 'json',
+                          data: {
+                              product_cart_id: id
+                          },
+                          success: function (data) {
+                              console.log(data);
+                              product.data = data['source_data'];
+                              product.product_id = data['source_data']['id'];
+                              product.size_id = data['size']['id'];
+
+                              $.ajax({
+                                  url: '/catalog/product/color/images',
+                                  type: 'GET',
+                                  dataType: 'json',
+                                  data: {
+                                      color_id: product.color_id
+                                  },
+                                  success: function (data_) {
+                                      if (product.views.length === 0) {
+                                          create_objects_array(data_);
+                                      }
+
+                                      for (var i = 0; i < data['logos'].length; i++) {
+                                          var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+                                          if (modified_view !== null) {
+                                              modified_view.logo_id = data['logos'][i]['logo_id'];
+                                              modified_view.x = parseFloat(data['logos'][i]['x']);
+                                              modified_view.y = parseFloat(data['logos'][i]['y']);
+                                              modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+                                          }
+                                      }
+
+                                      for (var j = 0; j < data['emblems'].length; j++) {
+                                          var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+                                          if (modified_view !== null) {
+                                              modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+                                          }
+                                      }
+
+                                      document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+                                      load_viewer();
+
+                                  },
+                                  error: function (data) {
+                                      console.log(data);
+                                  }
+                              });
+                              console.log(product);
+                          },
+                          error: function (data) {
+                              console.log(data);
+                          }
+                      });
+
+                      var body = $("body");
+                      body.addClass("modal-open");
+                      body.css('overflow', 'hidden');
+                      modal_quick.style.display = "block";
+                  }
+
+                  function getImage(array, id) {
+                      for (var i = 0; i < array.length; i++) {
+                          if (array[i].id === parseInt(id)) {
+                              return array[i];
+                          }
+                      }
+                  }
+
+                  var taxes = [];
+                  var prices = [];
+                  var stages = [];
+
+                  var stageWidth = 500;
+                  var stageHeight = 500;
+
+                  var container_lts = document.getElementById('container_lts');
+
+                  $.ajax({
+                      url: '/bag_items?o_id=<%= @order.cart.id %>&order_id=<%= @order.id %>',
+                      type: 'GET',
+                      dataType: 'json',
+                      data: {},
+                      success: function (data) {
+                          console.log(data);
+
+                          taxes = data['tax_array'];
+                          prices = data['cost_array'];
+                          var discount_rate = parseFloat(data['discount']);
+
+                          create_entry(0, data['products'].length);
+
+                          function create_entry(i, lim) {
+                              if (i < lim) {
+                                  var product = data['products'][i];
+                                  var status_color = ((product['status'] === 'Cancelled') ? 'red' : ((product['status'] === 'Cancel requested') ? 'white' : 'black'));
+                                  var background_d = (product['status'] === 'Cancel requested') ? 'red' : 'white';
+
+                                  var pre = '<div class="item-checkout-admin card" style="text-align: center; padding-bottom: 20px; overflow: hidden; position: relative">\n' +
+                                      '                   <div style="position: absolute; right: 5px; top: 5px; z-index: 99" class="dropdown">\n' +
+                                      '                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+                                      '                        <i class="fa fa-caret-down" aria-hidden="true"></i></button>\n' +
+                                      '                      <ul class="dropdown-menu dropdown-menu-right">\n' +
+                                      '                        <li>\n' +
+                                      '                          <a onclick="cancel_product(\'' + data['order']['id'] + '\', \'' + product['id'] + '\')">Cancel product</a>\n' +
+                                      '                        </li>\n' +
+                                      '                      </ul>\n' +
+                                      '                    </div>' +
+                                      '        <div onclick="review_cp(\'' + product['id'] + '\', \'' + product['color']['id'] + '\')" style="float: left; width: 100%; position: relative; overflow: hidden">\n' +
+                                      '          <div class="cart_item" id="cart' + product['id'] + '" style="cursor: zoom-in; width: 100%; height: 100%; margin-left: auto; margin-right: auto;"></div>\n' +
+                                      '        </div>\n' +
+                                      '          <div style="float: left; width: 100%; position: relative">\n' +
+                                      '        <hr style="float: left; width: 100%; margin-top: 5px; margin-bottom: 5px"> \n' +
+                                      '            <h4 class="text-light" style="float: left; width: 100%;">' + product['data']['title'] + '</h4>\n' +
+                                      '           </div>' +
+                                      '          <div style="float: left; width: 100%; position: relative">\n' +
+                                      '            <div style="float: left; width: 50%">\n' +
+                                      '              <h6 class="text-light">Size: ' + product['size']['title'] + '</h6>\n' +
+                                      '              <h6 class="text-light">Customized: ' + ((product['has_emblem'] || product['has_logo']) ? 'YES' : 'NO') + '\n' +
+                                      '              <h6 class="text-light">Color: ' + product['color']['title'] + '</h6>\n' +
+                                      '            </div>\n' +
+                                      '            <div style="float: left; width: 50%; text-align: center">\n' +
+                                      '              <h3 class="text-light" style="font-size: 20px;">Qty: ' + product['qty'] + '</h3>\n' +
+                                      '              <h4 class="text-light">' + product['price_sgl'] + '</h4>\n' +
+                                      '            </div>\n' +
+                                      '          </div>\n' +
+                                      '          <div style="float: left; width: 100%; height: 100px; position: relative">\n' +
+                                      '              <h6 class="text-light">SKU: ' + product['data']['sku'] + '</h6>\n' +
+                                      '              <h6 onclick="document.location.href = \'/admin/product/' + product['data']['id'] + '\'" style="color: #b592a2; cursor: pointer" class="text-light">ID: ' + product['data']['id'] + '</h6>\n' +
+                                      '              <h6 style="color: ' + status_color + '; background: '+ background_d +'" class="text-light">Status: ' + (product['status'] === null ? 'Booked' : product['status']) + '</h6>\n' +
+                                      '          </div>' +
+                                      '      </div>';
+
+
+                                  var div = document.createElement('div');
+                                  div.innerHTML = pre;
+
+                                  container_lts.appendChild(div);
+
+                                  var id = 'cart' + product['id'];
+                                  var container = $('#' + id);
+                                  console.log(container);
+                                  container.height(container.width());
+
+                                  var stage = new Konva.Stage({
+                                      container: id,
+                                      width: stageWidth,
+                                      height: stageHeight,
+                                      preventDefault: false
+                                  });
+                                  var layer = new Konva.Layer();
+                                  stage.add(layer);
+                                  stages.push(stage);
+
+                                  var baseImg = new Konva.Image({
+                                      width: stageWidth,
+                                      height: stageHeight,
+                                      draggable: false,
+                                      preventDefault: false
+                                  });
+                                  layer.add(baseImg);
+
+                                  var search_logo = true;
+
+                                  var imageObj1 = new Image();
+                                  imageObj1.onload = function () {
+                                      baseImg.image(imageObj1);
+
+                                      if (search_logo) {
+                                          var baseLogo = new Konva.Image({
+                                              x: 0,
+                                              y: 0,
+                                              width: container.width(),
+                                              height: container.height(),
+                                              draggable: false,
+                                              preventDefault: false
+                                          });
+                                          layer.add(baseLogo);
+
+                                          var logoBase = new Image();
+                                          logoBase.onload = function () {
+                                              baseLogo.image(logoBase);
+                                              baseLogo.setWidth(this.width);
+                                              baseLogo.setHeight(this.height);
+
+                                              i += 1;
+                                              create_entry(i, lim);
+                                              layer.draw();
+                                          };
+
+                                          $.ajax({
+                                              url: '/get_cart_item?product_cart_id=' + product['id'],
+                                              type: 'GET',
+                                              dataType: 'json',
+                                              data: {},
+                                              success: function (data) {
+                                                  console.log(data);
+                                                  var logo = data.logos[0];
+                                                  if (logo) {
+                                                      var image = getImage(data.pictures, logo.product_image_id);
+                                                      if (image) {
+                                                          search_logo = false;
+                                                          imageObj1.src = image.url;
+                                                          logoBase.src = logo.logo_url;
+                                                          baseLogo.setX(logo.x);
+                                                          baseLogo.setY(logo.y);
+                                                          baseLogo.scale({
+                                                              x: logo.multiplexer,
+                                                              y: logo.multiplexer
+                                                          });
+
+                                                      }
+                                                  } else {
+                                                      i += 1;
+                                                      create_entry(i, lim);
+                                                      layer.draw();
+                                                  }
+                                              },
+                                              error: function (data) {
+                                                  console.log(data);
+                                              }
+                                          });
+                                      }
+                                  };
+
+                                  $.ajax({
+                                      url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
+                                      type: 'GET',
+                                      dataType: 'json',
+                                      data: {},
+                                      success: function (data) {
+                                          imageObj1.src = data.picture;
+                                      },
+                                      error: function (data) {
+                                          console.log(data);
+                                      }
+                                  });
+                              } else {
+
+
+                                  function fitStageIntoParentContainer_we() {
+                                      $('.cart_item').each(function (index) {
+
+                                          $(this).height($(this).width());
+
+                                          // now we need to fit stage into parent
+                                          var containerWidth = $(this).width();
+                                          // to do this we need to scale the stage
+                                          var scale = containerWidth / stageWidth;
+                                          stages[index].scale({x: scale, y: scale});
+                                          stages[index].draw();
+                                      });
+                                  }
+
+                                  fitStageIntoParentContainer_we();
+                                  window.addEventListener('resize', fitStageIntoParentContainer_we);
+
+                                  var cost = 0;
+                                  for (var t = 0; t < prices.length; t++) {
+                                      cost += parseFloat(prices[t]);
+                                  }
+
+                                  var tax = 0;
+                                  for (var t = 0; t < taxes.length; t++) {
+                                      tax += parseFloat(taxes[t]);
+                                  }
+
+                                  document.getElementById('sub_total').innerText = '$' + cost.toFixed(2);
+                                  document.getElementById('estimated_tax').innerText = '$' + tax.toFixed(2);
+
+                                  if (discount_rate > 0) {
+                                      document.getElementById('discountable').innerHTML = '<div style="overflow: hidden; margin: 10px;">\n' +
+                                          '            <h4 class="t-right text-light">Sub total</h4>\n' +
+                                          '            <h3 style="font-weight: lighter;" class="s-left text-light">$' + (cost + tax).toFixed(2) + '</h3>\n' +
+                                          '          </div>\n' +
+                                          '          <div style="overflow: hidden; margin: 10px;">\n' +
+                                          '            <h4 class="t-right text-light">Discount percentage</h4>\n' +
+                                          '            <h4 style="font-weight: lighter;" class="s-left text-light">' + parseInt(discount_rate) + '%</h4>\n' +
+                                          '          </div>';
+                                      $('.estimated_total').each(function (index) {
+                                          $(this).html(((cost + tax) - ((cost + tax) * discount_rate / 100)).toFixed(2))
+                                      });
+                                  } else {
+                                      $('.estimated_total').each(function (index) {
+                                          $(this).html((cost + tax).toFixed(2));
+                                      });
+                                  }
+
+
+                              }
+                          }
+                      },
+                      error: function (data) {
+                          console.log(data);
+                      }
+                  });
+
+              </script>
+
+              <h2 style="text-align: left" class="text-light">ORDER DETAILS</h2>
+              <hr>
+              <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+                <h4 class="t-right text-light">Subtotal</h4><h4 id="sub_total" class="s-left text-light">-</h4>
+              </div>
+
+              <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+                <h4 class="t-right text-light">Estimated Tax</h4><h4 id="estimated_tax" class="s-left text-light">-</h4>
+              </div>
+
+              <div id="discountable"></div>
+
+              <div style="overflow: hidden; margin: 10px; border-bottom: dotted darkgray 1px">
+                <h4 class="t-right text-light">Estimated total</h4>
+                <h3 style="font-weight: lighter; color: #b592a2" class="s-left text-light">$<span style="font: inherit" class="estimated_total">-</span>
+                </h3>
+              </div>
+
+              <div style="margin: 30px 10px 10px;">
+                <h3 style="text-align: left" class="text-light">Extra info</h3>
+                <hr>
+                <table border="1" style="width: 100%">
+                  <thead>
+                  <tr>
+                    <th width="180">Object</th>
+                    <th>Value</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>ID</td>
+                    <td><%= @order.id %></td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td><%= @order.state %></td>
+                  </tr>
+                  <tr>
+                    <td>Description</td>
+                    <td><%= tracker['tracking_details'] ? tracker['tracking_details'].first.try('message') : @order.description %></td>
+                  </tr>
+                  <tr>
+                    <td>Carrier</td>
+                    <td><%= @order.carrier || 'Not assigned' %></td>
+                  </tr>
+                  <tr>
+                    <td>Tracking code</td>
+                    <td><%= @order.tracking_code || 'Not assigned' %></td>
+                  </tr>
+                  <tr>
+                    <td>Buyer</td>
+                    <td><%= "#{@order.user_address.name} #{@order.user_address.last_name}" %></td>
+                  </tr>
+                  <tr>
+                    <td>Charge ID</td>
+                    <td><%= @order.charge_id %></td>
+                  </tr>
+                  <tr>
+                    <td>Destination</td>
+                    <td><%= @order.user_address.city %></td>
+                  </tr>
+                  <tr>
+                    <td>Tracker information</td>
+                    <td><%= tracker['tracking_details'] ? tracker['tracking_details'].first.try('message') : '' %></td>
+                  </tr>
+                  <tr>
+                    <td>Tag link</td>
+                    <td><%= @order.tag_link %></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <h3 style="text-align: left; margin-top: 30px" class="text-light">Address info</h3>
+                <hr>
+                <table border="1" style="width: 100%">
+                  <thead>
+                  <tr>
+                    <th width="180">Object</th>
+                    <th>Value</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>ID</td>
+                    <td><%= @order.user_address.id %></td>
+                  </tr>
+                  <tr>
+                    <td>Address 1</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="address1"><%= @order.user_address.street_address %></td>
+                  </tr>
+                  <tr>
+                    <td>City</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="city_address"><%= @order.user_address.city %></td>
+                  </tr>
+                  <tr>
+                    <td>State</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="state_address"><%= @order.user_address.state %></td>
+                  </tr>
+                  <tr>
+                    <td>Zip code</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="zip_address"><%= @order.user_address.zip_code %></td>
+                  </tr>
+                  <tr>
+                    <td>Phone</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="phone_address"><%= @order.user_address.number %></td>
+                  </tr>
+                  <tr>
+                    <td>Names</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="name_address"><%= @order.user_address.name %></td>
+                  </tr>
+                  <tr>
+                    <td>Last Names</td>
+                    <td onclick="change_to_field(this)" style="cursor: pointer" id="last_name_address"><%= @order.user_address.last_name %></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <h5 id="error_log_ss" style="text-align: left; text-align: center; color: red" class="text-light"></h5>
+
+                <button onclick="update_address('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                  UPDATE SHIPPING ADDRESS
+                </button>
+
+                <script>
+
+                    var count = 0;
+
+                    function set_value(object) {
+                        count -= 1;
+                        var parent = object.parentElement;
+                        var input_val = parent.getElementsByClassName('cot')[0].value;
+                        parent.onclick = function () {
+                            change_to_field(parent);
+                        };
+                        parent.innerText = input_val;
+
+                    }
+
+                    function change_to_field(object) {
+                        count += 1;
+                        object.removeAttribute("onclick");
+                        var value_temp = object.innerText;
+                        object.innerHTML = '<input class="cot" style=" width: 70%; color: #000;" value="'+ value_temp +'">      <i onmouseup="set_value(this)" style="color: green; background: white; border-radius: 50%;" class="fa fa-check" aria-hidden="true"></i>'
+                    }
+
+                    function update_address(order) {
+                        if(count > 0){document.getElementById('error_log_ss').innerText = 'Please set all the values before we send the information.'}
+                        else {
+                            $.ajax({
+                                url: '/user_addresses',
+                                type: 'patch',
+                                dataType: 'json',
+                                data: {
+                                    order: order,
+                                    user_address:{
+                                        street_address: document.getElementById('address1').innerText,
+                                        city: document.getElementById('city_address').innerText,
+                                        state: document.getElementById('state_address').innerText,
+                                        zip_code: document.getElementById('zip_address').innerText,
+                                        number: document.getElementById('phone_address').innerText,
+                                        name: document.getElementById('name_address').innerText,
+                                        last_name: document.getElementById('last_name_address').innerText
+                                    }
+                                },
+                                success: function (data) {
+                                    document.getElementById('error_log_ss').innerText = '';
+
+                                },
+                                error: function (data) {
+                                    document.getElementById('error_log_ss').innerText = '';
+
+                                }
+                            });
+                        }
+                    }
+                </script>
+
+              </div>
+
+              <h2 style="text-align: left" class="text-light">Functions</h2>
+              <hr>
+
+              <form action="javascript:void(0);">
+                <div style="position: relative; overflow: hidden; padding: 10px" class="card">
+                  <h3 style="text-align: left" class="text-light">Shipping tag</h3>
+                  <hr>
+
+                  <div id="loading" class="hidden">
+
+                    <div class="loader">
+
+                    </div>
+
+                  </div>
+
+                  <% if !@order.tracking_code %>
+                    <input required id="length" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Length" name="search-field">
+                    <input required id="width" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Width" name="search-field">
+                    <input required id="height" style="margin: 2% 2% 2% 2%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Height" name="search-field">
+                    <input required id="weight" style="margin: 2% 2% 2% 0%;width: 21%; float: left;" class="serious-input text-light" type="text" placeholder="Weigth" name="search-field">
+
+                    <button onclick="get_shipping_tag('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 5px auto; display: block; width: 50%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">GENERATE
+                      SHIPPING TAG
+                    </button>
+
+                    <h5 id="error_log" style="text-align: left; text-align: center; color: red" class="text-light"></h5>
+
+                    <h4 style="text-align: left; margin-top: 30px" class="text-light">Refund status</h4>
+                    <hr>
+                    <table border="1" style="width: 100%">
+                      <thead>
+                      <tr>
+                        <th style="text-align: left; width: 40%">Date</th>
+                        <th style="text-align: left">Status</th>
+                        <th> Resubmit </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <% @order.shipping_tag_histories.each do |a| %>
+                        <% sth = EasyPost::Shipment.retrieve(a.easy_post_id) %>
+                        <tr>
+                          <td><%= time_ago_in_words sth['created_at'] %></td>
+                          <td class="text-uppercase"><%= sth['refund_status'] %></td>
+                          <td style="background: #fcd7e8">
+
+                            <button type="submit" onclick="cancel_shipment_sh('<%= sth['id'] %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                              RESUBMIT
+                            </button>
+
+                          </td>
+                        </tr>
+                      <% end %>
+                      </tbody>
+                    </table>
+
+                  <% else %>
+                    <img style="width: 60%; float: left" src="<%= shipment.postage_label.label_url %>">
+                    <div style="width: 40%; float: left; padding: 10px">
+                      <h4 style="text-align: left" class="text-light">Details</h4>
+                      <hr>
+                      <table border="1" style="width: 100%">
+                        <thead>
+                        <tr>
+                          <th>Object</th>
+                          <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <td>Price</td>
+                          <td>$<%= shipment["selected_rate"]["rate"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Est. days</td>
+                          <td><%= shipment["selected_rate"]["est_delivery_days"] %></td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+                      <h4 style="text-align: left; margin-top: 30px" class="text-light">Refund status</h4>
+                      <hr>
+                      <table border="1" style="width: 100%">
+                        <thead>
+                        <tr>
+                          <th style="text-align: left; width: 40%">Date</th>
+                          <th style="text-align: left">Status</th>
+                          <th> Resubmit </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @order.shipping_tag_histories.each do |a| %>
+                          <% sth = EasyPost::Shipment.retrieve(a.easy_post_id) %>
+                          <tr>
+                            <td><%= time_ago_in_words sth['created_at'] %></td>
+                            <td class="text-uppercase"><%= sth['refund_status'] %></td>
+                            <td style="background: #fcd7e8">
+                              <button type="submit" onclick="cancel_shipment_sh('<%= sth['id'] %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                                RESUBMIT
+                              </button>
+                            </td>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                      </table>
+
+                      <h4 style="text-align: left; margin-top: 30px" class="text-light">Actions</h4>
+                      <hr>
+                      <button type="submit" onclick="cancel_shipment('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                        CANCEL SHIPMENT
+                      </button>
+                      <div class="text-light" style="color: red" id="error_shipping">
+
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </form>
+
+              <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
+                <h3 style="text-align: left" class="text-light">Tracking</h3>
+                <hr>
+                <% curr = shipment["tracker"]["tracking_details"].try(:last) %>
+                <% if curr %>
+                  <div style="padding: 10px">
+                    <h4 style="text-align: left" class="text-light">Current</h4>
+                    <hr>
+
+                    <div style="padding: 10px">
+                      <table border="1" style="width: 100%">
+                        <thead>
+                        <tr>
+                          <th width="180">Object</th>
+                          <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <td>Message</td>
+                          <td><%= curr["message"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Date</td>
+                          <td><%= curr["datetime"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Source</td>
+                          <td><%= curr["source"] %></td>
+                        </tr>
+                        <tr>
+                          <td>City</td>
+                          <td><%= curr["tracking_location"]["city"] %></td>
+                        </tr>
+                        <tr>
+                          <td>State</td>
+                          <td><%= curr["tracking_location"]["state"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Country</td>
+                          <td><%= curr["tracking_location"]["country"] %></td>
+                        </tr>
+                        <tr>
+                          <td>ZIP Code</td>
+                          <td><%= curr["tracking_location"]["zip"] %></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <h4 style="text-align: left" class="text-light">History</h4>
+                  <hr>
+                  <div style="padding: 10px">
+                    <table border="1" style="width: 100%">
+                      <thead>
+                      <tr>
+                        <th width="180">Object</th>
+                        <th>Value</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <% shipment["tracker"]["tracking_details"].each do |curr| %>
+
+
+                        <tr>
+                          <td>Message</td>
+                          <td><%= curr["message"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Date</td>
+                          <td><%= curr["datetime"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Source</td>
+                          <td><%= curr["source"] %></td>
+                        </tr>
+                        <tr>
+                          <td>City</td>
+                          <td><%= curr["tracking_location"]["city"] %></td>
+                        </tr>
+                        <tr>
+                          <td>State</td>
+                          <td><%= curr["tracking_location"]["state"] %></td>
+                        </tr>
+                        <tr>
+                          <td>Country</td>
+                          <td><%= curr["tracking_location"]["country"] %></td>
+                        </tr>
+                        <tr style="border-bottom: dotted 4px #b592a2">
+                          <td>ZIP Code</td>
+                          <td><%= curr["tracking_location"]["zip"] %></td>
+                        </tr>
+                      <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                <% else %>
+                  <h4 class="text-light">NO INFORMATION YET</h4>
+                <% end %>
+              </div>
+
+              <div style="position: relative; overflow: hidden; padding: 10px; margin-top: 50px" class="card">
+
+                <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; width: 120px; height: 120px;" id="loading2" class="hidden">
+
+                  <div class="loader">
+
+                  </div>
+
+                </div>
+
+                <h3 style="text-align: left" class="text-light">Actions</h3>
+                <hr>
+
+                <% unless @order.state.eql? 'Cancelled' %>
+                  <button type="button" onclick="cancel_order('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                    CANCEL ORDER
+                  </button>
+                <% end %>
+
+                <div class="text-light" style="color: red" id="error_shipping_2">
+
+                </div>
+
+                <button type="button" onclick="location.href = '/admin/support/user?email=<%= @order.overall_user.email %>'" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                  SUPPORT CENTER
+                </button>
+
+                <button type="button" onclick="change_order_state('<%= @order.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 100%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">
+                  <%= @order.confirmed ? 'OPEN ORDER' : 'CLOSE (COMPLETE) ORDER' %>
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      </div>
+
+      </div>
+      </iv>
+
+      <script>
+
+          function get_shipping_tag(order) {
+              document.getElementById('loading').classList.remove('hidden');
+
+              $.ajax({
+                  url: '/admin/orders/tag',
+                  method: 'post',
+                  dataType: 'json',
+                  data: {
+                      order: order,
+                      l: $('#length').val(),
+                      w: $('#width').val(),
+                      h: $('#height').val(),
+                      w_o: $('#weight').val()
+                  },
+                  success: function (data) {
+                      document.getElementById('loading').classList.add('hidden');
+                      window.open(data.url, '_blank');
+                      document.location.reload(true);
+                  },
+                  error: function (data) {
+                      console.log(data);
+                      document.getElementById('loading').classList.add('hidden');
+                      document.getElementById('error_log').innerText = data['responseJSON']['error'];
+                  }
+              });
+
+          }
+
+          function cancel_product(order, item) {
+              $.ajax({
+                  url: '/orders',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {
+                      id_order: order,
+                      id_product_cart: item
+                  },
+                  success: function (data) {
+                      document.location.reload(true);
+                  },
+                  error: function (data) {
+                      document.location.reload(true);
+                  }
+              })
+          }
+
+          function cancel_shipment_sh(sh_id){
+              document.getElementById('loading').classList.remove('hidden');
+              $.ajax({
+                  url: '/orders/shipment',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {
+                      sh_id: sh_id
+                  },
+                  success: function (data) {
+                      console.log(data);
+                      document.location.reload(true);
+                      document.getElementById('loading').classList.add('hidden');
+                  },
+                  error: function (data) {
+                      console.log(data);
+                      document.getElementById('error_shipping').innerText = data.responseJSON.error;
+                      document.getElementById('loading').classList.add('hidden');
+                  }
+              })
+          }
+
+          function cancel_shipment(order) {
+              document.getElementById('loading').classList.remove('hidden');
+              $.ajax({
+                  url: '/orders/shipment',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {
+                      order_id: order
+                  },
+                  success: function (data) {
+                      console.log(data);
+                      document.location.reload(true);
+                      document.getElementById('loading').classList.add('hidden');
+                  },
+                  error: function (data) {
+                      console.log(data);
+                      document.getElementById('error_shipping').innerText = data.responseJSON.error;
+                      document.getElementById('loading').classList.add('hidden');
+                  }
+              })
+          }
+
+          function cancel_order(order) {
+              document.getElementById('loading2').classList.remove('hidden');
+              $.ajax({
+                  url: '/orders',
+                  type: 'delete',
+                  dataType: 'json',
+                  data: {
+                      id_order: order
+                  },
+                  success: function (data) {
+                      document.location.reload(true);
+                      document.getElementById('loading2').classList.add('hidden');
+                  },
+                  error: function (data) {
+                      document.getElementById('error_shipping_2').innerText = data.responseJSON.error;
+                      document.getElementById('loading2').classList.add('hidden');
+                  }
+              })
+          }
+
+          function change_order_state(order) {
+              $.ajax({
+                  url: '/orders/complete',
+                  type: 'patch',
+                  dataType: 'json',
+                  data: {
+                      id_order: order
+                  },
+                  success: function (data) {
+                      document.location.reload(true);
+                  },
+                  error: function (data) {
+                      document.location.reload(true);
+                  }
+              })
+          }
+
+      </script>
+
+      </div>
+
+
+
+    <% elsif params['email'] %>
+
+
+    <div style="position: relative" class="card content-part-5 single-element-center">
+
+      <div id="loading" class="hidden">
+
+        <div class="loader">
+
+        </div>
+
+      </div>
+
+      <h3>Email confirmed</h3>
+      <div style="text-align: left; padding: 20px">
+        <h5>
+          The email was confirmed successfully from now on the products can be managed with this email address. An email
+          has been sent with your temporary credentials.
+        </h5>
+      </div>
+      <input id="email" type="text" placeholder="Email" value="<%= params['email'] %>" name="email" class="serious-input" style="width: 98%">
+      <span onclick="resend_validation(true)" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
+      <script>
+          resend_validation(false);
+      </script>
+    </div>
+
+    <% else %>
+
+    <div style="position: relative" class="card content-part-5 single-element-center">
+
+      <div id="loading" class="hidden">
+
+        <div class="loader">
+
+        </div>
+
+      </div>
+
+      <h3>User not authenticated, here's a list of possible reasons:</h3>
+      <div style="text-align: left; padding: 20px">
+        <ul>
+          <li><h5>It was authenticated in another devise</h5></li>
+          <li><h5>The submitted token is incorrect</h5></li>
+        </ul>
+      </div>
+      <input id="email" type="text" placeholder="Email" name="email" class="serious-input" style="width: 98%">
+      <span onclick="resend_validation(true)" style="cursor: pointer; color: #5bc0de"><i class="fa fa-envelope" aria-hidden="true"></i>  Resend validation</span>
+
+    </div>
+
+    <% end %>
+
+<script>
+    function remove_from_system() {
+        $.ajax({
+            url: '/invalidate',
+            type: 'delete',
+            dataType: 'json',
+            data:{
+
+            },
+            success: function (data) {
+                document.location.reload(true);
+            },
+            error: function (data) {
+                document.location.reload(true);
+            }
+        })
+    }
+
+</script>
+
+<div class="modal fade" id="tracker" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>

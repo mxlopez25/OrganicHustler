@@ -339,12 +339,19 @@ class HomeController < ApplicationController
     render json: cart_products.to_json, status: :ok
   end
 
-  def temp_user_act
+  def temp_user_menu
 
   end
 
-  def temp_user_menu
-
+  def temp_user_order_details
+    tuc = TempUserControl.where(ip_address: request.env['REMOTE_ADDR']).last
+    if tuc
+      @user = nil
+      if tuc.t_available > Time.now && tuc.auth_token.eql?(session['temp_token'])
+        @user = TempUser.find(tuc.temp_user_id)
+        @order = @user.orders.find params[:order_id]
+      end
+    end
   end
 
   def temp_user_order
@@ -391,7 +398,7 @@ class HomeController < ApplicationController
     user = TempUser.find TempUserControl.find_by_auth_token(session['temp_token']).temp_user_id
 
     orders = []
-    user.orders.each do |o|
+    user.orders.order(created_at: :desc).each do |o|
       ol = JSON.parse(o.to_json)
       ol.merge!(cart_id: o.cart.id)
       orders.push(ol)
@@ -609,11 +616,13 @@ class HomeController < ApplicationController
   end
 
   def cancel_order
-
-    #OrdersController.cancel_order
+    user = TempUser.find TempUserControl.find_by_auth_token(session['temp_token']).temp_user_id
+    order = user.orders.find params['id_order']
+    product = order.cart.cart_products.find params['id_product_cart']
+    product.state = 'Cancel requested'
+    product.save!
 
     redirect_to '/temporary/user/orders'
-
   end
 
   def self.to_decimal(n_text)

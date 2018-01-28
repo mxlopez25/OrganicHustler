@@ -22,7 +22,6 @@
     <script>
         var Stage = {};
 
-
         function resend_validation(qty) {
             qty = qty || true;
             qty ? (document.getElementById('loading').classList.remove('hidden')) : null;
@@ -101,8 +100,7 @@
                                           '                          <a href="/cancel_order?id_order=' + data['order']['id'] + '&id_product_cart=' + product['id'] + '">Cancel\n' +
                                           '                            Order</a>\n' +
                                           '                        </li>\n' +
-                                          '                        <li><a href="#">Checkout details</a></li>\n' +
-                                          '                        <li><a href="#">Track order</a></li>\n' +
+                                          '                        <li><a href="/temporary/user/order?order_id='+ data_f['id'] +'">Track order</a></li>\n' +
                                           '                      </ul>\n' +
                                           '                    </div>' +
                                           '            <h4 style="width: 80%; margin-bottom: 10px;">' + product['data']['title'] + '</h4>\n' +
