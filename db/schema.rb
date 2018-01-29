@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180119074849) do
+ActiveRecord::Schema.define(version: 20180129210849) do
 
   create_table "admins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "email",                  default: "", null: false, collation: "utf8_general_ci"
@@ -111,10 +111,14 @@ ActiveRecord::Schema.define(version: 20180119074849) do
 
   create_table "configuration_webs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "title"
-    t.text     "value",        limit: 65535
+    t.text     "value",                limit: 65535
     t.integer  "content_type"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "picture_file_name"
+    t.string   "picture_content_type"
+    t.integer  "picture_file_size"
+    t.datetime "picture_updated_at"
   end
 
   create_table "custom_emblems", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -212,7 +216,7 @@ ActiveRecord::Schema.define(version: 20180119074849) do
   end
 
   create_table "messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.string   "ticket_it"
+    t.string   "ticket_id"
     t.text     "data",       limit: 65535
     t.boolean  "client"
     t.datetime "created_at",               null: false
@@ -231,6 +235,16 @@ ActiveRecord::Schema.define(version: 20180119074849) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "state",                                                        collation: "utf8_general_ci"
     t.text     "description",       limit: 65535,                              collation: "utf8_general_ci"
+    t.string   "carrier",                                                      collation: "utf8_general_ci"
+    t.string   "tracking_code",                                                collation: "utf8_general_ci"
+    t.string   "overall_user_id",                                              collation: "utf8_general_ci"
+    t.string   "overall_user_type",                                            collation: "utf8_general_ci"
+    t.string   "charge_id",                                                    collation: "utf8_general_ci"
+    t.boolean  "confirmed",                       default: false
+    t.string   "tag_link",                                                     collation: "utf8_general_ci"
+    t.string   "user_address_id",                                              collation: "utf8_general_ci"
+    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                                      null: false
   end
 
   create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -398,8 +412,10 @@ ActiveRecord::Schema.define(version: 20180119074849) do
     t.string   "temp_user_id"
     t.string   "subject"
     t.boolean  "status"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "respond_token"
+    t.boolean  "valid_token",   default: false
   end
 
   create_table "user_addresses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

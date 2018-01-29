@@ -1,3 +1,25 @@
+
+<style>
+  .paging_crt {
+    float: left;
+    width: 40px;
+    height: 40px;
+    font-size: 34px;
+    background: #e1e1e1;
+    padding: 3px;
+    line-height: 34px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0 10px 10px;
+  }
+
+    .pink-p {
+      background: #b592a2;
+      color: white;
+    }
+
+</style>
+
 <div class="mobilenot" style="height: 30px">
 </div>
 <div id="items-container" style="overflow: hidden; margin-bottom: 30px">
@@ -12,7 +34,7 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="style-list-filter" class="dropdown-menu drop-enlarge">
-        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = ''; load_items();" class="selectable">
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = ''; load_items(1);" class="selectable">
           <h5>Clear selection</h5></li>
       </ul>
     </div>
@@ -26,7 +48,7 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="color-list-filter" class="dropdown-menu drop-enlarge">
-        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = ''; load_items();" class="selectable">
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = ''; load_items(1);" class="selectable">
           <h5>Clear selection</h5></li>
       </ul>
     </div>
@@ -40,7 +62,7 @@
         <span style="right: 0; position: absolute; padding: 5px"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
       </button>
       <ul id="material-list-filter" class="dropdown-menu drop-enlarge">
-        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = ''; load_items();" class="selectable">
+        <li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = ''; load_items(1);" class="selectable">
           <h5>Clear selection</h5></li>
       </ul>
     </div>
@@ -53,6 +75,10 @@
   <div id="items" style="min-height: 370px">
 
   </div>
+
+</div>
+
+<div id="pages" style="overflow: hidden">
 
 </div>
 
@@ -125,9 +151,9 @@
             case 0:
                 if (!contains.call(filters_arr.style, value)) {
                     if (filters.style === value.toString()) {
-                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items(1);" class="selectable selected0f"><h5>' + title + '</h5></li>');
                     } else {
-                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                        $('#style-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.style = \'' + value + '\'; load_items(1);" class="selectable"><h5>' + title + '</h5></li>');
                     }
                     filters_arr.style.push(value);
                 }
@@ -135,9 +161,9 @@
             case 1:
                 if (!contains.call(filters_arr.color, value)) {
                     if (filters.color === value.toString()) {
-                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items(1);" class="selectable selected0f"><h5>' + title + '</h5></li>');
                     } else {
-                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                        $('#color-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.color = \'' + value + '\'; load_items(1);" class="selectable"><h5>' + title + '</h5></li>');
                     }
                     filters_arr.color.push(value);
                 }
@@ -145,9 +171,9 @@
             case 2:
                 if (!contains.call(filters_arr.material, value)) {
                     if (filters.material === value.toString()) {
-                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items();" class="selectable selected0f"><h5>' + title + '</h5></li>');
+                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items(1);" class="selectable selected0f"><h5>' + title + '</h5></li>');
                     } else {
-                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items();" class="selectable"><h5>' + title + '</h5></li>');
+                        $('#material-list-filter').append('<li style="padding-top: 7px; padding-bottom: 7px" onclick="filters.material = \'' + value + '\'; load_items(1);" class="selectable"><h5>' + title + '</h5></li>');
                     }
                     filters_arr.material.push(value);
                 }
@@ -155,7 +181,7 @@
         }
     }
 
-    function load_items() {
+    function load_items(page) {
 
         document.getElementById('style-list-filter').outerHTML = first_style.outerHTML;
         document.getElementById('material-list-filter').outerHTML = first_material.outerHTML;
@@ -163,14 +189,24 @@
         filters_arr.remove();
 
         $.ajax({
-            url: '/catalog/items?category=' + '<%= @parameters['view'] %>&style=' + filters.style + '&color=' + filters.color + '&material=' + filters.material + '&search=<%= @parameters['search'] %>',
+            url: '/catalog/items?page='+ page +'&category=' + '<%= @parameters['view'] %>&style=' + filters.style + '&color=' + filters.color + '&material=' + filters.material + '&search=<%= @parameters['search'] %>',
             type: 'GET',
             dataType: 'json',
             data: {},
             success: function (data) {
+                var n_p = data['t']['FOUND_ROWS()'];
+                var n_button_pag = Math.ceil(n_p / 12);
+
+                var page_crts = document.getElementById('pages');
+                page_crts.innerHTML = '';
+                for (var we = 0; we < n_button_pag; we++){
+                    page_crts.innerHTML = page_crts.innerHTML + '<div onclick="load_items(' + (we + 1) + ')" class="text_light paging_crt '+ (((we + 1) === page) ? 'pink-p' : '') +' ">' + (we + 1) +  '</div>';
+                }
+
+                data = data['ps'];
                 console.log(data);
                 var html_items = '';
-                document.getElementById('product_counter').innerHTML = data.length + ' products found';
+                document.getElementById('product_counter').innerHTML = n_p + ' products found';
                 for (var id in data) {
                     var item = data[id];
                     html_items = html_items + '<div class="catalog-item" id="item' + item.id + '" onclick="open_quick(\'' + item.id + '\', 1)">'
@@ -212,6 +248,7 @@
                             for (var i = 0; i < data.length; i++) {
                                 add_filter(data[i].id, data[i].title, 2);
                             }
+                            window.scrollTo(0, 0);
                         }
                     });
 
@@ -223,6 +260,6 @@
         });
     }
 
-    load_items();
+    load_items(1);
 
 </script>
