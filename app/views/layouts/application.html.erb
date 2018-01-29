@@ -2146,18 +2146,14 @@
 
     function clear_bag() {
         $.ajax({
-            url: '/cart',
-            method: 'get',
+            url: '/clear_bag',
+            method: 'delete',
             data: {},
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                for (var l = 0; l < data.length; l++) {
-                    delete_element(data[l]['id'], null, (l === data.length - 1))
-                }
+                location.href = '/';
             },
             error: function (data) {
-                console.log(data);
             }
         })
     }

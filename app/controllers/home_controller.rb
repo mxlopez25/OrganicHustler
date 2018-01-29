@@ -600,6 +600,14 @@ class HomeController < ApplicationController
     [product_price, real_product_tax, size_price, price_logos, price_emblems, total_m, (total_m + real_product_tax)]
   end
 
+  def clear_bag
+    user = TempUser.find(session[:temp_user_id])
+    cart = user.cart
+    cart.cart_products.each do |cp|
+      cp.unbind_cart
+    end
+  end
+
   def delete_from_cart
     id = params['item_id']
 
@@ -613,8 +621,6 @@ class HomeController < ApplicationController
 
     product = user.cart.cart_products.find(id)
     product.unbind_cart
-
-    render json: {}
   end
 
   def cancel_order
