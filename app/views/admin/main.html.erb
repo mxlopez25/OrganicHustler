@@ -22,6 +22,12 @@
           </script>
         <% elsif co.content_type == 3 %>
           <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><button onclick="find_ids('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">SELECT PRODUCTS</button></span>
+        <% elsif co.content_type == 4 %>
+          <span style="padding-top: 3px; padding-bottom: 3px;" class="input-group-addon"><i style="cursor: pointer" onclick="location.href = '<%= co.picture %>'" class="fa fa-picture-o" aria-hidden="true"></i><button onclick="image_uploader('<%= co.id || -1 %>')" style="font-size: 7px" class="btn btn-default">CHANGE IMAGE</button></span>
+          <script>
+            var image = document.getElementById(<%= co.id %>);
+            image.disabled = true;
+          </script>
         <% end %>
       </div>
 
@@ -45,7 +51,7 @@
               CKEDITOR.replace('editor');
           </script>
 
-          <button type="button" class="btn btn-success" onclick="update_entry();">Select product</button>
+          <button type="button" class="btn btn-success" onclick="update_entry();">UPDATE</button>
 
         </div>
       </div>
@@ -234,11 +240,17 @@
                     modal.style.display = "block";
                 }
 
-
                 function find_ids(id) {
                     temp_id = id;
                     var modal = document.getElementById('products_finder');
                     modal.style.display = "block";
+                }
+
+                function image_uploader(id) {
+                    temp_id = id;
+                    var modal = document.getElementById('image_uploader');
+                    modal.style.display = "block";
+                    document.getElementById('configuration_web_id').value = id;
                 }
 
                 function edit_entry(id) {
@@ -523,6 +535,19 @@
           </div>
         </div>
       </div>
+
+      <div id="image_uploader" class="modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
+        <div class="modal-content">
+
+          <%= form_for ConfigurationWeb.all.first, url:  configuration_webs_url, html: { multipart: true } do |form| %>
+            <%= form.hidden_field :id %>
+            <%= form.file_field :picture %>
+            <%= form.submit %>
+          <% end %>
+
+        </div>
+      </div>
+
     </div>
 
   </div>

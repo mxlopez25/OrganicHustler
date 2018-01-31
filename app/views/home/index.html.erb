@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'index/styles-index' %>
 
 <!--HEADER INDEX-->
-<div class="header mobilenot" style="margin-top: 40px; height: 450px; background: url('/images/index/bg_pad') no-repeat left center; background-size: cover;">
+<div class="header mobilenot" style="margin-top: 40px; height: 450px; background: url('<%= ConfigurationWeb.find(13).picture %>') no-repeat left center; background-size: cover;">
   <h1 class="text-center ht-desk text_light" style="margin-top: 150px; font-size: 100px">ECO FRIENDLY</h1>
   <div class="center-div-container" style="overflow: hidden; position: absolute; bottom: 30px">
     <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn pri-limit" style="float: left">SHOP
@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="header desktopnot " style="position: relative; background: url('/images/index/bg_pad') no-repeat left center; background-size: cover;height: 360px;width: 100%;overflow: hidden">
+<div class="header desktopnot " style="position: relative; background: url('<%= ConfigurationWeb.find(13).picture %>') no-repeat left center; background-size: cover;height: 360px;width: 100%;overflow: hidden">
   <div style="overflow: hidden; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 240px">
     <h1 class="text-center ht text_light" style="font-size: 60px">ECO<br>FRIENDLY</h1>
     <div style="text-align: center; overflow: hidden;">
@@ -152,9 +152,7 @@
   <div class="text-triangle">
     <p class="text_light" style="font-size: 3.4vw; margin-top: 15vw; margin-bottom: 5vw; width: 30vw; margin-left: -15vw; text-align: center">Our
       Story</p>
-    <p class="text_light" style="font-style: italic; line-height: 2.4vw; margin-bottom: 5vw; font-size: 2.3vw; width: 32vw; margin-left: -16vw; text-align: center">Clothing
-      - For
-      the solid,<br>selfmode individual with root<br>instincts to pursue their goots.<br>"By Any Means."</p>
+    <p class="text_light" style="font-style: italic; line-height: 2.4vw; margin-bottom: 5vw; font-size: 2.3vw; width: 32vw; margin-left: -16vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe %></p>
     <p class="text_light" style="font-size: 4vw; width: 32vw; margin-left: -15vw; text-align: center">
       <a href="/story" class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
   </div>
@@ -306,9 +304,7 @@
   <div style="border-width: 0 15vw 25vw 15vw" class="text-triangle">
     <p class="text_light" style="font-size: 1.7vw; margin-top: 7.5vw; margin-bottom: 2.5vw; width: 15vw; margin-left: -7.5vw; text-align: center">Our
       Story</p>
-    <p class="text_light" style="font-style: italic; line-height: 1.2vw; margin-bottom: 2.5vw; font-size: 1.15vw; width: 16vw; margin-left: -8vw; text-align: center">Clothing
-      - For
-      the solid,<br>selfmode individual with root<br>instincts to pursue their goots.<br>"By Any Means."</p>
+    <p class="text_light" style="font-style: italic; line-height: 1.2vw; margin-bottom: 2.5vw; font-size: 1.15vw; width: 16vw; margin-left: -8vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe %></p>
     <p class="text_light" style="font-size: 2vw; width: 16vw; margin-left: -7.5vw; text-align: center">
       <a href="/story" class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
   </div>
@@ -324,7 +320,7 @@
 
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
-  <img class="centered-images-showcase" src="/images/index/m1">
+  <img class="centered-images-showcase" src="<%= ConfigurationWeb.find(14).picture %>">
   <p class="text_light">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
@@ -346,7 +342,7 @@
 
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
 
-  <img class="centered-images-showcase" src="/images/index/m2">
+  <img class="centered-images-showcase" src="<%= ConfigurationWeb.find(15).picture %>">
   <p class="text_light">Outfits<br>Eco-Friendly + Customizable</p>
 
   <article>
@@ -367,7 +363,7 @@
 <hr style="width: 80%; margin: 30px auto">
 
 <div style="margin-top: 30px; margin-left: auto; margin-right:auto; text-align: center;">
-  <img class="centered-images-showcase" src="/images/index/m3">
+  <img class="centered-images-showcase" src="<%= ConfigurationWeb.find(16).picture %>">
 
   <article>
     <button onclick="location.href = '/catalog?looks=true&view=looks'" class="btn styling_btn">
@@ -408,7 +404,7 @@
 <div style="width: 75%" class="container mobilenot">
   <div class="row row-centered" style="position: relative; height: 250px">
     <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: auto;" class="col-xs-5 col-lg-5 text-center center col-cen col-centered  ">
-      <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>"><img class="img1lg" src="/images/index/m4" align="left"></a>
+      <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>"><img class="img1lg" src="<%= ConfigurationWeb.find(17).picture %>" align="left"></a>
     </div>
 
     <div style="width: 1px; float: left; height: 150px; background: #b692a2; position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0;">
@@ -416,7 +412,7 @@
 
 
     <div style="position: absolute; margin: auto; top: 0; bottom: 0; left: auto; right: 0;" class="col-xs-5 col-lg-5 text-center center col-cen col-centered ">
-      <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>"><img class="img2lg" src="/images/index/m5" align="right"></a>
+      <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>"><img class="img2lg" src="<%= ConfigurationWeb.find(18).picture %>" align="right"></a>
     </div>
   </div>
 </div>
@@ -425,7 +421,7 @@
 
   <div class=" text-center center col-cen col-centered " style="margin-top: 8px;">
 
-    <img class="img3" src="/images/index/m4" align="middle" style="width: 200px; height: 150px; margin: auto;display: block;">
+    <img class="img3" src="<%= ConfigurationWeb.find(17).picture %>" align="middle" style="width: 200px; height: 150px; margin: auto;display: block;">
     <p class="text-center " style="margin-top: 15px;">Organic Hustler Video 3</p>
     <button onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>'" class="btn styling_btn" style="width: auto">FOLLOW US ON INSTAGRAM</button>
 
