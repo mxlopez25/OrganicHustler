@@ -17,5 +17,5 @@
       <% end %>
     </div>
   </div>
-  <a href="http://10.0.0.9:3000/support/message?token=<%= @token %>" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; background: #b592a2; padding: 6px 12px; font-size: 100%; text-align: center; vertical-align: middle; border: none;">RESPOND</a>
+  <a href="<%= ENV['HOST'] %>/support/message?token=<%= @token %>" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; background: #b592a2; padding: 6px 12px; font-size: 100%; text-align: center; vertical-align: middle; border: none;">RESPOND</a>
 </div>

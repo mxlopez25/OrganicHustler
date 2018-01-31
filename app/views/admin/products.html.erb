@@ -64,6 +64,7 @@
     <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
     <button type="button" class="btn btn-warning" onclick="edit_selection()">Edit</button>
     <button type="button" class="btn btn-danger" onclick="delete_selection_np()" >DELETE</button>
+    <button type="button" class="btn btn-danger" onclick="delete_selection_p()">PERMANENT DELETE</button>
   </div>
 
   <div class="table_products card">
@@ -395,6 +396,8 @@
         function delete_selection_p() {
             var j = 0;
             var k = items.length;
+
+            if (confirm('You are about to permanently delete a product, are you sure? if a customer already bought this product he might experience some inconsistency in his product history.'))
 
             for (var i = 0; i < items.length; i++) {
                 $.ajax({

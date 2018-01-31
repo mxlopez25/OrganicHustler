@@ -1,6 +1,6 @@
 
-<body style="background-color: #dedede">
-<script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
+<body style="background-color: #ffffff">
+<script src="https://cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
 <div class="main">
   <div class="card showcase-part">
     <%= form_tag '/admin/mailer', method: :post do %>
@@ -16,18 +16,6 @@
         </script>
         <button class="btn btn-default" type="submit">Send to subscribers</button>
     <% end %>
-  </div>
-  <div class="card showcase-part">
-    <h4>Subscribers</h4>
-    <hr>
-    <ul>
-      <% Subscriber.last(10).reverse.each do |fr| %>
-          <li>
-            <%= fr.email %>
-          </li>
-      <% end %>
-    </ul>
-    <p style="text-align: right;"><a>Showing last 10</a></p>
   </div>
 </div>
 </body>

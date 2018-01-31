@@ -96,7 +96,9 @@ class TransactionalMailer < ApplicationMailer
 
   end
 
-  def subscription_confirmation
+  def subscription_confirmation(email)
+    @email = email
+    @token = SecureRandom.urlsafe_base64.to_s
 
   end
 
