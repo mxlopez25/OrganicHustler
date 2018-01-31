@@ -167,6 +167,8 @@ Rails.application.routes.draw do
   post '/messages-user' => 'home#message_user_add'
   post '/contact_us' => 'home#message_user_add_new'
 
+  get '/subscription/confirm' => 'home#confirm_email'
+
   namespace :support_controllers do
     get 'add/emblems/:id_p' => 'emblems#add_emblems'
     get 'emblems_created' => 'emblems#get_emblems_created'

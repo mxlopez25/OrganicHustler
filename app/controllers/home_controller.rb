@@ -653,13 +653,25 @@ class HomeController < ApplicationController
   end
 
   def subscribe
-
     subscriber = Subscriber.new(email: params['email'])
+    TransactionalMailer.subscription_confirmation(subscriber).deliver_now
     if subscriber.save!
       redirect_to '?success=true#subscriber'
     else
       redirect_to '?success=false#subscriber'
     end
+  end
+
+  def confirm_email
+    token = params[:token]
+    subs = Subscriber.find_by_token(token)
+    if subs
+      subs.active = true
+      subs.save!
+      TransactionalMailer.subscribed(subs.email).deliver_now
+    end
+
+    redirect_to root_path
   end
 
   #SHOWCASES

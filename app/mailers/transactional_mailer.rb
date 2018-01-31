@@ -96,14 +96,23 @@ class TransactionalMailer < ApplicationMailer
 
   end
 
-  def subscription_confirmation(email)
-    @email = email
+  def subscription_confirmation(subscriber)
+    @email = subscriber.email
     @token = SecureRandom.urlsafe_base64.to_s
+    subscriber.token = @token
+    subscriber.save!
 
+    mail to: @email, subject: 'Subscription for OrganicHustler'
   end
 
   def tracking
 
+  end
+
+  def subscribed(email)
+    # SUBSCRIBED MESSAGE
+    @email = email
+    mail to: @email, subject: 'Subscription for OrganicHustler'
   end
 
   private
