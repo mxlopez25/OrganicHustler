@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   get '/admin/products/new' => 'admin#new_product'
   get '/admin/edit_variation/:source_product/:variation_id' => 'admin#modify_variation'
   get '/admin/add_variation/:source_product' => 'admin#add_variation'
+  get '/preview/mail' => 'admin#preview_mail'
 
   get '/admin/products/color_images' => 'admin#get_images_colors'
   get '/admin/products/logos' => 'admin#get_logos'

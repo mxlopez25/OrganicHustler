@@ -89,9 +89,31 @@
     <hr class="no-spacing">
     <div style="padding: 10px">
       <p class="text-light">
-        Modify the transactional emails for each action buy modifying the html code, some parts are really important for
+        Modify the transactional emails for each action by modifying the html code, some parts are really important for
         the well behavior of the web app in some processes.
       </p>
+
+
+      <table border="1" style="width: 100%">
+        <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% MailContent.all.each do |mc| %>
+        <tr>
+          <td><%= mc.subject %></td>
+          <td>
+            <button style="margin: 2px; border: none" type="button" class="btn btn-default btn-sp"><i class="fa fa-pencil-square-o"></i></button>
+            <button onclick="window.open('/preview/mail?id=<%= mc.id %>')" style="margin: 2px; border: none" type="button" class="btn btn-default btn-sp"><i class="fa fa-eye"></i></button>
+          </td>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+
 
     </div>
 

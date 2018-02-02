@@ -3,9 +3,20 @@ require 'rest-client'
 class AdminController < ApplicationController
 
   layout 'admin'
+  layout 'customs_bl', :only => :preview_mail
   before_action :authenticate_admin!
 
   def main
+  end
+
+  def preview_mail
+    if params[:id] == '1'
+      @content = TransactionalMailer.shipped_out(Order.last).to_s.html_safe
+    elsif params[:id] == '2'
+      @content = TransactionalMailer.support_message(Ticket.last).to_s.html_safe
+    elsif params[:id] == '5'
+      @content = PurchaseMailer.new_purchase(Order.last).to_s.html_safe
+    end
   end
 
   def support
