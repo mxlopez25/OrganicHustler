@@ -187,5 +187,6 @@ Rails.application.routes.draw do
   resource :configuration_webs
   resource :tickets
   resource :messages
+  resource :mail_contents
 
 end

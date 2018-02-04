@@ -33,7 +33,7 @@
   <% end %>
 
   <div style="margin: 20px">
-    <h3 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter; text-align: center"></h3>
+    <h3 style="font-family: 'Helvetica Neue', Helvetica, serif; font-weight: lighter; text-align: center"><%= MailContent.find(5).content %></h3>
     <a target="_blank" href="<%= ENV['HOST'] %>/confirm_email?id=<%= @order_id %>&token=<%= @confirmation_token %>" style="font-family: 'Helvetica Neue', Helvetica, serif; text-decoration: none; margin: 0 auto; display: block; width: 50%; border-radius: 0; background: #b592a2; color: white; font-weight: 600; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.5), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">CONFIRM EMAIL</a>
   </div>
 

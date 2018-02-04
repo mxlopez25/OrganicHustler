@@ -1,7 +1,7 @@
 <div style="padding: 10px;">
   <h1 style="font-family: 'Source Sans Pro', sans-serif; font-weight: 300;"> WELCOME TO OUR MAILING LIST! </h1>
   <p style="font-family: 'Source Sans Pro', sans-serif; font-weight: 300;">
-    In order to get our latest news and promotions please complete the subscription process by confirming this email address: <span style="font-weight: bold"><%= @email %></span>
+    <%= MailContent.find(3).content %> <span style="font-weight: bold"><%= @email %></span>
   </p>
   <a href="<%= ENV['HOST'] %>/subscription/confirm?token=<%= @token %>" style="text-decoration: none; margin: 30px auto; display: block; width: 40%; color: white; background: #b592a2; padding: 6px 12px; font-size: 100%; text-align: center; vertical-align: middle; border: none;font-family: 'Source Sans Pro', sans-serif; font-weight: 300;">CONFIRM</a>
 </div>

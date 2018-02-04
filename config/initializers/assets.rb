@@ -25,6 +25,7 @@ Rails.application.config.assets.precompile += %w( home.css )
 Rails.application.config.assets.precompile += %w( cart.css )
 Rails.application.config.assets.precompile += %w( spectrum.css )
 Rails.application.config.assets.precompile += %w( spectrum.js )
+Rails.application.config.assets.precompile += %w( jquery.js )
 
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path

@@ -7,20 +7,16 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
 
   <%= stylesheet_link_tag 'home' %>
-  <%= javascript_include_tag 'jquery.min.js' %>
-  <%= stylesheet_link_tag 'bootstrap.min.css' %>
-  <%= stylesheet_link_tag 'bootstrap.css' %>
+  <%= javascript_include_tag 'jquery.js' %>
   <%= javascript_include_tag 'bootstrap.min' %>
+
+  <%= stylesheet_link_tag 'bootstrap.min.css' %>
   <%= javascript_include_tag 'dropzone' %>
   <%= stylesheet_link_tag 'dropzone' %>
   <%= javascript_include_tag 'konva.min' %>
 
   <%= stylesheet_link_tag 'admin_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
-
   <%= javascript_include_tag 'admin.js', 'data-turbolinks-track': 'reload' %>
-
-  <%= stylesheet_link_tag 'style-fc' %>
-  <%= javascript_include_tag 'jquery.jcarousel' %>
 
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application.js' %>
@@ -31,16 +27,6 @@
 
   <%= csrf_meta_tags %>
 </head>
-
-
-<!--<header style="margin: 10px">
-  <ul class="nav nav-pills hidden-xs-down">
-    <li class="nav-item"><a class="nav-link" onclick="loadView('products')" href="#" id="products">Products</a></li>
-    <li class="nav-item"><a class="nav-link" onclick="loadView('logo')" href="#" id="logo">Logos</a></li>
-    <li class="nav-item"><a class="nav-link" onclick="loadView('orders')" href="#" id="orders">Orders</a></li>
-    <li class="float-right" style="float: right; display: block" role="presentation"><a class="btn btn-danger" style="margin-left:50px" href="/admins/sign_out" data-method="DELETE" id="logo">Log out</a></li>
-  </ul>
-</header>-->
 
 <nav class="navbar navbar-inverse sidebar" role="navigation">
   <div class="container-fluid">
@@ -98,11 +84,68 @@
 
 <%= yield %>
 
+<div class="modal fade" id="edit_mail_content" tabindex="-1" role="dialog" aria-labelledby="edit_mail_content" aria-hidden="true">
+  <div style="width: 80%;" class="modal-dialog" role="document">
+    <div style="width: 80%;" class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title text-light" id="exampleModalLabel">Edit mailer</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="font-size: 30px;position:  absolute;right: 10px;top:  0;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="input-group">
+          <span class="text-light input-group-addon" id="basic-addon2">SUBJECT</span>
+          <input type="text" class="text-light form-control" aria-describedby="basic-addon2" id="subject" name="subject">
+        </div>
+
+        <div class="input-group">
+          <span class="text-light input-group-addon" id="basic-addon2">TEXT</span>
+          <textarea rows="3" class="text-light form-control" aria-describedby="basic-addon2" id="content" name="content"></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" style="border-radius: 0" class="text-light btn btn-secondary" data-dismiss="modal">Close</button>
+        <button onclick="update_mail()" type="button" class="btn btn-primary btn-sp text-light">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 
 </html>
 
 <script>
+
+  var _mail_id = -1;
+
+  function modify_mail(value, content, mail_id){
+      _mail_id = mail_id;
+      document.getElementById('subject').value = value;
+      document.getElementById('content').innerText = content;
+  }
+
+  function update_mail(){
+      $.ajax({
+          url: '/mail_contents',
+          type: 'patch',
+          dataType: 'json',
+          data: {
+              mail_id : _mail_id,
+              subject : document.getElementById('subject').value,
+              content : document.getElementById('content').value
+          }, success: function (data) {
+              location.reload(true);
+          }, error: function (data) {
+              console.log(data);
+          }
+
+      })
+
+  }
 
     function loadView(idView) {
 
@@ -131,9 +174,7 @@
 
 
     }
-</script>
 
-<script>
     function makeSortable(table) {
         var th = table.tHead, i;
         th && (th = th.rows[0]) && (th = th.cells);
@@ -167,4 +208,11 @@
         var t = parent.getElementsByTagName('table'), i = t.length;
         while (--i >= 0) makeSortable(t[i]);
     }
+
+
+    $(".modal").on("shown.bs.modal", function () {
+        $(".modal-backdrop").remove();
+    })
+
+
 </script>

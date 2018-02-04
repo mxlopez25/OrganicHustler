@@ -14,6 +14,10 @@ class AdminController < ApplicationController
       @content = TransactionalMailer.shipped_out(Order.last).to_s.html_safe
     elsif params[:id] == '2'
       @content = TransactionalMailer.support_message(Ticket.last).to_s.html_safe
+    elsif params[:id] == '3'
+      @content = TransactionalMailer.subscription_confirmation(Subscriber.last).to_s.html_safe
+    elsif params[:id] == '4'
+      @content = TransactionalMailer.subscribed('oh@admin').to_s.html_safe
     elsif params[:id] == '5'
       @content = PurchaseMailer.new_purchase(Order.last).to_s.html_safe
     end

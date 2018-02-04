@@ -56,7 +56,8 @@
 
 </style>
 
-<body style="background-color: #ffffff">
+<div style="background-color: #ffffff">
+
 <script src="https://cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
 <div class="main" style="padding: 20px">
   <h1 class="text-light">Mailer</h1>
@@ -106,7 +107,9 @@
         <tr>
           <td><%= mc.subject %></td>
           <td>
-            <button style="margin: 2px; border: none" type="button" class="btn btn-default btn-sp"><i class="fa fa-pencil-square-o"></i></button>
+            <% unless mc.content.blank? %>
+            <button style="margin: 2px; border: none" onclick="modify_mail('<%= mc.subject %>', '<%= mc.content %>', '<%= mc.id %>')" type="button" class="btn btn-default btn-sp" data-toggle="modal" data-target="#edit_mail_content"><i class="fa fa-pencil-square-o"></i></button>
+              <% end %>
             <button onclick="window.open('/preview/mail?id=<%= mc.id %>')" style="margin: 2px; border: none" type="button" class="btn btn-default btn-sp"><i class="fa fa-eye"></i></button>
           </td>
         </tr>
@@ -119,4 +122,5 @@
 
   </div>
 </div>
-</body>
+
+</div>

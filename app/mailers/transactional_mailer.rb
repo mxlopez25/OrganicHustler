@@ -102,7 +102,7 @@ class TransactionalMailer < ApplicationMailer
     subscriber.token = @token
     subscriber.save!
 
-    mail to: @email, subject: 'Subscription for OrganicHustler'
+    mail to: @email, subject: MailContent.find(3).subject
   end
 
   def tracking
@@ -112,10 +112,7 @@ class TransactionalMailer < ApplicationMailer
   def subscribed(email)
     # SUBSCRIBED MESSAGE
     @email = email
-    @content = '<div style="padding: 10px;"><h1 style="font-family: \'Source Sans Pro\', sans-serif; font-weight: 300;"> Successfully subscribed as: <span style="font-weight: bold">{##email##}</span></h1></div>'
-    @content.sub! '{##email##}', @email
-    @content = @content.html_safe
-    mail to: @email, subject: 'Subscription for OrganicHustler'
+    mail to: @email, subject: MailContent.find(4).subject
   end
 
   private
