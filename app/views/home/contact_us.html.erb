@@ -4,14 +4,35 @@
   <h1 class="text_light">CONTACT US</h1>
   <h5 class="uppercase" style="color: #A4A4A4;"><%= ConfigurationWeb.find(9).value %></h5>
   <%= ConfigurationWeb.find(11).value.html_safe %>
-  <form enctype="multipart/form-data" id="support" method="post" name="support">
+  <form onsubmit="message_sent()" enctype="multipart/form-data" id="support" method="post" name="support">
     <div style="float: none" class="content-part field-data">
-      <input style="margin-bottom: 10px" name="user-email" class="field" type="email" placeholder="Email" value="" required="">
-
-      <input name="reason" class="field" type="text" placeholder="Subject" value="" required="">
+      <input id="email" style="margin-bottom: 10px" name="user-email" class="field" type="email" placeholder="Email" value="" required="">
+      <input id="reason" name="reason" class="field" type="text" placeholder="Subject" value="" required="">
       <hr>
-      <textarea style="height: auto" name="user-message" class="field" placeholder="Message" required="" rows="10"></textarea>
+      <textarea id="message" style="height: auto" name="user-message" class="field" placeholder="Message" required="" rows="10"></textarea>
       <button class="btn btn-sp" name="submit" type="submit" value="SEND"/>SEND</button>
     </div>
   </form>
 </div>
+
+<script>
+  function message_sent() {
+      $.ajax({
+          url: '/contact_us',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+              "user-email": document.getElementById('email').value,
+              "reason": document.getElementById('reason').value,
+              "user-message": document.getElementById('message').innerText
+          },
+          success: function (data) {
+              document.getElementById('support').outerHTML = '<div class="alert alert-success" role="alert">Message sent!</div>';
+          },
+          error: function (data) {
+              document.getElementById('support').outerText = 'Something went wrong this is your message: ' + document.getElementById('message').innerText;
+          }
+      });
+
+  }
+</script>

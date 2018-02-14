@@ -81,7 +81,9 @@
 
 <script>
 
-  var ACTUAL_CART_ITEM_EDIT = null;
+    var search_3 = $("#search-bot");
+
+    var ACTUAL_CART_ITEM_EDIT = null;
 
     window.twttr = (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0],
@@ -120,10 +122,10 @@
         var clientTop = docEl.clientTop || body.clientTop || 0;
         var clientLeft = docEl.clientLeft || body.clientLeft || 0;
 
-        var top  = box.top +  scrollTop - clientTop;
+        var top = box.top + scrollTop - clientTop;
         var left = box.left + scrollLeft - clientLeft;
 
-        return { top: Math.round(top), left: Math.round(left) };
+        return {top: Math.round(top), left: Math.round(left)};
     }
 
     function edit_catalog(id) {
@@ -418,8 +420,8 @@
             prices_cart = data['cost_array'];
             var discount_rate = parseFloat(data['discount']);
 
-            for (var hj = 0; hj < data['products'].length; hj++){
-                container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="'+ hj +'" class="'+((hj === 0) ? 'active' : '')+'"></li>'
+            for (var hj = 0; hj < data['products'].length; hj++) {
+                container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="' + hj + '" class="' + ((hj === 0) ? 'active' : '') + '"></li>'
             }
 
             create_entry_cart(0, data['products'].length);
@@ -429,7 +431,7 @@
                     var product = data['products'][i];
 
 
-                    var pre = '<div class="item-checkout item '+ ((i === 0) ? 'active' : '') +'" style="margin-top: 20px; padding-bottom: 20px; overflow: hidden;">\n' +
+                    var pre = '<div class="item-checkout item ' + ((i === 0) ? 'active' : '') + '" style="margin-top: 20px; padding-bottom: 20px; overflow: hidden;">\n' +
                         '        <div style="float: left; width: 100%; position: relative">\n' +
                         '          <div class="cart_item_modal" id="cart_' + product['id'] + '" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto;"></div>\n' +
                         '        </div>\n' +
@@ -2653,7 +2655,7 @@
         a = a === 15 ? a : 0;
         var coords = getCoords(document.getElementById('cart_ic_2'));
         var bubble = document.getElementById('bubble');
-        if ($(window).width() < 768){
+        if ($(window).width() < 768) {
             bubble.style.top = 0;
             bubble.style.left = 0;
         } else {
@@ -2661,7 +2663,6 @@
             bubble.style.left = (coords.left - 380 + a) + 'px';
         }
     }
-
 
 
     window.addEventListener('resize', position_card);
@@ -2756,15 +2757,31 @@
       <h3 id="subscriber" style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
       <%= form_tag root_path, method: :post do %>
         <% if params['success'].eql? 'true' %>
-          <input class="foot-form" type="text" name="email" placeholder="Successfully saved!">
+          <div style="width: 70%" class="input-group">
+            <input name="email" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Sussesfully saved!">
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="submit">Subscribe!</button>
+            </span>
+          </div>
         <% else %>
-          <input class="foot-form" type="text" name="email" placeholder="Email Address">
+
+          <div style="width: 70%" class="input-group">
+            <input name="email" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Email address">
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="submit">Subscribe!</button>
+            </span>
+          </div>
         <% end %>
       <% end %>
 
 
       <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> SEARCH SHOP</h3>
-      <input id="search-bot" class="foot-form" type="text" name="" value="<%= params['search'] %>">
+      <div style="width: 70%" class="input-group">
+        <input id="search-bot" name="search" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Search..." value="<%= params['search'] %>">
+        <span class="input-group-btn">
+          <button onclick="location.href = '/catalog?search=' + this.parentElement.parentElement.getElementsByTagName('input')[0].value;" class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="button">GO!</button>
+        </span>
+      </div>
 
       <div>
         <img src="/images/logo_sm" style="width: 30px; margin-top: 50px;">

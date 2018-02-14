@@ -38,7 +38,7 @@
       </div>
 
       <div class="content-part content-part-10 field-data">
-        <input name="cardholder-street-address-2" class="field" placeholder="ADDRESS 2" value="<%= address['street_address_2'] %>" required>
+        <input name="cardholder-street-address-2" class="field" placeholder="ADDRESS 2" value="<%= address['street_address_2'] %>">
       </div>
 
       <div style="margin: auto" class="content-part content-part-3 field-data content-part-10">
@@ -491,7 +491,7 @@
 
           <hr>
 
-          <input type="checkbox"> I agree to the
+          <input type="checkbox" required> I agree to the
           <a href="" data-toggle="modal" data-target="#modal_terms">terms and conditions</a>.
 
           <button class="btn btn-sp" type="submit">Pay $<span class="estimated_total">-</span></button>
