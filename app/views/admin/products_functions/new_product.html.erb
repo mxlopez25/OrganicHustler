@@ -58,36 +58,36 @@
           <textarea rows="1" class="form-control" name="description" id="description"></textarea>
 
           <label>Media and clasifiers</label>
-          <div>
-            <button onclick="edit_modal('size_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit sizes
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default" onclick="edit_modal('size_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit sizes
             </button>
 
 
-            <button onclick="edit_modal('logo_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit logos
+            <button type="button" class="btn btn-default" onclick="edit_modal('logo_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit logos
             </button>
 
 
-            <button onclick="edit_modal('color_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+            <button type="button" class="btn btn-default" onclick="edit_modal('color_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
               photos
             </button>
 
 
-            <button onclick="edit_modal('category_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+            <button type="button" class="btn btn-default" onclick="edit_modal('category_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
               categories
             </button>
 
 
-            <button onclick="edit_modal('style_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+            <button type="button" class="btn btn-default" onclick="edit_modal('style_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
               styles
             </button>
 
 
-            <button onclick="edit_modal('material_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+            <button type="button" class="btn btn-default" onclick="edit_modal('material_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
               materials
             </button>
 
 
-            <button onclick="edit_modal('brand_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
+            <button type="button" class="btn btn-default" onclick="edit_modal('brand_modal', this.parentNode.parentNode.parentNode.dataset.idRow)">Edit
               brands
             </button>
           </div>
@@ -161,7 +161,8 @@
 
     function complete_size(id) {
 
-        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>' +
+        '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';
         var sizes = sizes_g[id];
         if (sizes) {
             sizes.forEach(function (size) {
@@ -209,7 +210,8 @@
 
     function complete_logo(id) {
 
-        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var logos = logos_g[id];
         if (logos) {
             logos = logos.logos;
@@ -363,7 +365,8 @@
             colors_g[id].cur_id = 0;
         }
 
-        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="only_photos(\'' + id + '\', true)"> <h6 style="float: right">No color, Only photos available</h6>';
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="only_photos(\'' + id + '\', true)"> <h6 style="float: right">No color, Only photos available</h6>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var colors = colors_g[id];
         var dd = null;
 
@@ -520,7 +523,8 @@
 
     function complete_category(id) {
 
-        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var categories = categories_g[id];
         if (categories) {
             categories.forEach(function (category) {
@@ -565,7 +569,8 @@
 
     function complete_style(id) {
 
-        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var styles = styles_g[id];
         if (styles) {
             styles.forEach(function (style) {
@@ -610,7 +615,8 @@
 
     function complete_material(id) {
 
-        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var materials = materials_g[id];
         if (materials) {
             materials.forEach(function (material) {
@@ -655,7 +661,8 @@
 
     function complete_brand(id) {
 
-        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>';
+        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>' +
+            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
         var brands = brands_g[id];
         if (brands) {
             brands.forEach(function (brand) {
