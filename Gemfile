@@ -19,6 +19,7 @@ gem 'stripe'
 gem 'rmagick'
 gem 'easypost'
 gem 'mailgun-ruby', '~>1.1.6'
+gem 'will_paginate'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

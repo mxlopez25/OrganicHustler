@@ -48,9 +48,9 @@ class Product < ApplicationRecord
     sizes
   end
 
-  def self.get_by_attributes(id, sku, title, amount, category)
+  def self.get_by_attributes(id, sku, title, amount, category, page)
 
-    sql = "SELECT DISTINCT products.* FROM products " +
+    sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT products.* FROM products " +
         "#{category.blank? ? '' : 'INNER JOIN categories_products ON products.id = categories_products.product_id'} " +
         "#{
         if id.blank? && sku.blank? && title.blank? && amount.blank? && category.blank?
@@ -63,18 +63,21 @@ class Product < ApplicationRecord
               "#{category.blank? ? '' : 'category_id = ' + category + ' AND'} " +
               "#{amount.blank? ? '' : 'price <= ' + amount + ' AND'} "
         end
-        }"
+        }  LIMIT #{10 * (page.to_i - 1)}, 10"
 
     sql = sql.reverse.sub('AND'.reverse, ''.reverse).reverse
     p sql
 
+    n_rows = 'SELECT FOUND_ROWS();'
+
     results = ActiveRecord::Base.connection.execute(sql)
+    total = ActiveRecord::Base.connection.execute(n_rows).each(:as => :hash)[0]
     products = []
     results.each(:as => :hash) do |row|
       products << row.with_indifferent_access
     end
 
-    products
+    [products, total]
   end
 
 end

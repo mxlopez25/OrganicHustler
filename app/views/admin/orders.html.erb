@@ -1,62 +1,25 @@
-
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
 
-<style>
-  table {
-    color: #333;
-
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 300;
-
-    width: 640px;
-    border-collapse:
-        collapse; border-spacing: 0;
-  }
-
-  td, th {
-    border: 1px solid transparent; /* No more visible border */
-    height: 30px;
-    transition: all 0.3s;
-  }
-
-  th {
-    background: #b592a2;
-    text-align: center;
-    font-size: large;
-    color: white;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 300;
-  }
-
-  td {
-    background: #FAFAFA;
-    text-align: center;
-  }
-
-  /* Cells in even rows (2,4,6...) are one color */
-  tr:nth-child(even) td { background: #F1F1F1; }
-
-  /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
-  tr:nth-child(odd) td { background: #FEFEFE; }
-
-  tr td:hover { background: #666; color: #FFF; }
-
-    .text-light {
-      font-family: 'Source Sans Pro', sans-serif;
-      font-weight: 300;
-    }
-
-</style>
-
-<body style="background-color: #dedede;">
+<body style="background-color: white;">
 <div class="main">
 
-  <div class="content-part-7 card">
-    <h2 class="text-light">Orders</h2>
-        <input style="margin: 0" class="content-part-7 serious-input text-light" type="text" id="order_id" placeholder="Order ID" name="search-field">
-        <button onclick="document.location.href = '/admin/orders/' + document.getElementById('order_id').value" style="margin: 0; color: white" type="submit" class="btn btn-sp content-part-3 text-light">Search</button>
+  <div style="padding: 20px; background-color: white">
+  <h1 class="text-light">Orders</h1>
+  <hr>
+
+  <div class="content-part-7">
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Discount rate</span>
+      <input id="order_id" placeholder="Order ID" name="search-field" type="text" step="any" class="form-control" aria-describedby="basic-addon1">
+    </div>
+    <button onclick="document.location.href = '/admin/orders/' + document.getElementById('order_id').value" style="margin: 0; color: white; width: 100%" type="submit" class="btn btn-sp text-light">SEARCH</button>
+  </div>
+    <div style="width: 25%" class="content-part-3">
+      <button style="width: 100%" onclick="see_details()" class="btn btn-default">See items/details</button>
+    </div>
+    <div class="content-part-10">
     <div style="overflow: hidden; width: 100%">
-      <h3  class="text-light">Latest unfinished orders</h3>
+      <h3 class="text-light">Latest unfinished orders</h3>
     </div>
     <table border="1" style="width: 100%">
       <thead>
@@ -69,27 +32,27 @@
       </tr>
       </thead>
       <tbody>
-      <% Order.where(confirmed: false).order(created_at: :asc).each do |o| %>
-          <tr>
-            <td>
-              <input onclick="click_radio('<%= o.id %>')" class="selected-r" name="order" type="radio" id="selection_<%= o.id %>" value="<%= o.id %>">
-            </td>
-            <td><%= time_ago_in_words o.created_at %></td>
-            <td>$<%= (get_price o.id).round(2) %></td>
-            <td><%= o.state %></td>
-            <td><%= "#{o.user_address.name} #{o.user_address.last_name}" %></td>
-          </tr>
+      <% @orders = Order.where(confirmed: false).order(created_at: :asc).paginate(page: params[:page], per_page: 10) %>
+      <% @orders.each do |o| %>
+        <tr>
+          <td>
+            <input onclick="click_radio('<%= o.id %>')" class="selected-r" name="order" type="radio" id="selection_<%= o.id %>" value="<%= o.id %>">
+          </td>
+          <td><%= time_ago_in_words o.created_at %></td>
+          <td>$<%= (get_price o.id).round(2) %></td>
+          <td><%= o.state %></td>
+          <td><%= "#{o.user_address.name} #{o.user_address.last_name}" %></td>
+        </tr>
       <% end %>
       </tbody>
     </table>
+    <%= will_paginate @orders %>
 
-  </div>
-  <div style="position: fixed; right: 0; width: 25%" class="content-part-3 card">
-    <button style="width: 100%" onclick="see_details()" class="btn btn-default">See items/details</button>
   </div>
 
   <script>
       var selected = 0;
+
       function click_radio(id) {
           var element = document.getElementById('selection_' + id);
           if (element.checked) {
@@ -104,6 +67,7 @@
       }
 
   </script>
+  </div>
 
 </div>
 </body>

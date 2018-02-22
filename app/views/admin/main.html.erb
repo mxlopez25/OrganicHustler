@@ -1,9 +1,19 @@
 
 <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
-<body style="background-color: #dedede">
+<body style="background-color: white">
 <div class="main masonry">
-  <div style="padding: 20px; margin: 20px" class="card content-part-10">
-    <h1>Configuration</h1>
+
+  <div style="padding: 20px; background-color: white">
+
+    <div style="width: 100%; height: 100%; position: absolute;" id="loading_a" class="hidden">
+
+      <div style="margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0" class="loader">
+
+      </div>
+
+    </div>
+
+    <h1 class="text-light">Configuration</h1>
     <hr>
 
     <% ConfigurationWeb.all.each do |co| %>
@@ -42,6 +52,7 @@
 
       <div id="entry_editor" class="modal">
         <div class="modal-content">
+          <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
           <textarea name="editor" id="editor" rows="10" cols="80">
           </textarea>
@@ -58,36 +69,33 @@
 
       <div id="product_finder" class="modal">
         <div class="modal-content">
+          <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
-          <div class="table_search card">
+          <div class="table_search">
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">ID</span>
-              <label for="id"></label>
               <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">SKU</span>
-              <label for="sku"></label>
               <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku" name="sku">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon">Title</span>
-              <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
+              <input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon">Less than</span>
-              <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
+              <input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
               <span class="input-group-addon">$</span>
             </div>
 
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">Category</span>
-              <label for="category"></label>
               <select class="form-control" id="category" name="category">
-
               </select>
             </div>
 
@@ -113,15 +121,17 @@
 
             </script>
 
-            <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
+            <button class="btn btn-primary" onclick="loadTable_1()" style="width: 100%" type="button">Search</button>
           </div>
 
-          <div class="table_buttons card">
+          <div class="table_buttons">
             <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
             <button type="button" class="btn btn-success" onclick="selected_item()">Select product</button>
           </div>
 
-          <div class="table_products card">
+          <div class="table_products">
+
+            <hr style="margin: 0;">
             <table class="table" id="table">
               <thead>
               <tr>
@@ -137,42 +147,19 @@
 
               </tbody>
             </table>
+            <div id="pages1">
+
+            </div>
             <script>
 
                 var item = null;
                 var temp_id = '';
-
-                $.ajax({
-                    url: '/admin/all_products',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {},
-                    success: function (data) {
-                        var table_body = document.getElementById('list-to-m');
-                        var text = '';
-                        for (var i = 0; i < data.length; i++) {
-                            console.log(data[i]);
-                            text = text + '<tr id="product-row">\n' +
-                                '            <td>\n' +
-                                '              <input id="select-obj" type="radio" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
-                                '            </td>\n' +
-                                '            <td>\n' +
-                                '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
-                                '            </td>\n' +
-                                '            <td>' + data[i]['title'] + '</td>\n' +
-                                '            <td>' + data[i]['stock'] + '</td>\n' +
-                                '            <td>' + data[i]['categories_l'] + '</td>\n' +
-                                '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
-                                '          </tr>'
-                        }
-                        table_body.innerHTML = text;
-                    },
-                    error: function (data) {
-
-                    }
-                });
+                var page1 = 1;
 
                 function update_entry() {
+
+                    document.getElementById('loading_a').classList.remove('hidden');
+
                     document.getElementById(temp_id).value = CKEDITOR.instances.editor.getData();
                     var modal = document.getElementById('entry_editor');
                     modal.style.display = "none";
@@ -187,14 +174,20 @@
                         },
                         success: function (data) {
                             console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
                             console.log(data)
+                            document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
                 }
 
                 function selected_item() {
+
+
+                    document.getElementById('loading_a').classList.remove('hidden');
+
                     document.getElementById(temp_id).value = item;
                     var modal = document.getElementById('product_finder');
                     modal.style.display = "none";
@@ -209,14 +202,19 @@
                         },
                         success: function (data) {
                             console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data)
+                            console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
                 }
 
                 function set_v(id) {
+
+                    document.getElementById('loading_a').classList.remove('hidden');
+
                     $.ajax({
                         url: '/configuration_webs',
                         type: 'patch',
@@ -227,42 +225,49 @@
                         },
                         success: function (data) {
                             console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data)
+                            console.log(data);
+                            window.location.reload(true);
+                            document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
                 }
 
+                var modal = null;
+
                 function find_id(id) {
                     temp_id = id;
-                    var modal = document.getElementById('product_finder');
+                    modal = document.getElementById('product_finder');
+                    loadTable_1();
                     modal.style.display = "block";
                 }
 
                 function find_ids(id) {
                     temp_id = id;
-                    var modal = document.getElementById('products_finder');
+                    modal = document.getElementById('products_finder');
+                    loadTable_2();
                     modal.style.display = "block";
                 }
 
                 function image_uploader(id) {
                     temp_id = id;
-                    var modal = document.getElementById('image_uploader');
+                    modal = document.getElementById('image_uploader');
                     modal.style.display = "block";
                     document.getElementById('configuration_web_id').value = id;
                 }
 
                 function edit_entry(id) {
                     temp_id = id;
-                    var modal = document.getElementById('entry_editor');
+                    modal = document.getElementById('entry_editor');
                     modal.style.display = "block";
                     CKEDITOR.instances['editor'].setData(document.getElementById(temp_id).value);
                 }
 
-                function loadTable() {
+                function loadTable_1() {
                     $.ajax({
-                        url: '/admin/all_products',
+                        url: '/admin/all_products?page=' + page1,
                         type: 'GET',
                         dataType: 'json',
                         data: {
@@ -273,6 +278,18 @@
                             category: document.getElementById('category').value
                         },
                         success: function (data) {
+
+                            var total = data['total']['FOUND_ROWS()'];
+
+
+                            var page_crts = document.getElementById('pages1');
+                            page_crts.innerHTML = '';
+                            for (var we = 0; we < (total / 10); we++){
+                                page_crts.innerHTML = page_crts.innerHTML + '<div onclick="page1=(' + (we + 1) +'); loadTable_1()" class="text_light paging_crt '+ (((we + 1) === page1) ? 'pink-p' : '') +' ">' + (we + 1) +  '</div>';
+                            }
+
+                            data = data['product'];
+
                             var table_body = document.getElementById('list-to-m');
                             var text = '';
                             for (var i = 0; i < data.length; i++) {
@@ -319,36 +336,33 @@
 
       <div id="products_finder" class="modal">
         <div class="modal-content">
+          <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
-          <div class="table_search card">
+          <div class="table_search">
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">ID</span>
-              <label for="id"></label>
               <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input_2" name="id_input">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">SKU</span>
-              <label for="sku"></label>
               <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku_2" name="sku">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon">Title</span>
-              <label for="title"></label><input type="text" class="form-control" aria-describedby="basic-addon1" id="title_2" name="title">
+              <input type="text" class="form-control" aria-describedby="basic-addon1" id="title_2" name="title">
             </div>
 
             <div class="input-group">
               <span class="input-group-addon">Less than</span>
-              <label for="amount"></label><input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount_2" name="amount">
+              <input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount_2" name="amount">
               <span class="input-group-addon">$</span>
             </div>
 
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon2">Category</span>
-              <label for="category"></label>
               <select class="form-control" id="category_2" name="category">
-
               </select>
             </div>
 
@@ -377,12 +391,13 @@
             <button class="btn btn-primary" onclick="loadTable_2()" style="width: 100%" type="button">Search</button>
           </div>
 
-          <div class="table_buttons card">
+          <div class="table_buttons">
             <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
             <button type="button" class="btn btn-success" onclick="set_values_ids()">Done</button>
           </div>
 
-          <div class="table_products card">
+          <div class="table_products">
+            <hr style="margin: 0;">
             <table class="table" id="table">
               <thead>
               <tr>
@@ -398,7 +413,19 @@
 
               </tbody>
             </table>
+            <div id="pages2">
+
+            </div>
             <script>
+
+              var page2 = 1;
+
+                function close_modal() {
+                    if (modal) {
+                        modal.style.display = "none";
+                        dim_back.style.display = "none";
+                    }
+                }
 
                 var ids = [];
 
@@ -417,37 +444,9 @@
                     return this;
                 };
 
-                $.ajax({
-                    url: '/admin/all_products',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {},
-                    success: function (data) {
-                        var table_body = document.getElementById('list-to-m_2');
-                        var text = '';
-                        for (var i = 0; i < data.length; i++) {
-                            console.log(data[i]);
-                            text = text + '<tr id="product-row">\n' +
-                                '            <td>\n' +
-                                '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item_s(\'' + data[i]['id'] + '\')">\n' +
-                                '            </td>\n' +
-                                '            <td>\n' +
-                                '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
-                                '            </td>\n' +
-                                '            <td>' + data[i]['title'] + '</td>\n' +
-                                '            <td>' + data[i]['stock'] + '</td>\n' +
-                                '            <td>' + data[i]['categories_l'] + '</td>\n' +
-                                '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
-                                '          </tr>'
-                        }
-                        table_body.innerHTML = text;
-                    },
-                    error: function (data) {
-
-                    }
-                });
-
                 function set_values_ids() {
+
+                    document.getElementById('loading_a').classList.remove('hidden');
 
                     document.getElementById(temp_id).value = ids;
                     var modal = document.getElementById('products_finder');
@@ -463,16 +462,18 @@
                         },
                         success: function (data) {
                             console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data)
+                            console.log(data);
+                            document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
                 }
 
                 function loadTable_2() {
                     $.ajax({
-                        url: '/admin/all_products',
+                        url: '/admin/all_products?page='+ page2,
                         type: 'GET',
                         dataType: 'json',
                         data: {
@@ -483,6 +484,18 @@
                             category: document.getElementById('category_2').value
                         },
                         success: function (data) {
+
+                            var total = data['total']['FOUND_ROWS()'];
+
+
+                            var page_crts = document.getElementById('pages2');
+                            page_crts.innerHTML = '';
+                            for (var we = 0; we < (total / 10); we++){
+                                page_crts.innerHTML = page_crts.innerHTML + '<div onclick="page2=(' + (we + 1) +'); loadTable_2()" class="text_light paging_crt '+ (((we + 1) === page2) ? 'pink-p' : '') +' ">' + (we + 1) +  '</div>';
+                            }
+
+                            data = data['product'];
+
                             var table_body = document.getElementById('list-to-m_2');
                             var text = '';
                             for (var i = 0; i < data.length; i++) {
@@ -538,6 +551,7 @@
 
       <div id="image_uploader" class="modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
         <div class="modal-content">
+          <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
           <%= form_for ConfigurationWeb.all.first, url:  configuration_webs_url, html: { multipart: true } do |form| %>
             <%= form.hidden_field :id %>

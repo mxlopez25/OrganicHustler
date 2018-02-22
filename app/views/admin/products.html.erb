@@ -2,10 +2,35 @@
     const items = [];
 </script>
 
-<body style="background-color: #dedede">
+<style>
+  .paging_crt {
+    float: left;
+    width: 40px;
+    height: 40px;
+    font-size: 34px;
+    background: #e1e1e1;
+    padding: 3px;
+    line-height: 34px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0 10px 10px;
+  }
+
+    .pink-p {
+      background: #222;
+      color: white;
+    }
+</style>
+
+<body style="background-color: white">
 <div class="main">
 
-  <div class="table_search card">
+
+  <div style="padding: 20px; background-color: white">
+  <h1 class="text-light">Products</h1>
+  <hr>
+
+  <div class="table_search">
     <div class="input-group">
       <span class="input-group-addon" id="basic-addon2">ID</span>
       <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
@@ -56,18 +81,20 @@
 
     </script>
 
-    <button class="btn btn-primary" onclick="loadTable()" style="width: 100%" type="button">Search</button>
+    <button class="btn-sp text-light btn" onclick="loadTable()" style="width: 100%" type="button">SEARCH</button>
   </div>
-  <div class="table_buttons card">
+
+  <div class="table_buttons">
     <button type="button" class="btn btn-success" onclick="window.location.href='/admin/products/new'">New product
     </button>
     <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
     <button type="button" class="btn btn-warning" onclick="edit_selection()">Edit</button>
-    <button type="button" class="btn btn-danger" onclick="delete_selection_np()" >DELETE</button>
+    <button type="button" class="btn btn-danger" onclick="delete_selection_np()">Disable</button>
     <button type="button" class="btn btn-danger" onclick="delete_selection_p()">PERMANENT DELETE</button>
   </div>
 
-  <div class="table_products card">
+  <div class="table_products">
+    <hr style="margin: 0">
     <table class="table" id="table">
       <thead>
       <tr>
@@ -83,44 +110,19 @@
 
       </tbody>
     </table>
+
+    <div id="pages">
+
+    </div>
+
     <script>
 
-        $.ajax({
-            url: '/admin/all_products',
-            type: 'GET',
-            dataType: 'json',
-            data: {},
-            success: function (data) {
-                var table_body = document.getElementById('list-to-m');
-                var text = '';
-                for (var i = 0; i < data.length; i++) {
-                    console.log(data[i]);
-
-                    var background_color = (data[i]['status'] ? 'white' : '#ff8787');
-
-                    text = text + '<tr id="product-row" style="background: '+ background_color +'">\n' +
-                        '            <td>\n' +
-                        '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
-                        '            </td>\n' +
-                        '            <td>\n' +
-                        '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
-                        '            </td>\n' +
-                        '            <td>' + data[i]['title'] + '</td>\n' +
-                        '            <td>' + data[i]['stock'] + '</td>\n' +
-                        '            <td>' + data[i]['categories_l'] + '</td>\n' +
-                        '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
-                        '          </tr>'
-                }
-                table_body.innerHTML = text;
-            },
-            error: function (data) {
-
-            }
-        });
+        var page = 1;
+        loadTable();
 
         function loadTable() {
             $.ajax({
-                url: '/admin/all_products',
+                url: '/admin/all_products?page=' + page,
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -131,6 +133,15 @@
                     category: document.getElementById('category').value
                 },
                 success: function (data) {
+                    var total = data['total']['FOUND_ROWS()'];
+
+                    var page_crts = document.getElementById('pages');
+                    page_crts.innerHTML = '';
+                    for (var we = 0; we < (total / 10); we++){
+                        page_crts.innerHTML = page_crts.innerHTML + '<div onclick="page=(' + (we + 1) +'); loadTable()" class="text_light paging_crt '+ (((we + 1) === page) ? 'pink-p' : '') +' ">' + (we + 1) +  '</div>';
+                    }
+
+                    data = data['product'];
                     var table_body = document.getElementById('list-to-m');
                     var text = '';
                     for (var i = 0; i < data.length; i++) {
@@ -164,9 +175,6 @@
             console.log(items);
         }
 
-    </script>
-    <script>
-
         var title_sort = true;
         var inventory_sort = true;
         var category_sort = true;
@@ -176,19 +184,19 @@
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
             switching = true;
-          /*Make a loop that will continue until
-           no switching has been done:*/
+            /*Make a loop that will continue until
+             no switching has been done:*/
             while (switching) {
                 //start by saying: no switching is done:
                 switching = false;
                 rows = table.getElementsByTagName("tr");
-              /*Loop through all table rows (except the
-               first, which contains table headers):*/
+                /*Loop through all table rows (except the
+                 first, which contains table headers):*/
                 for (i = 1; i < (rows.length - 1); i++) {
                     //start by saying there should be no switching:
                     shouldSwitch = false;
-                  /*Get the two elements you want to compare,
-                   one from current row and one from the next:*/
+                    /*Get the two elements you want to compare,
+                     one from current row and one from the next:*/
                     x = rows[i].getElementsByTagName("td")[2];
                     y = rows[i + 1].getElementsByTagName("td")[2];
                     //check if the two rows should switch place:
@@ -202,8 +210,8 @@
                     }
                 }
                 if (shouldSwitch) {
-                  /*If a switch has been marked, make the switch
-                   and mark that a switch has been done:*/
+                    /*If a switch has been marked, make the switch
+                     and mark that a switch has been done:*/
                     rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                     switching = true;
                 }
@@ -211,23 +219,24 @@
 
             title_sort = !title_sort;
         }
+
         function sort_inventory() {
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
             switching = true;
-          /*Make a loop that will continue until
-           no switching has been done:*/
+            /*Make a loop that will continue until
+             no switching has been done:*/
             while (switching) {
                 //start by saying: no switching is done:
                 switching = false;
                 rows = table.getElementsByTagName("tr");
-              /*Loop through all table rows (except the
-               first, which contains table headers):*/
+                /*Loop through all table rows (except the
+                 first, which contains table headers):*/
                 for (i = 1; i < (rows.length - 1); i++) {
                     //start by saying there should be no switching:
                     shouldSwitch = false;
-                  /*Get the two elements you want to compare,
-                   one from current row and one from the next:*/
+                    /*Get the two elements you want to compare,
+                     one from current row and one from the next:*/
                     x = rows[i].getElementsByTagName("td")[3];
                     y = rows[i + 1].getElementsByTagName("td")[3];
                     //check if the two rows should switch place:
@@ -241,8 +250,8 @@
                     }
                 }
                 if (shouldSwitch) {
-                  /*If a switch has been marked, make the switch
-                   and mark that a switch has been done:*/
+                    /*If a switch has been marked, make the switch
+                     and mark that a switch has been done:*/
                     rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                     switching = true;
                 }
@@ -255,19 +264,19 @@
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
             switching = true;
-          /*Make a loop that will continue until
-           no switching has been done:*/
+            /*Make a loop that will continue until
+             no switching has been done:*/
             while (switching) {
                 //start by saying: no switching is done:
                 switching = false;
                 rows = table.getElementsByTagName("tr");
-              /*Loop through all table rows (except the
-               first, which contains table headers):*/
+                /*Loop through all table rows (except the
+                 first, which contains table headers):*/
                 for (i = 1; i < (rows.length - 1); i++) {
                     //start by saying there should be no switching:
                     shouldSwitch = false;
-                  /*Get the two elements you want to compare,
-                   one from current row and one from the next:*/
+                    /*Get the two elements you want to compare,
+                     one from current row and one from the next:*/
                     x = rows[i].getElementsByTagName("td")[2];
                     y = rows[i + 1].getElementsByTagName("td")[2];
                     //check if the two rows should switch place:
@@ -281,8 +290,8 @@
                     }
                 }
                 if (shouldSwitch) {
-                  /*If a switch has been marked, make the switch
-                   and mark that a switch has been done:*/
+                    /*If a switch has been marked, make the switch
+                     and mark that a switch has been done:*/
                     rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                     switching = true;
                 }
@@ -295,19 +304,19 @@
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("table");
             switching = true;
-          /*Make a loop that will continue until
-           no switching has been done:*/
+            /*Make a loop that will continue until
+             no switching has been done:*/
             while (switching) {
                 //start by saying: no switching is done:
                 switching = false;
                 rows = table.getElementsByTagName("tr");
-              /*Loop through all table rows (except the
-               first, which contains table headers):*/
+                /*Loop through all table rows (except the
+                 first, which contains table headers):*/
                 for (i = 1; i < (rows.length - 1); i++) {
                     //start by saying there should be no switching:
                     shouldSwitch = false;
-                  /*Get the two elements you want to compare,
-                   one from current row and one from the next:*/
+                    /*Get the two elements you want to compare,
+                     one from current row and one from the next:*/
                     x = rows[i].getElementsByTagName("td")[5];
                     y = rows[i + 1].getElementsByTagName("td")[5];
                     //check if the two rows should switch place:
@@ -321,8 +330,8 @@
                     }
                 }
                 if (shouldSwitch) {
-                  /*If a switch has been marked, make the switch
-                   and mark that a switch has been done:*/
+                    /*If a switch has been marked, make the switch
+                     and mark that a switch has been done:*/
                     rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                     switching = true;
                 }
@@ -399,28 +408,29 @@
 
             if (confirm('You are about to permanently delete a product, are you sure? if a customer already bought this product he might experience some inconsistency in his product history.'))
 
-            for (var i = 0; i < items.length; i++) {
-                $.ajax({
-                    url: '/product',
-                    method: 'delete',
-                    data: {
-                        pro_id: items[i],
-                        permanent: true
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        j = j + 1;
-                        if (j === k) {
-                            window.location.href = '/admin/products';
+                for (var i = 0; i < items.length; i++) {
+                    $.ajax({
+                        url: '/product',
+                        method: 'delete',
+                        data: {
+                            pro_id: items[i],
+                            permanent: true
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            j = j + 1;
+                            if (j === k) {
+                                window.location.href = '/admin/products';
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data)
                         }
-                    },
-                    error: function (data) {
-                        console.log(data)
-                    }
-                });
-            }
+                    });
+                }
         }
     </script>
   </div>
+</div>
 </div>
 </body>
