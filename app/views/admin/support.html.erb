@@ -9,8 +9,22 @@
   <h1 class="text-light">Support</h1>
   <hr>
   <div class="content-part-7">
-    <input style="margin: 0" class="content-part-7 serious-input text-light" type="text" id="email" placeholder="User mail" name="search-field">
-    <button onclick="document.location.href = '/admin/support/user?email=' + document.getElementById('email').value" style="margin: 0; color: white" type="submit" class="btn btn-sp content-part-3 text-light">Search</button>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">User email</span>
+      <input id="email" placeholder="" name="search-field" type="text" class="form-control" aria-describedby="basic-addon1">
+    </div>
+    <button onclick="document.location.href = '/admin/support/user?email=' + document.getElementById('email').value"
+            style="margin: 0;
+                color: white;
+                width: 100%"
+            type="submit"
+            class="btn btn-sp text-light">
+
+      SEE DETAILS
+    </button>
+
+
     <div style="overflow: hidden; width: 100%">
       <h3  class="text-light">Latest unfinished tickets</h3>
     </div>

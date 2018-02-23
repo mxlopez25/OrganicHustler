@@ -65,6 +65,9 @@ class AdminController < ApplicationController
   def gifts
   end
 
+  def stats
+  end
+
   def change_main_picture
     (Color.find params[:color_id]).change_main_photo(params[:photo_id])
   end

@@ -75,9 +75,11 @@ Rails.application.routes.draw do
   get '/admin/categories' => 'admin#category'
   get '/admin/gifts' => 'admin#gifts'
   get '/admin/support' => 'admin#support'
+  get '/admin/stats' => 'admin#stats'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
+  get '/admin/temp_users' => 'admin#temp_users'
 
   get '/admin/product/:id' => 'admin#info_product'
   get '/admin/product/edit/:id' => 'admin#edit_product'
