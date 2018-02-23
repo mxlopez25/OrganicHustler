@@ -77,6 +77,12 @@ Rails.application.routes.draw do
   get '/admin/support' => 'admin#support'
   get '/admin/stats' => 'admin#stats'
 
+  get '/admin/stats/visits' => 'admin#get_data_visits'
+  get '/admin/stats/money' => 'admin#get_data_money'
+  get '/admin/stats/shipping' => 'admin#get_data_shipping'
+  get '/admin/stats/orders' => 'admin#get_data_orders'
+  get '/admin/stats/products_views' => 'admin#get_data_products_view'
+
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
   get '/admin/temp_users' => 'admin#temp_users'

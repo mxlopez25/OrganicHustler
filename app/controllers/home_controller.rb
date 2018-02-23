@@ -196,6 +196,8 @@ class HomeController < ApplicationController
 
   def catalog_item
     al = Product.find(params['id'])
+    al.history_counts << HistoryCount.create!(owner: al)
+    al.save!
     color = al.colors.where(preferred: true).first
     al.attributes.merge(main_color: color)
     render :json => JSON::parse(al.to_json).merge({main_color: color}).to_json

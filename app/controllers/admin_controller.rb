@@ -1,6 +1,9 @@
 require 'rest-client'
+require 'easypost'
+include HomeHelper
 
 class AdminController < ApplicationController
+  EasyPost.api_key = ENV['EASYPOST_SECRET']
 
   layout 'admin'
   layout 'customs_bl', :only => :preview_mail
@@ -66,6 +69,59 @@ class AdminController < ApplicationController
   end
 
   def stats
+  end
+
+  # Stats
+
+  def get_data_visits
+    visits_days = []
+    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
+          day = TempUser.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) )
+          visits_days.push([(Time.now - i.days).strftime("%b %d, %Y"), day.size])
+    end
+    render json: visits_days, status: :ok
+  end
+
+  def get_data_money
+    orders_price = []
+    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
+      orders = Order.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) )
+      price = 0
+      shipping = 0
+      orders.each do |ord|
+        mm = HomeHelper::get_price(ord.id)
+        price = price + ((mm == -1) ? 0 : mm)
+        if ord.tag_link
+          shipping = shipping + EasyPost::Shipment.retrieve(ord.tag_link)["selected_rate"]["rate"].to_f
+        end
+      end
+      orders_price.push([(Time.now - i.days).strftime("%b %d, %Y"), price.to_f, shipping])
+    end
+    render json: orders_price, status: :ok
+  end
+
+  def get_data_products_view
+    products_view = []
+    products_count = []
+    products = Product.find((HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - (params['days'] ? params['days'].to_i : 30).days), e_time: (Time.now.at_end_of_day))).pluck(:owner_id))
+    products.each do |pr|
+      products_view.push(pr)
+    end
+
+    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
+      day = [(Time.now.beginning_of_day - i.days).strftime("%b %d, %Y")]
+      counts = HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days))
+      products.each do |p|
+        day.push(counts.where(owner_id: p.id).size)
+      end
+      products_count.push(day)
+    end
+
+    render json: {pr: products_view, counts: products_count}, status: :ok
+  end
+
+  def get_data_orders
+
   end
 
   def change_main_picture

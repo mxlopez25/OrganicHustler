@@ -195,7 +195,7 @@ module HomeHelper
   end
 
   def get_price(order_id = nil)
-    
+    begin
     if order_id.nil?
       total_price = 0
       get_cart.cart_products.each do |t|
@@ -210,6 +210,9 @@ module HomeHelper
       end
 
       return total_price
+    end
+    rescue => e
+      return -1
     end
   end
 

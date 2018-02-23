@@ -39,7 +39,8 @@
             <input onclick="click_radio('<%= o.id %>')" class="selected-r" name="order" type="radio" id="selection_<%= o.id %>" value="<%= o.id %>">
           </td>
           <td><%= time_ago_in_words o.created_at %></td>
-          <td>$<%= (get_price o.id).round(2) %></td>
+          <% price = (get_price o.id) %>
+          <%= (price == -1) ? "<td  onmouseout=\"hide_message()\" onmouseover=\"show_message('It looks like one or more products from this order have been permanently deleted. If you wish to resolve this issue you may contact the developer.')\" style=\"color: red\">ERROR</td>".html_safe : "<td>$#{ price.round(2) }</td>".html_safe %>
           <td><%= o.state %></td>
           <td><%= "#{o.user_address.name} #{o.user_address.last_name}" %></td>
         </tr>
@@ -47,6 +48,10 @@
       </tbody>
     </table>
     <%= will_paginate @orders %>
+
+      <div style="display: none" id="messager" class="alert alert-info">
+
+      </div>
 
   </div>
 
@@ -64,6 +69,19 @@
           if (selected !== 0) {
               location.href = '/admin/orders/' + selected
           }
+      }
+
+      function show_message(message){
+          var message_box = document.getElementById('messager');
+          message_box.innerText = message;
+          message_box.style.display = 'block';
+          console.log('in');
+      }
+
+      function hide_message() {
+          var message_box = document.getElementById('messager');
+          message_box.innerText = '';
+          message_box.style.display = 'none';
       }
 
   </script>

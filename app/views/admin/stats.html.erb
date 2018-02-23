@@ -7,53 +7,221 @@
     <h1 class="text-light">Statistics</h1>
     <hr>
     <div style="overflow: hidden;">
+      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=1'">LAST DAY</button>
       <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=30'">30 DAYS</button>
       <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=60'">60 DAYS</button>
       <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=100'">100 DAYS</button>
       <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=365'">1 YEAR</button>
     </div>
     <hr>
-    <div style="padding: 20px">
+    <div style="padding: 20px; position: relative">
+
+      <div style="width: 100%; height: 100%; position: absolute;" id="loading_a">
+
+        <div style="margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0" class="loader">
+
+        </div>
+
+      </div>
+
       <h2 class="text-light">Visitors count</h2>
       <hr>
 
 
-      <div id="linechart_material" style="width: 100%; height: 500px"></div>
+      <div id="linechart_visitors" style="width: 100%; height: 500px"></div>
     </div>
+
+    <div style="padding: 20px; position: relative">
+
+      <div style="width: 100%; height: 100%; position: absolute;" id="loading_b">
+
+        <div style="margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0" class="loader">
+
+        </div>
+
+      </div>
+
+      <h2 class="text-light">Revenues / Shipping expenses</h2>
+      <hr>
+
+      <div id="linechart_revenue" style="width: 100%; height: 500px"></div>
+    </div>
+
+    <div style="padding: 20px; position: relative">
+
+      <div style="width: 100%; height: 100%; position: absolute;" id="loading_c">
+
+        <div style="margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0" class="loader">
+
+        </div>
+
+      </div>
+
+      <h2 class="text-light">Products stats</h2>
+      <hr>
+
+      <div id="chart_div" style="width: 100%; height: 500px"></div>
+    </div>
+
+
 
   </div>
 
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
-      google.charts.load('current', {'packages':['line']});
-      google.charts.setOnLoadCallback(drawChart);
+      google.charts.load('current', {'packages':['line', 'corechart', 'bar']});
 
-      function drawChart() {
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Day');
-          data.addColumn('number', 'New users');
-          data.addColumn('number', 'Orders');
+      google.charts.setOnLoadCallback(drawChartVisitors);
+      google.charts.setOnLoadCallback(drawChartRevenue);
+      google.charts.setOnLoadCallback(drawChartProductsView);
+      //data load
 
-          data.addRows([
-              <% (params['days'] ? params['days'].to_i : 30).downto(0) do |i|%>
-              <% day = TempUser.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) ) %>
-              <% orders = Order.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) ) %>
-              ['<%= (Time.now - i.days).strftime("%b %d, %Y")  %>', <%= day.size %>, <%= orders.size %>],
-              <% end %>
-          ]);
+      function drawChartVisitors() {
 
-          var options = {
-              chart: {
-                  title: 'Users visiting the web site by day',
-                  subtitle: 'New and returning users'
+          var data_visits = new google.visualization.DataTable();
+          data_visits.addColumn('string', 'Day');
+          data_visits.addColumn('number', 'New users');
+
+          $.ajax({
+              url: '/admin/stats/visits?days=<%= params['days'] %>',
+              type: 'GET',
+              dataType: 'JSON',
+              data: {},
+              success: function(data){
+                  console.log(data);
+
+                  for (var i = 0; i < data.length; i++){
+                      data_visits.addRow(data[i]);
+                  }
+
+                  var options = {
+                      chart: {
+                          title: 'Users visiting the web site by day',
+                          subtitle: 'Visits by day'
+                      }
+                  };
+
+                  var chart = new google.charts.Line(document.getElementById('linechart_visitors'));
+
+                  chart.draw(data_visits, google.charts.Line.convertOptions(options));
+                  document.getElementById('loading_a').classList.add('hidden');
+
+              },
+              error: function(data){
+                  console.log(data);
               }
-          };
-
-          var chart = new google.charts.Line(document.getElementById('linechart_material'));
-
-          chart.draw(data, google.charts.Line.convertOptions(options));
+          });
       }
+
+      function drawChartRevenue() {
+
+          var data_money = new google.visualization.DataTable();
+          data_money.addColumn('string', 'Day');
+          data_money.addColumn('number', 'Revenue');
+          data_money.addColumn('number', 'Shipping cost');
+
+          $.ajax({
+              url: '/admin/stats/money?days=<%= params['days'] %>',
+              type: 'GET',
+              dataType: 'JSON',
+              data: {},
+              success: function(data){
+                  console.log(data);
+
+                  for (var i = 0; i < data.length; i++){
+                      data_money.addRow(data[i]);
+                  }
+
+                  var options = {
+                      chart: {
+                          title: 'Money earned by orders and shipping expenses',
+                          subtitle: 'In Dollars'
+                      },
+                      vAxis: {format:'$###,###,###.00'},
+                      annotations: {
+                      boxStyle: {
+                          // Color of the box outline.
+                          stroke: '#888',
+                              // Thickness of the box outline.
+                              strokeWidth: 1,
+                              // x-radius of the corner curvature.
+                              rx: 10,
+                              // y-radius of the corner curvature.
+                              ry: 10,
+                              // Attributes for linear gradient fill.
+                              gradient: {
+                              // Start color for gradient.
+                              color1: '#fbf6a7',
+                                  // Finish color for gradient.
+                                  color2: '#33b679',
+                                  // Where on the boundary to start and
+                                  // end the color1/color2 gradient,
+                                  // relative to the upper left corner
+                                  // of the boundary.
+                                  x1: '0%', y1: '0%',
+                                  x2: '100%', y2: '100%',
+                                  // If true, the boundary for x1,
+                                  // y1, x2, and y2 is the box. If
+                                  // false, it's the entire chart.
+                                  useObjectBoundingBoxUnits: true
+                          }
+                      }
+                  }
+                  };
+
+                  var chart = new google.charts.Line(document.getElementById('linechart_revenue'));
+
+                  chart.draw(data_money, google.charts.Line.convertOptions(options));
+                  document.getElementById('loading_b').classList.add('hidden');
+              },
+              error: function(data){
+                  console.log(data);
+              }
+          });
+      }
+
+
+      function drawChartProductsView() {
+
+          var data_money = new google.visualization.DataTable();
+          data_money.addColumn('string', 'Day');
+
+          $.ajax({
+              url: '/admin/stats/products_views?days=<%= params['days'] %>',
+              type: 'GET',
+              dataType: 'JSON',
+              data: {},
+              success: function(data){
+                  var counts = data['counts'];
+                  data = data['pr'];
+
+                  for (var i = 0; i < data.length; i++){
+                      data_money.addColumn('number', data[i]['title']);
+                  }
+
+                  for (var j = 0; j < counts.length; j ++){
+                      data_money.addRow(counts[j]);
+                  }
+
+                  var options = {
+                      chart: {
+                          title: 'Product views in the last <%= (params[:days] || 30) %> days',
+                          subtitle: 'Count products by day'
+                      }
+                  };
+
+                  var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
+                  materialChart.draw(data_money, options);
+                  document.getElementById('loading_c').classList.add('hidden');
+
+              },
+              error: function(data){
+                  console.log(data);
+              }
+          });
+      }
+
   </script>
 
 
