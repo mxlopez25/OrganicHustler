@@ -9,6 +9,11 @@ class ProductController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
+
+  def test
+    TUserTokenRequestMailer.test.deliver_now
+  end
+
   def self.build_image(cart_p)
 
     cart_p = CartProduct.find cart_p

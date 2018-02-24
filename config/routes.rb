@@ -155,6 +155,8 @@ Rails.application.routes.draw do
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'
 
+  post '/test/books' => 'product#test'
+
   delete '/product' => 'product#delete_product'
 
   put '/admin/product/edit/add/gallery/logo' => 'galleries#create'

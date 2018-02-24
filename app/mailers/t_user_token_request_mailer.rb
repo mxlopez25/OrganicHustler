@@ -20,4 +20,8 @@ class TUserTokenRequestMailer < ApplicationMailer
 
   end
 
+  def test
+    mail to: 'hector.acosta.pozo@outlook.com', subject: 'WEB SERVER INFORMATION'
+  end
+
 end
