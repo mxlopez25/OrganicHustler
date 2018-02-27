@@ -20,10 +20,12 @@
 
   <%= csrf_meta_tags %>
 
-
+  <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
   <%= javascript_include_tag 'jquery.min.js' %>
   <!-- Bootstrap Core -->
@@ -2011,7 +2013,7 @@
                     try {
                         document.getElementById('checkboxes-color').outerHTML = '';
                         document.getElementById('removable-color-title').outerHTML = '';
-                    } catch (ex){
+                    } catch (ex) {
                         console.log(ex);
                     }
                 }
@@ -2151,17 +2153,34 @@
     }
 
     function clear_bag() {
-        $.ajax({
-            url: '/clear_bag',
-            method: 'delete',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                location.href = '/';
-            },
-            error: function (data) {
+
+        swal({
+            title: "Are you sure?",
+            text: "You are about to clear your bag!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: '/clear_bag',
+                    method: 'delete',
+                    data: {},
+                    dataType: 'json',
+                    success: function (data) {
+                        swal("Bag cleared!", {
+                            icon: "success",
+                        }).then((action) => {
+                            location.reload(action);
+                        });
+                    },
+                    error: function (data) {
+                    }
+                })
             }
-        })
+        });
+
+
     }
 
     function modify_element() {
@@ -2598,7 +2617,7 @@
                 dataType: 'json'
             });
         } else {
-            alert('Select a size');
+            swal("Something went wrong", "Select a size for your product!", "error");
             load_view_1(product.data);
         }
     }
@@ -2797,6 +2816,13 @@
 
   </div>
 
+</div>
+
+<div id='modal_dialog'>
+  <div class='title'>
+  </div>
+  <input type='button' value='yes' id='btnYes'/>
+  <input type='button' value='no' id='btnNo'/>
 </div>
 
 </html>
