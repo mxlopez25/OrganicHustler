@@ -2008,8 +2008,12 @@
                         }
                     }
                 } else {
-                    document.getElementById('removable-color-title').outerHTML = '';
-                    document.getElementById('checkboxes-color').outerHTML = '';
+                    try {
+                        document.getElementById('checkboxes-color').outerHTML = '';
+                        document.getElementById('removable-color-title').outerHTML = '';
+                    } catch (ex){
+                        console.log(ex);
+                    }
                 }
             },
             error: function () {
