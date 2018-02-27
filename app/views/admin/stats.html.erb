@@ -2,19 +2,186 @@
 <body style="background-color: white;">
 <div class="main">
 
+  <div id="product_finder" class="modal">
+    <div class="modal-content">
+      <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
+
+      <div class="table_search">
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon2">ID</span>
+          <input type="text" class="form-control" aria-describedby="basic-addon2" id="id_input" name="id_input">
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon2">SKU</span>
+          <input type="text" class="form-control" aria-describedby="basic-addon2" id="sku" name="sku">
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon">Title</span>
+          <input type="text" class="form-control" aria-describedby="basic-addon1" id="title" name="title">
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon">Less than</span>
+          <input type="number" step="any" min="0" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount" name="amount">
+          <span class="input-group-addon">$</span>
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon2">Category</span>
+          <select class="form-control" id="category" name="category">
+          </select>
+        </div>
+
+        <script>
+
+            $.ajax({
+                url: '/admin/all_categories',
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    var category_side = document.getElementById('category');
+                    var text = '<option value="">All categories</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        text = text + '<option value="' + data[i]['id'] + '">' + data[i]['title'] + '</option>';
+                    }
+                    category_side.innerHTML = text;
+                },
+                error: function (data) {
+
+                }
+            });
+
+        </script>
+
+        <button class="btn btn-primary" onclick="loadTable_1()" style="width: 100%" type="button">Search</button>
+      </div>
+
+      <div class="table_buttons">
+        <button type="button" class="btn btn-info" onclick="show_selection()">Info</button>
+        <button type="button" class="btn btn-success" onclick="selected_item()">Select product</button>
+      </div>
+
+      <div class="table_products">
+
+        <hr style="margin: 0;">
+        <table class="table" id="table">
+          <thead>
+          <tr>
+            <th></th>
+            <th><i class="fa fa-picture-o" aria-hidden="true"></i></th>
+            <th class="header-ele">Title</th>
+            <th class="header-ele">Inventory</th>
+            <th class="header-ele">Category</th>
+            <th class="header-ele">Price $</th>
+          </tr>
+          </thead>
+          <tbody id="list-to-m">
+
+          </tbody>
+        </table>
+        <div id="pages1">
+
+        </div>
+        <script>
+
+            var item = null;
+            var temp_id = '';
+            var page1 = 1;
+
+            function selected_item() {
+                document.getElementById('loading_a').classList.remove('hidden');
+                document.getElementById(temp_id).value = item;
+                var modal = document.getElementById('product_finder');
+                modal.style.display = "none";
+            }
+
+            var modal = null;
+
+            function find_id(id) {
+                temp_id = id;
+                modal = document.getElementById('product_finder');
+                loadTable_1();
+                modal.style.display = "block";
+            }
+
+            function loadTable_1() {
+                $.ajax({
+                    url: '/admin/all_products?page=' + page1,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        id: document.getElementById('id_input').value,
+                        sku: document.getElementById('sku').value,
+                        title: document.getElementById('title').value,
+                        amount: document.getElementById('amount').value,
+                        category: document.getElementById('category').value
+                    },
+                    success: function (data) {
+
+                        var total = data['total']['FOUND_ROWS()'];
+
+
+                        var page_crts = document.getElementById('pages1');
+                        page_crts.innerHTML = '';
+                        for (var we = 0; we < (total / 10); we++){
+                            page_crts.innerHTML = page_crts.innerHTML + '<div onclick="page1=(' + (we + 1) +'); loadTable_1()" class="text_light paging_crt '+ (((we + 1) === page1) ? 'pink-p' : '') +' ">' + (we + 1) +  '</div>';
+                        }
+
+                        data = data['product'];
+
+                        var table_body = document.getElementById('list-to-m');
+                        var text = '';
+                        for (var i = 0; i < data.length; i++) {
+                            console.log(data[i]);
+                            text = text + '<tr id="product-row">\n' +
+                                '            <td>\n' +
+                                '              <input id="select-obj" type="radio" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
+                                '            </td>\n' +
+                                '            <td>\n' +
+                                '                  <span id="img-thumb" style="width: 50px" class="thumbnail"><img src="' + data[i]['product_image_id'] + '"></span>\n' +
+                                '            </td>\n' +
+                                '            <td>' + data[i]['title'] + '</td>\n' +
+                                '            <td>' + data[i]['stock'] + '</td>\n' +
+                                '            <td>' + data[i]['categories_l'] + '</td>\n' +
+                                '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                                '          </tr>'
+                        }
+                        table_body.innerHTML = text;
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+
+            function add_item(box, product) {
+                $('input[type="radio"]').each(function () {
+                    $(this).prop('checked', false);
+                });
+                box.checked = true;
+                item = product;
+                console.log(item);
+            }
+
+            function show_selection() {
+                if (item !== null) {
+                    window.open('/admin/product/' + item);
+                }
+            }
+        </script>
+      </div>
+    </div>
+  </div>
+
+
 
   <div style="padding: 20px; background-color: white">
     <h1 class="text-light">Statistics</h1>
     <hr>
-    <div style="overflow: hidden;">
-      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=1'">LAST DAY</button>
-      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=30'">30 DAYS</button>
-      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=60'">60 DAYS</button>
-      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=100'">100 DAYS</button>
-      <button style="float: left; width: 100px; margin: 10px; padding: 5px;" class="btn btn-sp text-light" onclick="document.location = '?days=365'">1 YEAR</button>
-    </div>
-    <hr>
-    <div style="padding: 20px; position: relative">
+    <div id="visitors" style="padding: 20px; position: relative">
 
       <div style="width: 100%; height: 100%; position: absolute;" id="loading_a">
 
@@ -25,13 +192,17 @@
       </div>
 
       <h2 class="text-light">Visitors count</h2>
+
+      <input style="height: 32.73px" type="date" placeholder="from" id="from_visitors_day" name="visitors_day">
+      <input style="height: 32.73px" type="date" placeholder="to" id="to_visitors_day" name="visitors_day">
+      <button onclick="drawChartVisitors(document.getElementById('from_visitors_day').value, document.getElementById('to_visitors_day').value)" class="btn btn-sp text-light" >LOAD DATA</button>
       <hr>
 
 
       <div id="linechart_visitors" style="width: 100%; height: 500px"></div>
     </div>
 
-    <div style="padding: 20px; position: relative">
+    <div id="revenue" style="padding: 20px; position: relative">
 
       <div style="width: 100%; height: 100%; position: absolute;" id="loading_b">
 
@@ -42,12 +213,15 @@
       </div>
 
       <h2 class="text-light">Revenues / Shipping expenses</h2>
+      <input style="height: 32.73px" type="date" placeholder="from" id="from_revenue_day" name="revenue_day">
+      <input style="height: 32.73px" type="date" placeholder="to" id="to_revenue_day" name="revenue_day">
+      <button onclick="drawChartRevenue(document.getElementById('from_revenue_day').value, document.getElementById('to_revenue_day').value)" class="btn btn-sp text-light" >LOAD DATA</button>
       <hr>
 
       <div id="linechart_revenue" style="width: 100%; height: 500px"></div>
     </div>
 
-    <div style="padding: 20px; position: relative">
+    <div id="products" style="padding: 20px; position: relative">
 
       <div style="width: 100%; height: 100%; position: absolute;" id="loading_c">
 
@@ -58,13 +232,42 @@
       </div>
 
       <h2 class="text-light">Products stats</h2>
+      <input style="height: 32.73px" type="date" placeholder="from" id="from_products_day" name="products_day">
+      <input style="height: 32.73px" type="date" placeholder="to" id="to_products_day" name="products_day">
+      <button onclick="drawChartProductsView(document.getElementById('from_products_day').value, document.getElementById('to_products_day').value)" class="btn btn-sp text-light" >LOAD DATA</button>
       <hr>
 
       <div id="chart_div" style="width: 100%; height: 500px"></div>
     </div>
 
+    <div id="product" style="padding: 20px; position: relative">
 
+      <h2 class="text-light">Product stat</h2>
+      <input disabled style="height: 32.73px;" type="text", placeholder="Product id" id="product_id_1" name="product_id_1">
+      <button class="btn btn-sp text-light" onclick="find_id('product_id_1')">SELECT PRODUCT</button>
+      <input style="height: 32.73px" type="date" placeholder="from" id="from_product_day" name="product_day">
+      <input style="height: 32.73px" type="date" placeholder="to" id="to_product_day" name="product_day">
+      <button onclick="drawChartProduct(document.getElementById('product_id_1').value, document.getElementById('from_product_day').value, document.getElementById('to_product_day').value)" class="btn btn-sp text-light" >LOAD DATA</button>
+      <hr>
 
+      <div id="chart_div_product" style="width: 80%; height: 500px; float: left; background: #fafafa"></div>
+      <div style="width: 20%; height: 500px; float: left;">
+        <div id="number_total_product" style="position: relative;
+            background: grey;
+            width: 200px;
+            height: 200px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 200px;
+            font-size: 70px;
+            color: white;
+            top: 50%;
+            transform: translateY(-50%);"> Total </div>
+      </div>
+    </div>
   </div>
 
 
@@ -77,14 +280,66 @@
       google.charts.setOnLoadCallback(drawChartProductsView);
       //data load
 
-      function drawChartVisitors() {
+      function getLastWeek(){
+          var today = new Date();
+          var lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+          return lastWeek ;
+      }
+
+      function drawChartProduct(id, from_day, to_day) {
+          from_day = from_day || formatDate(getLastWeek());
+          to_day = to_day || formatDate(new Date());
+
+          var data_visits = new google.visualization.DataTable();
+          data_visits.addColumn('string', 'Day');
+          data_visits.addColumn('number', 'Visits');
+
+          $.ajax({
+              url: '/admin/stats/product_view?from_day=' + from_day + '&to_day=' + to_day + '&id=' + id,
+              type: 'GET',
+              dataType: 'JSON',
+              data: {},
+              success: function(data){
+                  console.log(data);
+                  var total = 0;
+
+                  for (var i = 0; i < data.length; i++){
+                      total = total + data[i][1];
+                      data_visits.addRow(data[i]);
+                  }
+
+                  var options = {
+                      chart: {
+                          title: 'Number of visits for product by day',
+                          subtitle: 'Visits by day'
+                      }
+                  };
+
+                  document.getElementById('number_total_product').innerText = total;
+                  var chart = new google.charts.Line(document.getElementById('chart_div_product'));
+
+                  chart.draw(data_visits, google.charts.Line.convertOptions(options));
+                  document.getElementById('loading_a').classList.add('hidden');
+
+              },
+              error: function(data){
+                  console.log(data);
+              }
+          });
+
+      }
+
+      function drawChartVisitors(from_day, to_day) {
+
+          from_day = from_day || formatDate(getLastWeek());
+          to_day = to_day || formatDate(new Date());
 
           var data_visits = new google.visualization.DataTable();
           data_visits.addColumn('string', 'Day');
           data_visits.addColumn('number', 'New users');
 
           $.ajax({
-              url: '/admin/stats/visits?days=<%= params['days'] %>',
+              url: '/admin/stats/visits?from_day=' + from_day + '&to_day=' + to_day,
               type: 'GET',
               dataType: 'JSON',
               data: {},
@@ -114,7 +369,11 @@
           });
       }
 
-      function drawChartRevenue() {
+      function drawChartRevenue(from_day, to_day) {
+
+
+          from_day = from_day || formatDate(getLastWeek());
+          to_day = to_day || formatDate(new Date());
 
           var data_money = new google.visualization.DataTable();
           data_money.addColumn('string', 'Day');
@@ -122,7 +381,7 @@
           data_money.addColumn('number', 'Shipping cost');
 
           $.ajax({
-              url: '/admin/stats/money?days=<%= params['days'] %>',
+              url: '/admin/stats/money?from_day=' + from_day + '&to_day=' + to_day,
               type: 'GET',
               dataType: 'JSON',
               data: {},
@@ -181,14 +440,30 @@
           });
       }
 
+      function formatDate(date) {
+          var d = new Date(date),
+              month = '' + (d.getMonth() + 1),
+              day = '' + d.getDate(),
+              year = d.getFullYear();
 
-      function drawChartProductsView() {
+          if (month.length < 2) month = '0' + month;
+          if (day.length < 2) day = '0' + day;
+
+          return [year, month, day].join('-');
+      }
+
+
+      function drawChartProductsView(from_day, to_day) {
+
+
+          from_day = from_day || formatDate(getLastWeek());
+          to_day = to_day || formatDate(new Date());
 
           var data_money = new google.visualization.DataTable();
           data_money.addColumn('string', 'Day');
 
           $.ajax({
-              url: '/admin/stats/products_views?days=<%= params['days'] %>',
+              url: '/admin/stats/products_views?from_day=' + from_day + '&to_day=' + to_day,
               type: 'GET',
               dataType: 'JSON',
               data: {},
@@ -207,7 +482,8 @@
                   var options = {
                       chart: {
                           title: 'Product views in the last <%= (params[:days] || 30) %> days',
-                          subtitle: 'Count products by day'
+                          subtitle: 'Count products by day',
+                          bar: {groupWidth: "100%"}
                       }
                   };
 

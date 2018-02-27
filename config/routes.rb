@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   get '/admin/stats/shipping' => 'admin#get_data_shipping'
   get '/admin/stats/orders' => 'admin#get_data_orders'
   get '/admin/stats/products_views' => 'admin#get_data_products_view'
+  get '/admin/stats/product_view' => 'admin#get_product_visit'
 
   get '/admin/all_products' => 'admin#get_products'
   get '/admin/all_categories' => 'admin#get_categories'
@@ -154,8 +155,6 @@ Rails.application.routes.draw do
   put '/product/edit' => 'product#save_product'
   put '/product/upload_image' => 'product#upload_image'
   put '/product/save_variation' => 'product#save_variation'
-
-  post '/test/books' => 'product#test'
 
   delete '/product' => 'product#delete_product'
 

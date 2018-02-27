@@ -2379,9 +2379,9 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
 
                 var carousel_jq = $('ul#container-sizes');
+                carousel_jq.innerHTML = "";
 
                 for (var i = 0; i < data.length; i++) {
                     carousel_jq.append('<li><span style="font-size: 15px" id="' + data[i].id + '" onclick="changeSize(\'' + data[i].id + '\')" class="badge badge-size text_light ' + ((OVERALL_MODE && product.size_id === data[i].id) ? 'badge_selected' : '') + '">' + data[i].title + '</span></li>');

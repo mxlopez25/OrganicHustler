@@ -73,19 +73,39 @@ class AdminController < ApplicationController
 
   # Stats
 
+  def get_product_visit
+    visits = []
+    start_time = Date.strptime(params['from_day'])
+    end_time = Date.strptime(params['to_day'])
+    product_id = params['id']
+    (start_time..end_time).step(1) do |i|
+      visits << [i, (HistoryCount.where 'owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time AND owner_id = :id',
+                         s_time: i.beginning_of_day,
+                         e_time: i.at_end_of_day,
+                         id: product_id
+      ).size]
+    end
+    render json: visits, status: :ok
+  end
+
   def get_data_visits
     visits_days = []
-    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
-          day = TempUser.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) )
-          visits_days.push([(Time.now - i.days).strftime("%b %d, %Y"), day.size])
+    start_time = Date.strptime(params['from_day'])
+    end_time = Date.strptime(params['to_day'])
+    (start_time..end_time).step(1) do |i|
+      day = TempUser.where('created_at >= :s_time AND created_at <= :e_time', s_time: (i.beginning_of_day), e_time: (i.at_end_of_day))
+      visits_days.push([i, day.size])
     end
     render json: visits_days, status: :ok
   end
 
   def get_data_money
     orders_price = []
-    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
-      orders = Order.where('created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days) )
+    start_time = Date.strptime(params['from_day'])
+    end_time = Date.strptime(params['to_day'])
+
+    (start_time..end_time).step(1) do |i|
+      orders = Order.where('created_at >= :s_time AND created_at <= :e_time', s_time: (i.beginning_of_day), e_time: (i.at_end_of_day) )
       price = 0
       shipping = 0
       orders.each do |ord|
@@ -95,7 +115,7 @@ class AdminController < ApplicationController
           shipping = shipping + EasyPost::Shipment.retrieve(ord.tag_link)["selected_rate"]["rate"].to_f
         end
       end
-      orders_price.push([(Time.now - i.days).strftime("%b %d, %Y"), price.to_f, shipping])
+      orders_price.push([i, price.to_f, shipping])
     end
     render json: orders_price, status: :ok
   end
@@ -103,14 +123,17 @@ class AdminController < ApplicationController
   def get_data_products_view
     products_view = []
     products_count = []
-    products = Product.find((HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - (params['days'] ? params['days'].to_i : 30).days), e_time: (Time.now.at_end_of_day))).pluck(:owner_id))
+    products = Product.find((HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: params['from_day'], e_time: params['to_day'])).pluck(:owner_id))
     products.each do |pr|
       products_view.push(pr)
     end
 
-    (params['days'] ? params['days'].to_i : 30).downto(0) do |i|
-      day = [(Time.now.beginning_of_day - i.days).strftime("%b %d, %Y")]
-      counts = HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: (Time.now.beginning_of_day - i.days), e_time: (Time.now.at_end_of_day - i.days))
+    start_time = Date.strptime(params['from_day'])
+    end_time = Date.strptime(params['to_day'])
+
+    (start_time..end_time).step(1) do |i|
+      day = [i]
+      counts = HistoryCount.where('owner_type = \'Product\' AND created_at >= :s_time AND created_at <= :e_time', s_time: (i.beginning_of_day), e_time: (i.at_end_of_day))
       products.each do |p|
         day.push(counts.where(owner_id: p.id).size)
       end

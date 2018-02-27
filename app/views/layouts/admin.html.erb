@@ -112,6 +112,19 @@
     margin-bottom: auto;
   }
 
+    .active div, li {
+      background: #080808;
+    }
+
+    .nav li a {
+      color: #9d9d9d;
+    }
+
+    .nav li a:hover {
+      background: #080808;
+      color: white;
+    }
+
 </style>
 
 <nav class="navbar navbar-inverse sidebar" role="navigation">
@@ -160,6 +173,15 @@
         </li>
         <li <%= (request.original_url.include? 'stats') ? 'class=active' : '' %>>
           <a href="/admin/stats">Statistics<span style="font-size:16px;" class="pull-right hidden-xs showopacity fa fa-bar-chart"></span></a>
+          <div data-toggle="collapse" data-target="#submenu1" aria-expanded="false" style="width: 100%; text-align: center;">
+            <span style="color: white" class="fa fa-caret-down"></span>
+          </div>
+          <ul class="nav collapse" id="submenu1" role="menu" aria-labelledby="btn-1">
+            <li><a style="text-decoration: none" href="/admin/stats#visitors">Visitors</a></li>
+            <li><a style="text-decoration: none" href="/admin/stats#revenue">Revenue</a></li>
+            <li><a style="text-decoration: none" href="/admin/stats#products">Products</a></li>
+            <li><a style="text-decoration: none" href="/admin/stats#product">Product</a></li>
+          </ul>
         </li>
       </ul>
     </div>
