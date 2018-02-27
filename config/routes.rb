@@ -10,7 +10,6 @@ Rails.application.routes.draw do
   get '/home/showcase/product' => 'home#get_showcase_product'
   post '/share' => 'home#save_to_share'
 
-  get '/account' => 'home#account'
   get '/contact_us' => 'home#contact_us'
   get '/story' => 'home#story'
   get '/bag_items' => 'home#bag_items'

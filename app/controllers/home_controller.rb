@@ -212,13 +212,6 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
-  def account
-    @address = current_user.user_address
-    unless @address
-      @address = current_user.create_user_address
-    end
-  end
-
   def bag
   end
 
@@ -431,17 +424,14 @@ class HomeController < ApplicationController
 
   def add_to_cart
     user = nil
-    unless user_signed_in?
-      if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
 
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
+    if session[:temp_user_id].nil?
+      user = TempUser.create
+      p ("user_created with id: #{user.id}")
+      session[:temp_user_id] = user.id
+
     else
-      user = current_user
+      user = TempUser.find(session[:temp_user_id])
     end
 
     if user.cart.nil?
@@ -615,15 +605,7 @@ class HomeController < ApplicationController
 
   def delete_from_cart
     id = params['item_id']
-
-    user = nil
-    p current_user
-    if user_signed_in?
-      user = current_user
-    else
-      user = TempUser.find(session[:temp_user_id])
-    end
-
+    user = TempUser.find(session[:temp_user_id])
     product = user.cart.cart_products.find(id)
     product.unbind_cart
   end

@@ -19,16 +19,14 @@ module HomeHelper
   end
 
   def get_user_toc
-    user = current_user
-    if user.nil?
-      if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
+    user = nil
+    if session[:temp_user_id].nil?
+      user = TempUser.create
+      p ("user_created with id: #{user.id}")
+      session[:temp_user_id] = user.id
 
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
+    else
+      user = TempUser.find(session[:temp_user_id])
     end
 
     user
@@ -77,21 +75,17 @@ module HomeHelper
   end
 
   def get_user
-    user = current_user
-    if user.nil?
-      if session[:temp_user_id].nil?
-        return create_temp_user
-      else
-        begin
-          user = TempUser.find(session[:temp_user_id])
-          return user
-        rescue => e
-          p e
-          return create_temp_user
-        end
+    user = nil
+    if session[:temp_user_id].nil?
+      create_temp_user
+    else
+      begin
+        TempUser.find(session[:temp_user_id])
+      rescue => e
+        p e, '###########################'
+        create_temp_user
       end
     end
-    user
   end
 
   def get_cart_id
@@ -112,16 +106,14 @@ module HomeHelper
   end
 
   def get_cart
-    user = current_user
-    if user.nil?
-      if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
+    user = nil
+    if session[:temp_user_id].nil?
+      user = TempUser.create
+      p ("user_created with id: #{user.id}")
+      session[:temp_user_id] = user.id
 
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
+    else
+      user = TempUser.find(session[:temp_user_id])
     end
 
     if user.cart.nil?
@@ -136,16 +128,14 @@ module HomeHelper
   end
 
   def get_item_count
-    user = current_user
-    if user.nil?
-      if session[:temp_user_id].nil?
-        user = TempUser.create
-        p ("user_created with id: #{user.id}")
-        session[:temp_user_id] = user.id
+    user = nil
+    if session[:temp_user_id].nil?
+      user = TempUser.create
+      p ("user_created with id: #{user.id}")
+      session[:temp_user_id] = user.id
 
-      else
-        user = TempUser.find(session[:temp_user_id])
-      end
+    else
+      user = TempUser.find(session[:temp_user_id])
     end
     
     if user.cart.nil?
