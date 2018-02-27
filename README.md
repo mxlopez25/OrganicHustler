@@ -1,5 +1,5 @@
 # Organic Hustler
-Web application build in ruby on rails for buying cloth online
+Web application build in ruby on rails for buying cloth online.
 
 ## Built With
 
@@ -9,7 +9,7 @@ Web application build in ruby on rails for buying cloth online
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+We do not accept any contribution from the comunity.
 
 ## Versioning
 
