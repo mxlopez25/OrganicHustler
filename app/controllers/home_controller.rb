@@ -166,7 +166,7 @@ class HomeController < ApplicationController
   end
 
   def get_presets_product
-    presets = (Product.find params['product_id']).presets
+    presets = (Product.find params['product_id']).presets.where(showcase: true)
     render json: presets.to_json
   end
 

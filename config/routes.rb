@@ -144,6 +144,8 @@ Rails.application.routes.draw do
   post '/product/add/preset' => 'product#add_preset'
   post '/product/remove/preset' => 'product#remove_preset'
 
+  patch '/admin/preset/showcase' => 'admin#showcase_ch'
+
   post '/product/add/emblem' => 'product#add_emblem'
   post '/product/remove/emblem' => 'product#remove_emblem'
 

@@ -174,6 +174,17 @@ class AdminController < ApplicationController
     render '/admin/orders'
   end
 
+  def showcase_ch
+    begin
+      preset = Preset.find params[:id]
+      preset.showcase = !preset.showcase
+      preset.save!
+      render json: preset, status: :ok
+    rescue => e
+        render json: {error: e}, status: :bad_request
+    end
+  end
+
   def remove_color
     color = Color.find params[:color_id]
 

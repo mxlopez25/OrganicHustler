@@ -8,11 +8,6 @@
   <!--Product reference-->
   <% product_i = @product %>
 
-  <div class="head-bread-crumbs card">
-    <h4><a class="breadcrumb" href="/admin/products">Products</a> /
-      <a class="breadcrumb" href="/admin/product/<%= product_i.id %>"><%= product_i.id %></a> / Edit</h4>
-  </div>
-
   <div class="card modal-g">
 
     <!--Title edit field-->
@@ -87,7 +82,7 @@
       <textarea rows="3" class="form-control" name="description" id="description_edit"><%= product_i.description %></textarea>
     </div>
 
-    <button onclick="save_1('<%= product_i.id %>')" style="width: 100%" class="btn btn-success">SAVE</button>
+    <button onclick="save_1('<%= product_i.id %>')" style="width: 100%" class="btn btn-sp text-light">SAVE</button>
 
     <script>
 
@@ -138,7 +133,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('size_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('size_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       SIZE
     </button>
 
@@ -154,7 +149,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('logo_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('logo_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       LOGO
     </button>
 
@@ -169,7 +164,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('category_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('category_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       CATEGORY
     </button>
 
@@ -184,7 +179,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('style_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('style_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       STYLE
     </button>
 
@@ -199,7 +194,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('material_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('material_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       MATERIAL
     </button>
 
@@ -214,7 +209,7 @@
           </div>
       <% end %>
     </div>
-    <button onclick="edit_modal('brand_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-success">ADD
+    <button onclick="edit_modal('brand_modal', <%= product_i.id %>)" style="width: 100%" class="btn btn-sp text-light">ADD
       BRAND
     </button>
 
@@ -297,7 +292,7 @@
                 '       <button onclick="zoom_in()">+</button>' +
                 '       <button onclick="zoom_out()">-</button>' +
                 '       <input id="grow_rate" value="' + ZOOM_COUNT + '">' +
-                '       <button class="btn btn-success" style="float: right;" onclick="save_preset(\'' + id + '\')">SAVE</button>' +
+                '       <button class="btn btn-sp text-light" style="float: right;" onclick="save_preset(\'' + id + '\')">SAVE</button>' +
                 '   </div>';
         }
 
@@ -325,7 +320,7 @@
                 '       <button onclick="zoom_in_emblem()">+</button>' +
                 '       <button onclick="zoom_out_emblem()">-</button>' +
                 '       <input id="grow_rate" value="' + ZOOM_COUNT + '">' +
-                '       <button class="btn btn-success" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
+                '       <button class="btn btn-sp text-light" style="float: right;" onclick="save_emblem(\'' + id + '\')">SAVE</button>' +
                 '   </div>';
         }
 
@@ -1265,61 +1260,100 @@
         </script>
 
     <% end %>
-    <button style="width:100%;" onclick="edit_modal('color_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+    <button style="width:100%;" onclick="edit_modal('color_modal', <%= product_i.id %>)" class="btn btn-sp text-light">ADD
       COLOR
     </button>
 
   </div>
 
   <div class="card modal-g">
-    Presets
-    <% product_i.presets.each do |preset| %>
-        <div id="preset-row" style="overflow: auto; text-align: center">
-          <button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
-          <h3 style="float:left; margin: 0 0 0 20px">Logo:</h3>
-          <img style="width: 50px; float: left;" src="<%= preset.logo.picture %>">
-          <h3 style="float:left; margin: 0 0 0 20px">Image:</h3>
-          <img style="width: 50px; float: left;" src="<%= preset.color_image.picture %>">
-          <h3 style="float:left; margin: 0 0 0 20px">Multiplexer:</h3>
-          <h5 style="float: left"><%= preset.multiplexer %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">X:</h3>
-          <h5 style="float: left"><%= preset.x %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">Y:</h3>
-          <h5 style="float: left"><%= preset.y %></h5>
-        </div>
-        <hr>
-    <% end %>
-    <button style="width:100%;" onclick="edit_modal('preset_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+    <h2 class="text-light">Presets</h2>
+    <hr>
+    <table style="width: 100%">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Logo</th>
+        <th>Image</th>
+        <th>Ratio</th>
+        <th>Position x</th>
+        <th>Position y</th>
+        <th>Showcase</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <% product_i.presets.each do |preset| %>
+        <tr>
+          <td><button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 100%; float: left" class="btn btn-danger">-</button></td>
+          <td><img style="width: 50px; float: left;" src="<%= preset.logo.picture %>"></td>
+          <td><img style="width: 50px; float: left;" src="<%= preset.color_image.picture %>"></td>
+          <td><%= preset.multiplexer %></td>
+          <td><%= preset.x %></td>
+          <td><%= preset.y %></td>
+          <td><button onclick="changeShowcase('<%= preset.id %>')" style="width: 100%;" class="btn btn-default text-light"><%= preset.showcase ? 'YES' : 'NO' %></button></td>
+        </tr>
+      <% end %>
+
+      </tbody>
+    </table>
+    <button style="width:100%;" onclick="edit_modal('preset_modal', <%= product_i.id %>)" class="btn btn-sp text-light">ADD
       PRESET
     </button>
   </div>
 
+  <script>
+    function changeShowcase(id) {
+        $.ajax({
+            url: '/admin/preset/showcase',
+            type: 'patch',
+            dataType: 'json',
+            data: {
+                id: id
+            }, success: function (data) {
+                location.reload(true);
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+  </script>
+
   <div class="card modal-g">
-    Emblems
+    <h2 class="text-light">Emblems</h2>
+    <hr>
+
+    <table style="width: 100%">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Emblem</th>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Ratio</th>
+        <th>Position x</th>
+        <th>Position y</th>
+      </tr>
+      </thead>
+      <tbody>
 
     <% product_i.position_emblem_admins.each do |emblems| %>
 
-        <div id="emblem-row" style="overflow: auto; text-align: center">
-          <button onclick="remove_emblem_row(this, '<%= emblems.id %>')" style="width: 10%; float: left" class="btn btn-danger">-</button>
-          <h3 style="float:left; margin: 0 0 0 20px">Emblem:</h3>
-          <img style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>">
-          <h3 style="float:left; margin: 0 0 0 20px">Image:</h3>
-          <img style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>">
-          <h3 style="float:left; margin: 0 0 0 20px">Title:</h3>
-          <h5 style="float: left"><%= emblems.title %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">Price:</h3>
-          <h5 style="float: left"><%= emblems.price %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">Multiplexer:</h3>
-          <h5 style="float: left"><%= emblems.multiplexer %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">X:</h3>
-          <h5 style="float: left"><%= emblems.x %></h5>
-          <h3 style="float:left; margin: 0 0 0 20px">Y:</h3>
-          <h5 style="float: left"><%= emblems.y %></h5>
-        </div>
+          <td><button onclick="remove_emblem_row(this, '<%= emblems.id %>')" style="width: 100%; float: left" class="btn btn-danger">-</button></td>
+          <td><img style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>"></td>
+          <td><img style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>"></td>
+          <td><%= emblems.title %></td>
+          <td><%= emblems.price %></td>
+          <td><%= emblems.multiplexer %></td>
+          <td><%= emblems.x %></td>
+          <td><%= emblems.y %></td>
 
     <% end %>
+      </tbody>
+    </table>
 
-    <button style="width:100%;" onclick="edit_modal('emblem_modal', <%= product_i.id %>)" class="btn btn-success">ADD
+    <button style="width:100%;" onclick="edit_modal('emblem_modal', <%= product_i.id %>)" class="btn btn-sp text-light">ADD
       EMBLEM
     </button>
   </div>
