@@ -519,7 +519,7 @@
         phone_field.val(output);
     });
 
-    var stripe = Stripe('pk_test_v1i9VQN3G18s8aYbnwi9Mqim');
+    var stripe = Stripe('<%= ENV['STRIPE_PUBLIC'] %>');
     var elements = stripe.elements();
 
     var card = elements.create('card', {
