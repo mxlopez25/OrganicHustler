@@ -196,9 +196,9 @@
                             tax += parseFloat(taxes[t]);
                         }
 
-                        document.getElementById('sub_total').innerText = cost.toFixed(2);
-                        document.getElementById('estimated_tax').innerText = tax.toFixed(2);
-                        document.getElementById('estimated_total').innerText = (cost + tax).toFixed(2);
+                        document.getElementById('sub_total').innerText = "$" + cost.toFixed(2);
+                        document.getElementById('estimated_tax').innerText = "$" + tax.toFixed(2);
+                        document.getElementById('estimated_total').innerText = "$" + (cost + tax).toFixed(2);
                     }
                 }
             },
