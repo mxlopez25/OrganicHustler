@@ -221,6 +221,11 @@
         <span class="icon-bar" style="background: black"></span>
       </button>
 
+
+      <div style="float: right; overflow: hidden; position: relative; width: 23px; height: 23px; top: 15px; margin-right: 10px;">
+        <i onclick="show_search();" style="cursor: pointer; font-size: 23px; position: absolute; width: 23px; height: 23px; top:0; bottom:0; right: 0; left: 0; margin: auto" class="fa fa-search"></i>
+      </div>
+
       <div style="float: right; overflow: hidden">
         <a class="navbar-brand brand" href="/"><img width="66" src="/images/logo"></a>
         <img data-toggle="modal" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="cart_ic" src="/images/bag_icon">
@@ -295,16 +300,8 @@
           <div class="menu-button">
             <li>
               <a class="selectable link-to-btn
-              <% unless params['looks'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?looks=true&view=looks'">LOOKS</a>
-            </li>
-          </div>
-
-          <div class="menu-button">
-            <li>
-              <a class="selectable link-to-btn
-              <% unless params['hats'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?hats=true&view=hats'">HATS</a>
+              <% unless params['story'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/story?story=true&view=story'">STORY</a>
             </li>
           </div>
 
@@ -312,7 +309,7 @@
             <li>
               <a class="selectable link-to-btn
               <% unless params['men'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">MEN</a>
+              <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
             </li>
           </div>
 
@@ -320,7 +317,7 @@
             <li>
               <a class="selectable link-to-btn
               <% unless params['women'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">WOMEN</a>
+              <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
             </li>
           </div>
 
@@ -328,7 +325,15 @@
             <li>
               <a class="selectable link-to-btn
               <% unless params['brand'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">BRAND</a>
+              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">FULL COLLECTION</a>
+            </li>
+          </div>
+
+          <div class="menu-button">
+            <li>
+              <a class="selectable link-to-btn
+              <% unless params['contact'].blank? and available %> selected-esp
+              <% end %>" onclick="location.href = '/contact_us?contact=true&view=contact'">CONTACT US</a>
             </li>
           </div>
         </ul>
@@ -340,6 +345,35 @@
 </nav>
 
 <body style="padding-top: 60px">
+
+
+<div id="search-box-drop" style="width: 70%; top: 0px; margin: auto; left: 0; right: 0; z-index: 1; position: absolute;" class="input-group desktopnot">
+  <input id="search-bot" name="search" style="height: 40px; border-color: #cb929c;" type="text" class="form-control" placeholder="Search..." value="">
+  <span class="input-group-btn">
+          <button onclick="location.href = '/catalog?search=' + this.parentElement.parentElement.getElementsByTagName('input')[0].value;" class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="button">GO!</button>
+        </span>
+</div>
+
+<script>
+  var twist = false;
+  function show_search() {
+      var elem = document.getElementById('search-box-drop');
+      var pos = (twist ? 70 : 0);
+      var id = setInterval(frame, 5);
+
+      function frame() {
+          if (pos === (twist ? 0 : 70)) {
+              twist = !twist;
+              clearInterval(id);
+          } else {
+              twist ? pos-- : pos++;
+              elem.style.top = pos + 'px';
+          }
+      }
+
+  }
+</script>
+
 <%= yield %>
 
 <div class="modal " id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
