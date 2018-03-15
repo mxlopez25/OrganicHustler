@@ -133,11 +133,11 @@
         return {top: Math.round(top), left: Math.round(left)};
     }
 
-    function edit_catalog(id) {
+    function edit_catalog(id, exterior) {
         document.getElementsByTagName('body')[0].classList.remove('modal-open');
-        $('#cart_modal').modal('toggle');
+        exterior ? null : $('#cart_modal').modal('toggle');
         close_modal();
-        OVERALL_MODE = true;
+        OVERALL_MODE = exterior ? false : true;
         ACTUAL_CART_ITEM_EDIT = id;
         $.ajax({
             url: '/get_cart_item',
@@ -347,7 +347,7 @@
 <body style="padding-top: 60px">
 
 
-<div id="search-box-drop" style="width: 70%; top: 0px; margin: auto; left: 0; right: 0; z-index: 1; position: absolute;" class="input-group desktopnot">
+<div id="search-box-drop" style="width: 70%; top: 0px; margin: auto; left: 0; right: 0; z-index: 1; position: fixed;" class="input-group desktopnot">
   <input id="search-bot" name="search" style="height: 40px; border-color: #cb929c;" type="text" class="form-control" placeholder="Search..." value="">
   <span class="input-group-btn">
           <button onclick="location.href = '/catalog?search=' + this.parentElement.parentElement.getElementsByTagName('input')[0].value;" class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="button">GO!</button>
@@ -744,7 +744,7 @@
                           success: function (data, status, xhr) {
                               var button_share = document.getElementById('share');
                               button_share.outerHTML =
-                                  '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp=' + data + ' &link=http://organichustler.com?cp=' + data + ' &picture=<%= @shared_image %> &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
+                                  '    <a onclick="window.open(this.href, \'Facebook\', \'width=450,height=530\'); return false;" href="https://www.facebook.com/dialog/feed?app_id=155439938432875 &redirect_uri=http://organichustler.com/?cp=' + data + ' &link=http://organichustler.com?cp=' + data + ' &picture=http://organichustler.com/images/logo &caption=This%20is%20the%20caption &description=This%20is%20the%20description" style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>\n' +
                                   '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n' +
                                   '    <a onclick="window.open(this.href, \'Google+\', \'width=450,height=530\'); return false;" href="https://plus.google.com/share?url=http://organichustler.com/?cp=' + data + '" style="color: white; width: 80%; margin: 2px; background-color: #dd4b39" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-google-plus"></span>Google plus</a>\n' +
                                   '    <a href="whatsapp://send?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>';
@@ -2004,9 +2004,7 @@
                     '              </button>';
                 var btn3 = document.getElementById('done-section-2');
                 btn3 ? (btn3.outerHTML = delete_modify) : '';
-
             }
-
         });
     }
 
@@ -2452,6 +2450,21 @@
                 for (var i = 0; i < data.length; i++) {
                     carousel_jq.append('<li><span style="font-size: 15px" id="' + data[i].id + '" onclick="changeSize(\'' + data[i].id + '\')" class="badge badge-size text_light ' + ((OVERALL_MODE && product.size_id === data[i].id) ? 'badge_selected' : '') + '">' + data[i].title + '</span></li>');
                 }
+                
+                var jcarouselSelector = '.jcarousel';
+
+                $(jcarouselSelector).reloadJcarousel();
+
+                $('.jcarousel-control-prev').jcarouselControl({
+                    // Options go here
+                    target: '-=1'
+                });
+                $('.jcarousel-control-next').jcarouselControl({
+                    // Options go here
+                    target: '+=1'
+                });
+                $('div#preview_size_cr_carousel').jcarousel('reload');
+
             },
             error: function (data) {
 
@@ -2691,6 +2704,11 @@
         } else {
             open_quick(item_s, 1);
         }
+    }
+
+    var cp = '<%= params[:cp] %>';
+    if (cp !== ''){
+        edit_catalog(cp, true);
     }
 
 </script>

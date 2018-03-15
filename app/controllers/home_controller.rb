@@ -17,7 +17,6 @@ class HomeController < ApplicationController
 
     @config_products = ConfigurationWeb.where content_type: 1
     @cart_product_shared = params['cp']
-    @shared_image = 'http://organichustler.com/images/logo'
 
   end
 
