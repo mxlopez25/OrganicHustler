@@ -854,34 +854,55 @@
             actual_row_id = id;
             console.log(type);
 
+
+            var close_icon = '\n' +
+                '    <div style="background: #cb929c; border-radius: 50%; position: fixed; top: 10px; right: 10px; width: 50px; height: 50px">\n' +
+                '      <span onclick="close_modal()" id="actor" style="cursor: pointer;\n' +
+                '          color: white;\n' +
+                '          font-size: 40px;\n' +
+                '          line-height: 50px;\n' +
+                '          width: 50px;\n' +
+                '          height: 50px;\n' +
+                '          text-align: center;\n' +
+                '          position: absolute;\n' +
+                '          margin: auto;\n' +
+                '          top: 0;\n' +
+                '          left: 0;\n' +
+                '          right: 0;\n' +
+                '          bottom: 0;">\n' +
+                '        <i class="fa fa-times" aria-hidden="true"></i>\n' +
+                '      </span>\n' +
+                '    </div>';
+
+
             switch (type) {
                 case 'size_modal':
-                    modal.innerHTML = complete_size(id);
+                    modal.innerHTML = complete_size(id) + close_icon;
                     break;
                 case 'logo_modal':
-                    modal.innerHTML = complete_logo(id);
+                    modal.innerHTML = complete_logo(id) + close_icon;
                     break;
                 case 'color_modal':
-                    modal.innerHTML = complete_color(id);
+                    modal.innerHTML = complete_color(id) + close_icon;
 
                     $(".basic-picker").spectrum({
                         preferredFormat: "hex"
                     });
                     break;
                 case 'category_modal':
-                    modal.innerHTML = complete_category(id);
+                    modal.innerHTML = complete_category(id) + close_icon;
                     break;
                 case 'style_modal':
-                    modal.innerHTML = complete_style(id);
+                    modal.innerHTML = complete_style(id) + close_icon;
                     break;
                 case 'material_modal':
-                    modal.innerHTML = complete_material(id);
+                    modal.innerHTML = complete_material(id) + close_icon;
                     break;
                 case 'brand_modal':
-                    modal.innerHTML = complete_brand(id);
+                    modal.innerHTML = complete_brand(id) + close_icon;
                     break;
                 case 'preset_modal':
-                    modal.innerHTML = complete_preset(id);
+                    modal.innerHTML = complete_preset(id) + close_icon;
 
                     $.ajax({
                         url: '/admin/products/logos',
@@ -995,7 +1016,7 @@
                     break;
 
                 case 'emblem_modal':
-                    modal.innerHTML = complete_emblem(id);
+                    modal.innerHTML = complete_emblem(id) + close_icon;
 
                     $.ajax({
                         url: '/admin/products/color_images',
@@ -1095,9 +1116,7 @@
 
             window.onclick = function (event) {
                 if (event.target === dim_back) {
-                    modal.style.display = "none";
-                    dim_back.style.display = "none";
-                    $('body').removeClass('modal-open');
+                    close_modal();
                 }
             };
         }
@@ -1243,7 +1262,7 @@
             var temp_v = {
                 name: '<%= col.picture_file_name %>',
                 size: <%= col.picture_file_size %>,
-                data: '<%= col.picture(:thumb) %>'
+                data: '<%= col.picture(:s_thumb) %>'
             };
             existingFiles<%= color.id %>.push(temp_v);
 
@@ -1398,4 +1417,15 @@
   </div>
 
 </div>
+
+<script>
+
+  function close_modal() {
+      modal.style.display = "none";
+      dim_back.style.display = "none";
+      $('body').removeClass('modal-open');
+  }
+
+</script>
+
 </body>

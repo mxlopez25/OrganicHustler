@@ -158,10 +158,28 @@
         }
     }
 
+    var close_icon = '\n' +
+        '    <div style="background: #cb929c; border-radius: 50%; position: fixed; top: 10px; right: 10px; width: 50px; height: 50px">\n' +
+        '      <span onclick="close_modal()" id="actor" style="cursor: pointer;\n' +
+        '          color: white;\n' +
+        '          font-size: 40px;\n' +
+        '          line-height: 50px;\n' +
+        '          width: 50px;\n' +
+        '          height: 50px;\n' +
+        '          text-align: center;\n' +
+        '          position: absolute;\n' +
+        '          margin: auto;\n' +
+        '          top: 0;\n' +
+        '          left: 0;\n' +
+        '          right: 0;\n' +
+        '          bottom: 0;">\n' +
+        '        <i class="fa fa-times" aria-hidden="true"></i>\n' +
+        '      </span>\n' +
+        '    </div>';
+
     function complete_size(id) {
 
-        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>' +
-        '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';
+        var html = '<button onclick="save_sizes(' + id + ')">SAVE</button>' + close_icon;
         var sizes = sizes_g[id];
         if (sizes) {
             sizes.forEach(function (size) {
@@ -209,8 +227,7 @@
 
     function complete_logo(id) {
 
-        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_logos(' + id + ')">SAVE</button>' + close_icon;
         var logos = logos_g[id];
         if (logos) {
             logos = logos.logos;
@@ -298,7 +315,7 @@
         if (colors && dd) {
             colors = dd;
             colors.forEach(function (color) {
-                modal.innerHTML = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
+                modal.innerHTML = close_icon + '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
                     '<div class="color_row" data-id-use="' + color.id + '" data-ocupaid-use="true" data-changed="false"  style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
                     '      <input style="float: left; width: 12%; margin: 0;" value="No color" disabled placeholder="Color title" name="title" id="title">\n' +
                     '      <input style="float: left; width: 12%; margin: 0;" step="any" value="0.00" disabled type="number" placeholder="Price" name="price" id="price">\n' +
@@ -314,7 +331,7 @@
             });
         } else {
 
-            modal.innerHTML = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
+            modal.innerHTML = close_icon + '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" checked onchange="photos_color(\'' + id + '\')"> <h6 style="float: right">No color, Only photos available</h6>' +
                 '<div class="color_row" data-ocupaid-use="false" data-changed="false" style="overflow: hidden; width: 100%; float: left;">\<n></n>' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="No color" disabled placeholder="Color title" name="title" id="title">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" step="any" value="0.00" disabled type="number" placeholder="Price" name="price" id="price">\n' +
@@ -364,8 +381,7 @@
             colors_g[id].cur_id = 0;
         }
 
-        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="only_photos(\'' + id + '\', true)"> <h6 style="float: right">No color, Only photos available</h6>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_colors(' + id + ')">SAVE</button><input id="only_photo" style="float: right" type="checkbox" onchange="only_photos(\'' + id + '\', true)"> <h6 style="float: right">No color, Only photos available</h6>' + close_icon;
         var colors = colors_g[id];
         var dd = null;
 
@@ -522,8 +538,7 @@
 
     function complete_category(id) {
 
-        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_categories(' + id + ')">SAVE</button>' + close_icon;
         var categories = categories_g[id];
         if (categories) {
             categories.forEach(function (category) {
@@ -568,8 +583,7 @@
 
     function complete_style(id) {
 
-        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_styles(' + id + ')">SAVE</button>' + close_icon;
         var styles = styles_g[id];
         if (styles) {
             styles.forEach(function (style) {
@@ -614,8 +628,7 @@
 
     function complete_material(id) {
 
-        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_materials(' + id + ')">SAVE</button>' + close_icon;
         var materials = materials_g[id];
         if (materials) {
             materials.forEach(function (material) {
@@ -660,8 +673,7 @@
 
     function complete_brand(id) {
 
-        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>' +
-            '<span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: xx-large; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>';;
+        var html = '<button onclick="save_brands(' + id + ')">SAVE</button>' + close_icon;
         var brands = brands_g[id];
         if (brands) {
             brands.forEach(function (brand) {
