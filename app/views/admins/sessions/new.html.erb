@@ -1,0 +1,14 @@
+<div class="center-div">
+  <div class="card notification-ask" style="background: #ffffff">
+    <h2>Log in</h2>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <%= f.email_field :email, style: "margin: 4px 0 4px 0; width: 100%", class: "field",  autofocus: true %>
+        <%= f.password_field :password, style: "margin: 4px 0 4px 0; width: 100%", class: "field", autocomplete: "off" %>
+
+      <div class="actions">
+        <%= f.submit "SIGN IN", class: "btn btn-sp" %>
+      </div>
+    <% end %>
+  </div>
+</div>
