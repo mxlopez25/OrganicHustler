@@ -3,8 +3,8 @@
     <h2>Log in</h2>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <%= f.email_field :email, style: "margin: 4px 0 4px 0; width: 100%", class: "field",  autofocus: true %>
-        <%= f.password_field :password, style: "margin: 4px 0 4px 0; width: 100%", class: "field", autocomplete: "off" %>
+        <%= f.email_field :email, style: "margin: 4px 0 4px 0; width: 100%", placeholder: "EMAIL", class: "field",  autofocus: true %>
+        <%= f.password_field :password, style: "margin: 4px 0 4px 0; width: 100%", placeholder: "PASSWORD", class: "field", autocomplete: "off" %>
 
       <div class="actions">
         <%= f.submit "SIGN IN", class: "btn btn-sp" %>
