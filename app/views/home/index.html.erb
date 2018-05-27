@@ -173,7 +173,7 @@
 
     <% product = Product.all.first %>
     <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
-      <img onclick="open_quick('<%= product.id %>', <%= product.customizable ? 2 : 1 %>)" id="img_1" src="<%= product.colors.first.product_images.first.picture %>" style="height: 370px;">
+      <img onclick="open_quick('<%= product.id %>', <%= product.customizable ? 2 : 1 %>)" id="img_1" src="<%= product.try(:colors).try(:first).try(:product_images).try(:first).try(:picture) %>" style="height: 370px;">
       <h4 id="title_1" class="text-center text_light"></h4>
       <h5 class="text-center text_light">Eco-Friendly+Customizable</h5>
       <article>
