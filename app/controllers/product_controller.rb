@@ -3,6 +3,10 @@ require 'rmagick'
 require 'tempfile'
 require 'json'
 
+class ColorP < ApplicationRecord::Color
+
+end
+
 class ProductController < ApplicationController
   include Magick
   layout 'customs_bl'
@@ -18,7 +22,7 @@ class ProductController < ApplicationController
     logo = cart_p.custom_logos[0]
 
     if logo
-      picture = (ApplicationRecord::Color.find base_color).product_images.where(id: logo.product_image_id).first
+      picture = (ColorP.find base_color).product_images.where(id: logo.product_image_id).first
       base = Image.read("public#{picture.picture.url(:original, timestamp: false)}").first
 
       logo_s = logo.logo.picture.url(:original, timestamp: false)
@@ -35,7 +39,7 @@ class ProductController < ApplicationController
 
       render text: cart_p.picture, status: :ok
     else
-      picture = (ApplicationRecord::Color.find base_color).product_images.where(main: true).first
+      picture = (ColorP.find base_color).product_images.where(main: true).first
       render text: picture.picture, status: :ok
     end
   end
@@ -214,14 +218,14 @@ class ProductController < ApplicationController
   end
 
   def new_color
-    color = ApplicationRecord::Color.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred'], main_picture: params['main_picture'], product_id: params['pr_id']
+    color = ColorP.create! title: params['title'], price: params['price'], code_hex: params['color'], stock: params['stock'], preferred: params['preferred'], main_picture: params['main_picture'], product_id: params['pr_id']
     render :json => color.to_json, :status => 200
   end
 
   def new_image
 
     file = re_center_upload(params['file'])
-    image = ProductImage.create! color: ApplicationRecord::Color.find(params['parent_id']), picture: file, main: (params['file'].original_filename.eql?(params['main_name']))
+    image = ProductImage.create! color: ColorP.find(params['parent_id']), picture: file, main: (params['file'].original_filename.eql?(params['main_name']))
 
     file.close
     file.unlink
@@ -252,7 +256,7 @@ class ProductController < ApplicationController
     end
 
     if params['colors']
-      product.colors << ApplicationRecord::Color.find(params['colors'])
+      product.colors << ColorP.find(params['colors'])
       #assigning main image
       image = product.colors[0].product_images[0]
       product.product_image_id = image.picture
