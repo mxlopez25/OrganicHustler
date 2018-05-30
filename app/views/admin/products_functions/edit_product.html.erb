@@ -240,8 +240,6 @@
                 '      <input style="float: left; width: 12%; margin: 0;" step="any" value="" type="number" placeholder="Price" name="price" id="price">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="color" name="code_hex" id="color">\n' +
                 '      <input style="float: left; width: 12%; margin: 0;" value="" type="number" step="any" placeholder="Stock level" name="stock_level" id="stock_level">\n' +
-                '      <input id="main_color" type="checkbox" value="true" style="float: left; width: 2%; margin: 0;" placeholder="main">\n' +
-                '      <h5 style="width: 10%; float: left;">Main color?</h5>\n' +
                 '      <button onclick="save_color_row(' + id + ', this.parentNode)" >SAVE</button>' +
                 '</div>';
         }
@@ -505,7 +503,7 @@
                     price: $(parent).find('#price').val(),
                     color: $(parent).find('#color').val(),
                     stock: $(parent).find('#stock_level').val(),
-                    preferred: $(parent).find('#main_color').is(":checked"),
+                    preferred: false,
                     main_picture: ''
                 },
                 success: function (data) {
