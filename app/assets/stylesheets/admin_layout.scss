@@ -218,7 +218,7 @@ div.modal-c {
 .dim_back {
   display: none;
   position: fixed;
-  z-index: 9999;
+  z-index: 990;
   left: 0;
   top: 0;
   width: 100%;
@@ -440,7 +440,7 @@ nav.sidebar, .main {
     height: 100%;
     margin-left: 0;
     float: left;
-    z-index: 8000;
+    z-index: 30;
     margin-bottom: 0;
   }
 

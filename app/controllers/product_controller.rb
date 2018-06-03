@@ -3,7 +3,7 @@ require 'rmagick'
 require 'tempfile'
 require 'json'
 
-class ColorP < ApplicationRecord::Color
+class ColorP < ::Color
 
 end
 

@@ -21,5 +21,4 @@ class Color < ApplicationRecord
     product.product_image_id = new_main.picture
     product.save!
   end
-
 end
