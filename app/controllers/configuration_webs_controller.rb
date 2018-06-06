@@ -1,3 +1,5 @@
+require 'ffmpeg'
+require 'cocaine'
 class ConfigurationWebsController < ApplicationController
 
   def update
@@ -8,6 +10,7 @@ class ConfigurationWebsController < ApplicationController
 
     if params[:configuration_web]
       co.picture = params[:configuration_web][:picture]
+      co.video = params[:configuration_web][:video]
     end
 
     co.save!

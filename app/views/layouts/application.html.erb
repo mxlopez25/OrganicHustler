@@ -236,24 +236,28 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a class="selectable
-              <% unless params['story'].blank? and available %>selected
+              <% unless params['story'].blank? and available %> selected
               <% end %>" onclick="location.href = '/story?story=true&view=story'">STORY</a>
         </li>
         <li>
           <a class="selectable
-              <% unless params['men'].blank? and available %>selected
+              <% unless params['men'].blank? and available %> selected
               <% end %>" onclick="location.href = '/catalog?men=true&view=men'">SHOP MEN</a>
         </li>
         <li>
           <a class="selectable
-              <% unless params['women'].blank? and available %>selected
+              <% unless params['women'].blank? and available %> selected
               <% end %>" onclick="location.href = '/catalog?women=true&view=women'">SHOP WOMEN</a>
         </li>
         <li>
-          <a class="selectable" onclick="location.href = '/catalog'">FULL COLLECTION</a>
+          <a class="selectable
+            <% unless params['brand'].blank? and available %> selected
+            <% end %>" onclick="location.href = '/catalog?brand=true&view=full%20collection'">FULL COLLECTION</a>
         </li>
-        <li class="selectable ">
-          <a onclick="location.href = '/contact_us'">CONTACT US</a>
+        <li>
+          <a class="selectable
+            <% unless params['contact'].blank? and available %> selected
+            <% end %>" onclick="location.href = '/contact_us?contact=true'">CONTACT US</a>
         </li>
         <p class="text-center color lf mobile-only" hidden=""> Organic Hustler, LLC</p>
       </ul>
@@ -286,7 +290,7 @@
 
         <div style="float: left">
         <% if @parameters.nil? || params['action'] != 'catalog' %>
-          <a href="/contact_us" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get
+          <a href="/contact_us?contact=true" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Get
             in Touch</a>
           <a href="https://instagram.com/<%= ConfigurationWeb.find(3).value %>" style="float: left; border-right: 1px solid black" type="button" class="btn btn-link">Instagram</a>
           <a href="https://twitter.com/<%= ConfigurationWeb.find(1).value %>" style="float: left" type="button" class="btn btn-link">Twitter</a>
@@ -332,7 +336,7 @@
             <li>
               <a style="font-family: CaviarDream, Helvetica, sans-serif" class="selectable link-to-btn
               <% unless params['brand'].blank? and available %> selected-esp
-              <% end %>" onclick="location.href = '/catalog?brand=true&view=brand'">FULL COLLECTION</a>
+              <% end %>" onclick="location.href = '/catalog?brand=true&view=full%20collection'">FULL COLLECTION</a>
             </li>
           </div>
 
@@ -2778,15 +2782,15 @@
   <div class="row" style="margin-top: 20px;">
     <h3 style="color: white;"> BRAND</h3>
     <br>
-    <h4 onclick="location.href = '/story'" style="color: #A4A4A4; cursor: pointer"> STORY </h4>
-    <h4 onclick="location.href = '/contact_us'" style="color: #A4A4A4; cursor: pointer"> CONTACT US</h4>
+    <h4 onclick="location.href = '/story?story=true&view=story'" style="color: #A4A4A4; cursor: pointer"> STORY </h4>
+    <h4 onclick="location.href = '/contact_us?contact=true'" style="color: #A4A4A4; cursor: pointer"> CONTACT US</h4>
     <br>
     <h3 style="color: white;"> SHOP</h3>
     <br>
     <h4 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h4>
     <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP
       WOMEN </h4>
-    <h4 onclick="location.href = '/catalog'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
+    <h4 onclick="location.href = '/catalog?brand=true&view=full%20collection'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
     <br>
 
     <img src="/images/logo_sm" style="width: 60px;">
@@ -2808,7 +2812,7 @@
       <h5 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h5>
       <h5 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP
         WOMEN </h5>
-      <h5 onclick="location.href = '/contact_us'" style="color: #A4A4A4; cursor: pointer"> CONTACT US</h5>
+      <h5 onclick="location.href = '/contact_us?contact=true'" style="color: #A4A4A4; cursor: pointer"> CONTACT US</h5>
 
 
     </div>

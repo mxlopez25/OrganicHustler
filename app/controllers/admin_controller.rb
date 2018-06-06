@@ -8,6 +8,14 @@ class AdminController < ApplicationController
   layout 'admin'
   layout 'customs_bl', :only => :preview_mail
   before_action :authenticate_admin!
+  before_action 'register_request'
+
+  def register_request
+    History.create!(
+        admin: current_admin,
+        request: "{'info': ['#{request.request_method}', '#{request.remote_ip}', '#{request.original_url}', #{params.to_json.html_safe}]}"
+    )
+  end
 
   def main
   end
