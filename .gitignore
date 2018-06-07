@@ -1,10 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/.generators
-.idea/.rakeTasks
-.idea/OrganicHustler.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
+.idea/*
 config/application.yml
 log/development.log
 tmp/cache/
