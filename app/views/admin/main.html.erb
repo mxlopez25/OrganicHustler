@@ -129,8 +129,6 @@
         </tbody>
       </table>
 
-      <button style="margin-bottom: 5px;" class="btn btn-sp text-light">ADD AMINISTRATOR</button>
-
     </div>
 
     <div style="text-align: left">
@@ -700,11 +698,12 @@
         <div class="modal-content">
           <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
-          <%= form_for ConfigurationWeb.all.first, url: configuration_webs_url, html: {multipart: true} do |form| %>
-            <%= form.hidden_field :id, id: 'video_on' %>
-            <%= form.file_field :video %>
-            <%= form.submit %>
-          <% end %>
+        </div>
+      </div>
+
+      <div id="admin_adder" class="modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
+        <div class="modal-content">
+          <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
 
         </div>
       </div>
