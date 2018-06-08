@@ -13,8 +13,16 @@ class AdminController < ApplicationController
   def register_request
     History.create!(
         admin: current_admin,
-        request: "{'info': ['#{request.request_method}', '#{request.remote_ip}', '#{request.original_url}', #{params.to_json.html_safe}]}"
+        request: request.original_url,
+        method: request.request_method,
+        source_ip: request.remote_ip,
+        json_data: params.to_json.html_safe,
     )
+  end
+
+  def show_history
+    id = params[:admin_id]
+    render json: Admin.find(id).histories.to_json, code: 200
   end
 
   def main
