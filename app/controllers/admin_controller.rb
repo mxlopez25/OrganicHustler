@@ -8,7 +8,7 @@ class AdminController < ApplicationController
   layout 'admin'
   layout 'customs_bl', :only => :preview_mail
   before_action :authenticate_admin!
-  before_action 'register_request'
+  before_action 'register_request', except: :create_admin
 
   def register_request
     History.create!(
@@ -18,6 +18,16 @@ class AdminController < ApplicationController
         source_ip: request.remote_ip,
         json_data: params.to_json.html_safe,
     )
+  end
+
+  def create_admin
+    a = Admin.new(
+      email: params[:admin][:email],
+      password: params[:admin][:password],
+      password_confirmation: params[:admin][:password_confirmation]
+    )
+    a.save!
+    render json: a.to_json, code: 200
   end
 
   def show_history

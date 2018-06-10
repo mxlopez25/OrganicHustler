@@ -58,6 +58,7 @@ Rails.application.routes.draw do
   delete '/clear_bag' => 'home#clear_bag'
 
   get '/admin/history' => 'admin#show_history'
+  post '/admin/create/new' => 'admin#create_admin'
 
   get '/admin/home' => 'admin#main'
   get '/admin/products' => 'admin#products'

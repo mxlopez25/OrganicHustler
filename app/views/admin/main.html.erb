@@ -128,7 +128,7 @@
         </tbody>
       </table>
 
-      <button class="btn btn-sp text-light">ADD AMINISTRATOR</button>
+      <button onclick="add_amin()" class="btn btn-sp text-light">ADD AMINISTRATOR</button>
 
     </div>
 
@@ -355,6 +355,11 @@
                     modal = document.getElementById('product_finder');
                     loadTable_1();
                     modal.style.display = "block";
+                }
+
+                function add_amin(){
+                  modal = document.getElementById('admin_adder');
+                  modal.style.display = "block";
                 }
 
                 function open_history(id){
@@ -732,6 +737,19 @@
       <div id="admin_adder" class="modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
         <div class="modal-content">
           <span onclick="close_modal()" id="actor" style="cursor: pointer; color: grey; z-index: 9000; position: absolute; font-size: medium; right: 5px; top: 0;"><i class="fa fa-times" aria-hidden="true"></i></span>
+
+          <%= form_for(:admin, :url => "/admin/create/new")   do |f| %>
+          <input style="width: 35%;" type="email" id="email" name="email" placeholder="Administrator email">
+          <input style="width: 20%;" type="password" id="password" name="pasword" placeholder="Password">
+          <input style="width: 20%;" type="password" id="password_confirmation" name="password_confirmation" placeholder="Password confirmation">
+          <button style="width: 20%;" class="btn btn-sp button text_light">ADD</button>
+          <% end %>
+
+          <!--<select name="role_select" id="role_select" style="width: 25%;">
+            <option value="1">Role 1</option>
+            <option value="2">Role 2</option>
+            <option value="3">Role 3</option>
+          </select>-->
 
         </div>
       </div>
