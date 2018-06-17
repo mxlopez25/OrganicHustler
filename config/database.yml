@@ -58,7 +58,7 @@ test:
 #
 production:
   port: 3306
-  database: OrganicHustler_production
+  database: OrganicHustler
   username: <%= ENV['USERNAME_DB'] %>
   password: <%= ENV['PASSWORD_DB'] %>
   adapter: mysql2
