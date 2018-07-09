@@ -3,6 +3,7 @@ require 'easypost'
 include HomeHelper
 
 class AdminController < ApplicationController
+  skip_before_action :verify_authenticity_token
   EasyPost.api_key = ENV['EASYPOST_SECRET']
 
   layout 'admin'
