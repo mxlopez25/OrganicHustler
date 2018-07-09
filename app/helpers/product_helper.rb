@@ -1,5 +1,5 @@
 require 'rest_client'
-require 'RMagick'
+require 'rmagick'
 require 'tempfile'
 require 'json'
 

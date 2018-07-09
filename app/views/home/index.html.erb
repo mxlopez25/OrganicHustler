@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'index/styles-index' %>
 
 <!--HEADER INDEX-->
-<div class="header mobilenot" style="margin-top: 40px; height: 450px; background: url('<%= ConfigurationWeb.find(13).picture %>') no-repeat left center; background-size: cover;">
+<div class="header mobilenot" style="margin-top: 40px; height: 450px; background: url('<%= ConfigurationWeb.find(13).picture(:big, format: :webp) %>') no-repeat left center; background-size: cover;">
   <h1 class="text-center ht-desk text_light" style="margin-top: 150px; font-size: 100px; font-family: CaviarDream, Helvetica, sans-serif"><%= ConfigurationWeb.find(20).value %></h1>
   <div class="center-div-container" style="overflow: hidden; position: absolute; bottom: 30px">
     <button onclick="location.href = '/catalog?men=true&view=men'" class="button button-head btn pri-limit" style="float: left">SHOP
@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="header desktopnot " style="position: relative; background: url('<%= ConfigurationWeb.find(13).picture %>') no-repeat left center; background-size: cover;height: 360px;width: 100%;overflow: hidden">
+<div class="header desktopnot " style="position: relative; background: url('<%= ConfigurationWeb.find(13).picture(:medium, format: :webp) %>') no-repeat left center; background-size: cover;height: 360px;width: 100%;overflow: hidden">
   <div style="overflow: hidden; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: 240px">
     <h1 class="text-center ht text_light" style="font-family: CaviarDream, Helvetica, sans-serif; font-size: 60px"><%= ConfigurationWeb.find(20).value %></h1>
     <div style="text-align: center; overflow: hidden;">

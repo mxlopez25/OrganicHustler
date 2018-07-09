@@ -23,31 +23,46 @@
 
   <%= csrf_meta_tags %>
 
-  <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+<!--  <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>-->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>-->
 
   <%= javascript_include_tag 'jquery.min.js' %>
-  <!-- Bootstrap Core -->
   <%= stylesheet_link_tag 'bootstrap.css' %>
   <%= javascript_include_tag 'bootstrap.js' %>
-
-  <%= javascript_include_tag 'konva.min' %>
-  <%= stylesheet_link_tag 'style-fc' %>
   <%= javascript_include_tag 'jquery.jcarousel' %>
-
-  <%= stylesheet_link_tag 'application' %>
-  <%= javascript_include_tag 'application.js' %>
-
-  <!-- Theme CSS -->
-  <%= stylesheet_link_tag 'cart' %>
-  <%= stylesheet_link_tag 'index/styles-index' %>
   <%= stylesheet_link_tag 'home' %>
 
 </head>
+
+<script>
+
+    function loadScript(src, callback)
+    {
+        var s,
+            r,
+            t;
+        r = false;
+        s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = src;
+        s.onload = s.onreadystatechange = function() {
+            console.log( this.readyState ); //uncomment this line to see which ready states are called.
+            if ( !r && (!this.readyState || this.readyState == 'complete') )
+            {
+                r = true;
+                callback();
+            }
+        };
+        t = document.getElementsByTagName('script')[0];
+        t.parentNode.insertBefore(s, t);
+    }
+
+    loadScript('/assets/konva.min.js');
+    loadScript('/assets/sweetalert.min.js');
+
+</script>
 
 <style>
 
@@ -85,9 +100,6 @@
 </style>
 
 <script>
-
-    var search_3 = $("#search-bot");
-
     var ACTUAL_CART_ITEM_EDIT = null;
 
     window.twttr = (function (d, s, id) {

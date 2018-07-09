@@ -6,19 +6,19 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.5.0'
-gem 'devise'
-gem 'mjml-rails'
-gem 'rest-client'
-gem 'paperclip'
-gem 'font-awesome-rails'
-gem 'figaro'
-gem 'paperclip-ffmpeg', '~> 1.0.1'
-gem 'ffmpeg'
 gem 'cocaine'
-gem 'stripe'
-gem 'rmagick'
+gem 'devise'
 gem 'easypost'
+gem 'ffmpeg'
+gem 'figaro'
+gem 'font-awesome-rails'
 gem 'mailgun-ruby', '~>1.1.6'
+gem 'mjml-rails'
+gem 'paperclip'
+gem 'paperclip-ffmpeg', '~> 1.0.1'
+gem 'rest-client'
+gem 'rmagick'
+gem 'stripe'
 gem 'will_paginate'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -57,8 +57,8 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
   gem 'listen', '~> 3.0.5'
+  gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
