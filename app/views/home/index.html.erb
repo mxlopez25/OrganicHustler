@@ -161,7 +161,7 @@
 <div class="container mobilenot">
   <div style="position: relative">
 
-    <% product = Product.all.first %>
+    <% product = Product.find(ConfigurationWeb.find(4).value) %>
     <div style="margin-top: 70px; margin-left: auto; margin-right:auto; text-align: center;">
       <img onclick="open_quick('<%= product.id %>', <%= product.customizable ? 2 : 1 %>)" id="img_1" src="<%= product.try(:colors).try(:first).try(:product_images).try(:first).picture(:medium, format: :webp) %>" style="height: 370px;">
       <h4 id="title_1" class="text-center text_light"></h4>
