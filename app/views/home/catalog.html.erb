@@ -204,7 +204,7 @@
                 }
 
                 data = data['ps'];
-                console.log(data);
+
                 var html_items = '';
                 document.getElementById('product_counter').innerHTML = n_p + ' products found';
                 for (var id in data) {
@@ -257,7 +257,7 @@
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }

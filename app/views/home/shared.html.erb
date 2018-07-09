@@ -16,7 +16,7 @@
             product_cart_id: id
         },
         success: function (data) {
-            console.log(data);
+
             product.data = data['source_data'];
             product.product_id = data['source_data']['id'];
             product.color_id = data['color']['id'];
@@ -57,13 +57,12 @@
 
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
-            console.log(product);
         },
         error: function (data) {
-            console.log(data);
+
         }
     });
 

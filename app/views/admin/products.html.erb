@@ -145,7 +145,7 @@
                     var table_body = document.getElementById('list-to-m');
                     var text = '';
                     for (var i = 0; i < data.length; i++) {
-                        console.log(data[i]);
+
                         text = text + '<tr id="product-row">\n' +
                             '            <td>\n' +
                             '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
@@ -172,7 +172,6 @@
                 items.push(product);
             else
                 items.splice(items.lastIndexOf(product), 1);
-            console.log(items);
         }
 
         var title_sort = true;
@@ -396,7 +395,7 @@
                         }
                     },
                     error: function (data) {
-                        console.log(data)
+
                     }
                 });
             }
@@ -424,7 +423,7 @@
                             }
                         },
                         error: function (data) {
-                            console.log(data)
+
                         }
                     });
                 }

@@ -49,7 +49,6 @@
           var from = active.index();
           var next = $(e.relatedTarget);
           var to = next.data('id');
-          console.log(from + ' => ' + to);
           current_item_id = to;
       });
 
@@ -80,7 +79,7 @@
               holder.innerHTML = html;
           },
           error: function (data) {
-              console.log(data)
+
           }
       });
 
@@ -128,9 +127,7 @@
               logoImg.image(imageObj2);
               layer.draw();
               imageObj2.width = container.width() * width / s_w;
-              console.log(imageObj2.width, container.width(), width, s_w);
               imageObj2.height = container.height() * height / s_h;
-              console.log(imageObj2.height);
           };
           imageObj2.src = '';
           layer.draw();
@@ -190,7 +187,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
+
 
                 var side_list = $('#side-list-' + dd);
                 //data[i].id
@@ -268,7 +265,7 @@
                 imageBase.src = data.picture
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
 
@@ -281,7 +278,7 @@
                 imageLogo.src = data
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }
@@ -387,7 +384,7 @@
 </div>
 
 <script>
-    if ( <%= @cart_product_shared %> ){
+    if ( <%= @cart_product_shared || false %> ){
         replicate_cart_product('<%= @cart_product_shared %>');
     }
 </script>

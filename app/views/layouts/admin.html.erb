@@ -249,7 +249,7 @@
           }, success: function (data) {
               location.reload(true);
           }, error: function (data) {
-              console.log(data);
+
           }
 
       })
@@ -293,7 +293,6 @@
             var dir = 1;
             th[i].addEventListener('click', function () {
                 sortTable(table, i, (dir = 1 - dir));
-                console.log("holaaaa")
             });
         }(i));
     }

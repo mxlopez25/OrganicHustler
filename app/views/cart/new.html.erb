@@ -136,7 +136,6 @@
                       promo_code: document.getElementById('promo_code_g').value
                   },
                   success: function (data, statusText, xhr) {
-                      console.log(data);
                       if (data.code === 1005) {
                           window.location.reload(true);
                       } else if (data.code === 1004) {
@@ -167,7 +166,6 @@
                       promo_code: document.getElementById('promo_code').value
                   },
                   success: function (data, statusText, xhr) {
-                      console.log(data);
                       if (data.code === 1005) {
                           window.location.reload(true);
                       } else if (data.code === 1004) {
@@ -256,7 +254,6 @@
                 dataType: 'json',
                 data: {},
                 success: function (data) {
-                    console.log(data);
 
                     taxes = data['tax_array'];
                     prices = data['cost_array'];
@@ -297,7 +294,6 @@
 
                             var id = 'cart' + product['id'];
                             var container = $('#' + id);
-                            console.log(container);
                             container.height(container.width());
 
                             var stage = new Konva.Stage({
@@ -352,7 +348,6 @@
                                         dataType: 'json',
                                         data: {},
                                         success: function (data) {
-                                            console.log(data);
                                             var logo = data.logos[0];
                                             if (logo) {
                                                 var image = getImage(data.pictures, logo.product_image_id);
@@ -375,7 +370,7 @@
                                             }
                                         },
                                         error: function (data) {
-                                            console.log(data);
+
                                         }
                                     });
                                 }
@@ -390,7 +385,7 @@
                                     imageObj1.src = data.picture;
                                 },
                                 error: function (data) {
-                                    console.log(data);
+
                                 }
                             });
                         } else {
@@ -458,7 +453,7 @@
                     }
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
 
@@ -590,14 +585,14 @@
             statusCode: {
                 403: function (xhr) {
                     check.outerHTML = '<i id="confirmation_check" class="fa fa-times" style="font-size: 14px; align-self: center; color: #ffffff" aria-hidden="true"></i>';
-                    console.log(data);
+
                 }
             },
             success: function (data) {
                 var order_id = data['order_id'];
                 var code = data['auth_code'];
                 btn_holder.remove();
-                console.log(data);
+
                 new_holder.outerHTML = '<span id="email_address" style="font-weight: bold">'+ new_holder.value +'</span>';
                 document.getElementById('email_changer').outerHTML = '<a id="email_changer" onclick="modify_email(\''+ order_id +'\',\''+ code +'\');" class="text-uppercase text_light_pink" style="cursor: pointer; margin: 5px; text-decoration: none; float: left">Change email</a>';
             },
@@ -631,7 +626,7 @@
                     datType: 'json',
                     data: values,
                     success: function (data) {
-                        console.log(data);
+
                         var charging_data = data['charge'];
                         if (charging_data['paid']) {
                             document.getElementById('loading').innerHTML ='  <div style="padding: 0; width: 80%; height: 365px" class="card content-part message_container">\n' +

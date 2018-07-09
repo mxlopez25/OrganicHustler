@@ -47,7 +47,6 @@
                     return function () {
                         return this.each(function () {
                             if (!$(this).data(plugin)) {
-                                console.log('Element is not an instance of ' + plugin);
                                 return false;
                             }
                             var _options = $(this).data(plugin)._options;
@@ -122,9 +121,7 @@
     }
 
     loadScript('/assets/konva.min.js', function (data) {
-        console.log('loaded konva');
         loadScript('/assets/jquery.jcarousel.min.js', function (data) {
-            console.log('loaded jcarousel');
 
             enter_key_setup();
             reload_jcarousel();
@@ -133,7 +130,6 @@
             setup_n_2();
 
             loadScript('/assets/sweetalert.min.js', function (data) {
-                console.log('loaded sweetalert');
             });
         });
     });
@@ -235,7 +231,7 @@
                 product_cart_id: id
             },
             success: function (data) {
-                console.log(data);
+
                 product.data = data['source_data'];
                 product.product_id = data['source_data']['id'];
                 product.color_id = data['color']['id'];
@@ -276,13 +272,12 @@
 
                     },
                     error: function (data) {
-                        console.log(data);
+
                     }
                 });
-                console.log(product);
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
 
@@ -359,7 +354,7 @@
 
         <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
           <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
-          <img data-toggle="modal" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2 js-lazy-image" class="cart_ic" src="/images/bag_icon">
+          <img data-toggle="modal" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic js-lazy-image" data-src="/images/bag_icon">
           <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
           <script>
             function enter_key_setup() {
@@ -556,7 +551,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
+
                 taxes_cart = data['tax_array'];
                 prices_cart = data['cost_array'];
                 var discount_rate = parseFloat(data['discount']);
@@ -582,7 +577,6 @@
                         container_lts_cart.appendChild(div.childNodes[0]);
                         var id = 'cart_' + product['id'];
                         var container = $('#' + id);
-                        console.log(container);
                         container.height(container.width());
                         var stage = new Konva.Stage({
                             container: id,
@@ -629,7 +623,7 @@
                                     dataType: 'json',
                                     data: {},
                                     success: function (data) {
-                                        console.log(data);
+
                                         var logo = data.logos[0];
                                         if (logo) {
                                             var image = getImage(data.pictures, logo.product_image_id);
@@ -651,7 +645,7 @@
                                         }
                                     },
                                     error: function (data) {
-                                        console.log(data);
+
                                     }
                                 });
                             }
@@ -665,7 +659,7 @@
                                 imageObj1.src = data.picture;
                             },
                             error: function (data) {
-                                console.log(data);
+
                             }
                         });
                     } else {
@@ -679,7 +673,7 @@
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }
@@ -1139,7 +1133,7 @@
             data: {},
             success: function (data) {
 
-                console.log(data);
+
                 document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
 
                 product.remove();
@@ -1325,11 +1319,8 @@
 
         var view = product.views[i];
 
-        console.log('Primera parte');
 
         if (TEMP_PRESET_HOLDER !== null) {
-            console.log(view.picture_id);
-            console.log(TEMP_PRESET_HOLDER.picture_id);
 
             if (view.picture_id === parseInt(TEMP_PRESET_HOLDER.picture_id)) {
                 current_pointer = i;
@@ -1369,7 +1360,6 @@
         image.src = url;
 
         if (view.logo_id) {
-            console.log('has logo');
             var logo = new Konva.Image({
                 x: view.x,
                 y: view.y,
@@ -1410,7 +1400,7 @@
                     imageLogo.src = data
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
         }
@@ -1445,7 +1435,7 @@
                     imageEmblem.src = data.src;
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
         }
@@ -1455,15 +1445,11 @@
         for (var i = 0; i < data.length; i++) {
             product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
         }
-        console.log(product);
     }
 
     function find_in_custom(p_id) {
         var custom = null;
-        console.log(product.views.length);
         for (var i = 0; i < product.views.length; i++) {
-            console.log(product.views[i].picture_id);
-            console.log(p_id);
             if (product.views[i].picture_id.toString() === p_id.toString()) {
                 custom = product.views[i];
             }
@@ -1489,7 +1475,6 @@
                     }
                 }
             });
-            console.log(group);
             group.add(logo);
             view.konva_elements.logo = logo;
 
@@ -1529,7 +1514,7 @@
                     imageLogo.src = data
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
         }
@@ -1638,7 +1623,7 @@
                     color_id: product.color_id
                 },
                 success: function (data) {
-                    console.log(data);
+
                     if (product.views.length === 0) {
                         create_objects_array(data);
                     }
@@ -1652,7 +1637,7 @@
                     }
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
 
@@ -1708,7 +1693,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
+
 
                 var carousel_jq = $('ul#container-emblems');
 
@@ -1720,7 +1705,7 @@
                         selected = 'selected_emblem';
                     }
 
-                    console.log(data[i]);
+
 
                     carousel_jq.append('<li>' +
                         '<div id="emblem_btn_' + data[i].id + '" class="' + selected + '" onclick="load_data_emblems(' + data[i].id + ', ' + data[i].product_image_id + ')" style="cursor: pointer; margin: 4px; width: 100px; text-align: center">' +
@@ -1796,13 +1781,13 @@
                 color_id: product.color_id
             },
             success: function (data) {
-                console.log(data);
+
                 if (product.views.length === 0) {
                     create_objects_array(data);
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         }).done(function () {
 
@@ -1857,7 +1842,7 @@
                 dataType: 'json',
                 data: {},
                 success: function (data) {
-                    console.log(data);
+
 
                     var carousel_jq = $('ul#container-logos');
 
@@ -1914,8 +1899,6 @@
 
             var anim_zoom_in = new Konva.Animation(function (frame) {
 
-                console.log(ACTUAL_LOGO);
-                console.log(ACTUAL_VIEW);
                 if (ACTUAL_LOGO !== null) {
                     ACTUAL_LOGO.scale({
                         x: ACTUAL_VIEW.multiplexer + 0.0005 * frame.timeDiff,
@@ -2098,7 +2081,6 @@
                         document.getElementById('checkboxes-color').outerHTML = '';
                         document.getElementById('removable-color-title').outerHTML = '';
                     } catch (ex) {
-                        console.log(ex);
                     }
                 }
             },
@@ -2121,7 +2103,6 @@
 
     function get_view_by_image(id) {
         for (var r = 0; r < product.views.length; r++) {
-            console.log(product.views[r]);
             if (product.views[r].picture_id === parseInt(id)) {
                 return {id: r, view: product.views[r]}
             }
@@ -2226,7 +2207,7 @@
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }
@@ -2276,11 +2257,11 @@
                 item_id: ACTUAL_CART_ITEM_EDIT
             },
             success: function (data) {
-                console.log(data);
+
                 addToCart();
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }
@@ -2294,14 +2275,14 @@
                 item_id: ACTUAL_CART_ITEM_EDIT || id
             },
             success: function (data) {
-                console.log(data);
+
                 var _a = bb ? '' : location.reload();
                 if (ft) {
                     location.href = '/';
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
     }
@@ -2520,7 +2501,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
+
 
                 if (data.length > 0) {
 
@@ -2620,7 +2601,7 @@
                     imageBase.src = data.picture
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
 
@@ -2633,7 +2614,7 @@
                     imageLogo.src = data
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             });
         }
@@ -2727,8 +2708,6 @@
         product.size_id = id;
 
         for (var i = 0; i < spans.length; i++) {
-            console.log(spans[i].id);
-            console.log(id);
             if (spans[i].id === id) {
                 $(spans[i]).addClass('badge_selected');
             } else {
@@ -2907,7 +2886,6 @@
       };
 
       const fetchImage = (url) => {
-          console.log(url);
           return new Promise((resolve, reject) => {
               const image = new Image();
               image.src = url;
@@ -2919,7 +2897,6 @@
       const loadImage = (image) => {
           const src = image.dataset.src;
           fetchImage(src).then(() => {
-              // console.log(src)
               image.src = src;
           })
       }
@@ -2927,7 +2904,6 @@
       const handleIntersection = (entries, observer) => {
           entries.forEach(entry => {
               if (entry.intersectionRatio > 0) {
-                  console.log(entry.intersectionRatio);
                   loadImage(entry.target)
               }
           })

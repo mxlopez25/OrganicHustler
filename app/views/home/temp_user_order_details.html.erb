@@ -194,11 +194,7 @@
 
                         var view = product.views[i];
 
-                        console.log('Primera parte');
-
                         if (TEMP_PRESET_HOLDER !== null) {
-                            console.log(view.picture_id);
-                            console.log(TEMP_PRESET_HOLDER.picture_id);
 
                             if (view.picture_id === parseInt(TEMP_PRESET_HOLDER.picture_id)) {
                                 current_pointer = i;
@@ -238,7 +234,6 @@
                         image.src = url;
 
                         if (view.logo_id) {
-                            console.log('has logo');
                             var logo = new Konva.Image({
                                 x: view.x,
                                 y: view.y,
@@ -279,7 +274,7 @@
                                     imageLogo.src = data
                                 },
                                 error: function (data) {
-                                    console.log(data);
+
                                 }
                             });
                         }
@@ -314,7 +309,7 @@
                                     imageEmblem.src = data.src;
                                 },
                                 error: function (data) {
-                                    console.log(data);
+
                                 }
                             });
                         }
@@ -641,7 +636,7 @@
                                     color_id: product.color_id
                                 },
                                 success: function (data) {
-                                    console.log(data);
+
                                     if (product.views.length === 0) {
                                         create_objects_array(data);
                                     }
@@ -655,7 +650,7 @@
                                     }
                                 },
                                 error: function (data) {
-                                    console.log(data);
+
                                 }
                             });
 
@@ -671,10 +666,7 @@
 
                     function find_in_custom(p_id) {
                         var custom = null;
-                        console.log(product.views.length);
                         for (var i = 0; i < product.views.length; i++) {
-                            console.log(product.views[i].picture_id);
-                            console.log(p_id);
                             if (product.views[i].picture_id.toString() === p_id.toString()) {
                                 custom = product.views[i];
                             }
@@ -732,7 +724,6 @@
                         for (var i = 0; i < data.length; i++) {
                             product.views.push(new ModifiedView(product.data['id'], data[i]['id'], data[i]['color_id']))
                         }
-                        console.log(product);
                     }
 
                     function review_cp(id, color) {
@@ -747,7 +738,7 @@
                                 product_cart_id: id
                             },
                             success: function (data) {
-                                console.log(data);
+
                                 product.data = data['source_data'];
                                 product.product_id = data['source_data']['id'];
                                 product.size_id = data['size']['id'];
@@ -786,13 +777,12 @@
 
                                     },
                                     error: function (data) {
-                                        console.log(data);
+
                                     }
                                 });
-                                console.log(product);
                             },
                             error: function (data) {
-                                console.log(data);
+
                             }
                         });
 
@@ -825,7 +815,7 @@
                         dataType: 'json',
                         data: {},
                         success: function (data) {
-                            console.log(data);
+
 
                             taxes = data['tax_array'];
                             prices = data['cost_array'];
@@ -873,7 +863,6 @@
 
                                     var id = 'cart' + product['id'];
                                     var container = $('#' + id);
-                                    console.log(container);
                                     container.height(container.width());
 
                                     var stage = new Konva.Stage({
@@ -928,7 +917,7 @@
                                                 dataType: 'json',
                                                 data: {},
                                                 success: function (data) {
-                                                    console.log(data);
+
                                                     var logo = data.logos[0];
                                                     if (logo) {
                                                         var image = getImage(data.pictures, logo.product_image_id);
@@ -951,7 +940,7 @@
                                                     }
                                                 },
                                                 error: function (data) {
-                                                    console.log(data);
+
                                                 }
                                             });
                                         }
@@ -966,7 +955,7 @@
                                             imageObj1.src = data.picture;
                                         },
                                         error: function (data) {
-                                            console.log(data);
+
                                         }
                                     });
                                 } else {
@@ -1025,7 +1014,7 @@
                             }
                         },
                         error: function (data) {
-                            console.log(data);
+
                         }
                     });
 

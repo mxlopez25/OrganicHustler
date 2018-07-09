@@ -485,7 +485,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -512,7 +512,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -539,7 +539,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -561,7 +561,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -583,7 +583,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -605,7 +605,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -627,7 +627,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             })
@@ -713,9 +713,6 @@
 
             document.getElementById('loading_a').classList.remove('hidden');
 
-            console.log('YEAH YOU ARE??>>>!!');
-            console.log(PREFERRED_COLOR);
-
             $.ajax({
                 url: '/product/add/preset',
                 type: 'POST',
@@ -734,7 +731,7 @@
                     window.location.reload();
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             });
@@ -766,7 +763,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                     document.getElementById('loading_a').classList.remove('hidden');
                 }
             });
@@ -777,7 +774,6 @@
             var preferred_color;
             for (var i = 0; i < COLORS_PICTURES.length; i++) {
                 var color = COLORS_PICTURES[i].color;
-                console.log(color.id);
                 if (color.id === parseInt(select.value)) {
                     preferred_color = COLORS_PICTURES[i];
                     break;
@@ -803,7 +799,6 @@
             var preferred_color;
             for (var i = 0; i < COLORS_PICTURES.length; i++) {
                 var color = COLORS_PICTURES[i].color;
-                console.log(color.id);
                 if (color.id === parseInt(select.value)) {
                     preferred_color = COLORS_PICTURES[i];
                     break;
@@ -822,7 +817,6 @@
                 }
                 photo_list.innerHTML = photo_list.innerHTML + '<option value="' + picture.data.id + '">' + picture.data.picture_file_name + '</option>';
                 emblem_photo_list[picture.data.id] = picture.url[1];
-                console.log(emblem_photo_list);
             }
 
             BASE_IMAGE_EMBLEM.src = default_picture.url[1];
@@ -852,7 +846,6 @@
             modal.style.display = "block";
             dim_back.style.display = "block";
             actual_row_id = id;
-            console.log(type);
 
 
             var close_icon = '\n' +
@@ -911,7 +904,7 @@
                             product_id: id
                         },
                         success: function (data) {
-                            console.log(data);
+
                             LOGOS = data;
                             var html = '';
                             for (var l = 0; l < data.length; l++) {
@@ -921,7 +914,7 @@
                             document.getElementById('logos_holder').innerHTML = html;
 
                         }, error: function (data) {
-                            console.log(data);
+
                         }
                     });
 
@@ -1006,9 +999,9 @@
                             LOGO_IMAGE_H.src = '';
                             LAYER.draw();
 
-                            console.log(data);
+
                         }, error: function (data) {
-                            console.log(data);
+
                         }
                     });
 
@@ -1059,7 +1052,6 @@
                                 }
                                 photo_list.innerHTML = photo_list.innerHTML + '<option value="' + picture.data.id + '">' + picture.data.picture_file_name + '</option>';
                                 emblem_photo_list[picture.data.id] = picture.url[1];
-                                console.log(emblem_photo_list);
                             }
 
                             STAGE = new Konva.Stage({
@@ -1102,9 +1094,9 @@
                             EMBLEM_IMAGE_H.src = '';
                             LAYER.draw();
 
-                            console.log(data);
+
                         }, error: function (data) {
-                            console.log(data);
+
                         }
                     });
 
@@ -1136,7 +1128,7 @@
                     document.getElementById('loading').classList.add('hidden');
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             })
         }
@@ -1156,7 +1148,7 @@
                     window.location.reload(false);
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             })
         }
@@ -1176,7 +1168,7 @@
                     window.location.reload(true);
                 },
                 error: function (data) {
-                    console.log(data);
+
                 }
             })
         }
@@ -1235,7 +1227,7 @@
                                 window.location.reload(true);
                             },
                             error: function (data) {
-                                console.log(data);
+
                             }
                         });
                     });
@@ -1331,7 +1323,7 @@
             }, success: function (data) {
                 location.reload(true);
             }, error: function (data) {
-                console.log(data);
+
             }
         })
     }

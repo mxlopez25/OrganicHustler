@@ -20,7 +20,7 @@
             dataType: 'json',
             data: {},
             success: function (data) {
-                console.log(data);
+
 
                 taxes = data['tax_array'];
                 prices = data['cost_array'];
@@ -60,7 +60,6 @@
 
                         var id = 'cart' + product['id'];
                         var container = $('#' + id);
-                        console.log(container);
                         container.height(container.width());
 
                         var stage = new Konva.Stage({
@@ -115,7 +114,7 @@
                                     dataType: 'json',
                                     data: {},
                                     success: function (data) {
-                                        console.log(data);
+
                                         var logo = data.logos[0];
                                         if (logo) {
                                             var image = getImage(data.pictures, logo.product_image_id);
@@ -138,7 +137,7 @@
                                         }
                                     },
                                     error: function (data) {
-                                        console.log(data);
+
                                     }
                                 });
                             }
@@ -153,7 +152,7 @@
                                 imageObj1.src = data.picture;
                             },
                             error: function (data) {
-                                console.log(data);
+
                             }
                         });
                     }
@@ -203,7 +202,7 @@
                 }
             },
             error: function (data) {
-                console.log(data);
+
             }
         });
 

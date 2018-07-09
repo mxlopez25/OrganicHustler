@@ -126,7 +126,6 @@
                     logoGroup.on('dragend', function () {
                         position.x = logoGroup.x();
                         position.y = logoGroup.y();
-                        console.log(position);
                     });
 
                     anchor_1.on('dragend', function () {
@@ -135,7 +134,6 @@
 
                         position.width = anchor_2.getX() - anchor_1.getX();
                         position.height = anchor_4.getY() - anchor_1.getY();
-                        console.log(position);
                     });
 
                     anchor_2.on('dragend', function () {
@@ -144,7 +142,6 @@
 
                         position.width = anchor_2.getX() - anchor_1.getX();
                         position.height = anchor_4.getY() - anchor_1.getY();
-                        console.log(position);
                     });
 
                     anchor_3.on('dragend', function () {
@@ -153,7 +150,6 @@
 
                         position.width = anchor_2.getX() - anchor_1.getX();
                         position.height = anchor_4.getY() - anchor_1.getY();
-                        console.log(position);
                     });
 
                     anchor_4.on('dragend', function () {
@@ -162,7 +158,6 @@
 
                         position.width = anchor_2.getX() - anchor_1.getX();
                         position.height = anchor_4.getY() - anchor_1.getY();
-                        console.log(position);
                     });
 
                     var imageObj = new Image();
@@ -284,7 +279,6 @@
                       positions[pos].cost = parseFloat(document.getElementById(positions[pos].element_id).getElementsByTagName('input')[0].value);
                       positions[pos].name = document.getElementById(positions[pos].element_id).getElementsByTagName('input')[1].value;
                   } catch (e) {
-                      console.log(e)
                   }
               }
 
@@ -332,7 +326,6 @@
                           formData.append("id_moltin", '<%= @product_id %>');
                       });
                       this.on("success", function (files, response) {
-                          console.log(response);
                           image_emblem = [response['id'], response['url']];
                       });
                   }

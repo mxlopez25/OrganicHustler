@@ -135,7 +135,7 @@
                         var table_body = document.getElementById('list-to-m');
                         var text = '';
                         for (var i = 0; i < data.length; i++) {
-                            console.log(data[i]);
+
                             text = text + '<tr id="product-row">\n' +
                                 '            <td>\n' +
                                 '              <input id="select-obj" type="radio" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
@@ -163,7 +163,6 @@
                 });
                 box.checked = true;
                 item = product;
-                console.log(item);
             }
 
             function show_selection() {
@@ -300,7 +299,7 @@
               dataType: 'JSON',
               data: {},
               success: function(data){
-                  console.log(data);
+
                   var total = 0;
 
                   for (var i = 0; i < data.length; i++){
@@ -323,7 +322,7 @@
 
               },
               error: function(data){
-                  console.log(data);
+
               }
           });
 
@@ -344,7 +343,7 @@
               dataType: 'JSON',
               data: {},
               success: function(data){
-                  console.log(data);
+
 
                   for (var i = 0; i < data.length; i++){
                       data_visits.addRow(data[i]);
@@ -364,7 +363,7 @@
 
               },
               error: function(data){
-                  console.log(data);
+
               }
           });
       }
@@ -386,7 +385,7 @@
               dataType: 'JSON',
               data: {},
               success: function(data){
-                  console.log(data);
+
 
                   for (var i = 0; i < data.length; i++){
                       data_money.addRow(data[i]);
@@ -435,7 +434,7 @@
                   document.getElementById('loading_b').classList.add('hidden');
               },
               error: function(data){
-                  console.log(data);
+
               }
           });
       }
@@ -493,7 +492,7 @@
 
               },
               error: function(data){
-                  console.log(data);
+
               }
           });
       }

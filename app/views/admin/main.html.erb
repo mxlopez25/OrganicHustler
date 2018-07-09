@@ -262,11 +262,11 @@
                             value: CKEDITOR.instances.editor.getData()
                         },
                         success: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
@@ -290,11 +290,11 @@
                             value: item
                         },
                         success: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
@@ -313,11 +313,11 @@
                             value: (val === "false") ? "true" : "false"
                         },
                         success: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data);
+
                             window.location.reload(true);
                             document.getElementById('loading_a').classList.add('hidden');
                         }
@@ -337,11 +337,11 @@
                             value: document.getElementById(id).value
                         },
                         success: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data);
+
                             window.location.reload(true);
                             document.getElementById('loading_a').classList.add('hidden');
                         }
@@ -382,7 +382,7 @@
                       history_loader.innerHTML = histories_entries;
                     },
                     error: function(data){
-                      console.log(data);
+
                     }
                   })
                 }
@@ -443,7 +443,7 @@
                             var table_body = document.getElementById('list-to-m');
                             var text = '';
                             for (var i = 0; i < data.length; i++) {
-                                console.log(data[i]);
+
                                 text = text + '<tr id="product-row">\n' +
                                     '            <td>\n' +
                                     '              <input id="select-obj" type="radio" name="select-obj" autocomplete="off" onclick="add_item(this, \'' + data[i]['id'] + '\')">\n' +
@@ -471,7 +471,6 @@
                     });
                     box.checked = true;
                     item = product;
-                    console.log(item);
                 }
 
                 function show_selection() {
@@ -612,11 +611,11 @@
                             value: ids
                         },
                         success: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         },
                         error: function (data) {
-                            console.log(data);
+
                             document.getElementById('loading_a').classList.add('hidden');
                         }
                     })
@@ -650,7 +649,7 @@
                             var table_body = document.getElementById('list-to-m_2');
                             var text = '';
                             for (var i = 0; i < data.length; i++) {
-                                console.log(data[i]);
+
                                 text = text + '<tr id="product-row">\n' +
                                     '            <td>\n' +
                                     '              <input id="select-obj" type="checkbox" name="select-obj" autocomplete="off" onclick="add_item_s(\'' + data[i]['id'] + '\')">\n' +

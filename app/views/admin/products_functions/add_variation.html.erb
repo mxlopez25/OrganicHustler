@@ -23,7 +23,6 @@
               for (var variation in data) {
                   if (data.hasOwnProperty(variation)) {
 
-                      console.log(data[variation]);
 
                       if (data[variation][1]['title'] === 'Color') {
                           variations[2] = data[variation];
@@ -294,7 +293,6 @@
               function changePic(url, id) {
 
                   document.getElementById('id_pic').value = id;
-                  console.log(url, id);
                   imageObjL.src = url;
                   layerW.draw();
 

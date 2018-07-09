@@ -266,7 +266,6 @@
           margin_left_b.on('dragmove', function () {
               margin_left.width(margin_left_b.x() + region_left);
               layer.draw();
-              console.log(margin_left_b.x())
           });
 
           //top margin
@@ -306,7 +305,6 @@
           margin_top_b.on('dragmove', function () {
               margin_top.height(margin_top_b.y() + region_top);
               layer.draw();
-              console.log(margin_top_b.y())
           });
 
           //margin right
@@ -353,7 +351,6 @@
               margin_right.width(x+region_right-margin_right.x());
               margin_right.x(x+margin_right_b.x());
               layer.draw();
-              console.log(margin_right_b.x())
           });
 
           //margin bottom
@@ -399,7 +396,6 @@
           margin_bottom_b.on('dragmove', function () {
               margin_bottom.height(y+region_bottom-margin_bottom.y());
               margin_bottom.y(y+margin_bottom_b.y());
-              console.log(margin_bottom_b.y());
               layer.draw();
           });
 
@@ -516,7 +512,7 @@
               },
               dataType: "html",
               success: function (data) {
-                  console.log(data);
+
                   $("#container-image").html(data);
               }
           });
