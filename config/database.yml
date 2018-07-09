@@ -27,7 +27,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   port: 3306
-  database: OrganicHustler
+  database: OrganicHustler_test
   username: root
   password: admin
   adapter: mysql2

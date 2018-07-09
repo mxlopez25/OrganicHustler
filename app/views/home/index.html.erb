@@ -154,19 +154,9 @@
       Story</p>
     <p class="text_light" style="font-style: italic; line-height: 2.4vw; margin-bottom: 5vw; font-size: 2.3vw; width: 32vw; margin-left: -16vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe.gsub('<p>', '').gsub('</p>', '').html_safe %></p>
     <p class="text_light" style="font-size: 4vw; width: 32vw; margin-left: -15vw; text-align: center">
-      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> onclick="play_video_1()" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
+      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> data-toggle="modal" data-target="#video_modal" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
   </div>
 </div>
-
-<script>
-
-    function play_video_1() {
-        document.getElementById('video-player').innerHTML = '<video controls id="video" src="<%= ConfigurationWeb.find(22).video.url %>"></video>';
-        var video = document.getElementById('video');
-        video.play();
-    }
-
-</script>
 
 <div class="container mobilenot">
   <div style="position: relative">
@@ -306,16 +296,8 @@
       Story</p>
     <p class="text_light" style="font-style: italic; line-height: 1.2vw; margin-bottom: 2.5vw; font-size: 1.15vw; width: 16vw; margin-left: -8vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe.gsub('<p>', '').gsub('</p>', '').html_safe %></p>
     <p class="text_light" style="font-size: 2vw; width: 16vw; margin-left: -7.5vw; text-align: center">
-      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> onclick="play_video_2()" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
+      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> data-toggle="modal" data-target="#video_modal" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
   </div>
-  <script>
-
-      function play_video_2() {
-          document.getElementById('video-player-desk').innerHTML = '<video controls style="position: absolute; top: 0; bottom: 0; margin: auto;" id="video_desk" src="<%= ConfigurationWeb.find(22).video.url %>"></video>';
-          var video = document.getElementById('video_desk');
-          video.play();
-      }
-  </script>
 </div>
 
 <div class="container" style="margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center; position: relative;">
@@ -409,3 +391,13 @@
         replicate_cart_product('<%= @cart_product_shared %>');
     }
 </script>
+
+<!-- Video modal -->
+
+<div class="modal" id="video_modal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel">
+  <video style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; margin: auto; max-width: 1250px" controls id="video" src="<%= ConfigurationWeb.find(22).video.url %>"></video>
+    <button style="background-color: white; border-radius: 50%; width: 50px; height: 50px; position: absolute; padding: 0; top: 10%; right: 10%;" type="button" data-dismiss="modal" aria-label="Close">
+
+      <span style="font-size: 50px;/* margin-top: -10px; */top: 0;bottom:  0;margin:  auto;width: 80;height: 80px;position:  absolute;right:  0;left:  0;" style="font-size: 50px;" aria-hidden="true">&times;</span>
+    </button>
+</div>
