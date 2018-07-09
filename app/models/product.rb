@@ -81,4 +81,12 @@ class Product < ApplicationRecord
     [products, total]
   end
 
+  def simple_info
+    {
+      id: id,
+      product_image_id: colors.try(:first).try(:product_images).try(:first).picture(:medium, format: :webp),
+      title: title
+    }
+  end
+
 end

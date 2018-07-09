@@ -28,15 +28,78 @@
  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>-->
 
-  <%= javascript_include_tag 'jquery.min.js' %>
-  <%= stylesheet_link_tag 'bootstrap.css' %>
-  <%= javascript_include_tag 'bootstrap.js' %>
-  <%= javascript_include_tag 'jquery.jcarousel' %>
+  <%= javascript_include_tag 'jquery-3.3.1.min.js' %>
+  <%= stylesheet_link_tag 'bootstrap.min.css' %>
+  <%= javascript_include_tag 'bootstrap.min.js' %>
   <%= stylesheet_link_tag 'home' %>
 
 </head>
 
 <script>
+
+    function reload_jcarousel() {
+        (function (window, $, undefined) {
+            var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
+            for (var i = 0; i < plugins.length; i++) {
+                var plugin = plugins[i];
+                var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
+                $.fn[reload_plugin] = (function (plugin) {
+                    return function () {
+                        return this.each(function () {
+                            if (!$(this).data(plugin)) {
+                                console.log('Element is not an instance of ' + plugin);
+                                return false;
+                            }
+                            var _options = $(this).data(plugin)._options;
+                            $(this).data(plugin, {}).off()[plugin](_options);
+                        });
+                    };
+                })(plugin);
+            }
+        })(this, jQuery);
+    }
+
+    function setup_n_1() {
+        $('#quick_view').on('click', function (e) {
+            if (e.target === this)
+                close_modal();
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target === modal_quick) {
+                product.remove();
+                modal_quick.style.display = "none";
+                $("body").removeClass("modal-open");
+                $('body').css('overflow', 'auto');
+                $('body').css('position', 'relative');
+                OVERALL_MODE = false;
+            }
+        };
+    }
+
+    function position_card(a) {
+        a = a === 15 ? a : 0;
+        var coords = getCoords(document.getElementById('cart_ic_2'));
+        var bubble = document.getElementById('bubble');
+        if ($(window).width() < 768) {
+            bubble.style.top = 0;
+            bubble.style.left = 0;
+        } else {
+            bubble.style.top = '38px';
+            bubble.style.left = (coords.left - 380 + a) + 'px';
+        }
+    }
+
+    function setup_n_2() {
+        $(".modal").on("shown.bs.modal", function () {
+            $(".modal-backdrop").remove();
+            fitStageIntoParentContainer_we_cart();
+        });
+
+        window.addEventListener('resize', position_card);
+        position_card(15);
+    }
 
     function loadScript(src, callback)
     {
@@ -48,7 +111,6 @@
         s.type = 'text/javascript';
         s.src = src;
         s.onload = s.onreadystatechange = function() {
-            console.log( this.readyState ); //uncomment this line to see which ready states are called.
             if ( !r && (!this.readyState || this.readyState == 'complete') )
             {
                 r = true;
@@ -59,8 +121,22 @@
         t.parentNode.insertBefore(s, t);
     }
 
-    loadScript('/assets/konva.min.js');
-    loadScript('/assets/sweetalert.min.js');
+    loadScript('/assets/konva.min.js', function (data) {
+        console.log('loaded konva');
+        loadScript('/assets/jquery.jcarousel.min.js', function (data) {
+            console.log('loaded jcarousel');
+
+            enter_key_setup();
+            reload_jcarousel();
+            get_cart_setup();
+            setup_n_1();
+            setup_n_2();
+
+            loadScript('/assets/sweetalert.min.js', function (data) {
+                console.log('loaded sweetalert');
+            });
+        });
+    });
 
 </script>
 
@@ -239,7 +315,7 @@
       </div>
 
       <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="/"><img width="66" src="/images/logo"></a>
+        <a class="navbar-brand brand" href="/"><img width="66" src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
         <img data-toggle="modal" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="cart_ic" src="/images/bag_icon">
         <span class="badge" style="background-color: #89c03e; margin-left: -32px; margin-top: 20px"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
       </div>
@@ -286,17 +362,19 @@
           <img data-toggle="modal" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic" src="/images/bag_icon">
           <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
           <script>
-              $(document).keyup(function (e) {
-                  var search_f = $("#search-input");
-                  if (search_f.is(":focus") && (e.keyCode === 13)) {
-                      location.href = '/catalog?search=' + search_f.val();
-                  }
+            function enter_key_setup() {
+                $(document).keyup(function (e) {
+                    var search_f = $("#search-input");
+                    if (search_f.is(":focus") && (e.keyCode === 13)) {
+                        location.href = '/catalog?search=' + search_f.val();
+                    }
 
-                  var search_2 = $("#search-bot");
-                  if (search_2.is(":focus") && (e.keyCode === 13)) {
-                      location.href = '/catalog?search=' + search_2.val();
-                  }
-              });
+                    var search_2 = $("#search-bot");
+                    if (search_2.is(":focus") && (e.keyCode === 13)) {
+                        location.href = '/catalog?search=' + search_2.val();
+                    }
+                });
+            }
           </script>
         </div>
 
@@ -314,7 +392,7 @@
         <% end %>
         </div>
 
-        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img width="66" src="/images/logo"></a>
+        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img width="66" src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
 
       </div>
 
@@ -471,160 +549,140 @@
     var container_lts_cart = document.getElementById('container_lts_cart');
     var container_ind_cart = document.getElementById('container_ind_cart');
 
-    $.ajax({
-        url: '/bag_items',
-        type: 'GET',
-        dataType: 'json',
-        data: {},
-        success: function (data) {
-            console.log(data);
-
-            taxes_cart = data['tax_array'];
-            prices_cart = data['cost_array'];
-            var discount_rate = parseFloat(data['discount']);
-
-            for (var hj = 0; hj < data['products'].length; hj++) {
-                container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="' + hj + '" class="' + ((hj === 0) ? 'active' : '') + '"></li>'
-            }
-
-            create_entry_cart(0, data['products'].length);
-
-            function create_entry_cart(i, lim) {
-                if (i < lim) {
-                    var product = data['products'][i];
-
-
-                    var pre = '<div class="item-checkout item ' + ((i === 0) ? 'active' : '') + '" style="margin-top: 20px; padding-bottom: 20px; overflow: hidden;">\n' +
-                        '        <div style="float: left; width: 100%; position: relative">\n' +
-                        '          <div class="cart_item_modal" id="cart_' + product['id'] + '" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto;"></div>\n' +
-                        '        </div>\n' +
-                        '        <div style="float: right; width: 100%; position: relative; text-align: center">\n' +
-                        '           <p class="text-uppercase text_light_20">' + product['data']['title'] + '</p>\n' +
-                        '           <p class="text_light_pink" style="font-size: 20px; height: 35px; line-height: 35px;">' + product['price_sgl'] + '</p>\n' +
-                        '           <a onclick="edit_catalog(\'' + product['id'] + '\')" style="color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                        '        </div>\n' +
-                        '      </div>';
-
-
-                    var div = document.createElement('div');
-                    div.innerHTML = pre;
-
-                    container_lts_cart.appendChild(div.childNodes[0]);
-
-                    var id = 'cart_' + product['id'];
-                    var container = $('#' + id);
-                    console.log(container);
-                    container.height(container.width());
-
-                    var stage = new Konva.Stage({
-                        container: id,
-                        width: stageWidth_cart,
-                        height: stageHeight_cart,
-                        preventDefault: false
-                    });
-                    var layer = new Konva.Layer();
-                    stage.add(layer);
-                    stages_cart.push(stage);
-
-                    var baseImg = new Konva.Image({
-                        width: stageWidth_cart,
-                        height: stageHeight_cart,
-                        draggable: false,
-                        preventDefault: false
-                    });
-                    layer.add(baseImg);
-
-                    var search_logo = true;
-
-                    var imageObj1 = new Image();
-                    imageObj1.onload = function () {
-                        baseImg.image(imageObj1);
-
-                        if (search_logo) {
-                            var baseLogo = new Konva.Image({
-                                x: 0,
-                                y: 0,
-                                width: container.width(),
-                                height: container.height(),
-                                draggable: false,
-                                preventDefault: false
-                            });
-                            layer.add(baseLogo);
-
-                            var logoBase = new Image();
-                            logoBase.onload = function () {
-                                baseLogo.image(logoBase);
-                                baseLogo.setWidth(this.width);
-                                baseLogo.setHeight(this.height);
-
-                                i += 1;
-                                create_entry_cart(i, lim);
-                                layer.draw();
-                            };
-
-                            $.ajax({
-                                url: '/get_cart_item?product_cart_id=' + product['id'],
-                                type: 'GET',
-                                dataType: 'json',
-                                data: {},
-                                success: function (data) {
-                                    console.log(data);
-                                    var logo = data.logos[0];
-                                    if (logo) {
-                                        var image = getImage(data.pictures, logo.product_image_id);
-                                        if (image) {
-                                            search_logo = false;
-                                            imageObj1.src = image.url;
-                                            logoBase.src = logo.logo_url;
-                                            baseLogo.setX(logo.x);
-                                            baseLogo.setY(logo.y);
-                                            baseLogo.scale({
-                                                x: logo.multiplexer,
-                                                y: logo.multiplexer
-                                            });
-
-                                        }
-                                    } else {
-                                        i += 1;
-                                        create_entry_cart(i, lim);
-                                        layer.draw();
-                                    }
-                                },
-                                error: function (data) {
-                                    console.log(data);
-                                }
-                            });
-                        }
-                    };
-
-                    $.ajax({
-                        url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {},
-                        success: function (data) {
-                            imageObj1.src = data.picture;
-                        },
-                        error: function (data) {
-                            console.log(data);
-                        }
-                    });
-                } else {
-                    window.addEventListener('resize', fitStageIntoParentContainer_we_cart);
-
-                    var cost = 0;
-                    for (var t = 0; t < prices_cart.length; t++) {
-                        cost += parseFloat(prices_cart[t]);
-                    }
-
-                    document.getElementById('sub_total_cart').innerText = '$' + cost.toFixed(2);
+    function get_cart_setup(){
+        $.ajax({
+            url: '/bag_items',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                console.log(data);
+                taxes_cart = data['tax_array'];
+                prices_cart = data['cost_array'];
+                var discount_rate = parseFloat(data['discount']);
+                for (var hj = 0; hj < data['products'].length; hj++) {
+                    container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="' + hj + '" class="' + ((hj === 0) ? 'active' : '') + '"></li>'
                 }
+                create_entry_cart(0, data['products'].length);
+                function create_entry_cart(i, lim) {
+                    if (i < lim) {
+                        var product = data['products'][i];
+                        var pre = '<div class="item-checkout item ' + ((i === 0) ? 'active' : '') + '" style="margin-top: 20px; padding-bottom: 20px; overflow: hidden;">\n' +
+                            '        <div style="float: left; width: 100%; position: relative">\n' +
+                            '          <div class="cart_item_modal" id="cart_' + product['id'] + '" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto;"></div>\n' +
+                            '        </div>\n' +
+                            '        <div style="float: right; width: 100%; position: relative; text-align: center">\n' +
+                            '           <p class="text-uppercase text_light_20">' + product['data']['title'] + '</p>\n' +
+                            '           <p class="text_light_pink" style="font-size: 20px; height: 35px; line-height: 35px;">' + product['price_sgl'] + '</p>\n' +
+                            '           <a onclick="edit_catalog(\'' + product['id'] + '\')" style="color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                            '        </div>\n' +
+                            '      </div>';
+                        var div = document.createElement('div');
+                        div.innerHTML = pre;
+                        container_lts_cart.appendChild(div.childNodes[0]);
+                        var id = 'cart_' + product['id'];
+                        var container = $('#' + id);
+                        console.log(container);
+                        container.height(container.width());
+                        var stage = new Konva.Stage({
+                            container: id,
+                            width: stageWidth_cart,
+                            height: stageHeight_cart,
+                            preventDefault: false
+                        });
+                        var layer = new Konva.Layer();
+                        stage.add(layer);
+                        stages_cart.push(stage);
+                        var baseImg = new Konva.Image({
+                            width: stageWidth_cart,
+                            height: stageHeight_cart,
+                            draggable: false,
+                            preventDefault: false
+                        });
+                        layer.add(baseImg);
+                        var search_logo = true;
+                        var imageObj1 = new Image();
+                        imageObj1.onload = function () {
+                            baseImg.image(imageObj1);
+                            if (search_logo) {
+                                var baseLogo = new Konva.Image({
+                                    x: 0,
+                                    y: 0,
+                                    width: container.width(),
+                                    height: container.height(),
+                                    draggable: false,
+                                    preventDefault: false
+                                });
+                                layer.add(baseLogo);
+                                var logoBase = new Image();
+                                logoBase.onload = function () {
+                                    baseLogo.image(logoBase);
+                                    baseLogo.setWidth(this.width);
+                                    baseLogo.setHeight(this.height);
+                                    i += 1;
+                                    create_entry_cart(i, lim);
+                                    layer.draw();
+                                };
+                                $.ajax({
+                                    url: '/get_cart_item?product_cart_id=' + product['id'],
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    data: {},
+                                    success: function (data) {
+                                        console.log(data);
+                                        var logo = data.logos[0];
+                                        if (logo) {
+                                            var image = getImage(data.pictures, logo.product_image_id);
+                                            if (image) {
+                                                search_logo = false;
+                                                imageObj1.src = image.url;
+                                                logoBase.src = logo.logo_url;
+                                                baseLogo.setX(logo.x);
+                                                baseLogo.setY(logo.y);
+                                                baseLogo.scale({
+                                                    x: logo.multiplexer,
+                                                    y: logo.multiplexer
+                                                });
+                                            }
+                                        } else {
+                                            i += 1;
+                                            create_entry_cart(i, lim);
+                                            layer.draw();
+                                        }
+                                    },
+                                    error: function (data) {
+                                        console.log(data);
+                                    }
+                                });
+                            }
+                        };
+                        $.ajax({
+                            url: '/catalog/product/color/main_image?color_id=' + product['color']['id'],
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {},
+                            success: function (data) {
+                                imageObj1.src = data.picture;
+                            },
+                            error: function (data) {
+                                console.log(data);
+                            }
+                        });
+                    } else {
+                        window.addEventListener('resize', fitStageIntoParentContainer_we_cart);
+                        var cost = 0;
+                        for (var t = 0; t < prices_cart.length; t++) {
+                            cost += parseFloat(prices_cart[t]);
+                        }
+                        document.getElementById('sub_total_cart').innerText = '$' + cost.toFixed(2);
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data);
             }
-        },
-        error: function (data) {
-            console.log(data);
-        }
-    });
+        });
+    }
 
     function fitStageIntoParentContainer_we_cart() {
         $('.cart_item_modal').each(function (index) {
@@ -856,27 +914,6 @@
 </div>
 <script>
 
-    //reload jcarousel
-    (function (window, $, undefined) {
-        var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
-        for (var i = 0; i < plugins.length; i++) {
-            var plugin = plugins[i];
-            var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
-            $.fn[reload_plugin] = (function (plugin) {
-                return function () {
-                    return this.each(function () {
-                        if (!$(this).data(plugin)) {
-                            console.log('Element is not an instance of ' + plugin);
-                            return false;
-                        }
-                        var _options = $(this).data(plugin)._options;
-                        $(this).data(plugin, {}).off()[plugin](_options);
-                    });
-                };
-            })(plugin);
-        }
-    })(this, jQuery);
-
     var default_modal = document.getElementById('modal-content-center').cloneNode(true);
     var view_1 = document.getElementById('view_1').cloneNode(true);
     var view_2 = document.getElementById('view_2').cloneNode(true);
@@ -887,24 +924,6 @@
     // Get the modal
     var modal_quick = document.getElementById('quick_view');
     var modal_emblem = document.getElementById('modal-content-quick-m');
-
-    $('#quick_view').on('click', function (e) {
-        if (e.target === this)
-            close_modal();
-
-    });
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target === modal_quick) {
-            product.remove();
-            modal_quick.style.display = "none";
-            $("body").removeClass("modal-open");
-            $('body').css('overflow', 'auto');
-            $('body').css('position', 'relative');
-            OVERALL_MODE = false;
-        }
-    };
 
     function close_modal() {
         product.remove();
@@ -2752,30 +2771,6 @@
     </div>
   </div>
 </div>
-
-<script>
-    $(".modal").on("shown.bs.modal", function () {
-        $(".modal-backdrop").remove();
-        fitStageIntoParentContainer_we_cart();
-    });
-
-    function position_card(a) {
-        a = a === 15 ? a : 0;
-        var coords = getCoords(document.getElementById('cart_ic_2'));
-        var bubble = document.getElementById('bubble');
-        if ($(window).width() < 768) {
-            bubble.style.top = 0;
-            bubble.style.left = 0;
-        } else {
-            bubble.style.top = '38px';
-            bubble.style.left = (coords.left - 380 + a) + 'px';
-        }
-    }
-
-
-    window.addEventListener('resize', position_card);
-    position_card(15);
-</script>
 
 </body>
 

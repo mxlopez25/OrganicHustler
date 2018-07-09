@@ -1,6 +1,11 @@
+
 require 'ffmpeg'
 require 'cocaine'
+
+# Modifies CWC
 class ConfigurationWebsController < ApplicationController
+
+  skip_before_action :verify_authenticity_token
 
   def update
     co = ConfigurationWeb.find(params[:id] ||  params[:configuration_web][:id])

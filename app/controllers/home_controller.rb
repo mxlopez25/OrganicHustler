@@ -181,7 +181,7 @@ class HomeController < ApplicationController
 
   def get_color_images_main
     picture = (Color.find params['color_id']).product_images.where(main: true).first
-    render json: ({data: picture, picture: picture.picture}).to_json
+    render json: ({data: picture, picture: picture.picture(:medium, format: :webp)}).to_json
   end
 
   def get_main_image
@@ -665,11 +665,10 @@ class HomeController < ApplicationController
 
     products = []
     y.each do |p|
-      products << Product.find(p)
+      products << Product.find(p).simple_info
     end
 
-    render json: products.to_json, code: 200
+    render json: products, code: 200
   end
-
 
 end
