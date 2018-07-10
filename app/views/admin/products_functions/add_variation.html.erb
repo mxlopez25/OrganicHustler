@@ -74,7 +74,7 @@
                                   '<% get_gallery(@product_id).pictures.all.each do |logo| %>' +
                                   '<% p logo %>' +
                                   '<div class="items-logo-container">' +
-                                  '<img onclick="changePic(\'<%= logo.image.url %>\', \'<%= logo.id %>\')" src="<%= logo.image.url(:thumb) %>" alt="" height="30px">' +
+                                  '<img onclick="changePic(\'<%= logo.image.url %>\', \'<%= logo.id %>\')" src="<%= logo.image.url(:thumb) %>" alt="Product image" height="30px">' +
                                   '</div>' +
                                   '<% end %>' +
                                   '<% end %>' +

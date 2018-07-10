@@ -310,8 +310,8 @@
       </div>
 
       <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="/"><img class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
-        <img data-toggle="modal" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="js-lazy-image cart_ic" data-src="/images/bag_icon">
+        <a class="navbar-brand brand" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
+        <img data-toggle="modal" alt="Cart logo" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="js-lazy-image cart_ic" data-src="/images/bag_icon">
         <span class="badge" style="background-color: #89c03e; margin-left: -32px; margin-top: 20px"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
       </div>
     </div>
@@ -354,7 +354,7 @@
 
         <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
           <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
-          <img data-toggle="modal" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic js-lazy-image" data-src="/images/bag_icon">
+          <img data-toggle="modal" alt="Bag logo" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic js-lazy-image" data-src="/images/bag_icon">
           <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
           <script>
             function enter_key_setup() {
@@ -387,7 +387,7 @@
         <% end %>
         </div>
 
-        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
+        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
 
       </div>
 
@@ -1710,7 +1710,7 @@
                     carousel_jq.append('<li>' +
                         '<div id="emblem_btn_' + data[i].id + '" class="' + selected + '" onclick="load_data_emblems(' + data[i].id + ', ' + data[i].product_image_id + ')" style="cursor: pointer; margin: 4px; width: 100px; text-align: center">' +
                         '<div style=" background: #f1f1f1; padding-bottom: 10px;">' +
-                        '<img style="margin: 5px;" height="50px" src="' + data[i].url + '">' +
+                        '<img  alt="Product image" style="margin: 5px;" height="50px" src="' + data[i].url + '">' +
                         '<div><h5 style="width: 100%; font-weight: bold;">' + data[i].title + '</h5></div>' +
                         '</div>' +
                         '<div><h5 style="width: 100%; color: #c2a5b2">+$' + data[i].price + '</h5></div>' +
@@ -1847,7 +1847,7 @@
                     var carousel_jq = $('ul#container-logos');
 
                     for (var i = 0; i < data.length; i++) {
-                        carousel_jq.append('<li><img src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\', ' + current_pointer + ')"></li>');
+                        carousel_jq.append('<li><img alt="Product image" src="' + data[i].picture + '" style="height: 70px;" id="' + data[i].id + '" onclick="load_data_logos(\'' + data[i].id + '\', ' + current_pointer + ')"></li>');
                     }
 
                     var jcarouselSelector = '.jcarousel';
@@ -2779,7 +2779,7 @@
     <h4 onclick="location.href = '/catalog?brand=true&view=full%20collection'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
     <br>
 
-    <img class="js-lazy-image" data-src="/images/logo_sm" style="width: 60px;">
+    <img alt="Small web site logo" class="js-lazy-image" data-src="/images/logo_sm" style="width: 60px;">
 
     <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
 
@@ -2861,7 +2861,7 @@
       </div>
 
       <div>
-        <img class="js-lazy-image" data-src="/images/logo_sm" style="width: 30px; margin-top: 50px;">
+        <img alt="Small web site logo" class="js-lazy-image" data-src="/images/logo_sm" style="width: 30px; margin-top: 50px;">
         <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
 
       </div>

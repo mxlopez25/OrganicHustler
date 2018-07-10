@@ -211,7 +211,7 @@
                     var item = data[id];
                     html_items = html_items + '<div class="catalog-item" id="item' + item.id + '">' +
                         '<div onclick="open_quick(\'' + item.id + '\', 1)">'
-                        + '<img id="item_img_' + item.id + '" class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
+                        + '<img alt="Product image" id="item_img_' + item.id + '" class="img-con-item" style="margin-bottom: 10px" src="' + item.product_image_id + '">'
                         + '<h5 class="text-uppercase text_light" style="font-size: 16px; margin-bottom: 10px">' + item.title + '</h5>'
                         + '<h5 style="font-size: 16px; color: #ba97a6; font-family: CaviarDream, Helvetica, sans-serif; font-weight: 600">$' + parseFloat(Math.round(item.price * 100) / 100).toFixed(2) + '</h5>' +
                         '</div>'

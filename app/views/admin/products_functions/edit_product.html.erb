@@ -146,7 +146,7 @@
       <% product_i.logos.each do |logo| %>
           <div class="logo_row" style="overflow: hidden">
             <button onclick="remove_logo_row(this, <%= logo.id %>)" style="float: left; width: 10%; margin: 0;">-</button>
-            <img style="float: left; width: 15%; margin: 0;" src="<%= logo.picture(:thumb) %>" name="logo">
+            <img alt="Logo image" style="float: left; width: 15%; margin: 0;" src="<%= logo.picture(:thumb) %>" name="logo">
             <input disabled step="any" style="float: left; width: 74%; margin: 0;" type="number" value="<%= logo.price %>" placeholder="Price" name="price" id="price">
           </div>
       <% end %>
@@ -908,7 +908,7 @@
                             LOGOS = data;
                             var html = '';
                             for (var l = 0; l < data.length; l++) {
-                                html = html + '<img src="' + data[l].picture + '" style="width: 50px; float: left" onclick="set_logo(\'' + data[l].id + '\')" >'
+                                html = html + '<img alt="Product image" src="' + data[l].picture + '" style="width: 50px; float: left" onclick="set_logo(\'' + data[l].id + '\')" >'
                             }
 
                             document.getElementById('logos_holder').innerHTML = html;
@@ -1296,8 +1296,8 @@
       <% product_i.presets.each do |preset| %>
         <tr>
           <td><button onclick="remove_preset_row(this, '<%= preset.id %>')" style="width: 100%; float: left" class="btn btn-danger">-</button></td>
-          <td><img style="width: 50px; float: left;" src="<%= preset.logo.picture %>"></td>
-          <td><img style="width: 50px; float: left;" src="<%= preset.color_image.picture %>"></td>
+          <td><img alt="Logo picture" style="width: 50px; float: left;" src="<%= preset.logo.picture %>"></td>
+          <td><img alt="Base image" style="width: 50px; float: left;" src="<%= preset.color_image.picture %>"></td>
           <td><%= preset.multiplexer %></td>
           <td><%= preset.x %></td>
           <td><%= preset.y %></td>
@@ -1351,8 +1351,8 @@
     <% product_i.position_emblem_admins.each do |emblems| %>
 
           <td><button onclick="remove_emblem_row(this, '<%= emblems.id %>')" style="width: 100%; float: left" class="btn btn-danger">-</button></td>
-          <td><img style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>"></td>
-          <td><img style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>"></td>
+          <td><img alt="Emblem image" style="width: 50px; float: left;" src="<%= emblems.picture(:thumb) %>"></td>
+          <td><img alt="Emblem image" style="width: 50px; float: left;" src="<%= emblems.color_image.picture %>"></td>
           <td><%= emblems.title %></td>
           <td><%= emblems.price %></td>
           <td><%= emblems.multiplexer %></td>

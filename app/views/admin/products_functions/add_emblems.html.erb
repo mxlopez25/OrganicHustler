@@ -14,7 +14,7 @@
               <% base_image = get_product(@product_id)['images'][0]['url']['https'] %>
               <% Emblem.where(id_moltin: @product_id).each do |logo| %>
                   <div class="items-emblems-container" style="float: left; overflow: hidden; margin: 4px;">
-                    <img onclick="image_emblem = ['<%= logo['id'] %>', '<%= logo.picture.url %>']" src="<%= logo.picture.url(:thumb) %>" alt="" height="30px">
+                    <img alt="Logo image" onclick="image_emblem = ['<%= logo['id'] %>', '<%= logo.picture.url %>']" src="<%= logo.picture.url(:thumb) %>" alt="" height="30px">
                   </div>
               <% end %>
             </div>
