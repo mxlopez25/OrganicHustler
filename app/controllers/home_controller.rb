@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'rest_client'
 class HomeController < ApplicationController
@@ -7,11 +9,9 @@ class HomeController < ApplicationController
   skip_before_filter :verify_authenticity_token
   before_action :authenticate_user!, only: 'account'
 
-  def contact_us
-  end
+  def contact_us; end
 
-  def story
-  end
+  def story; end
 
   def index
 
@@ -42,26 +42,25 @@ class HomeController < ApplicationController
         end
       end
 
-      unless custom_view[:position_emblem_id].blank?
-        product.custom_emblems << CustomEmblem.create! do |ce|
-          ce.product_image_id = custom_view[:picture_id]
-          ce.color_id = custom_view[:color_id]
-          ce.position_emblem_admin_id = custom_view[:position_emblem_id]
-        end
+      next if custom_view[:position_emblem_id].blank?
+      product.custom_emblems << CustomEmblem.create! do |ce|
+        ce.product_image_id = custom_view[:picture_id]
+        ce.color_id = custom_view[:color_id]
+        ce.position_emblem_admin_id = custom_view[:position_emblem_id]
       end
     end
 
-    if product.custom_logos.length > 0
-      product.has_logo = true
+    product.has_logo = if !product.custom_logos.empty?
+      true
     else
-      product.has_logo = false
-    end
+      false
+                       end
 
-    if product.custom_emblems.length > 0
-      product.has_emblem = true
+    product.has_emblem = if !product.custom_emblems.empty?
+      true
     else
-      product.has_emblem = false
-    end
+      false
+                         end
 
     product.save!
     render text: product.id, status: :ok
@@ -74,10 +73,10 @@ class HomeController < ApplicationController
 
     variations_obj = {}
 
-    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{pr_id}/variations", {:Authorization => "Bearer #{HomeHelper.generate_token}"})
+    response = RestClient.get("https://#{Moltin::Config.api_host}/v1/products/#{pr_id}/variations", Authorization: "Bearer #{HomeHelper.generate_token}")
     result = JSON.parse(response.body)['result']
     result.each do |r|
-      variations_obj[(r['modifiers'][mod]['var_id'])] = [r['id'].eql?(actual_id), "#{r['id']}"]
+      variations_obj[(r['modifiers'][mod]['var_id'])] = [r['id'].eql?(actual_id), (r['id']).to_s]
     end
 
     render json: variations_obj.to_json
@@ -127,14 +126,14 @@ class HomeController < ApplicationController
           #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
     #{products_col ? 'INNER JOIN colors ON products.id = colors.product_id' : ''}
     #{products_mat ? 'INNER JOIN materials_products ON products.id = materials_products.product_id' : ''}
-          WHERE products.status = 1 #{products_cat ? 'AND category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : 'AND products.title LIKE \'%'+ (params[:search].to_s) +'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''} LIMIT #{12 * (params[:page].to_i - 1)}, 12"
+          WHERE products.status = 1 #{products_cat ? 'AND category_id = '+ products_cat.id.to_s : params[:search].blank? ? '' : 'AND products.title LIKE \'%'+params[:search].to_s+'%\'' } #{products_sty ? ' AND style_id = ' + products_sty.id.to_s : ''} #{products_col ? 'AND colors.title = \'' + products_col + '\'' : ''} #{products_mat ? ' AND material_id = ' + products_mat.id.to_s : ''} LIMIT #{12 * (params[:page].to_i - 1)}, 12"
 
     n_rows = 'SELECT FOUND_ROWS();'
 
     results = ActiveRecord::Base.connection.execute(sql)
-    total = ActiveRecord::Base.connection.execute(n_rows).each(:as => :hash)[0]
+    total = ActiveRecord::Base.connection.execute(n_rows).each(as: :hash)[0]
     products = []
-    results.each(:as => :hash) do |row|
+    results.each(as: :hash) do |row|
       products << row.with_indifferent_access
     end
 
@@ -181,11 +180,11 @@ class HomeController < ApplicationController
 
   def get_color_images_main
     picture = (Color.find params['color_id']).product_images.where(main: true).first
-    render json: ({data: picture, picture: picture.picture("medium_#{@browser}")}).to_json
+    render json: {data: picture, picture: picture.picture("medium_#{@browser}")}.to_json
   end
 
   def get_main_image
-    render json: ({src: (Product.find params[:pr_id]).colors.where(preferred: true).first.product_images.where(main: true).first.picture, id: params[:pr_id]}).to_json
+    render json: {src: (Product.find params[:pr_id]).colors.where(preferred: true).first.product_images.where(main: true).first.picture, id: params[:pr_id]}.to_json
   end
 
   def get_preset_logo
@@ -199,7 +198,7 @@ class HomeController < ApplicationController
     al.save!
     color = al.colors.where(preferred: true).first
     al.attributes.merge(main_color: color)
-    render :json => JSON::parse(al.to_json).merge({main_color: color}).to_json
+    render json: JSON.parse(al.to_json).merge(main_color: color).to_json
   end
 
   def catalog
@@ -209,9 +208,6 @@ class HomeController < ApplicationController
   def product
     @product = HomeHelper.get_product_by_id(params[:id])
     @parameters = params
-  end
-
-  def bag
   end
 
   def message_admin
@@ -224,10 +220,7 @@ class HomeController < ApplicationController
       @ticket = Ticket.find session[:ticket]
     else
       tt = Ticket.find_by(respond_token: params[:token])
-      p tt
-      if tt
-        TransactionalMailer.support_message(tt).deliver_now
-      end
+      TransactionalMailer.support_message(tt).deliver_now if tt
       redirect_to '/404.html'
     end
   end
@@ -282,24 +275,22 @@ class HomeController < ApplicationController
 
     products = products_partial
 
-    (0..products_partial.length - 1).each {|i|
+    (0..products_partial.length - 1).each do |i|
 
       pr = products_partial[i]
 
-      unless pr['consolidated']
-        products_partial.each do |dl|
-          if dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id'] && pr['color_id'] == dl['color_id']
-            tem_pr = CartProduct.find(pr['id'])
-            tem_dl = CartProduct.find(pr['id'])
+      next if pr['consolidated']
+      products_partial.each do |dl|
+        next unless dl['id'] != pr['id'] && pr['size_id'] == dl['size_id'] && pr['has_emblem'] == dl['has_emblem'] && pr['has_logo'] == false && dl['has_logo'] == false && pr['product_id'] == dl['product_id'] && pr['color_id'] == dl['color_id']
+        tem_pr = CartProduct.find(pr['id'])
+        tem_dl = CartProduct.find(pr['id'])
 
-            if tem_pr.custom_emblems == tem_dl.custom_emblems
-              dl['consolidated'] = true
-              products[i]['qty'] = products[i]['qty'] + 1
-            end
-          end
+        if tem_pr.custom_emblems == tem_dl.custom_emblems
+          dl['consolidated'] = true
+          products[i]['qty'] = products[i]['qty'] + 1
         end
       end
-    }
+    end
 
     cart_products = {
         tax_array: [],
@@ -316,15 +307,14 @@ class HomeController < ApplicationController
       cart_products[:tax_array].push(pr_price[1])
       cart_products[:cost_array].push(pr_price[5])
 
-      unless product['consolidated']
+      next if product['consolidated']
 
-        product['data'] = get_product_l(product['product_id'])
-        product['size'] = Size.find product['size_id']
-        product['color'] = Color.find product['color_id']
-        product['price_sgl'] = format('$%.2f', pr_price[5])
-        product['status'] = product['state']
-        cart_products[:products].push(product)
-      end
+      product['data'] = get_product_l(product['product_id'])
+      product['size'] = Size.find product['size_id']
+      product['color'] = Color.find product['color_id']
+      product['price_sgl'] = format('$%.2f', pr_price[5])
+      product['status'] = product['state']
+      cart_products[:products].push(product)
 
     end
 
@@ -336,9 +326,7 @@ class HomeController < ApplicationController
     render json: cart_products.to_json, status: :ok
   end
 
-  def temp_user_menu
-
-  end
+  def temp_user_menu; end
 
   def temp_user_order_details
     tuc = TempUserControl.where(ip_address: request.env['REMOTE_ADDR']).last
@@ -373,7 +361,7 @@ class HomeController < ApplicationController
           session['temp_token'] = request.env['HTTP_AUTHORIZATION']
           temp_user_c.save!
         end
-      rescue => e
+      rescue StandardError => e
         p e
       end
     end
@@ -426,7 +414,7 @@ class HomeController < ApplicationController
 
     if session[:temp_user_id].nil?
       user = TempUser.create
-      p ("user_created with id: #{user.id}")
+      p "user_created with id: #{user.id}"
       session[:temp_user_id] = user.id
 
     else
@@ -463,26 +451,25 @@ class HomeController < ApplicationController
         end
       end
 
-      unless custom_view[:position_emblem_id].blank?
-        product.custom_emblems << CustomEmblem.create! do |ce|
-          ce.product_image_id = custom_view[:picture_id]
-          ce.color_id = custom_view[:color_id]
-          ce.position_emblem_admin_id = custom_view[:position_emblem_id]
-        end
+      next if custom_view[:position_emblem_id].blank?
+      product.custom_emblems << CustomEmblem.create! do |ce|
+        ce.product_image_id = custom_view[:picture_id]
+        ce.color_id = custom_view[:color_id]
+        ce.position_emblem_admin_id = custom_view[:position_emblem_id]
       end
     end
 
-    if product.custom_logos.length > 0
-      product.has_logo = true
+    product.has_logo = if !product.custom_logos.empty?
+      true
     else
-      product.has_logo = false
-    end
+      false
+                       end
 
-    if product.custom_emblems.length > 0
-      product.has_emblem = true
+    product.has_emblem = if !product.custom_emblems.empty?
+      true
     else
-      product.has_emblem = false
-    end
+      false
+                         end
 
     product.save!
 
@@ -509,7 +496,7 @@ class HomeController < ApplicationController
 
     product = {
         id: cart_product.id,
-        source_data: JSON::parse(al.to_json).merge({main_color: color}),
+        source_data: JSON.parse(al.to_json).merge(main_color: color),
         size: {
             id: size.id,
             title: size.title,
@@ -519,7 +506,7 @@ class HomeController < ApplicationController
             id: color.id,
             title: color.title,
             price: color.price,
-            code_hex: color.code_hex,
+            code_hex: color.code_hex
         },
         picture: product_image.picture,
         pictures: pictures_array,
@@ -556,13 +543,13 @@ class HomeController < ApplicationController
 
     obj = CartProduct.where(cart_id: get_cart.id)
     json_obj = JSON.parse(obj.to_json)
-    json_obj.each {|json_data|
+    json_obj.each do |json_data|
       json_data['product_data'] = Product.find(json_data['product_id'])
       json_data['emblem_url'] = Emblem.find_by(id: json_data['emblem_id']).try(:picture).try(:url)
       json_data['emblem_position_data'] = PositionEmblemAdmin.find_by(id: json_data['position_id'])
       json_data['logo_url'] = Picture.find_by(id: json_data['logo_id']).try(:image).try(:url)
       json_data['price'] = product_price(json_data['id'])
-    }
+    end
 
     render json: json_obj
   end
@@ -597,9 +584,7 @@ class HomeController < ApplicationController
   def clear_bag
     user = TempUser.find(session[:temp_user_id])
     cart = user.cart
-    cart.cart_products.each do |cp|
-      cp.unbind_cart
-    end
+    cart.cart_products.each(&:unbind_cart)
   end
 
   def delete_from_cart
@@ -621,17 +606,17 @@ class HomeController < ApplicationController
 
   def self.to_decimal(n_text)
     if n_text.blank?
-      return 0
+      0
     else
-      return n_text.to_d
+      n_text.to_d
     end
   end
 
   def self.to_integer(n_text)
     if n_text.blank?
-      return 0
+      0
     else
-      return n_text.to_i
+      n_text.to_i
     end
   end
 
@@ -661,7 +646,7 @@ class HomeController < ApplicationController
 
   def showcase_mobile_products
     values = ConfigurationWeb.find_by_title('Showcase products').value.gsub /"/, ''
-    y = values[1..-2].split(',').collect! {|n| n.to_s}
+    y = values[1..-2].split(',').collect!(&:to_s)
 
     products = []
     y.each do |p|
