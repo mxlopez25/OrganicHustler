@@ -181,7 +181,7 @@ class HomeController < ApplicationController
 
   def get_color_images_main
     picture = (Color.find params['color_id']).product_images.where(main: true).first
-    render json: ({data: picture, picture: picture.picture(:medium, format: :webp)}).to_json
+    render json: ({data: picture, picture: picture.picture("medium_#{@browser}")}).to_json
   end
 
   def get_main_image

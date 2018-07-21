@@ -21,7 +21,6 @@
 
   <meta property="og:image" content="<%= @shared_image %>"/>
   <meta name="theme-color" content="#B692A2"/>
-
   <%= csrf_meta_tags %>
 
 <!--  <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>-->
@@ -200,7 +199,7 @@
         }
     }
 
-    function getCoords(elem) { // crossbrowser version
+    function getCoords(elem) {
         var box = elem.getBoundingClientRect();
 
         var body = document.body;
@@ -311,8 +310,8 @@
       </div>
 
       <div style="float: right; overflow: hidden">
-        <a class="navbar-brand brand" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
-        <img data-toggle="modal" alt="Cart logo" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="js-lazy-image cart_ic" data-src="/images/bag_icon">
+        <a class="navbar-brand brand" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(24).picture("s_thumb_#{@browser}") %>"></a>
+        <img data-toggle="modal" alt="Cart logo" data-target="#cart_modal" style="margin-right: 10px" id="cart_ic_1" class="js-lazy-image cart_ic" src="/images/holder.jp2" data-src="/images/bag_icon">
         <span class="badge" style="background-color: #89c03e; margin-left: -32px; margin-top: 20px"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
       </div>
     </div>
@@ -355,7 +354,7 @@
 
         <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
           <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
-          <img data-toggle="modal" alt="Bag logo" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic js-lazy-image" data-src="/images/bag_icon">
+          <img data-toggle="modal" alt="Bag logo" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic js-lazy-image" src="/images/holder.jp2" data-src="/images/bag_icon">
           <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
           <script>
             function enter_key_setup() {
@@ -388,7 +387,7 @@
         <% end %>
         </div>
 
-        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" data-src="<%= ConfigurationWeb.find(24).picture(:thumb, format: :webp) %>"></a>
+        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img alt="Web site logo" class="js-lazy-image" width="66" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(24).picture("s_thumb_#{@browser}") %>"></a>
 
       </div>
 
@@ -2780,7 +2779,7 @@
     <h4 onclick="location.href = '/catalog?brand=true&view=full%20collection'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
     <br>
 
-    <img alt="Small web site logo" class="js-lazy-image" data-src="/images/logo_sm" style="width: 60px;">
+    <img alt="Small web site logo" class="js-lazy-image" src="/images/holder.jp2" data-src="/images/logo_sm" style="width: 60px;">
 
     <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
 
@@ -2862,7 +2861,7 @@
       </div>
 
       <div>
-        <img alt="Small web site logo" class="js-lazy-image" data-src="/images/logo_sm" style="width: 30px; margin-top: 50px;">
+        <img alt="Small web site logo" class="js-lazy-image" src="/images/holder.jp2" data-src="/images/logo_sm" style="width: 30px; margin-top: 50px;">
         <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
 
       </div>

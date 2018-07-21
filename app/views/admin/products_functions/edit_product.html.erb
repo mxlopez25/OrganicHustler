@@ -1253,7 +1253,7 @@
             var temp_v = {
                 name: '<%= col.picture_file_name %>',
                 size: <%= col.picture_file_size %>,
-                data: '<%= col.picture(:s_thumb) %>'
+                data: '<%= col.picture("s_thumb_#{@browser}") %>'
             };
             existingFiles<%= color.id %>.push(temp_v);
 

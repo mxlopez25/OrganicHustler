@@ -25,7 +25,7 @@ class Product < ApplicationRecord
     images = []
     colors.each do |color|
       color.product_images.each do |pictures|
-        images.push [pictures.picture(:thumb), pictures.picture]
+        images.push [pictures.picture("thumb_#{@browser}"), pictures.picture]
       end
     end
     images
@@ -37,7 +37,7 @@ class Product < ApplicationRecord
     colors.each do |color|
       color_obj = {color: color, pictures: []}
       color.product_images.each do |pictures|
-        color_obj[:pictures].push({data: pictures, url: [pictures.picture(:thumb), pictures.picture]})
+        color_obj[:pictures].push({data: pictures, url: [pictures.picture("thumb_#{@browser}"), pictures.picture]})
       end
       colors_array.push color_obj
     end
@@ -84,7 +84,7 @@ class Product < ApplicationRecord
   def simple_info
     {
       id: id,
-      product_image_id: colors.try(:first).try(:product_images).try(:first).picture(:medium, format: :webp),
+      product_image_id: colors.try(:first).try(:product_images).try(:first).picture("medium_#{browser}"),
       title: title
     }
   end
