@@ -120,6 +120,7 @@
         var page = 1;
         loadTable();
 
+        // GET ALL THE PRODUCTS BY PAGE
         function loadTable() {
             $.ajax({
                 url: '/admin/all_products?page=' + page,

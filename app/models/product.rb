@@ -78,6 +78,7 @@ class Product < ApplicationRecord
       products << row.with_indifferent_access
     end
 
+    p products
     [products, total]
   end
 
