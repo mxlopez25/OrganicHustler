@@ -121,6 +121,7 @@ class HomeController < ApplicationController
     products_sty = Style.find_by_id params[:style]
     products_col = params[:color].blank? ? nil : params[:color]
     products_mat = Material.find_by_id params[:material]
+
     sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT products.* FROM products
           INNER JOIN categories_products ON products.id = categories_products.product_id
           #{products_sty ? 'INNER JOIN products_styles ON products.id = products_styles.product_id' : ''}
@@ -134,10 +135,15 @@ class HomeController < ApplicationController
     total = ActiveRecord::Base.connection.execute(n_rows).each(as: :hash)[0]
     products = []
     results.each(as: :hash) do |row|
-      products << row.with_indifferent_access
+      products << (conform_to_product row.with_indifferent_access)
     end
 
     render json: {ps: products, t: total}
+  end
+
+  def conform_to_product(product)
+    product[:product_image_id] = (Product.get_main product[:id], 'medium', @browser)
+    product
   end
 
   def get_showcase_product
@@ -154,7 +160,7 @@ class HomeController < ApplicationController
   end
 
   def get_images_product
-    images = Product.get_all_images params['product_id']
+    images = Product.get_all_images(params['product_id'], @browser)
     render json: images.to_json
   end
 
@@ -645,12 +651,13 @@ class HomeController < ApplicationController
   #SHOWCASES
 
   def showcase_mobile_products
+    @browser = UserAgent.parse(request.env["HTTP_USER_AGENT"]).browser.eql?('Chrome') ? 'chrome' : 'safari'
     values = ConfigurationWeb.find_by_title('Showcase products').value.gsub /"/, ''
     y = values[1..-2].split(',').collect!(&:to_s)
 
     products = []
     y.each do |p|
-      products << Product.find(p).simple_info
+      products << Product.find(p).simple_info(@browser)
     end
 
     render json: products, code: 200

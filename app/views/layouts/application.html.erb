@@ -134,6 +134,12 @@
         });
     });
 
+    if('serviceWorker' in navigator){
+        navigator.serviceWorker.register('/assets/sw.min.js').then(function () {
+            console.log("Service Worker Registered");
+        });
+    }
+
 </script>
 
 <style>

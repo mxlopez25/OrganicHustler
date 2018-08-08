@@ -20,24 +20,30 @@ class Product < ApplicationRecord
     Category.find_by_title(title).products
   end
 
-  def self.get_all_images(id)
+  def self.get_all_images(id, browser)
     colors = Color.where(product_id: id)
     images = []
     colors.each do |color|
       color.product_images.each do |pictures|
-        images.push [pictures.picture("thumb_#{@browser}"), pictures.picture]
+        images.push [pictures.picture("thumb_#{browser}"), pictures.picture]
       end
     end
     images
   end
 
-  def self.get_all_images_colors(id)
+  def self.get_main(id, size, browser)
+    colors = Color.where(product_id: id, preferred: true).first
+    image = colors.product_images.where(main: true).first
+    image.picture("#{size}_#{browser}")
+  end
+
+  def self.get_all_images_colors(id, browser)
     colors = Color.where(product_id: id)
     colors_array = []
     colors.each do |color|
       color_obj = {color: color, pictures: []}
       color.product_images.each do |pictures|
-        color_obj[:pictures].push({data: pictures, url: [pictures.picture("thumb_#{@browser}"), pictures.picture]})
+        color_obj[:pictures].push({data: pictures, url: [pictures.picture("thumb_#{browser}"), pictures.picture]})
       end
       colors_array.push color_obj
     end
@@ -49,7 +55,7 @@ class Product < ApplicationRecord
     sizes
   end
 
-  def self.get_by_attributes(id, sku, title, amount, category, page)
+  def self.get_by_attributes(id, sku, title, amount, category, page, browser)
 
     sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT products.* FROM products " +
         "#{category.blank? ? '' : 'INNER JOIN categories_products ON products.id = categories_products.product_id'} " +
@@ -75,14 +81,19 @@ class Product < ApplicationRecord
     total = ActiveRecord::Base.connection.execute(n_rows).each(:as => :hash)[0]
     products = []
     results.each(:as => :hash) do |row|
-      products << row.with_indifferent_access
+      products << conform_to_product(row.with_indifferent_access, browser)
     end
 
     p products
     [products, total]
   end
 
-  def simple_info
+  def self.conform_to_product(product, browser)
+    product[:product_image_id] = (Product.get_main product[:id], 'medium', browser)
+    product
+  end
+
+  def simple_info(browser)
     {
       id: id,
       product_image_id: colors.try(:first).try(:product_images).try(:first).picture("medium_#{browser}"),

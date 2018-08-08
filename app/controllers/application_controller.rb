@@ -5,5 +5,4 @@ class ApplicationController < ActionController::Base
   def get_browser
     @browser = UserAgent.parse(request.env["HTTP_USER_AGENT"]).browser.eql?('Chrome') ? 'chrome' : 'safari'
   end
-
 end

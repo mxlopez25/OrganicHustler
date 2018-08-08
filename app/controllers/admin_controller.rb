@@ -69,7 +69,8 @@ class AdminController < ApplicationController
       params[:title],
       params[:amount],
       params[:category],
-      (params[:page] || 1)
+      (params[:page] || 1),
+      @browser
     )
     for product in products[0]
       pr = JSON.parse(product.to_json.to_s)
@@ -304,7 +305,7 @@ class AdminController < ApplicationController
   end
 
   def get_images_colors
-    images = Product.get_all_images_colors params['product_id']
+    images = Product.get_all_images_colors(params['product_id'], @browser)
     render json: images.to_json
   end
 
