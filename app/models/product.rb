@@ -33,8 +33,10 @@ class Product < ApplicationRecord
 
   def self.get_main(id, size, browser)
     colors = Color.where(product_id: id, preferred: true).first
-    image = colors.product_images.where(main: true).first
-    image.picture("#{size}_#{browser}")
+    image = colors.try(:product_images)
+    url = '/images/holder.jp2'
+    url = image.where(main: true).first.picture("#{size}_#{browser}") if image
+    url
   end
 
   def self.get_all_images_colors(id, browser)
