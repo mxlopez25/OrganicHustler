@@ -20,6 +20,10 @@ class HomeController < ApplicationController
 
   end
 
+  def terms
+    
+  end
+
   def save_to_share
     product = CartProduct.create! do |u|
       u.product_id = params[:product][:product_id]

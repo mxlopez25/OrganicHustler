@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post '/share' => 'home#save_to_share'
 
   get '/contact_us' => 'home#contact_us'
+  get '/terms_of_use' => 'home#terms'
   get '/story' => 'home#story'
   get '/bag_items' => 'home#bag_items'
   get '/cancel_order' => 'home#cancel_order'
