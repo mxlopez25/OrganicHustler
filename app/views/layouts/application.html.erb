@@ -38,6 +38,10 @@
 
 <script>
 
+  let index = false;
+  let bag = false;
+  let checkout = false;
+
     function reload_jcarousel() {
         (function (window, $, undefined) {
             var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
@@ -120,20 +124,6 @@
         t = document.getElementsByTagName('script')[0];
         t.parentNode.insertBefore(s, t);
     }
-
-    loadScript('/assets/konva.min.js', function (data) {
-        loadScript('/assets/jquery.jcarousel.min.js', function (data) {
-
-            enter_key_setup();
-            reload_jcarousel();
-            get_cart_setup();
-            setup_n_1();
-            setup_n_2();
-
-            loadScript('/assets/sweetalert.min.js', function (data) {
-            });
-        });
-    });
 
     if('serviceWorker' in navigator){
         navigator.serviceWorker.register('/assets/sw.min.js').then(function () {
@@ -2890,6 +2880,29 @@
         w.lazyLoadOptions = {};
         b.appendChild(s)
     }(window, document));
+
+    loadScript('/assets/konva.min.js', function (data) {
+        loadScript('/assets/jquery.jcarousel.min.js', function (data) {
+            loadScript('/assets/sweetalert.min.js', function (data) {
+                enter_key_setup();
+                reload_jcarousel();
+                get_cart_setup();
+                setup_n_1();
+                setup_n_2();
+                if(index) {
+                    load_side_elements(<%= ConfigurationWeb.where(title: 'Main product')[0].value %>, 1);
+                    load_side_elements(<%= ConfigurationWeb.where(title: 'Product 1')[0].value %>, 2);
+                    load_side_elements(<%= ConfigurationWeb.where(title: 'Product 2')[0].value %>, 3);
+                }
+                if(bag){
+                    get_bag_items();
+                }
+                if(checkout){
+                    get_products();
+                }
+            });
+        });
+    });
 </script>
 
 </html>

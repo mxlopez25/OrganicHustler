@@ -1,3 +1,7 @@
+<script>
+  index = true;
+</script>
+
 <!--HEADER INDEX-->
 <div class="header mobilenot" style="margin-top: 40px; height: 450px; background: url('<%= ConfigurationWeb.find(13).picture("big_#{@browser}") %>') no-repeat left center; background-size: cover;">
   <h1 class="text-center ht-desk text_light" style="margin-top: 150px; font-size: 100px; font-family: CaviarDream, Helvetica, sans-serif"><%= ConfigurationWeb.find(20).value %></h1>
@@ -46,8 +50,7 @@
           var active = $(e.target).find('.carousel-inner > .item.active');
           var from = active.index();
           var next = $(e.relatedTarget);
-          var to = next.data('id');
-          current_item_id = to;
+          current_item_id = next.data('id');
       });
 
       $.ajax({
@@ -175,8 +178,6 @@
 </div>
 
 <script>
-
-    load_side_elements(<%= @config_products.where(title: 'Main product')[0].value %>, 1);
 
     function load_side_elements(id, dd) {
         $.ajax({
@@ -309,10 +310,6 @@
 
   </div>
 
-  <script>
-      load_side_elements(<%= @config_products.where(title: 'Product 1')[0].value %>, 2);
-  </script>
-
 </div>
 
 <hr style="width: 80%; margin: 30px auto">
@@ -330,10 +327,6 @@
     <h4 class="text_light" style="margin-bottom: 20px;">CHOOSE DESIGN</h4>
 
   </div>
-
-  <script>
-      load_side_elements(<%= @config_products.where(title: 'Product 2')[0].value %>, 3);
-  </script>
 
 </div>
 
