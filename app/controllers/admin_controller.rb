@@ -9,7 +9,7 @@ class AdminController < ApplicationController
   layout 'admin'
   layout 'customs_bl', :only => :preview_mail
   before_action :authenticate_admin!
-  before_action 'register_request', except: :create_admin
+  before_action 'register_request', except: %i[create_admin mailer_send]
 
   def register_request
     History.create!(
