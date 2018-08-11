@@ -186,9 +186,19 @@ input::-webkit-search-cancel-button {
   margin-right: 5px;
   padding: 10px;
   float: left;
-  background-color: rgba(194,165,178,0.50);
+  background-color: rgba(194,165,178,0.70);
   color: white;
   border: 3px solid #b692a2;
+}
+
+.button-head:active{
+  background-color: #b692a2;
+  color: white;
+}
+
+.button-head:focus{
+  background-color: #b692a2;
+  color: white;
 }
 
 .button-head-phone{
