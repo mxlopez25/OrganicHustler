@@ -14,15 +14,26 @@ button.styling_btn {
   background: white;
   border-radius: 0;
   min-width: 230px;
-  border-color: #c098ac;
+  min-height: 40px;
+  border: #c098ac solid 1px;
 }
 
 button.styling_btn:hover {
-  color: #c098ac;
+  color: black;
+  background: lightgrey;
+  border: grey solid 1px;
 }
 
 button.styling_btn:focus {
-  color: #c098ac;
+  color: black;
+  background: lightgrey;
+  border: grey solid 1px;
+}
+
+.styling_btn:active {
+  color: black;
+  background: darkgrey;
+  border: grey solid 1px;
 }
 
 .text-triangle {

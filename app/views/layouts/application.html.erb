@@ -216,7 +216,7 @@
 
     function edit_catalog(id, exterior) {
         document.getElementsByTagName('body')[0].classList.remove('modal-open');
-        exterior ? null : $('#cart_modal').modal('toggle');
+        //exterior ? null : $('#cart_modal').modal('toggle');
         close_modal();
         OVERALL_MODE = exterior ? false : true;
         ACTUAL_CART_ITEM_EDIT = id;
@@ -567,7 +567,7 @@
                             '        <div style="float: right; width: 100%; position: relative; text-align: center">\n' +
                             '           <p class="text-uppercase text_light_20">' + product['data']['title'] + '</p>\n' +
                             '           <p class="text_light_pink" style="font-size: 20px; height: 35px; line-height: 35px;">' + product['price_sgl'] + '</p>\n' +
-                            '           <a onclick="edit_catalog(\'' + product['id'] + '\')" style="color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                            '           <a onclick="edit_catalog(\'' + product['id'] + '\', true)" style="color: #9ca5a3; cursor: pointer; top: 5px; right: 5px"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
                             '        </div>\n' +
                             '      </div>';
                         var div = document.createElement('div');
