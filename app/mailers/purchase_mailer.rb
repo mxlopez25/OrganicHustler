@@ -70,6 +70,8 @@ class PurchaseMailer < ApplicationMailer
 
     p oc
 
+    @email = order.overall_user.email
+
     @confirmation_token = oc.confirmation_token
 
     mail to: order.overall_user.email, subject: MailContent.find(5).subject

@@ -280,14 +280,9 @@ class AdminController < ApplicationController
     subject = params['subject']
     content = params['editor'].html_safe
 
-    email_list = []
-
-    Subscriber.where(active: 1).each do |user|
-      email_list << user.email
+    Subscriber.where(active: 1).uniq.each do |user|
+      SubscriptionMailer.new_promotion(user.email, subject, content).deliver_later
     end
-
-    SubscriptionMailer.new_promotion(email_list, subject, content).deliver_later
-
   end
 
   def new_product

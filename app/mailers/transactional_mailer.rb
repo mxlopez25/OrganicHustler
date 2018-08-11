@@ -61,6 +61,7 @@ class TransactionalMailer < ApplicationMailer
     cart_p = c.promotion_codes.first.try(:rate)
     cart_g = c.gifts.first.try(:rate)
     @cart_products.merge!('discount' => (cart_p || cart_g || {rate: 0}))
+    @email = @order.overall_user.email
 
     mail to: @order.overall_user.email, subject: 'Your order is being ready for shipment'
   end
@@ -88,6 +89,7 @@ class TransactionalMailer < ApplicationMailer
     ticket.respond_token = @token
     ticket.valid_token = true
     ticket.save!
+    @email = @ticket.temp_user.email
 
     mail to: @ticket.temp_user.email, subject: 'OrganicHustler Support'
   end
