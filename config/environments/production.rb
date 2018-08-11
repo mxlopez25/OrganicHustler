@@ -109,9 +109,9 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      :address => "organichustler.com",
+      :address => "mail.organichustler.com",
       :port => 25,
-      :domain => "organichustler.com"
+      :domain => "mail.organichustler.com"
   }
 
 
