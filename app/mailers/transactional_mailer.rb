@@ -1,6 +1,6 @@
 class TransactionalMailer < ApplicationMailer
 
-  layout 'trasactional_mm'
+  layout 'mailer'
 
   def shipped_out(order)
     @order = order
