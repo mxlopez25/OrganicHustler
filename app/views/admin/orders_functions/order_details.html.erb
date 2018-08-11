@@ -1440,7 +1440,8 @@
                 l: $('#length').val(),
                 w: $('#width').val(),
                 h: $('#height').val(),
-                w_o: $('#weight').val()
+                w_o: $('#weight').val(),
+                "authenticity_token": '<%= form_authenticity_token %>'
             },
             success: function (data) {
                 document.getElementById('loading').classList.add('hidden');

@@ -92,6 +92,8 @@ Rails.application.configure do
       :path => ":rails_root/public:url"
   }
 
+
+=begin
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
       :authentication => :plain,
@@ -101,6 +103,18 @@ Rails.application.configure do
       :user_name => ENV['MAILGUN_USR'],
       :password => ENV['MAILGUN_PSD']
   }
+  EasyPost.api_key = ENV['EASYPOST_SECRET']
+  Stripe.api_key = ENV['STRIPE_SECRET']
+=end
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      :address => "organichustler.com",
+      :port => 25,
+      :domain => "organichustler.com"
+  }
+
+
   EasyPost.api_key = ENV['EASYPOST_SECRET']
   Stripe.api_key = ENV['STRIPE_SECRET']
 
