@@ -4,7 +4,7 @@ class SubscriptionMailer < ApplicationMailer
 
     @mail_t = mail.html_safe
 
-    mail bcc: user,
+    mail to: user,
          subject: subject
   end
 
