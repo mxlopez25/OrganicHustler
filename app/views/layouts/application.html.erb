@@ -29,8 +29,8 @@
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>-->
 
   <%= javascript_include_tag 'jquery-3.3.1.min.js' %>
-  <%= stylesheet_link_tag 'bootstrap.min.css' %>
   <%= javascript_include_tag 'bootstrap.min.js' %>
+  <%= stylesheet_link_tag 'bootstrap.min.css' %>
   <%= stylesheet_link_tag 'index/styles-index' %>
   <%= stylesheet_link_tag 'home' %>
 
@@ -484,7 +484,7 @@
 
       <hr class="no-spacing-bar">
 
-      <div style="position: relative" id="myCarousel" class="carousel slide" data-ride="carousel">
+      <div style="position: relative" id="cartCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol id="container_ind_cart" class="carousel-indicators" style="bottom: -20px">
         </ol>
@@ -494,13 +494,13 @@
         </div>
 
         <!-- Controls -->
-        <a class="carousel-control" href="#myCarousel" role="button" data-slide="prev" style="left: 0; position: absolute; right: auto">
+        <a class="carousel-control" href="#cartCarousel" role="button" data-slide="prev" style="left: 0; position: absolute; right: auto">
           <div style="position: relative; height: 100%">
             <span class="fa fa-chevron-left" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
           </div>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control" href="#myCarousel" role="button" data-slide="next" style="right: 0; position: absolute; left: auto">
+        <a class="carousel-control" href="#cartCarousel" role="button" data-slide="next" style="right: 0; position: absolute; left: auto">
           <span class="fa fa-chevron-right" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
           <span class="sr-only">Next</span>
         </a>
@@ -553,7 +553,8 @@
                 prices_cart = data['cost_array'];
                 var discount_rate = parseFloat(data['discount']);
                 for (var hj = 0; hj < data['products'].length; hj++) {
-                    container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#myCarousel" data-slide-to="' + hj + '" class="' + ((hj === 0) ? 'active' : '') + '"></li>'
+                    container_ind_cart.innerHTML = container_ind_cart.innerHTML + '<li style="border-color: #b592a2" data-target="#cartCarousel" data-slide-to="' + hj + '" class="' + ((hj === 0) ? 'active' : '') + '"></li>'
+
                 }
                 create_entry_cart(0, data['products'].length);
                 function create_entry_cart(i, lim) {
@@ -667,6 +668,8 @@
                         }
                         document.getElementById('sub_total_cart').innerText = '$' + cost.toFixed(2);
                     }
+
+                    $("#cartCarousel").carousel();
                 }
             },
             error: function (data) {

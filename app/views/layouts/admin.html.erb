@@ -24,7 +24,6 @@
   <%= stylesheet_link_tag 'cart' %>
   <%= stylesheet_link_tag 'index/styles-index' %>
 
-  <%= csrf_meta_tags %>
 </head>
 
 <style>
@@ -225,6 +224,7 @@
 </nav>
 
 <body>
+<%= csrf_meta_tags %>
 
 <%= yield %>
 
@@ -280,7 +280,8 @@
           data: {
               mail_id : _mail_id,
               subject : document.getElementById('subject').value,
-              content : document.getElementById('content').value
+              content : document.getElementById('content').value,
+              "authenticity_token": '<%= form_authenticity_token %>'
           }, success: function (data) {
               location.reload(true);
           }, error: function (data) {

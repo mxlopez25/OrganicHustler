@@ -134,7 +134,8 @@
                   dataType: 'json',
                   data: {
                       cart_id: '<%= user.cart.id %>',
-                      promo_code: document.getElementById('promo_code_g').value
+                      promo_code: document.getElementById('promo_code_g').value,
+                      "authenticity_token": '<%= form_authenticity_token %>'
                   },
                   success: function (data, statusText, xhr) {
                       if (data.code === 1005) {
@@ -164,7 +165,8 @@
                   dataType: 'json',
                   data: {
                       cart_id: '<%= user.cart.id %>',
-                      promo_code: document.getElementById('promo_code').value
+                      promo_code: document.getElementById('promo_code').value,
+                      "authenticity_token": '<%= form_authenticity_token %>'
                   },
                   success: function (data, statusText, xhr) {
                       if (data.code === 1005) {
@@ -583,7 +585,8 @@
             data: {
                 order: order_id,
                 code_authenticity: code,
-                n_mail: new_holder.value
+                n_mail: new_holder.value,
+                "authenticity_token": '<%= form_authenticity_token %>'
             },
             statusCode: {
                 403: function (xhr) {

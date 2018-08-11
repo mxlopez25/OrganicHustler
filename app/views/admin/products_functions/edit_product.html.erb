@@ -330,7 +330,8 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id
+                    id: id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -346,7 +347,8 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id
+                    id: id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -363,7 +365,8 @@
                 dataType: 'json',
                 data: {
                     id: id,
-                    pr_id: pr_id
+                    pr_id: pr_id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -380,7 +383,8 @@
                 dataType: 'json',
                 data: {
                     id: id,
-                    pr_id: pr_id
+                    pr_id: pr_id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -397,7 +401,8 @@
                 dataType: 'json',
                 data: {
                     id: id,
-                    pr_id: pr_id
+                    pr_id: pr_id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -424,7 +429,8 @@
                 dataType: 'json',
                 data: {
                     id: id,
-                    pr_id: pr_id
+                    pr_id: pr_id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -440,7 +446,8 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id
+                    id: id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -456,7 +463,8 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    id: id
+                    id: id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     var parent = btn.parentNode.parentNode;
@@ -479,7 +487,8 @@
                     size: {
                         title: $(parent).find('#title').val(),
                         price: $(parent).find('#price').val()
-                    }
+                    },
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -506,7 +515,8 @@
                     color: "#"+$(parent).find('#color').val(),
                     stock: $(parent).find('#stock_level').val(),
                     preferred: false,
-                    main_picture: ''
+                    main_picture: '',
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -527,6 +537,7 @@
             formData.append('picture', $(parent).find('#file')[0].files[0]);
             formData.append('price', $(parent).find('#price').val());
             formData.append('pr_id', id);
+            formData.append('authenticity_token', '<%= form_authenticity_token %>');
 
             $.ajax({
                 url: '/product/add/logo',
@@ -555,7 +566,8 @@
                 dataType: 'json',
                 data: {
                     pr_id: id,
-                    title: $(parent).find('#title').val()
+                    title: $(parent).find('#title').val(),
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -577,7 +589,8 @@
                 dataType: 'json',
                 data: {
                     pr_id: id,
-                    title: $(parent).find('#title').val()
+                    title: $(parent).find('#title').val(),
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -599,7 +612,8 @@
                 dataType: 'json',
                 data: {
                     pr_id: id,
-                    title: $(parent).find('#title').val()
+                    title: $(parent).find('#title').val(),
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -621,7 +635,8 @@
                 dataType: 'json',
                 data: {
                     pr_id: id,
-                    title: $(parent).find('#title').val()
+                    title: $(parent).find('#title').val(),
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload(true);
@@ -725,7 +740,8 @@
                     logo_id: ACTUAL_LOGO,
                     color_id: ACTUAL_COLOR,
                     picture_id: PREFERRED_COLOR.data.id,
-                    alo: 'khe'
+                    alo: 'khe',
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     window.location.reload();
@@ -751,6 +767,7 @@
             formData.append('multiplexer', ACTUAL_ZOOM);
             formData.append('product_image_id', ACTUAL_PHOTO_EMBLEM);
             formData.append('pr_id', id);
+            formData.append('authenticity_token', '<%= form_authenticity_token %>');
 
             $.ajax({
                 url: '/product/add/emblem',
@@ -1122,7 +1139,8 @@
                 dataType: 'json',
                 data: {
                     color_id: id_color,
-                    photo_id: $('#main_image_' + id_color).val()
+                    photo_id: $('#main_image_' + id_color).val(),
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     document.getElementById('loading').classList.add('hidden');
@@ -1161,7 +1179,8 @@
                 dataType: 'json',
                 data: {
                     pr_id: <%= product_i.id %>,
-                    color: id
+                    color: id,
+                    "authenticity_token": '<%= form_authenticity_token %>'
                 },
                 success: function (data) {
                     document.getElementById('loading').classList.add('hidden');
@@ -1319,7 +1338,8 @@
             type: 'patch',
             dataType: 'json',
             data: {
-                id: id
+                id: id,
+                "authenticity_token": '<%= form_authenticity_token %>'
             }, success: function (data) {
                 location.reload(true);
             }, error: function (data) {

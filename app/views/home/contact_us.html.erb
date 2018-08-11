@@ -9,7 +9,7 @@
       <input id="email" style="margin-bottom: 10px" name="user-email" class="field" type="email" placeholder="Email" value="" required="">
       <input id="reason" name="reason" class="field" type="text" placeholder="Subject" value="" required="">
       <hr>
-      <textarea id="message" style="height: auto" name="user-message" class="field" placeholder="Message" required="" rows="10"></textarea>
+      <textarea id="user-message" style="height: auto" name="user-message" class="field" placeholder="Message" required="" rows="10"></textarea>
       <button onclick="message_sent()" class="btn btn-sp" name="submit" type="button" value="SEND"/>SEND</button>
     </div>
   </form>
@@ -24,7 +24,8 @@
           data: {
               "user-email": document.getElementById('email').value,
               "reason": document.getElementById('reason').value,
-              "user-message": document.getElementById('message').innerText
+              "user-message": document.getElementById('user-message').value,
+              "authenticity_token": '<%= form_authenticity_token %>'
           },
           success: function (data) {
               document.getElementById('support').outerHTML = '<div class="alert alert-success" role="alert">Message sent!</div>';

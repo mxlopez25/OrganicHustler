@@ -259,7 +259,8 @@
                         dataType: 'json',
                         data: {
                             id: temp_id,
-                            value: CKEDITOR.instances.editor.getData()
+                            value: CKEDITOR.instances.editor.getData(),
+                            "authenticity_token": '<%= form_authenticity_token %>'
                         },
                         success: function (data) {
 
@@ -287,7 +288,8 @@
                         dataType: 'json',
                         data: {
                             id: temp_id,
-                            value: item
+                            value: item,
+                            "authenticity_token": '<%= form_authenticity_token %>'
                         },
                         success: function (data) {
 
@@ -310,7 +312,8 @@
                         dataType: 'json',
                         data: {
                             id: id,
-                            value: (val === "false") ? "true" : "false"
+                            value: (val === "false") ? "true" : "false",
+                            "authenticity_token": '<%= form_authenticity_token %>'
                         },
                         success: function (data) {
 
@@ -334,7 +337,8 @@
                         dataType: 'json',
                         data: {
                             id: id,
-                            value: document.getElementById(id).value
+                            value: document.getElementById(id).value,
+                            "authenticity_token": '<%= form_authenticity_token %>'
                         },
                         success: function (data) {
 
@@ -608,7 +612,8 @@
                         dataType: 'json',
                         data: {
                             id: temp_id,
-                            value: ids
+                            value: ids,
+                            "authenticity_token": '<%= form_authenticity_token %>'
                         },
                         success: function (data) {
 

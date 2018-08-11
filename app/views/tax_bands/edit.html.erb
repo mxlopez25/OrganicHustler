@@ -35,7 +35,8 @@
                     titulo: document.getElementById('title').value,
                     amount: parseInt(document.getElementById('rate').value) / 100,
                     description: document.getElementById('description').value
-                }
+                },
+                "authenticity_token": '<%= form_authenticity_token %>'
             },
             success: function (data) {
 

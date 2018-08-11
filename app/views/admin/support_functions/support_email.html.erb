@@ -108,6 +108,7 @@
           data: {
               temp_user_id: user,
               subject: document.getElementById('subject').value,
+              authenticity_token: '<%= form_authenticity_token %>',
               status: false
           },
           success: function (data) {
