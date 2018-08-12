@@ -18,22 +18,17 @@
   <meta property="og:type" content="website"/>
   <meta property="og:title" content="OrganicHustler"/>
   <meta property="og:description" content="Check my new creation"/>
-
   <meta property="og:image" content="<%= @shared_image %>"/>
   <meta name="theme-color" content="#B692A2"/>
   <%= csrf_meta_tags %>
-
-<!--  <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>-->
-  <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400i,400,600" rel="stylesheet">
- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>-->
+  <%= action_cable_meta_tag %>
 
   <%= javascript_include_tag 'jquery-3.3.1.min.js' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'bootstrap.min.js' %>
   <%= stylesheet_link_tag 'bootstrap.min.css' %>
   <%= stylesheet_link_tag 'index/styles-index' %>
   <%= stylesheet_link_tag 'home' %>
-
 </head>
 
 <script>
@@ -123,12 +118,6 @@
         };
         t = document.getElementsByTagName('script')[0];
         t.parentNode.insertBefore(s, t);
-    }
-
-    if('serviceWorker' in navigator){
-        navigator.serviceWorker.register('/assets/sw.min.js').then(function () {
-            console.log("Service Worker Registered");
-        });
     }
 
 </script>

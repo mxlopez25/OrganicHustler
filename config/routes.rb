@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       sessions: 'admins/sessions'
   }
 
+  mount ActionCable.server => '/cable'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'

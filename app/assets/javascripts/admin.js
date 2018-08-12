@@ -2,8 +2,7 @@
  * Created by hectorandac on 01/03/17.
  * @return {string}
  */
-
-
+//= require cable
 
 function htmlbodyHeightUpdate(){
     var height3 = $( window ).height();

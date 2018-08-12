@@ -1,0 +1,8 @@
+<div class="speech-bubble<%= message.client ? '' : '-admin' %>">
+  <div class="text-light" style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative">
+    <%= message.data %>
+  </div>
+  <div class="text-light" style="color: white; float: left; width: 30%; padding: 10px">
+    <%= message.created_at %>
+  </div>
+</div>

@@ -116,7 +116,7 @@
 
     <div style="padding: 10px; height: 500px;">
       <div id="mydiv" style="overflow-y: scroll; height: 300px">
-        <div style="overflow: visible">
+        <div id="messages" style="overflow: visible">
           <% @ticket.messages.each do |m| %>
             <div class="speech-bubble<%= m.client ? '' : '-admin' %>">
               <div class="text-light" style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative">
@@ -130,12 +130,17 @@
         </div>
 
       </div>
+      <div style="position: absolute;" id="notifier">User writing...</div>
 
       <hr>
 
       <div style="margin: 10px; height: 100px">
-        <textarea id="message" class="content-part-7 serious-input text-light" style="font-size: 14px; line-height: 14px; margin: 0; height: 100%; width: 70%;float: left;"></textarea>
-        <button onclick="send_message('<%= @ticket.id %>')" class="btn btn-sp content-part-3 text-light" style="margin: 0; font-size: 30px; width: 30%;float: left; height: 100%">SEND</button>
+        <%= form_for :message, url: '#', html: {id: 'new-message'} do |f| %>
+          <%= f.hidden_field :ticket, :value => @ticket_encrypted %>
+          <%= f.hidden_field :sender, :value => false %>
+          <textarea id="message-body" class="content-part-7 serious-input text-light" style="font-size: 14px; line-height: 14px; margin: 0; height: 100px; width: 70%;float: left;"></textarea>
+          <button type="submit" class="btn btn-sp content-part-3 text-light" style="margin: 0; font-size: 30px; width: 30%;float: left; height: 100px">SEND</button>
+        <% end %>
       </div>
 
       <button type="button" onclick="close_ticket('<%= @ticket.id %>')" class="text-light" style="text-decoration: none; margin: 12px auto; display: block; width: 60%; color: white; border-radius: 0; background: #b592a2; padding: 6px 12px; font-size: 100%; line-height: 2; text-align: center; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.08); outline: none;">

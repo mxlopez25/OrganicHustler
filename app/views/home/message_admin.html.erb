@@ -113,7 +113,7 @@
 
     <div style="padding: 10px; height: 500px;">
       <div id="mydiv" style="overflow-y: scroll; height: 300px">
-        <div style="overflow: visible">
+        <div id="messages" style="overflow: visible">
           <% @ticket.messages.each do |m| %>
             <div class="speech-bubble<%= m.client ? '' : '-admin' %>">
               <div class="text-light" style="text-align: justify; float: left; width: 70%; border-right: dotted white 1px; min-height: 60px; padding: 15px; position: relative">
@@ -127,13 +127,19 @@
         </div>
 
       </div>
+      <div style="position: absolute;" id="notifier">Agent writing...</div>
 
       <hr>
 
       <div style="margin: 10px; height: 100px">
-        <textarea id="message" class="content-part-7 serious-input text-light" style="font-size: 14px; line-height: 14px; margin: 0; height: 100%; width: 70%;float: left;"></textarea>
-        <button onclick="send_message()" class="btn btn-sp content-part-3 text-light" style="margin: 0; font-size: 30px; width: 30%;float: left; height: 100%">SEND</button>
+        <%= form_for :message, url: '#', html: {id: 'new-message'} do |f| %>
+          <%= f.hidden_field :ticket, :value => cookies[:temp_user_id] %>
+          <%= f.hidden_field :sender, :value => true %>
+          <textarea id="message-body" class="content-part-7 serious-input text-light" style="font-size: 14px; line-height: 14px; margin: 0; height: 100px; width: 70%;float: left;"></textarea>
+          <button type="submit" class="btn btn-sp content-part-3 text-light" style="margin: 0; font-size: 30px; width: 30%;float: left; height: 100px">SEND</button>
+        <% end %>
       </div>
+
 
     </div>
 

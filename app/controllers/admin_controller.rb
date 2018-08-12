@@ -264,9 +264,21 @@ class AdminController < ApplicationController
     render '/admin/orders_functions/order_details'
   end
 
+  def encrypt text
+    text = text.to_s unless text.is_a? String
+
+    len   = ActiveSupport::MessageEncryptor.key_len
+    salt  = SecureRandom.hex len
+    key   = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key salt, len
+    crypt = ActiveSupport::MessageEncryptor.new key
+    encrypted_data = crypt.encrypt_and_sign text
+    "#{salt}$$#{encrypted_data}"
+  end
+
   def ticket_details
     id = params['id']
     @ticket = Ticket.find id
+    @ticket_encrypted = encrypt(id)
     render '/admin/support_functions/ticket_details.html.erb'
   end
 

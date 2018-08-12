@@ -220,10 +220,24 @@ class HomeController < ApplicationController
     @parameters = params
   end
 
+  def encrypt text
+    text = text.to_s unless text.is_a? String
+
+    len   = ActiveSupport::MessageEncryptor.key_len
+    salt  = SecureRandom.hex len
+    key   = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key salt, len
+    crypt = ActiveSupport::MessageEncryptor.new key
+    encrypted_data = crypt.encrypt_and_sign text
+    "#{salt}$$#{encrypted_data}"
+  end
+
   def message_admin
+
     @ticket = Ticket.find_by(respond_token: params[:token], valid_token: true)
     if @ticket
+
       session[:ticket] = @ticket.id
+      cookies[:temp_user_id] = encrypt(@ticket.id)
       @ticket.valid_token = false
       @ticket.save!
     elsif session[:ticket]

@@ -17,4 +17,5 @@ Rails.application.config.assets.precompile += %w[spectrum.css]
 Rails.application.config.assets.precompile += %w[spectrum.js]
 Rails.application.config.assets.precompile += %w[jquery.js]
 Rails.application.config.assets.precompile += %w[jscolor.js]
+Rails.application.config.assets.precompile += %w[application.js]
 
