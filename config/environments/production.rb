@@ -74,7 +74,7 @@ Rails.application.configure do
 
 
 
-  config.action_cable.url = 'ws://organichustler.com/cable'
+  config.action_cable.url = 'wss://organichustler.com/cable'
   config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 
   # Use a different logger for distributed setups.
