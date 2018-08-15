@@ -52,10 +52,9 @@ button.styling_btn:focus {
 }
 
 .side-list {
+  flex: 2;
+  align-self: flex-end;
   text-align: center;
-  position: absolute;
-  right: 0;
-  top: 0;
   border: solid thin #b692a2;
   padding: 17px;
 }
