@@ -25,7 +25,7 @@ class ChatChannel < ApplicationCable::Channel
 
   def send_writing(data)
     ticket = decrypt(data['ticket'])
-    WritingBroadcastJob.perform_later(ticket, data['sender'])
+    WritingBroadcastJob.perform_now(ticket, data['sender'])
   end
 
 end

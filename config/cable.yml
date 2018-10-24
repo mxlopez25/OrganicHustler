@@ -6,4 +6,3 @@ test:
 
 production:
   adapter: async
-  url: wss://organichustler.com/cable
