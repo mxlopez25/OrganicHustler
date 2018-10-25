@@ -107,7 +107,6 @@ GEM
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
-    mjml-rails (4.0.2)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mysql2 (0.5.1)
@@ -232,7 +231,6 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   mailgun-ruby (~> 1.1.6)
-  mjml-rails
   mysql2
   paperclip
   paperclip-ffmpeg (~> 1.0.1)
