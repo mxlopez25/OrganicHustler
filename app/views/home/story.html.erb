@@ -3,4 +3,7 @@
 <div class="body">
   <h1 class="text_light">ABOUT US</h1>
   <p style="text-align: justify" class="text_light"><%= ConfigurationWeb.find(10).value %></p>
+  <video controls id="video" src="<%= ConfigurationWeb.find(22).video.url %>"></video>
 </div>
+
+<%# style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; margin: auto; max-width: 1080px" %>
