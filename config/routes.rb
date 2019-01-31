@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get '/contact_us' => 'home#contact_us'
   get '/terms_of_use' => 'home#terms'
+  get '/privacy_policy' => 'home#privacy'
   get '/story' => 'home#story'
   get '/bag_items' => 'home#bag_items'
   get '/cancel_order' => 'home#cancel_order'
