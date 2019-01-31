@@ -145,17 +145,6 @@
   </a>
 </div>
 
-<div id="video-player" style="margin-top: 30px; position: relative; width: 100%;" class="desktopnot">
-  <img class="lazy" alt="Video background image" style="width: 100%" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(21).picture("medium_#{@browser}") %>">
-  <div class="text-triangle">
-    <p class="text_light" style="font-size: 3.4vw; margin-top: 15vw; margin-bottom: 5vw; width: 30vw; margin-left: -15vw; text-align: center">Our
-      Story</p>
-    <p class="text_light" style="font-style: italic; line-height: 2.4vw; margin-bottom: 5vw; font-size: 2.3vw; width: 32vw; margin-left: -16vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe.gsub('<p>', '').gsub('</p>', '').html_safe %></p>
-    <p class="text_light" style="font-size: 4vw; width: 32vw; margin-left: -15vw; text-align: center">
-      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> data-toggle="modal" data-target="#video_modal" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
-  </div>
-</div>
-
 <div class="container mobilenot" style="justify-content: space-around; display: flex;">
     <div style="flex: 2; align-self: flex-start; padding: 17px;" class="mobilenot"></div>
 
@@ -283,17 +272,6 @@
 
 </script>
 
-
-<div id="video-player-desk" class="mobilenot" style="width: 100%; margin-top: 80px; position: relative; overflow: hidden; height: 37vw">
-  <img alt="Video image background" class="lazy" style="width: 100%" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(21).picture("big_#{@browser}") %>">
-  <div style="border-width: 0 15vw 25vw 15vw" class="text-triangle">
-    <p class="text_light" style="font-size: 1.7vw; margin-top: 7.5vw; margin-bottom: 2.5vw; width: 15vw; margin-left: -7.5vw; text-align: center">Our
-      Story</p>
-    <p class="text_light" style="font-style: italic; line-height: 1.2vw; margin-bottom: 2.5vw; font-size: 1.15vw; width: 16vw; margin-left: -8vw; text-align: center"><%= ConfigurationWeb.find(19).value.html_safe.gsub('<p>', '').gsub('</p>', '').html_safe %></p>
-    <p class="text_light" style="font-size: 2vw; width: 16vw; margin-left: -7.5vw; text-align: center">
-      <a <% if ConfigurationWeb.find(23).value.eql? "true" %> data-toggle="modal" data-target="#video_modal" <% else %> href="/story" <% end %> class="selectable" style="color: black;text-decoration: none">FULL STORY</a></p>
-  </div>
-</div>
 
 <div class="container" style="justify-content: space-around; display: flex; margin-top: 40px; margin-left: auto; margin-right:auto; text-align: center;">
 
