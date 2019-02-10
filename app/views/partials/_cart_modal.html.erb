@@ -1,0 +1,58 @@
+<div class="modal " id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="cart_modal_abel" aria-hidden="true">
+  <div id="bubble" class="modal-dialog triangle_up bubble" role="document">
+    <div style="width: 335px; margin-top: 0; -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        -moz-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        -o-box-shadow: 0 5px 15px rgba(0,0,0,0);
+        box-shadow: 0 5px 15px rgba(0,0,0,0); " class="modal-content modal-content-cart">
+
+      <span style="position: absolute;" class="close" data-dismiss="modal" aria-label="Close">×</span>
+
+      <h3 class="text_light" style="font-size: 30px; color: #3F3F3F; text-align: center; margin-bottom: 10px;">Your
+        Bag</h3>
+
+      <hr class="no-spacing-bar">
+
+      <div style="position: relative" id="cartCarousel" data-interval="false" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol id="container_ind_cart" class="carousel-indicators" style="bottom: -20px">
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div id="container_lts_cart" class="carousel-inner" style="max-height: 480px; min-height: 339px">
+        </div>
+
+        <!-- Controls -->
+        <a class="carousel-control" href="#cartCarousel" role="button" data-slide="prev" style="left: 0; position: absolute; right: auto">
+          <div style="position: relative; height: 100%">
+            <span class="fa fa-chevron-left" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
+          </div>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control" href="#cartCarousel" role="button" data-slide="next" style="right: 0; position: absolute; left: auto">
+          <span class="fa fa-chevron-right" aria-hidden="true" style="position: absolute; margin: auto; top: 0; right: 0; left: 0; height: 20px; color: #b592a2; alignment: center; bottom: 0;"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <hr style="margin-top: 20px" class="no-spacing-bar">
+
+      <div style="overflow: hidden">
+        <span class="text_light_pink" style="font-size: 20px; font-style: italic; position: relative;height: 35px;float: left;vertical-align: middle;line-height: 35px;">Subtotal</span>
+        <span id="sub_total_cart" class="text_light" style="font-size: 30px; float: right;position: relative;height: 35px;">-</span>
+      </div>
+
+      <hr class="no-spacing-bar">
+
+      <div>
+        <button onclick="location.href='/checkout'" class="btn btn-sp" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CHECKOUT</button>
+        <button onclick="location.href='/shopping_bag'" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">EDIT
+          ORDER
+        </button>
+        <button onclick="clear_bag();" class="btn btn-default" style="width: 100%; margin-top: 5px; margin-bottom: 5px;">CLEAR
+          BAG
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
