@@ -1,0 +1,122 @@
+<div class="desktopnot">
+
+  <div style="overflow: hidden; margin: 30px 0;border: solid 1px #b692a2" class="desktopnot">
+    <a onclick="location.href = 'https://facebook.com/<%= ConfigurationWeb.find(2).value %>' " style="border-width:0; color: black; width: 23%" class="btn"><span class="fa fa-facebook"></span></a>
+    <a onclick="location.href = 'https://twitter.com/<%= ConfigurationWeb.find(1).value %>' " style="border-width:0; color: black; width: 23%" class="btn"><span class="fa fa-twitter"></span></a>
+    <a onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>' " style="border-width:0; color: black; width: 23%" class="btn"><span class="fa fa-instagram"></span></a>
+    <a onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="border-width:0; color: black; width: 23%" class="btn"><span class="fa fa-youtube"></span></a>
+  </div>
+
+</div>
+
+<div class="container-fluid blc desktopnot">
+  <div class="row" style="margin-top: 20px;">
+    <h3 style="color: white;"> BRAND</h3>
+    <br>
+    <h4 onclick="location.href = '/story?story=true&view=story'" style="color: #A4A4A4; cursor: pointer"> STORY </h4>
+    <h4 onclick="location.href = '/terms_of_use?terms_of_use=true&view=terms_of_use'" style="color: #A4A4A4; cursor: pointer"> TERMS OF USE </h4>
+    <h4 onclick="location.href = '/privacy_policy?privacy_policy=true&view=privacy_policy'" style="color: #A4A4A4; cursor: pointer"> PRIVACY POLICY </h4>
+    <h4 onclick="location.href = '/contact_us?contact=true'" style="color: #A4A4A4; cursor: pointer"> CONTACT US</h4>
+    <br>
+    <h3 style="color: white;"> SHOP</h3>
+    <br>
+    <h4 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN</h4>
+    <h4 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP
+      WOMEN </h4>
+    <h4 onclick="location.href = '/catalog?brand=true&view=full%20collection'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h4>
+    <br>
+
+    <img alt="Small web site logo" class="lazy" src="/images/holder.jp2" data-src="/images/logo_sm.png" style="width: 60px;">
+
+    <p style="margin-top: 10px;">ORGANIC HUSTLER, LLC</p>
+
+
+  </div>
+</div>
+
+<div class="container-fluid blc mobilenot">
+  <div class="row" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;"> BRAND</h3>
+      <br>
+      <br>
+      <h5 onclick="location.href = '/story'" style="color: #A4A4A4; cursor: pointer"> STORY </h5>
+      <h5 onclick="location.href = '/terms_of_use'" style="color: #A4A4A4; cursor: pointer"> TERMS OF USE </h5>
+      <h5 onclick="location.href = '/privacy_policy'" style="color: #A4A4A4; cursor: pointer"> PRIVACY POLICY </h5>
+      <h5 onclick="location.href = '/contact_us?contact=true'" style="color: #A4A4A4; cursor: pointer"> CONTACT US </h5>
+
+
+    </div>
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;">SHOP</h3>
+      <br>
+      <br>
+
+      <h5 onclick="location.href = '/catalog?men=true&view=men'" style="color: #A4A4A4; cursor: pointer"> SHOP MEN </h5>
+      <h5 onclick="location.href = '/catalog?women=true&view=women'" style="color: #A4A4A4; cursor: pointer"> SHOP WOMEN </h5>
+      <h5 onclick="location.href = '/catalog?brand=true&view=full%20collection'" style="color: #A4A4A4; cursor: pointer"> FULL COLLECTION </h5>
+
+    </div>
+
+    <div class="col-sm-2" style="text-align: left;">
+      <h3 style="color: white;"> FIND US AT</h3>
+      <br>
+      <br>
+      <h5 onclick="location.href = 'https://instagram.com/<%= ConfigurationWeb.find(3).value %>' " style="color: #A4A4A4; cursor: pointer">
+        INSTAGRAM </h5>
+      <h5 onclick="location.href = 'https://twitter.com/<%= ConfigurationWeb.find(1).value %>' " style="color: #A4A4A4; cursor: pointer">
+        TWITTER </h5>
+      <h5 onclick="location.href = 'https://youtube.com/user/<%= ConfigurationWeb.find(8).value %>' " style="color: #A4A4A4; cursor: pointer">
+        YOUTUBE </h5>
+      <h5 onclick="location.href = 'https://facebook.com/<%= ConfigurationWeb.find(2).value %>' " style="color: #A4A4A4; cursor: pointer">
+        FACEBOOK</h5>
+    </div>
+
+    <div class="col-sm-6">
+
+      <div style="background-color: #5e5e5e; height: 330px; width:1px; float: left; ">
+      </div>
+
+
+      <h3 id="subscriber" style="color: white; margin-top: 25px; margin-bottom: 25px;"> JOIN OUR NEWSLETTER</h3>
+      <%= form_tag root_path, method: :post do %>
+        <% if params['success'].eql? 'true' %>
+          <div style="width: 70%" class="input-group">
+            <input name="email" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Sussesfully saved!">
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="submit">Subscribe!</button>
+            </span>
+          </div>
+        <% else %>
+
+          <div style="width: 70%" class="input-group">
+            <input name="email" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Email address">
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="submit">Subscribe!</button>
+            </span>
+          </div>
+        <% end %>
+      <% end %>
+
+
+      <h3 style="color: white; margin-top: 25px; margin-bottom: 25px;"> SEARCH SHOP</h3>
+      <div style="width: 70%" class="input-group">
+        <input id="search-bot" name="search" style="height: 40px; border: none;" type="text" class="form-control" placeholder="Search..." value="<%= params['search'] %>">
+        <span class="input-group-btn">
+          <button onclick="location.href = '/catalog?search=' + this.parentElement.parentElement.getElementsByTagName('input')[0].value;" class="btn btn-default btn-sp text_light_20" style="border: none; color: white;" type="button">GO!</button>
+        </span>
+      </div>
+
+      <div>
+        <img alt="Small web site logo" class="lazy" src="/images/holder.jp2" data-src="/images/logo_sm.png" style="width: 30px; margin-top: 50px;">
+        <p style="color: #FFFFFF; margin-top: 10px;">Organic Hustler, LLC</p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
