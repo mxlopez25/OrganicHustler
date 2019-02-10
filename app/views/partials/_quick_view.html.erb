@@ -1,0 +1,213 @@
+<div id="quick_view" class="modal_quick modal_base">
+
+  <!-- Modal content -->
+  <div id="modal-content-center" class="modal-content_quick modal-content_base" style="overflow: hidden; padding: 0;">
+    <div id="general_p_content" class="g-wrapper" style="position: relative">
+      <span id="actor" style="cursor: pointer; color: #ba97a6; z-index: 9000; position: absolute; font-size: xx-large; left: 10px"><i class="fa fa-times" aria-hidden="true"></i></span>
+      <div id="product_display" class="wrapper-side">
+        <div class="image-container-quick" id="image-container">
+        </div>
+        <button id="slide-left" style="top: 0; bottom: 0; margin: auto; border: none; left: 0; float: left; position: absolute; width: 10%" href="#" class="jcarousel-control-prev">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button id="slide-right" style="top: 0; bottom: 0; margin: auto; border: none; right: 0; float: right; position: absolute; width: 10%" href="#" class="jcarousel-control-next">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div id="layers" class="wrapper-side">
+
+        <div style="display: none" id="view_1">
+          <div class="wrap">
+            <h5 id="product_title" class="text-uppercase text_light_20"></h5>
+            <h5 id="product_price" class="text_light_pink"></h5>
+            <div id="product_description" class="wrap light-paragraph" style="padding-top: 10px">
+              <span id="first_30"></span><span id="dots">...</span><span class="complete"></span>
+              <div style="text-align: end">
+                <span id="more-toggle" class="text_light_pink">Read more</span>
+              </div>
+            </div>
+            <hr style="margin-bottom: 0">
+
+            <h6 id="removable-color-title" style="font-weight: bold">Select color(s):</h6>
+            <div style="width: 100%; overflow: hidden" id="checkboxes-color">
+            </div>
+
+            <div style="margin-bottom: 10px">
+              <div id="icon-show" class="hidden">
+                <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> SIZE</h5></div>
+              <div id="icon-hide"><h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> SIZE</h5>
+              </div>
+            </div>
+
+            <div style="height: 40px" id="icon_loader" class="jcarousel-wrapper">
+              <button id="controller-jcarousel-preview-l" style="top: 1px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%" id="preview_size_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-sizes" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 1px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <hr class="customizable_presets" style="margin-bottom: 0">
+            <div class="customizable_presets" style="margin-bottom: 10px">
+              <div id="icon-show-logo" class="hidden">
+                <h5 class="text_light"><i class="fa fa-angle-down" aria-hidden="true"></i> CUSTOMIZED</h5></div>
+              <div id="icon-hide-logo">
+                <h5 class="text_light"><i class="fa fa-angle-up" aria-hidden="true"></i> CUSTOMIZED</h5></div>
+            </div>
+
+            <div style="height: 80px" id="icon_loader_logo" class="jcarousel-wrapper customizable_presets">
+              <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%" id="preview_preset_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-presets" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div>
+              <button id="customize_btn" style="width: 100%; margin-top: 10px" class="btn btn-cust" onclick="load_view_2(product.data)">CUSTOMIZE
+                IT
+              </button>
+              <button id="replacesable_button_edit" style="width: 100%; margin-top: 10px" class="btn btn-sp" onclick="addToCart()">ADD
+                TO CART
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: none" id="view_2">
+          <div class="wrap">
+            <div id="controllers" style="float: left; width: 100%">
+              <div style="margin-left: auto; margin-right: auto; text-align: center">
+                <button id="minus-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-minus"></div>
+                </button>
+                <button id="plus-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-plus"></div>
+                </button>
+                <button id="left-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-left"></div>
+                </button>
+                <button id="right-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-right"></div>
+                </button>
+                <button id="down-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-down"></div>
+                </button>
+                <button id="up-btn" class="direction border-bg-sty resizable">
+                  <div class="fa fa-chevron-up"></div>
+                </button>
+              </div>
+            </div>
+            <div id="share-div" style="width: 100%; text-align: center">
+              <button onclick="show_socials()" id="share" class="styling_btn btn">SHARE
+              </button>
+
+              <script>
+                  function show_socials() {
+                      $.ajax({
+                          type: "POST",
+                          url: "/share",
+                          data: {
+                              product: product.send_info()
+                          },
+                          success: function (data, status, xhr) {
+                              var button_share = document.getElementById('share');
+                              button_share.outerHTML =
+                                '    <a href="https://www.facebook.com/sharer/sharer.php?u=http://organichustler.com/?cp=' + data + '" target="_blank"style="color: white; width: 80%; margin: 2px; background-color: #3b5998" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-facebook"></span>Facebook</a>'
+                                + '    <a target="_blank" href="https://twitter.com/intent/tweet?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" style="color: white; width: 80%; margin: 2px; background-color: #55acee" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-twitter"></span>Twitter</a>\n'
+                                + '    <a href="whatsapp://send?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Whatsapp</a>'
+                                + '    <a href="mailto:?subject=Check this out! @organichustler &amp;body=Check out what I have created @organichustler http://organichustler.com/?cp=' + data + '"style="color: white; width: 80%; margin: 2px; background-color: #707070" class="btn btn-sp text_light" title="Share by Email"><span style="margin-right: 5%" class="fa fa-envelope"></span>Email</a>'
+                                // + '    <a href="" data-action="share/whatsapp/share " style="color: white; width: 80%; margin: 2px; background-color: #4dc247" class="btn btn-sp text_light"><span style="margin-right: 5%" class="fa fa-whatsapp"></span>Email</a>';
+                                ;
+                          }, // href="whatsapp://send?text=http://organichustler.com/?cp=' + data + ' Check out what I have created @organichustler"
+                          dataType: 'json'
+                      });
+                  }
+              </script>
+
+            </div>
+            <hr id="bar" class="pro">
+            <div id="icon-show-logos" class="hidden">
+              <h6><i class="fa fa-angle-down" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
+            <div id="icon-hide-logos"><h6><i class="fa fa-angle-up" aria-hidden="true"></i> CHOOSE DESIGN</h6></div>
+
+            <div id="icon_loader-logos" class="jcarousel-wrapper row">
+              <button id="controller-jcarousel-preview-l" style="top: 25px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%; height: 70px" id="preview_preset_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-logos" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 25px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div id="jr-filler"></div>
+
+            <div id="selection-btn-s">
+              <button onclick="start_over(); load_view_2(product.data);" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
+                <span class="cell-btn">START OVER</span></button>
+              <button id="done-section-2" type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="send_variations()">
+                DONE
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="display: none" id="view_3">
+          <div class="wrap">
+            <div id="icon_loader" class="jcarousel-wrapper">
+              <button id="controller-jcarousel-preview-l" style="top: 45px; border: none; left: 0; float: left; position: relative; width: 10%" href="#" class="jcarousel-control-prev" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div style="float: left; width: 80%; height: 150px;" id="preview_preset_cr_carousel" class="jcarousel" data-jcarousel="true">
+                <ul id="container-emblems" style="left: 0; top: 0;">
+                </ul>
+              </div>
+              <button id="controller-jcarousel-preview-r" style="top: 45px; border: none; right: 0; float: right; position: relative; width: 10%" href="#" class="jcarousel-control-next" data-jcarouselcontrol="true">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div id="selection-btn-s">
+              <button onclick="start_over(); load_view_3(product.data)" id="restart-btn" type="button" style="width: 100%; margin-top: 10px" class="btn btn-default">
+                <span class="cell-btn">START OVER</span></button>
+              <button type="button" style="width: 100%; margin-top: 10px" class="btn btn-sp cell-btn" onclick="load_view_1(product.data);">
+                DONE
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-content-quick-m" class="modal-content-quick-m" style="overflow: hidden; padding: 0; display: none">
+    <i id="quick-view-close-m" style="cursor: pointer; color: #ba97a6; z-index: 9000; float: left; margin: 10px;" class="fa fa-times" aria-hidden="true"></i>
+    <div id="general_p_content" class="g-wrapper" style="margin-top: 0; padding-top: 0">
+      Would you like to edit the placement of our emblem?
+
+      <button style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="load_view_3(product.data)" class="styling_btn btn">EDIT</button>
+      <button id="replacesable_second_button_edit" style="min-width: 0; width: 85%; margin: 5px 0 0 0" onclick="addToCart()" class="styling_btn btn">ADD
+        TO CART
+      </button>
+    </div>
+
+  </div>
+
+</div>
