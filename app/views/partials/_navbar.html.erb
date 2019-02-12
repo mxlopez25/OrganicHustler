@@ -59,7 +59,7 @@
   <div class="mobilenot" style="position: relative;">
     <div style="padding: 10px; width: 100%" class="navbar-header">
 
-      <div style="position:relative; overflow: hidden;">
+      <div style="position:relative; overflow: hidden; min-height: 7.7rem">
 
         <div style="float: right; overflow: hidden; width: 25%; min-width: 280px">
           <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
@@ -96,7 +96,7 @@
         <% end %>
         </div>
 
-        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:66px ;" href="/"><img alt="Web site logo" class="lazy" width="66" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(24).picture("s_thumb_#{@browser}") %>"></a>
+        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:130px ;" href="/"><img alt="Web site logo" class="lazy" width="100%" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(24).picture("s_thumb_#{@browser}") %>"></a>
 
       </div>
 
