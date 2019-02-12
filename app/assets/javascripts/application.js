@@ -1,231 +1,231 @@
 // First script 
 
-let index = false;
-let bag = false;
-let checkout = false;
+// let index = false;
+// let bag = false;
+// let checkout = false;
 
-function reload_jcarousel() {
-    (function (window, $, undefined) {
-        var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
-        for (var i = 0; i < plugins.length; i++) {
-            var plugin = plugins[i];
-            var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
-            $.fn[reload_plugin] = (function (plugin) {
-                return function () {
-                    return this.each(function () {
-                        if (!$(this).data(plugin)) {
-                            return false;
-                        }
-                        var _options = $(this).data(plugin)._options;
-                        $(this).data(plugin, {}).off()[plugin](_options);
-                    });
-                };
-            })(plugin);
-        }
-    })(this, jQuery);
-}
+// function reload_jcarousel() {
+//     (function (window, $, undefined) {
+//         var plugins = ['jcarousel', 'jcarouselAutoscroll', 'jcarouselControl', 'jcarouselPagination'];
+//         for (var i = 0; i < plugins.length; i++) {
+//             var plugin = plugins[i];
+//             var reload_plugin = 'reload' + plugin.charAt(0).toUpperCase() + plugin.slice(1);
+//             $.fn[reload_plugin] = (function (plugin) {
+//                 return function () {
+//                     return this.each(function () {
+//                         if (!$(this).data(plugin)) {
+//                             return false;
+//                         }
+//                         var _options = $(this).data(plugin)._options;
+//                         $(this).data(plugin, {}).off()[plugin](_options);
+//                     });
+//                 };
+//             })(plugin);
+//         }
+//     })(this, jQuery);
+// }
 
-function setup_n_1() {
-    $('#quick_view').on('click', function (e) {
-        if (e.target === this)
-            close_modal();
-    });
+// function setup_n_1() {
+//     $('#quick_view').on('click', function (e) {
+//         if (e.target === this)
+//             close_modal();
+//     });
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target === modal_quick) {
-            product.remove();
-            modal_quick.style.display = "none";
-            $("body").removeClass("modal-open");
-            $('body').css('overflow', 'auto');
-            $('body').css('position', 'relative');
-            OVERALL_MODE = false;
-        }
-    };
-}
+//     // When the user clicks anywhere outside of the modal, close it
+//     window.onclick = function (event) {
+//         if (event.target === modal_quick) {
+//             product.remove();
+//             modal_quick.style.display = "none";
+//             $("body").removeClass("modal-open");
+//             $('body').css('overflow', 'auto');
+//             $('body').css('position', 'relative');
+//             OVERALL_MODE = false;
+//         }
+//     };
+// }
 
-function position_card(a) {
-    a = a === 15 ? a : 0;
-    var coords = getCoords(document.getElementById('cart_ic_2'));
-    var bubble = document.getElementById('bubble');
-    if ($(window).width() < 768) {
-        bubble.style.top = 0;
-        bubble.style.left = 0;
-    } else {
-        bubble.style.top = '38px';
-        bubble.style.left = (coords.left - 380 + a) + 'px';
-    }
-}
+// function position_card(a) {
+//     a = a === 15 ? a : 0;
+//     var coords = getCoords(document.getElementById('cart_ic_2'));
+//     var bubble = document.getElementById('bubble');
+//     if ($(window).width() < 768) {
+//         bubble.style.top = 0;
+//         bubble.style.left = 0;
+//     } else {
+//         bubble.style.top = '38px';
+//         bubble.style.left = (coords.left - 380 + a) + 'px';
+//     }
+// }
 
-function setup_n_2() {
-    $(".modal").on("shown.bs.modal", function () {
-        $(".modal-backdrop").remove();
-        fitStageIntoParentContainer_we_cart();
-    });
+// function setup_n_2() {
+//     $(".modal").on("shown.bs.modal", function () {
+//         $(".modal-backdrop").remove();
+//         fitStageIntoParentContainer_we_cart();
+//     });
 
-    window.addEventListener('resize', position_card);
-    position_card(15);
-}
+//     window.addEventListener('resize', position_card);
+//     position_card(15);
+// }
 
-function loadScript(src, callback) {
-    var s,
-        r,
-        t;
-    r = false;
-    s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = src;
-    s.onload = s.onreadystatechange = function () {
-        if (!r && (!this.readyState || this.readyState == 'complete')) {
-            r = true;
-            callback();
-        }
-    };
-    t = document.getElementsByTagName('script')[0];
-    t.parentNode.insertBefore(s, t);
-}
+// function loadScript(src, callback) {
+//     var s,
+//         r,
+//         t;
+//     r = false;
+//     s = document.createElement('script');
+//     s.type = 'text/javascript';
+//     s.src = src;
+//     s.onload = s.onreadystatechange = function () {
+//         if (!r && (!this.readyState || this.readyState == 'complete')) {
+//             r = true;
+//             callback();
+//         }
+//     };
+//     t = document.getElementsByTagName('script')[0];
+//     t.parentNode.insertBefore(s, t);
+// }
 
 // End First Script
 
 // Second Script
-var ACTUAL_CART_ITEM_EDIT = null;
+// var ACTUAL_CART_ITEM_EDIT = null;
 
-window.twttr = (function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-        t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
+// window.twttr = (function (d, s, id) {
+//     var js, fjs = d.getElementsByTagName(s)[0],
+//         t = window.twttr || {};
+//     if (d.getElementById(id)) return t;
+//     js = d.createElement(s);
+//     js.id = id;
+//     js.src = "https://platform.twitter.com/widgets.js";
+//     fjs.parentNode.insertBefore(js, fjs);
 
-    t._e = [];
-    t.ready = function (f) {
-        t._e.push(f);
-    };
+//     t._e = [];
+//     t.ready = function (f) {
+//         t._e.push(f);
+//     };
 
-    return t;
-}(document, "script", "twitter-wjs"));
+//     return t;
+// }(document, "script", "twitter-wjs"));
 
-function getImage(array, id) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i].id === parseInt(id)) {
-            return array[i];
-        }
-    }
-}
+// function getImage(array, id) {
+//     for (var i = 0; i < array.length; i++) {
+//         if (array[i].id === parseInt(id)) {
+//             return array[i];
+//         }
+//     }
+// }
 
-function getCoords(elem) {
-    var box = elem.getBoundingClientRect();
+// function getCoords(elem) {
+//     var box = elem.getBoundingClientRect();
 
-    var body = document.body;
-    var docEl = document.documentElement;
+//     var body = document.body;
+//     var docEl = document.documentElement;
 
-    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+//     var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+//     var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
-    var clientTop = docEl.clientTop || body.clientTop || 0;
-    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+//     var clientTop = docEl.clientTop || body.clientTop || 0;
+//     var clientLeft = docEl.clientLeft || body.clientLeft || 0;
 
-    var top = box.top + scrollTop - clientTop;
-    var left = box.left + scrollLeft - clientLeft;
+//     var top = box.top + scrollTop - clientTop;
+//     var left = box.left + scrollLeft - clientLeft;
 
-    return {
-        top: Math.round(top),
-        left: Math.round(left)
-    };
-}
+//     return {
+//         top: Math.round(top),
+//         left: Math.round(left)
+//     };
+// }
 
-function edit_catalog(id, exterior, mode) {
-    document.getElementsByTagName('body')[0].classList.remove('modal-open');
-    exterior ? null : $('#cart_modal').modal('toggle');
-    close_modal();
-    OVERALL_MODE = exterior ? mode : true;
-    ACTUAL_CART_ITEM_EDIT = id;
-    $.ajax({
-        url: '/get_cart_item',
-        method: 'get',
-        dataType: 'json',
-        data: {
-            product_cart_id: id
-        },
-        success: function (data) {
+// function edit_catalog(id, exterior, mode) {
+//     document.getElementsByTagName('body')[0].classList.remove('modal-open');
+//     exterior ? null : $('#cart_modal').modal('toggle');
+//     close_modal();
+//     OVERALL_MODE = exterior ? mode : true;
+//     ACTUAL_CART_ITEM_EDIT = id;
+//     $.ajax({
+//         url: '/get_cart_item',
+//         method: 'get',
+//         dataType: 'json',
+//         data: {
+//             product_cart_id: id
+//         },
+//         success: function (data) {
 
-            product.data = data['source_data'];
-            product.product_id = data['source_data']['id'];
-            product.color_id = data['color']['id'];
-            product.size_id = data['size']['id'];
+//             product.data = data['source_data'];
+//             product.product_id = data['source_data']['id'];
+//             product.color_id = data['color']['id'];
+//             product.size_id = data['size']['id'];
 
-            $.ajax({
-                url: '/catalog/product/color/images',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    color_id: product.color_id
-                },
-                success: function (data_) {
-                    if (product.views.length === 0) {
-                        create_objects_array(data_);
-                    }
+//             $.ajax({
+//                 url: '/catalog/product/color/images',
+//                 type: 'GET',
+//                 dataType: 'json',
+//                 data: {
+//                     color_id: product.color_id
+//                 },
+//                 success: function (data_) {
+//                     if (product.views.length === 0) {
+//                         create_objects_array(data_);
+//                     }
 
-                    for (var i = 0; i < data['logos'].length; i++) {
-                        var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
-                        if (modified_view !== null) {
-                            modified_view.logo_id = data['logos'][i]['logo_id'];
-                            modified_view.x = parseFloat(data['logos'][i]['x']);
-                            modified_view.y = parseFloat(data['logos'][i]['y']);
-                            modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
-                        }
-                    }
+//                     for (var i = 0; i < data['logos'].length; i++) {
+//                         var modified_view = find_in_custom(data['logos'][i]['product_image_id']);
+//                         if (modified_view !== null) {
+//                             modified_view.logo_id = data['logos'][i]['logo_id'];
+//                             modified_view.x = parseFloat(data['logos'][i]['x']);
+//                             modified_view.y = parseFloat(data['logos'][i]['y']);
+//                             modified_view.multiplexer = parseFloat(data['logos'][i]['multiplexer']);
+//                         }
+//                     }
 
-                    for (var j = 0; j < data['emblems'].length; j++) {
-                        var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
-                        if (modified_view !== null) {
-                            modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
-                        }
-                    }
+//                     for (var j = 0; j < data['emblems'].length; j++) {
+//                         var modified_view = find_in_custom(data['emblems'][j]['product_image_id']);
+//                         if (modified_view !== null) {
+//                             modified_view.position_emblem_id = data['emblems'][j]['position_emblem_admin_id'];
+//                         }
+//                     }
 
-                    document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
-                    load_viewer();
-                    load_view_1(product.data);
+//                     document.getElementById('modal-content-center').outerHTML = default_modal.outerHTML;
+//                     load_viewer();
+//                     load_view_1(product.data);
 
-                },
-                error: function (data) {
+//                 },
+//                 error: function (data) {
 
-                }
-            });
-        },
-        error: function (data) {
+//                 }
+//             });
+//         },
+//         error: function (data) {
 
-        }
-    });
+//         }
+//     });
 
-    var body = $("body");
-    body.addClass("modal-open");
-    body.css('overflow', 'hidden');
-    modal_quick.style.display = "block";
-}
+//     var body = $("body");
+//     body.addClass("modal-open");
+//     body.css('overflow', 'hidden');
+//     modal_quick.style.display = "block";
+// }
 // End Second Script
 
 // Third Script
-var twist = false;
+// var twist = false;
 
-function show_search() {
-    var elem = document.getElementById('search-box-drop');
-    var pos = (twist ? 70 : 0);
-    var id = setInterval(frame, 5);
+// function show_search() {
+//     var elem = document.getElementById('search-box-drop');
+//     var pos = (twist ? 70 : 0);
+//     var id = setInterval(frame, 5);
 
-    function frame() {
-        if (pos === (twist ? 0 : 70)) {
-            twist = !twist;
-            clearInterval(id);
-        } else {
-            twist ? pos-- : pos++;
-            elem.style.top = pos + 'px';
-        }
-    }
+//     function frame() {
+//         if (pos === (twist ? 0 : 70)) {
+//             twist = !twist;
+//             clearInterval(id);
+//         } else {
+//             twist ? pos-- : pos++;
+//             elem.style.top = pos + 'px';
+//         }
+//     }
 
-}
+// }
 // End Third Script
 
 // Forth Script
@@ -2060,33 +2060,33 @@ function changeSize(id) {
 // End Sixth Script
 
 // Zoom in function
-function zoomInFunction(layer, stage) {
-    console.log("zoom in");
-    var zoomLevel = 2;
-    layer.on('mouseenter', function () {
-        layer.scale({
-            x: zoomLevel,
-            y: zoomLevel
-        });
-        layer.draw();
-    });
+// function zoomInFunction(layer, stage) {
+//     console.log("zoom in");
+//     var zoomLevel = 2;
+//     layer.on('mouseenter', function () {
+//         layer.scale({
+//             x: zoomLevel,
+//             y: zoomLevel
+//         });
+//         layer.draw();
+//     });
 
-    layer.on('mousemove', function (e) {
-        var pos = stage.getPointerPosition();
-        layer.x(-(pos.x));
-        layer.y(-(pos.y));
-        layer.draw();
-    });
+//     layer.on('mousemove', function (e) {
+//         var pos = stage.getPointerPosition();
+//         layer.x(-(pos.x));
+//         layer.y(-(pos.y));
+//         layer.draw();
+//     });
 
-    layer.on('mouseleave', function () {
-        layer.x(0);
-        layer.y(0);
-        layer.scale({
-            x: 1,
-            y: 1
-        });
-        layer.draw();
-    });
-    console.log("end zoom in");
-}
+//     layer.on('mouseleave', function () {
+//         layer.x(0);
+//         layer.y(0);
+//         layer.scale({
+//             x: 1,
+//             y: 1
+//         });
+//         layer.draw();
+//     });
+//     console.log("end zoom in");
+// }
 // End Zoom in Function
