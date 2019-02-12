@@ -19,6 +19,5 @@ Rails.application.config.assets.precompile += %w[jquery.js]
 Rails.application.config.assets.precompile += %w[jscolor.js]
 Rails.application.config.assets.precompile += %w[application.js]
 Rails.application.config.assets.precompile += %w[main.js]
-Rails.application.config.assets.precompile += %w[konva.min.js]
 
 
