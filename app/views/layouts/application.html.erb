@@ -314,6 +314,60 @@ function show_search() {
 
 }
 
+function zoomInMobileFunction(layer, stage) {
+    // Function Begin
+
+    var lastDist = 0;
+    var startScale = 1;
+
+    function getDistance(p1, p2) {
+        return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+    }
+
+    stage.getContent().addEventListener(
+        'touchmove',
+        function (evt) {
+            var touch1 = evt.touches[0];
+            var touch2 = evt.touches[1];
+
+            if (touch1 && touch2) {
+                var dist = getDistance({
+                    x: touch1.clientX,
+                    y: touch1.clientY
+                }, {
+                    x: touch2.clientX,
+                    y: touch2.clientY
+                });
+
+                if (!lastDist) {
+                    lastDist = dist;
+                }
+
+                var scale = (stage.scaleX() * dist) / lastDist;
+
+                stage.scaleX(scale);
+                stage.scaleY(scale);
+                stage.draw();
+                lastDist = dist;
+            }
+        },
+        false
+    );
+
+          stage.getContent().addEventListener(
+              'touchend',
+              function () {
+                  lastDist = 0;
+              },
+              false
+          );
+
+    //stage.add(layer);
+
+    // Function End
+}
+
+
 function zoomInFunction(layer, stage) {
     console.log("zoom in");
     var zoomLevel = 2;
@@ -813,7 +867,7 @@ function create_image_slider(views) {
         y: 0,
         height: 500,
         width: 500 * views.length,
-        draggable: true,
+        draggable: false,
         dragBoundFunc: function (pos) {
             return {
                 x: pos.x < 0 && pos.x > limit ? pos.x : this.getAbsolutePosition().x,
@@ -1181,12 +1235,21 @@ function load_viewer(_url_base, view, view_stationary) {
         STAGE = new Konva.Stage({
             container: 'image-container',
             width: stageWidth,
-            height: stageHeight
+            height: stageHeight,
+            draggable: true,
+        x: stageWidth / 2,
+        y: stageHeight / 2,
+        offset: {
+          x: stageWidth / 2,
+          y: stageHeight / 2
+        }
         });
         LAYER = new Konva.Layer();
+//        zoomInFunction(LAYER, STAGE);
+        //zoomInMobileFunction(LAYER, STAGE);
         STAGE.add(LAYER);
-        zoomInFunction(LAYER, STAGE);
-
+        //zoomInFunction(LAYER, STAGE);
+        
         $('#slide-right').unbind();
         $('#slide-right').on('click', function () {
             var mover = -500 * (current_pointer + 1);
@@ -1257,7 +1320,13 @@ function load_viewer(_url_base, view, view_stationary) {
 
             }
         });
-
+        console.log("Width: " + $(document).width());
+        console.log("Height: " + $(document).height());
+        if ($(document).width() < 750 ) {
+        zoomInMobileFunction(LAYER, STAGE);
+        } else {
+            zoomInFunction(LAYER, STAGE);
+        }
         fitStageIntoParentContainer();
         window.addEventListener('resize', fitStageIntoParentContainer);
         $('#image-container').find('.konvajs-content').each(function (index) {
@@ -2174,7 +2243,7 @@ function load_view_1(_product) {
         var layer = new Konva.Layer();
         
         layer.preventDefault(false);
-        
+        //zoomInMobileFunction(layer, stage);
         stage.add(layer);
 
         var baseImg = new Konva.Image({
@@ -2212,7 +2281,7 @@ function load_view_1(_product) {
             layer.draw()
         };
         
-        zoomInFunction(layer, stage);
+        
         
         $.ajax({
             url: '/catalog/product/color/main_image?color_id=' + preview.color_id,
