@@ -2470,6 +2470,54 @@ if (cp !== '') {
             });
         });
     });
+
+    function enter_key_setup() {
+                $(document).keyup(function (e) {
+                    var search_f = $("#search-input");
+                    if (search_f.is(":focus") && (e.keyCode === 13)) {
+                        location.href = '/catalog?search=' + search_f.val();
+                    }
+
+                    var search_2 = $("#search-bot");
+                    if (search_2.is(":focus") && (e.keyCode === 13)) {
+                        location.href = '/catalog?search=' + search_2.val();
+                    }
+                });
+            }
+
+            function loadScript(src, callback)
+    {
+        var s,
+            r,
+            t;
+        r = false;
+        s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = src;
+        s.onload = s.onreadystatechange = function() {
+            if ( !r && (!this.readyState || this.readyState == 'complete') )
+            {
+                r = true;
+                callback();
+            }
+        };
+        t = document.getElementsByTagName('script')[0];
+        t.parentNode.insertBefore(s, t);
+    }
+
+    loadScript('/assets/konva.min.js', function (data) {
+        loadScript('/assets/jquery.jcarousel.min.js', function (data) {
+
+            enter_key_setup();
+            reload_jcarousel();
+            get_cart_setup();
+            setup_n_1();
+            setup_n_2();
+
+            loadScript('/assets/sweetalert.min.js', function (data) {
+            });
+        });
+    });
 </script>
 
 </html>

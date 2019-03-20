@@ -65,21 +65,6 @@
           <input id="search-input" style="background: #f0f5e6; float: right" type="text" name="search" value="<%= params['search'] %>" placeholder="Search...">
           <img data-toggle="modal" alt="Bag logo" data-target="#cart_modal" style="float: right; z-index: 3; margin-right: 10px" id="cart_ic_2" class="cart_ic lazy" src="/images/holder.jp2" data-src="/images/bag_icon">
           <span class="badge" style="z-index: 10; background-color: #89c03e; margin-right: -43px; margin-top: 20px; float: right"><%= a = get_item_count; (a == 0 ? '' : a) %></span>
-          <script>
-            function enter_key_setup() {
-                $(document).keyup(function (e) {
-                    var search_f = $("#search-input");
-                    if (search_f.is(":focus") && (e.keyCode === 13)) {
-                        location.href = '/catalog?search=' + search_f.val();
-                    }
-
-                    var search_2 = $("#search-bot");
-                    if (search_2.is(":focus") && (e.keyCode === 13)) {
-                        location.href = '/catalog?search=' + search_2.val();
-                    }
-                });
-            }
-          </script>
         </div>
 
         <div style="float: left">
