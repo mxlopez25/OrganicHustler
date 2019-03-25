@@ -23,9 +23,9 @@ class AdminController < ApplicationController
 
   def create_admin
     a = Admin.new(
-      email: params[:admin][:email],
-      password: params[:admin][:password],
-      password_confirmation: params[:admin][:password_confirmation]
+      email: params[:email],
+      password: params[:password],
+      password_confirmation: params[:password_confirmation]
     )
     a.save!
     render json: a.to_json, code: 200
