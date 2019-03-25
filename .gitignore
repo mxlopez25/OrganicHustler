@@ -63,3 +63,6 @@ yarn-debug.log*
 
 # Ignore .DS_Store mac files
 .DS_Store
+
+# Intelli J Files
+.idea/
