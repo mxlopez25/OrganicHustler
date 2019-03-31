@@ -372,7 +372,8 @@
 
         function edit_selection() {
             for (var i = 0; i < items.length; i++) {
-                window.open('/admin/product/edit/' + items[i]);
+                //window.open('/admin/product/edit/' + items[i]);
+                window.location.href='/admin/product/edit/'+ items[i];
             }
         }
 

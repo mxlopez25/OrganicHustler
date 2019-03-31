@@ -21,7 +21,6 @@
 
   <div style="height: 100%; position: relative;">
     <div class="card modal-c">
-      <button class="btn btn-success" onclick="save()">Save</button>
       <hr>
       <div style="padding: 20px;" data-id-row="1" id="mm_row" class="product_row_new">
 
@@ -103,12 +102,13 @@
             <% end %>
           </select>
           <hr>
+          <div id="replace_with">
+        <button onclick="add_row()">Add row</button>
+      </div>
         </div>
 
       </div>
-      <div id="replace_with">
-        <button onclick="add_row()">Add row</button>
-      </div>
+      <button class="btn btn-block btn-success" onclick="save()">Save</button>
     </div>
   </div>
 
@@ -834,6 +834,7 @@
                 logo_info.append('file', logos[id].file);
                 $(row).css('background-color', '#fffae0');
 
+                // Ajax to create logos
                 $.ajax({
                     url: "/product/new/logo",
                     type: "POST",
@@ -870,6 +871,7 @@
                             request(rows[current_n]);
                         }
                         $(row).css('background-color', '#ff8787');
+                        alert("Favor verificar logos");
                     }
 
                 });
@@ -908,6 +910,7 @@
                             request(rows[current_n]);
                         }
                         $(row).css('background-color', '#ff8787');
+                        alert("Colors could not be added.")
                     }
                 });
             }
@@ -1010,6 +1013,8 @@
                             request(rows[current_n]);
                         }
                         $(row).css('background-color', '#eeffe0');
+                        alert("Product added successfully.");
+                        window.history.back();
                     },
                     error: function (data) {
 
@@ -1018,6 +1023,7 @@
                             request(rows[current_n]);
                         }
                         $(row).css('background-color', '#ff8787');
+                        alert("Product could not be added o was not added correctly, please verify.")
                     }
                 });
             }

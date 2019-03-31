@@ -132,7 +132,12 @@ class ProductController < ApplicationController
 
   def save_product
     (Product.find params[:id]).update (basic_product_params params[:attr])
-    render :nothing => true, :status => 200
+    if 1 == 1
+      render :nothing => true, :status => 200, json: {}
+    else
+      render :nothing => true, :status => 200
+    end
+
   end
 
   def add_size

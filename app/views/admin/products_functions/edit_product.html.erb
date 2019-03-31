@@ -114,9 +114,11 @@
                     }
                 },
                 success: function () {
-                    window.location.reload(true);
+                    alert("Product saved correctly.");
+                    window.location.href='/admin/products';
                 },
-                error: function () {
+                error: function (data) {
+                    alert("Error while saving the product changes.");
                     window.location.reload(true);
                 }
             });
