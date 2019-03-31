@@ -11,7 +11,9 @@ class HomeController < ApplicationController
 
   def contact_us; end
 
-  def story; end
+  def story
+    @config_video = false
+  end
 
   def index
 

@@ -2,17 +2,18 @@ class CategoriesController < ApplicationController
   layout 'admin'
   before_action :authenticate_admin!
 
-  def new
-
-  end
+  def new; end
 
   def edit
     @categories = Category.find(params['id'])
   end
 
   def update
-    params['categories'].permit!
-    Category.find(params['id']).update! params['categories']
+    # params['categories'].permit!
+    # Category.find(params['id']).update! params['categories']
+    ca = Category.find(params['id'])
+    ca.title = params['category']['title']
+    ca.save!
   end
 
   def destroy
