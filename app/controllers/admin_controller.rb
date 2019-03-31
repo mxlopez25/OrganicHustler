@@ -97,8 +97,7 @@ class AdminController < ApplicationController
   def tax_band
   end
 
-  def category
-  end
+  def category; end
 
   def gifts
   end

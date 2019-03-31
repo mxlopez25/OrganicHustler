@@ -32,6 +32,7 @@
         <th></th>
         <th>ID</th>
         <th>Title</th>
+        <th>Active</th>
       </tr>
       </thead>
       <tbody id="data-table">
@@ -56,15 +57,20 @@
 
     function destroy() {
         $.ajax({
-            url: '/categories?id=' + selected.toString(),
+            url: '/categories',
             type: 'delete',
             dataType: 'json',
-            data: {},
+            data: {
+                id: selected.toString(),
+                "authenticity_token": '<%= form_authenticity_token %>'
+            },
             success: function (data) {
-                window.location.href = '/admin/categories';
+
+                window.location.reload(true);
+                //href = '/admin/categories';
             },
             error: function (data) {
-
+                alert(data);
             }
         });
     }
@@ -80,7 +86,7 @@
                 title: document.getElementById('title').value
             },
             success: function (data) {
-
+                console.log(data);
                 for (var i = 0; i < data.length; i++) {
                     var background_color = data[i]['active'] ? 'white' : '#ff8787';
                     text = text +
@@ -88,6 +94,7 @@
                         '<td><input id="' + data[i]['id'] + '" name="radio_btn" type="radio" onclick="selected = \'' + data[i]['id'] + '\'"></td>' +
                         '<td>' + data[i]['id'] + '</td>' +
                         '<td>' + data[i]['title'] + '</td>' +
+                        '<td>' + ((data[i]['active'] === 1) ? 'Active' : 'Disabled')  + '</td>' +
                         '</tr>';
                 }
                 data_table.innerHTML = text;
