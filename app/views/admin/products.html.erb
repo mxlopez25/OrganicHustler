@@ -104,6 +104,7 @@
         <th onclick="sort_inventory()" class="header-ele">Inventory</th>
         <th onclick="sort_category()" class="header-ele">Category</th>
         <th onclick="sort_price()" class="header-ele">Price $</th>
+        <th class="header-ele">Status</th>
       </tr>
       </thead>
       <tbody id="list-to-m">
@@ -143,6 +144,7 @@
                     }
 
                     data = data['product'];
+                    console.log(data);
                     var table_body = document.getElementById('list-to-m');
                     var text = '';
                     for (var i = 0; i < data.length; i++) {
@@ -158,6 +160,7 @@
                             '            <td>' + data[i]['stock'] + '</td>\n' +
                             '            <td>' + data[i]['categories_l'] + '</td>\n' +
                             '            <td class="price" style="text-align: right">' + data[i]['price'] + '</td>\n' +
+                            '            <td>' + ((data[i]['status'] === 1) ? 'Active' : 'Disabled')  + '</td>' +
                             '          </tr>'
                     }
                     table_body.innerHTML = text;
