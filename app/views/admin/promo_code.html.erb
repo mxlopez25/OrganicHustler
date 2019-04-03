@@ -81,15 +81,19 @@
 
     function destroy() {
         $.ajax({
-            url: '/promotion_codes?id=' + selected.toString(),
+            url: '/promotion_codes',
             type: 'delete',
             dataType: 'json',
-            data: {},
+            data: {
+              id: selected.toString(),
+              "authenticity_token": '<%= form_authenticity_token %>'
+            },
             success: function (data) {
-                window.location.href = '/admin/promos';
+                window.location.reload(true);
+                //window.location.href = '/admin/promos';
             },
             error: function (data) {
-
+              alert("Error: " + data)
             }
         });
     }

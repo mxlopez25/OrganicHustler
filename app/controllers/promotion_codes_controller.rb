@@ -47,7 +47,9 @@ class PromotionCodesController < ApplicationController
   end
 
   def destroy
-    PromotionCode.find(params['id']).update! used: true
+    pc = PromotionCode.find(params['id'])
+    pc.used = !pc.used
+    pc.save!
   end
 
 end
