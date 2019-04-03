@@ -32,7 +32,7 @@
         <th></th>
         <th>ID</th>
         <th>Title</th>
-        <th>Active</th>
+        <th>Status</th>
       </tr>
       </thead>
       <tbody id="data-table">
@@ -86,7 +86,6 @@
                 title: document.getElementById('title').value
             },
             success: function (data) {
-                console.log(data);
                 for (var i = 0; i < data.length; i++) {
                     var background_color = data[i]['active'] ? 'white' : '#ff8787';
                     text = text +
