@@ -30,7 +30,14 @@
 
 <script>
     function create() {
-        $.ajax({
+      var rate = ($('#rate').val() != '') && ($('#rate').val() != null);
+      var code = $('#code').val() != '' && ($('#code').val() != null);
+      var usage = $('#usage').val() != '' && $('#usage').val() != null;
+      var until = $('#until').val() != '' && $('#until').val() != null;
+      
+      if(rate && code && usage && until)
+      {
+                $.ajax({
             url: '/promotion_codes',
             type: 'post',
             dataType: 'json',
@@ -52,6 +59,10 @@
 
             }
         });
+      }
+      else {
+        alert('Favor verificar valores!');
+      }
     }
 
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
