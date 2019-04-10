@@ -57,7 +57,7 @@
   </div>
 
   <div class="mobilenot" style="position: relative;">
-    <div style="padding: 10px; width: 100%" class="navbar-header">
+    <div style="padding: 10px; width: 100%; min-height: 7.7rem;" class="navbar-header">
 
       <div style="position:relative; overflow: hidden; min-height: 7.7rem">
 
@@ -81,7 +81,9 @@
         <% end %>
         </div>
 
-        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:130px ;" href="/"><img alt="Web site logo" class="lazy" width="100%" src="/images/holder.jp2" data-src="<%= ConfigurationWeb.find(24).picture("s_thumb_#{@browser}") %>"></a>
+        <a style="position: absolute; top: 10px; right: 0; left: 0; margin: auto; width:130px ;" href="/">
+          <img alt="Web site logo" class="lazy" width="140px" src="/images/logo.webp" >
+        </a>
 
       </div>
 
