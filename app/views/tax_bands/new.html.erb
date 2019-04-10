@@ -24,26 +24,36 @@
 
 <script>
     function create() {
-        $.ajax({
+      var rate = ($('#rate').val() != '') && ($('#rate').val() != null);
+      var title = $('#title').val() != '' && ($('#title').val() != null);
+      var description = $('#description').val() != '' && $('#description').val() != null;
+      
+      if(rate && title && description)
+      {
+          $.ajax({
             url: '/tax_bands',
-            type: 'post',
+            type: 'POST',
             dataType: 'json',
             data: {
                 taxes: {
                     titulo: document.getElementById('title').value,
                     amount: parseInt(document.getElementById('rate').value) / 100,
-                    description: document.getElementById('description').value,
-                    "authenticity_token": '<%= form_authenticity_token %>'
-                }
+                    description: document.getElementById('description').value
+                },
+                "authenticity_token": '<%= form_authenticity_token %>'
             },
             success: function (data) {
 
                 window.location.href = '/admin/taxes';
             },
             error: function (data) {
-
+                alert("Error!");
             }
         });
+        }
+        else {
+          alert("Favor verificar valores!")
+        }
     }
 
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

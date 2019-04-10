@@ -24,6 +24,10 @@ class TaxBandsController < ApplicationController
   def create
     params['taxes'].permit!
     TaxBand.create! params['taxes']
+    # ta = params[taxes]
+    # ta.active = !ta.active
+    # ta.save!
+    # render json: ta, status: 200
   end
 
   def show

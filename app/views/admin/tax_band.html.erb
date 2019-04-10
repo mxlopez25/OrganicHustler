@@ -40,6 +40,7 @@
         <th>Title</th>
         <th>Amount</th>
         <th>Description</th>
+        <th>Status</th>
       </tr>
       </thead>
       <tbody id="data-table">
@@ -64,10 +65,13 @@
 
     function destroy() {
         $.ajax({
-            url: '/tax_bands?id=' + selected.toString(),
+            url: '/tax_bands',
             type: 'delete',
             dataType: 'json',
-            data: {},
+            data: {
+                id: selected.toString(),
+                "authenticity_token": '<%= form_authenticity_token %>'
+            },
             success: function (data) {
                 window.location.href = '/admin/taxes';
             },
@@ -100,6 +104,7 @@
                         '<td>' + data[i]['titulo'] + '</td>' +
                         '<td>' + parseInt(parseFloat(data[i]['amount']) * 100) + '%</td>' +
                         '<td>' + data[i]['description'] + '</td>' +
+                        '<td>' + ((data[i]['active'] === 1) ? 'Active' : 'Disabled') + '</td>' +
                         '</tr>';
                 }
                 data_table.innerHTML = text;
