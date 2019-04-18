@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  root to: 'home#index'
+  root to: 'home#construction'
   get '/home/showcase/product' => 'home#get_showcase_product'
   post '/share' => 'home#save_to_share'
 
@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get '/bag_items' => 'home#bag_items'
   get '/cancel_order' => 'home#cancel_order'
   get '/confirm_email' => 'product#confirm_email'
+  get '/index' => 'home#index'
 
   post '/' => 'home#subscribe'
 

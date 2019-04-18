@@ -22,6 +22,10 @@ class HomeController < ApplicationController
 
   end
 
+  def construction
+    render layout: false
+  end
+
   def privacy
 
   end
