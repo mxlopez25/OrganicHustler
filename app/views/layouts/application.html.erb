@@ -2449,28 +2449,28 @@ if (cp !== '') {
         b.appendChild(s)
     }(window, document));
 
-    loadScript('/assets/konva.min.js', function (data) {
-        loadScript('/assets/jquery.jcarousel.min.js', function (data) {
-            loadScript('/assets/sweetalert.min.js', function (data) {
-                enter_key_setup();
-                reload_jcarousel();
-                get_cart_setup();
-                setup_n_1();
-                setup_n_2();
-                if(index) {
-                    load_side_elements(<%= ConfigurationWeb.where(title: 'Main product')[0].value %>, 1);
-                    load_side_elements(<%= ConfigurationWeb.where(title: 'Product 1')[0].value %>, 2);
-                    load_side_elements(<%= ConfigurationWeb.where(title: 'Product 2')[0].value %>, 3);
-                }
-                if(bag){
-                    get_bag_items();
-                }
-                if(checkout){
-                    get_products();
-                }
-            });
-        });
-    });
+    // loadScript('/assets/konva.min.js', function (data) {
+    //     loadScript('/assets/jquery.jcarousel.min.js', function (data) {
+    //         loadScript('/assets/sweetalert.min.js', function (data) {
+    //             enter_key_setup();
+    //             reload_jcarousel();
+    //             get_cart_setup();
+    //             setup_n_1();
+    //             setup_n_2();
+    //             if(index) {
+    //                 load_side_elements(<%= ConfigurationWeb.where(title: 'Main product')[0].value %>, 1);
+    //                 load_side_elements(<%= ConfigurationWeb.where(title: 'Product 1')[0].value %>, 2);
+    //                 load_side_elements(<%= ConfigurationWeb.where(title: 'Product 2')[0].value %>, 3);
+    //             }
+    //             if(bag){
+    //                 get_bag_items();
+    //             }
+    //             if(checkout){
+    //                 get_products();
+    //             }
+    //         });
+    //     });
+    // });
 
     function enter_key_setup() {
                 $(document).keyup(function (e) {
