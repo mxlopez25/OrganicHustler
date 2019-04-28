@@ -479,31 +479,21 @@
         var holder = null;
         var colors_tt = colors_g[id];
         colors_g[id] = {cur_id: 0, colors: [], single: $('#only_photo').is(':checked')};
+        var bTitle = !!$(modal).find('.color_row').find('input[id="title"]').val();
+        var bPrice = !!$(modal).find('.color_row').find('input[id="price"]').val();
+        //var bColor = !!$(modal).find('.color_row').find('input[id="code_hex"]').val();
+        var bStock = !!$(modal).find('.color_row').find('input[id="stock_level"]').val();
+        var bFiles = $(modal).find('.color_row').find('input[id="file"]')[0].files == 0 ? false : true;
 
-        if (colors_tt) {
-            holder = colors_tt.colors;
-            colors_g[id] = {cur_id: colors_tt.cur_id, colors: [], single: $('#only_photo').is(':checked')};
-        }
-
-        for (var i = 0; i < rows.length; i++) {
-            if (rows[i].dataset.ocupaidUse === 'false') {
-                colors_g[id].colors.push({
-                    id: colors_g[id].cur_id,
-                    title: $(rows[i]).find('input[id="title"]').val(),
-                    price: $(rows[i]).find('input[id="price"]').val(),
-                    color: $(rows[i]).find('input[id="code_hex"]').val(),
-                    stock: $(rows[i]).find('input[id="stock_level"]').val(),
-                    preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
-                    files: $(rows[i]).find('input[id="file"]')[0].files,
-                    main_picture: $(rows[i]).find('select[name="main_image"]').val()
-                });
-                colors_g[id].cur_id = colors_g[id].cur_id + 1;
-                rows[i].dataset.changed = 'false';
-            } else {
-                var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
-                if (rows[i].dataset.changed === 'true') {
+        if(bTitle && bPrice && bStock && bFiles) {
+            if (colors_tt) {
+                holder = colors_tt.colors;
+                colors_g[id] = {cur_id: colors_tt.cur_id, colors: [], single: $('#only_photo').is(':checked')};
+            }
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].dataset.ocupaidUse === 'false') {
                     colors_g[id].colors.push({
-                        id: item.id,
+                        id: colors_g[id].cur_id,
                         title: $(rows[i]).find('input[id="title"]').val(),
                         price: $(rows[i]).find('input[id="price"]').val(),
                         color: $(rows[i]).find('input[id="code_hex"]').val(),
@@ -512,24 +502,42 @@
                         files: $(rows[i]).find('input[id="file"]')[0].files,
                         main_picture: $(rows[i]).find('select[name="main_image"]').val()
                     });
+                    colors_g[id].cur_id = colors_g[id].cur_id + 1;
                     rows[i].dataset.changed = 'false';
                 } else {
-                    colors_g[id].colors.push({
-                        id: item.id,
-                        title: $(rows[i]).find('input[id="title"]').val(),
-                        price: $(rows[i]).find('input[id="price"]').val(),
-                        color: $(rows[i]).find('input[id="code_hex"]').val(),
-                        stock: $(rows[i]).find('input[id="stock_level"]').val(),
-                        preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
-                        files: item.files,
-                        main_picture: item.main_picture
-                    });
-                    rows[i].dataset.changed = 'false';
+                    var item = get_correct(holder, parseInt(rows[i].dataset.idUse));
+                    if (rows[i].dataset.changed === 'true') {
+                        colors_g[id].colors.push({
+                            id: item.id,
+                            title: $(rows[i]).find('input[id="title"]').val(),
+                            price: $(rows[i]).find('input[id="price"]').val(),
+                            color: $(rows[i]).find('input[id="code_hex"]').val(),
+                            stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                            preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                            files: $(rows[i]).find('input[id="file"]')[0].files,
+                            main_picture: $(rows[i]).find('select[name="main_image"]').val()
+                        });
+                        rows[i].dataset.changed = 'false';
+                    } else {
+                        colors_g[id].colors.push({
+                            id: item.id,
+                            title: $(rows[i]).find('input[id="title"]').val(),
+                            price: $(rows[i]).find('input[id="price"]').val(),
+                            color: $(rows[i]).find('input[id="code_hex"]').val(),
+                            stock: $(rows[i]).find('input[id="stock_level"]').val(),
+                            preferred: $(rows[i]).find('input[id="main"]').prop('checked'),
+                            files: item.files,
+                            main_picture: item.main_picture
+                        });
+                        rows[i].dataset.changed = 'false';
+                    }
                 }
             }
-        }
 
-        close_modal();
+            close_modal();
+        } else {
+            alert("Favor verficar que todos los campos.");
+        }
     }
 
     function complete_category(id) {
@@ -809,10 +817,10 @@
         var limit_n = rows.length;
         var current_n = 0;
 
+        console.log(rows[current_n]);
         request(rows[current_n]);
 
         function request(row) {
-
             var id_row = $(row).data('idRow');
 
             var logos_arr = [];
@@ -927,6 +935,7 @@
                     file_info.append('file', files[files_cur]);
                     file_info.append('parent_id', id);
                     file_info.append('main_name', colors[id_c].main_picture);
+                    console.log(file_info);
                     $.ajax({
                         url: "/product/new/image",
                         type: "POST",
