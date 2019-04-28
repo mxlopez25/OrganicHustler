@@ -483,7 +483,7 @@
         var bPrice = !!$(modal).find('.color_row').find('input[id="price"]').val();
         //var bColor = !!$(modal).find('.color_row').find('input[id="code_hex"]').val();
         var bStock = !!$(modal).find('.color_row').find('input[id="stock_level"]').val();
-        var bFiles = $(modal).find('.color_row').find('input[id="file"]')[0].files == 0 ? false : true;
+        var bFiles = !!$(modal).find('.color_row').find('input[id="file"]')[0].files.length;
 
         if(bTitle && bPrice && bStock && bFiles) {
             if (colors_tt) {
