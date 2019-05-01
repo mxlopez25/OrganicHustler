@@ -228,18 +228,12 @@ class ProductController < ApplicationController
   end
 
   def new_image
-    puts "New Image Safe 1"
     file = re_center_upload(params['file'])
-    image = ProductImage.create! 
-          color: ColorP.find(params['parent_id']), 
-          picture: file, 
-          main: (params['file'].original_filename.eql?(params['main_name']))
+    image = ProductImage.create! color: ColorP.find(params['parent_id']), picture: file, main: (params['file'].original_filename.eql?(params['main_name']))
 
-    puts "Image Created"
     file.close
     file.unlink
 
-    puts "Image unliked"
     render :json => image.to_json, :status => 200
   end
 
@@ -254,8 +248,7 @@ class ProductController < ApplicationController
     product.stock = params['stock']
     product.sku = params['sku']
     product.description = params['description']
-    puts "All parameters accepted"
-
+    
     if params['sizes']
       params['sizes'].each do |size|
         product.sizes << Size.new(size_params (params['sizes'][size]))
@@ -316,7 +309,6 @@ class ProductController < ApplicationController
       end
     end
 
-
     render :json => product.to_json, :status => 200
   end
 
@@ -343,7 +335,7 @@ class ProductController < ApplicationController
   def re_center_upload(file)
     image = Magick::Image::from_blob(file.read).first
     square_p = 500
-    puts "Safe re_cente_upload 1"
+    
     image.resize_to_fit!(square_p, square_p)
     new_img = ::Magick::Image.new(square_p, square_p)
     filled = new_img.matte_floodfill(1, 1)
