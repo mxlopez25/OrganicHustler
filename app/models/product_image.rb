@@ -9,7 +9,7 @@ class ProductImage < ApplicationRecord
                       thumb: ["120x120>", :webp]
                     },
                     convert_options: {
-                      huge: '-quality 85'
+                      huge: '-quality 85',
                       med: '-quality 85',
                       big: '-quality 85',
                       large: '-quality 85',
