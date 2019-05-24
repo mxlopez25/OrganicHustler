@@ -1,10 +1,10 @@
 class ProductImage < ApplicationRecord
   has_attached_file :picture, 
                     styles: { 
-                      thumb: "64x64#", 
-                      small: "100x100#", 
-                      med: "150x150>", 
-                      large: "200x200>" 
+                      thumb: ["64x64#", :webp], 
+                      small: ["100x100#", :webp], 
+                      med: ["150x150>", :webp], 
+                      large: ["200x200>", :webp] 
                     },
                     convert_options: {
                       thumb: '-quality 85',
